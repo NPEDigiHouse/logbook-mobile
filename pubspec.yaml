@@ -19,7 +19,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  flutter_native_splash: ^2.3.0
   flutter_launcher_icons: "^0.13.1"
 
 flutter:
@@ -45,11 +44,6 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
-
-flutter_native_splash:
-  color: "#29C5F6"
-  image: icons/splash_logo.png
-
 
 
 flutter_launcher_icons:
