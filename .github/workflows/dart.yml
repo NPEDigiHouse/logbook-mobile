@@ -23,17 +23,3 @@ jobs:
 
     - name: Install dependencies
       run: flutter pub get
-
-    - name: Build Android APK
-      run: flutter build apk --release
-
-    - name: Build iOS IPA
-      run: flutter build ios --release --no-codesign
-
-    - name: Archive artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: app-release
-        path: |
-          build/app/outputs/flutter-apk/app-release.apk
-          build/ios/ipa/Runner.ipa
