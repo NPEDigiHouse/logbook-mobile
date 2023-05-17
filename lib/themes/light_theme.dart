@@ -28,7 +28,7 @@ final filledButtonTheme = FilledButtonThemeData(
     backgroundColor: primaryColor,
     foregroundColor: scaffoldBackgroundColor,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(100),
     ),
   ),
 );
@@ -38,7 +38,7 @@ final outlinedButtonTheme = OutlinedButtonThemeData(
     foregroundColor: primaryColor,
     side: const BorderSide(color: primaryColor),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(100),
     ),
   ),
 );
@@ -47,13 +47,13 @@ final textButtonTheme = TextButtonThemeData(
   style: TextButton.styleFrom(
     foregroundColor: primaryColor,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(100),
     ),
   ),
 );
 
 final inputDecorationTheme = InputDecorationTheme(
-  floatingLabelBehavior: FloatingLabelBehavior.never,
+  floatingLabelBehavior: FloatingLabelBehavior.auto,
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(14),
   ),

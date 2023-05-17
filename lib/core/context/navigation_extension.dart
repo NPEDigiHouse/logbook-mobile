@@ -9,4 +9,8 @@ extension NavigationExtension on BuildContext {
       ),
     );
   }
+
+  void back() {
+    Navigator.pop(this);
+  }
 }
