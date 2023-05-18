@@ -1,7 +1,7 @@
 import 'package:elogbook/core/app/app_settings.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/utils/keys.dart';
-import 'package:elogbook/src/features/wrapper/wrapper.dart';
+import 'package:elogbook/src/presentation/features/wrapper/wrapper.dart';
 import 'package:elogbook/themes/light_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
