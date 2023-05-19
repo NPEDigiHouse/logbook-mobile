@@ -2,9 +2,9 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/features/login/register_page.dart';
-import 'package:elogbook/src/widgets/auth/auth_header.dart';
-import 'package:elogbook/src/widgets/auth/input_password.dart';
+import 'package:elogbook/src/presentation/features/login/register_page.dart';
+import 'package:elogbook/src/presentation/widgets/auth/auth_header.dart';
+import 'package:elogbook/src/presentation/widgets/auth/input_password.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
