@@ -19,9 +19,18 @@ ThemeData get lightTheme {
         TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
       },
     ),
+    appBarTheme: appBarTheme,
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
 }
+
+final appBarTheme = AppBarTheme(
+  
+    titleTextStyle: textTheme.titleMedium?.copyWith(
+  color: primaryColor,
+  
+  fontWeight: FontWeight.bold,
+));
 
 final filledButtonTheme = FilledButtonThemeData(
   style: FilledButton.styleFrom(
