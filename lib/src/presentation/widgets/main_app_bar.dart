@@ -13,7 +13,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return SliverAppBar(
       elevation: 0,
       backgroundColor: scaffoldBackgroundColor,
       surfaceTintColor: scaffoldBackgroundColor,

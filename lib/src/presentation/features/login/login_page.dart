@@ -1,3 +1,4 @@
+import 'package:elogbook/src/presentation/features/menu/main_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
@@ -68,7 +69,7 @@ class LoginPage extends StatelessWidget {
                           width: AppSize.getAppWidth(context),
                           child: FilledButton(
                             onPressed: () {
-                              context.navigateTo(UnitActivityPage());
+                              context.navigateTo(MainMenu());
                             },
                             child: Text('Login'),
                           ),

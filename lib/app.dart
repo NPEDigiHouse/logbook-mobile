@@ -27,6 +27,7 @@ class App extends StatelessWidget {
       navigatorKey: navigatorKey,
       title: AppSettings.title,
       theme: lightTheme,
+      
       home: Wrapper(),
     );
   }
