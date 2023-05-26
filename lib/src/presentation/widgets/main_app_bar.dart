@@ -16,6 +16,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       backgroundColor: scaffoldBackgroundColor,
+      surfaceTintColor: scaffoldBackgroundColor,
       title: const Text('E-Logbook'),
       centerTitle: true,
       titleTextStyle: textTheme.titleMedium?.copyWith(
