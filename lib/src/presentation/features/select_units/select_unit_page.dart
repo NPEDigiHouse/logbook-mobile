@@ -1,9 +1,7 @@
-import 'package:elogbook/core/helpers/app_size.dart';
-import 'package:elogbook/core/styles/color_palette.dart';
-import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/select_units/widgets/custom_bottom_alert.dart';
-import 'package:elogbook/src/presentation/features/select_units/widgets/select_unit_card.dart';
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:elogbook/core/styles/color_palette.dart';
+import 'package:elogbook/src/presentation/features/select_units/widgets/select_unit_card.dart';
 
 class SelectUnitPage extends StatefulWidget {
   const SelectUnitPage({super.key});
@@ -39,7 +37,7 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
         centerTitle: true,
         title: Text("Select Unit"),
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () => context.back(),
           icon: Icon(
             Icons.arrow_back,
           ),

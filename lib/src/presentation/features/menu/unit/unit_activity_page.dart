@@ -1,15 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_switch/flutter_switch.dart';
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/menu/unit/unit_data.dart';
+import 'package:elogbook/src/presentation/features/select_units/select_unit_page.dart';
 import 'package:elogbook/src/presentation/widgets/glassmorphism.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
+import 'package:elogbook/src/presentation/widgets/menu/grid_menu_row.dart';
+import 'package:elogbook/src/presentation/widgets/menu/list_menu_column.dart';
 import 'package:elogbook/src/presentation/widgets/menu/report_expansion_tile.dart';
 
-class UnitActivityPage extends StatelessWidget {
+class UnitActivityPage extends StatefulWidget {
   const UnitActivityPage({super.key});
+
+  @override
+  State<UnitActivityPage> createState() => _UnitActivityPageState();
+}
+
+class _UnitActivityPageState extends State<UnitActivityPage> {
+  late final ValueNotifier<bool> isList;
+
+  @override
+  void initState() {
+    super.initState();
+
+    isList = ValueNotifier(false);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    isList.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +105,6 @@ class UnitActivityPage extends StatelessWidget {
                       vertical: 16,
                     ),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
@@ -98,7 +124,7 @@ class UnitActivityPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         InkWell(
-                          onTap: () {},
+                          onTap: () => context.navigateTo(SelectUnitPage()),
                           child: Glassmorphism(
                             blur: 5,
                             opacity: .15,
@@ -211,9 +237,130 @@ class UnitActivityPage extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 28),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Menu',
+                  style: textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                ValueListenableBuilder(
+                  valueListenable: isList,
+                  builder: (context, isList, child) {
+                    return FlutterSwitch(
+                      value: isList,
+                      width: 48,
+                      height: 32,
+                      activeColor: Color(0xFF1C1B1F).withOpacity(.1),
+                      inactiveColor: Color(0xFF1C1B1F).withOpacity(.1),
+                      toggleColor: scaffoldBackgroundColor,
+                      activeIcon: Icon(
+                        Icons.view_list_rounded,
+                        color: primaryColor,
+                      ),
+                      inactiveIcon: Icon(
+                        Icons.grid_view_rounded,
+                        color: primaryColor,
+                      ),
+                      onToggle: (value) => this.isList.value = value,
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ValueListenableBuilder(
+              valueListenable: isList,
+              builder: (context, isList, child) {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 150),
+                  reverseDuration: const Duration(milliseconds: 150),
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    );
+                  },
+                  child: isList ? buildItemList() : buildItemGrid(),
+                );
+              },
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Column buildItemGrid() {
+    return Column(
+      key: ValueKey(1),
+      children: <Widget>[
+        GridMenuRow(
+          itemColor: primaryColor,
+          iconPaths: iconPaths.sublist(0, 4),
+          labels: labels.sublist(0, 4),
+          onTaps: onTaps.sublist(0, 4),
+        ),
+        const SizedBox(height: 20),
+        GridMenuRow(
+          itemColor: variant2Color,
+          iconPaths: iconPaths.sublist(4, 8),
+          labels: labels.sublist(4, 8),
+          onTaps: onTaps.sublist(4, 8),
+        ),
+        const SizedBox(height: 20),
+        GridMenuRow(
+          length: 3,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          itemColor: variant1Color,
+          iconPaths: iconPaths.sublist(8, iconPaths.length),
+          labels: labels.sublist(8, labels.length),
+          onTaps: onTaps.sublist(8, onTaps.length),
+        ),
+      ],
+    );
+  }
+
+  Column buildItemList() {
+    return Column(
+      key: ValueKey(2),
+      children: <Widget>[
+        ListMenuColumn(
+          itemColor: primaryColor,
+          iconPaths: iconPaths.sublist(0, 4),
+          labels: labels.sublist(0, 4),
+          descriptions: descriptions.sublist(0, 4),
+          onTaps: onTaps.sublist(0, 4),
+        ),
+        Divider(
+          height: 30,
+          thickness: 1,
+          color: Color(0xFFEFF0F9),
+        ),
+        ListMenuColumn(
+          itemColor: variant2Color,
+          iconPaths: iconPaths.sublist(4, 8),
+          labels: labels.sublist(4, 8),
+          descriptions: descriptions.sublist(4, 8),
+          onTaps: onTaps.sublist(4, 8),
+        ),
+        Divider(
+          height: 30,
+          thickness: 1,
+          color: Color(0xFFEFF0F9),
+        ),
+        ListMenuColumn(
+          length: 3,
+          itemColor: variant1Color,
+          iconPaths: iconPaths.sublist(8, iconPaths.length),
+          labels: labels.sublist(8, labels.length),
+          descriptions: descriptions.sublist(8, descriptions.length),
+          onTaps: onTaps.sublist(8, onTaps.length),
+        ),
+      ],
     );
   }
 }
