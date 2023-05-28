@@ -1,3 +1,5 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/src/presentation/features/clinical_record/create_clinical_record_first_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/src/presentation/widgets/menu/grid_menu_item.dart';
@@ -35,7 +37,9 @@ class GridMenuRow extends StatelessWidget {
           color: itemColor,
           iconPath: iconPaths[i],
           label: labels[i],
-          onTap: onTaps[i],
+          onTap: i == 0
+              ? () => context.navigateTo(CreateClinicalRecordFirstPage())
+              : onTaps[i],
         );
       }),
     );

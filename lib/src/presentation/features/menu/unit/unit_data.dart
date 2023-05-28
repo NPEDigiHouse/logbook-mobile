@@ -33,4 +33,6 @@ final List<String> descriptions = List.generate(11, (_) {
   return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et.';
 });
 
-final List<VoidCallback> onTaps = List.generate(11, (_) => () {});
+final List<VoidCallback> onTaps = List.generate(11, (_) => () {
+  
+});

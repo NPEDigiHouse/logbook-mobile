@@ -13,6 +13,7 @@ const dividerColor = Color(0xFFE4E4E4);
 const errorColor = Color(0xFFD1495B);
 const successColor = Color(0xFF56B9A1);
 const onDisableColor = Color(0xFFF3F4F6);
+const onFormDisableColor = Color(0xFF9CA3AF);
 
 // Color scheme
 final colorScheme = ColorScheme.fromSeed(

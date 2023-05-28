@@ -1,7 +1,7 @@
 name: elogbook
 description: A new Flutter project.
 
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+publish_to: "none" 
 
 version: 1.0.0+1
 
@@ -12,6 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  provider: ^6.0.5
   flutter_svg: ^1.1.6
   flutter_switch: ^0.3.2
 
