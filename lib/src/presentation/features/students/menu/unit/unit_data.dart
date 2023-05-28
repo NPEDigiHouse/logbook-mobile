@@ -1,6 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/create_clinical_record_first_page.dart';
 import 'package:elogbook/src/presentation/features/students/self_reflection/create_self_reflection_page.dart';
+import 'package:elogbook/src/presentation/features/students/sgl_cst/sgl_cst_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 
@@ -43,6 +44,8 @@ List<VoidCallback> onTaps(BuildContext context) {
       onTapList.add(() => context.navigateTo(CreateClinicalRecordFirstPage()));
     } else if (i == 2) {
       onTapList.add(() => context.navigateTo(CreateSelfReflectionPage()));
+    } else if (i == 7) {
+      onTapList.add(() => context.navigateTo(SglCstHomePage()));
     } else {
       onTapList.add(() {});
     }

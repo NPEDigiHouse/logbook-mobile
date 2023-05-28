@@ -1,11 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/create_clinical_record_third_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/build_examination.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
-import 'package:elogbook/src/presentation/widgets/header/form_section_header.dart';
-import 'package:elogbook/src/presentation/widgets/input/build_text_field.dart';
-import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 
 class CreateClinicalRecordSecondPage extends StatefulWidget {

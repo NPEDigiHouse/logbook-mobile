@@ -1,5 +1,4 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/create_clinical_record_second_page.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 

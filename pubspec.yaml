@@ -15,6 +15,7 @@ dependencies:
   provider: ^6.0.5
   flutter_svg: ^1.1.6
   flutter_switch: ^0.3.2
+  timeline_tile: ^2.0.0
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
