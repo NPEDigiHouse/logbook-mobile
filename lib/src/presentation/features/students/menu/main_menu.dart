@@ -1,5 +1,5 @@
-import 'package:elogbook/src/presentation/features/menu/unit/unit_activity_page.dart';
-import 'package:elogbook/src/presentation/features/menu/widgets/custom_navigation_bar.dart';
+import 'package:elogbook/src/presentation/features/students/menu/unit/unit_activity_page.dart';
+import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class MainMenu extends StatefulWidget {

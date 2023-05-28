@@ -1,7 +1,7 @@
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/select_units/widgets/custom_bottom_alert.dart';
+import 'package:elogbook/src/presentation/features/students/select_units/widgets/custom_bottom_alert.dart';
 import 'package:flutter/material.dart';
 
 class SelectUnitCard extends StatelessWidget {

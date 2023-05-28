@@ -1,4 +1,4 @@
-import 'package:elogbook/src/presentation/features/login/login_page.dart';
+import 'package:elogbook/src/presentation/features/common/login/login_page.dart';
 import 'package:flutter/material.dart';
 
 class Wrapper extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/src/presentation/features/clinical_record/create_clinical_record_first_page.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/create_clinical_record_first_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/src/presentation/widgets/menu/list_menu_item.dart';
 
@@ -32,9 +32,7 @@ class ListMenuColumn extends StatelessWidget {
           iconPath: iconPaths[index],
           label: labels[index],
           description: descriptions[index],
-          onTap: index != 0
-              ? onTaps[index]
-              : () => context.navigateTo(CreateClinicalRecordFirstPage()),
+          onTap: onTaps[index],
         );
       },
       separatorBuilder: (context, index) {

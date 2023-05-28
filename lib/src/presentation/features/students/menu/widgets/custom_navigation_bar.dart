@@ -1,5 +1,5 @@
 import 'package:elogbook/core/helpers/app_size.dart';
-import 'package:elogbook/src/presentation/features/menu/widgets/nav_item.dart';
+import 'package:elogbook/src/presentation/features/students/menu/widgets/nav_item.dart';
 import 'package:flutter/material.dart';
 
 class CustomNavigationBar extends StatelessWidget {

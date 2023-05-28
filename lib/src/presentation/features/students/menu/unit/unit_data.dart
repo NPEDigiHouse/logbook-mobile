@@ -1,3 +1,6 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/create_clinical_record_first_page.dart';
+import 'package:elogbook/src/presentation/features/students/self_reflection/create_self_reflection_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 
@@ -33,6 +36,16 @@ final List<String> descriptions = List.generate(11, (_) {
   return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et.';
 });
 
-final List<VoidCallback> onTaps = List.generate(11, (_) => () {
-  
-});
+List<VoidCallback> onTaps(BuildContext context) {
+  List<VoidCallback> onTapList = [];
+  for (var i = 0; i < 11; i++) {
+    if (i == 0) {
+      onTapList.add(() => context.navigateTo(CreateClinicalRecordFirstPage()));
+    } else if (i == 2) {
+      onTapList.add(() => context.navigateTo(CreateSelfReflectionPage()));
+    } else {
+      onTapList.add(() {});
+    }
+  }
+  return onTapList;
+}

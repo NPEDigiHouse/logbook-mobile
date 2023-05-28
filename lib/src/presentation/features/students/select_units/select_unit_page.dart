@@ -1,7 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
-import 'package:elogbook/src/presentation/features/select_units/widgets/select_unit_card.dart';
+import 'package:elogbook/src/presentation/features/students/select_units/widgets/select_unit_card.dart';
 
 class SelectUnitPage extends StatefulWidget {
   const SelectUnitPage({super.key});

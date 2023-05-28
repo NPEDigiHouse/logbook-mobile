@@ -6,8 +6,8 @@ import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/menu/unit/unit_data.dart';
-import 'package:elogbook/src/presentation/features/select_units/select_unit_page.dart';
+import 'package:elogbook/src/presentation/features/students/menu/unit/unit_data.dart';
+import 'package:elogbook/src/presentation/features/students/select_units/select_unit_page.dart';
 import 'package:elogbook/src/presentation/widgets/glassmorphism.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
 import 'package:elogbook/src/presentation/widgets/menu/grid_menu_row.dart';
@@ -306,14 +306,14 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           itemColor: primaryColor,
           iconPaths: iconPaths.sublist(0, 4),
           labels: labels.sublist(0, 4),
-          onTaps: onTaps.sublist(0, 4),
+          onTaps: onTaps(context).sublist(0, 4),
         ),
         const SizedBox(height: 20),
         GridMenuRow(
           itemColor: variant2Color,
           iconPaths: iconPaths.sublist(4, 8),
           labels: labels.sublist(4, 8),
-          onTaps: onTaps.sublist(4, 8),
+          onTaps: onTaps(context).sublist(4, 8),
         ),
         const SizedBox(height: 20),
         GridMenuRow(
@@ -322,7 +322,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           itemColor: variant1Color,
           iconPaths: iconPaths.sublist(8, iconPaths.length),
           labels: labels.sublist(8, labels.length),
-          onTaps: onTaps.sublist(8, onTaps.length),
+          onTaps: onTaps(context).sublist(8, onTaps(context).length),
         ),
       ],
     );
@@ -337,7 +337,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           iconPaths: iconPaths.sublist(0, 4),
           labels: labels.sublist(0, 4),
           descriptions: descriptions.sublist(0, 4),
-          onTaps: onTaps.sublist(0, 4),
+          onTaps: onTaps(context).sublist(0, 4),
         ),
         Divider(
           height: 30,
@@ -349,7 +349,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           iconPaths: iconPaths.sublist(4, 8),
           labels: labels.sublist(4, 8),
           descriptions: descriptions.sublist(4, 8),
-          onTaps: onTaps.sublist(4, 8),
+          onTaps: onTaps(context).sublist(4, 8),
         ),
         Divider(
           height: 30,
@@ -362,7 +362,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           iconPaths: iconPaths.sublist(8, iconPaths.length),
           labels: labels.sublist(8, labels.length),
           descriptions: descriptions.sublist(8, descriptions.length),
-          onTaps: onTaps.sublist(8, onTaps.length),
+          onTaps: onTaps(context).sublist(8, onTaps(context).length),
         ),
       ],
     );
