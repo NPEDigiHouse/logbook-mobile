@@ -1,11 +1,10 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/list_cst_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/list_sgl_page.dart';
-import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
+import 'package:elogbook/src/presentation/widgets/header/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -36,17 +35,7 @@ class _SglCstHomePageState extends State<SglCstHomePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Unit',
-                    style: textTheme.titleLarge?.copyWith(color: primaryColor),
-                  ),
-                  Text(
-                    'Obstetrics and Gynecology',
-                    style: textTheme.titleSmall?.copyWith(
-                      color: secondaryTextColor,
-                      height: 1,
-                    ),
-                  ),
+                  UnitHeader(),
                   SizedBox(
                     height: 32,
                   ),

@@ -1,7 +1,7 @@
 name: elogbook
 description: A new Flutter project.
 
-publish_to: "none" 
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -16,6 +16,7 @@ dependencies:
   flutter_svg: ^1.1.6
   flutter_switch: ^0.3.2
   timeline_tile: ^2.0.0
+  sleek_circular_slider: ^2.0.1
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
