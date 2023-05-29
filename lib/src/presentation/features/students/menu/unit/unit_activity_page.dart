@@ -41,7 +41,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      slivers: [
+      slivers: <Widget>[
         MainAppBar(),
         SliverFillRemaining(
           child: SingleChildScrollView(
