@@ -1,7 +1,5 @@
-import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/create_clinical_record_first_page.dart';
 import 'package:flutter/material.dart';
-import 'package:elogbook/src/presentation/widgets/menu/list_menu_item.dart';
+import 'package:elogbook/src/presentation/features/students/menu/widgets/list_menu_item.dart';
 
 class ListMenuColumn extends StatelessWidget {
   final int length;
@@ -24,6 +22,7 @@ class ListMenuColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      padding: const EdgeInsets.all(0),
       primary: false,
       shrinkWrap: true,
       itemBuilder: (context, index) {

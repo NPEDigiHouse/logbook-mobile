@@ -7,12 +7,12 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/unit/unit_data.dart';
+import 'package:elogbook/src/presentation/features/students/menu/widgets/grid_menu_row.dart';
+import 'package:elogbook/src/presentation/features/students/menu/widgets/list_menu_column.dart';
+import 'package:elogbook/src/presentation/features/students/menu/widgets/report_expansion_tile.dart';
 import 'package:elogbook/src/presentation/features/students/select_units/select_unit_page.dart';
 import 'package:elogbook/src/presentation/widgets/glassmorphism.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
-import 'package:elogbook/src/presentation/widgets/menu/grid_menu_row.dart';
-import 'package:elogbook/src/presentation/widgets/menu/list_menu_column.dart';
-import 'package:elogbook/src/presentation/widgets/menu/report_expansion_tile.dart';
 
 class UnitActivityPage extends StatefulWidget {
   const UnitActivityPage({super.key});
@@ -41,7 +41,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      slivers: [
+      slivers: <Widget>[
         MainAppBar(),
         SliverFillRemaining(
           child: SingleChildScrollView(
@@ -317,8 +317,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
         ),
         const SizedBox(height: 20),
         GridMenuRow(
-          length: 3,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          length: 1,
           itemColor: variant1Color,
           iconPaths: iconPaths.sublist(8, iconPaths.length),
           labels: labels.sublist(8, labels.length),
@@ -357,7 +356,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           color: Color(0xFFEFF0F9),
         ),
         ListMenuColumn(
-          length: 3,
+          length: 1,
           itemColor: variant1Color,
           iconPaths: iconPaths.sublist(8, iconPaths.length),
           labels: labels.sublist(8, labels.length),
