@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
-import 'package:elogbook/src/presentation/widgets/menu/grid_menu_item.dart';
+import 'package:elogbook/src/presentation/features/students/menu/widgets/grid_menu_item.dart';
 
 class GridMenuRow extends StatelessWidget {
   final int length;

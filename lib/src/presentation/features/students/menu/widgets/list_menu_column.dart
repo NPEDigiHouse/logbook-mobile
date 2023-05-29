@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:elogbook/src/presentation/widgets/menu/list_menu_item.dart';
+import 'package:elogbook/src/presentation/features/students/menu/widgets/list_menu_item.dart';
 
 class ListMenuColumn extends StatelessWidget {
   final int length;

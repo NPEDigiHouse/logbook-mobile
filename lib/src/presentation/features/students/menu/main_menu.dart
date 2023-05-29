@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:elogbook/src/presentation/features/students/menu/global/global_activity_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/unit/unit_activity_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
-import 'package:flutter/material.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -11,9 +12,10 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   final ValueNotifier<int> _selectedIndex = new ValueNotifier(0);
+
   final _listPage = [
     UnitActivityPage(),
-    Container(),
+    GlobalActivityPage(),
     Container(),
     Container(),
   ];
@@ -21,20 +23,23 @@ class _MainMenuState extends State<MainMenu> {
   @override
   void dispose() {
     _selectedIndex.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: _selectedIndex,
-        builder: (context, val, _) {
-          return Scaffold(
-              body: _listPage[val],
-              bottomNavigationBar: CustomNavigationBar(
-                selectedIndex: _selectedIndex,
-                val: val,
-              ));
-        });
+      valueListenable: _selectedIndex,
+      builder: (context, val, _) {
+        return Scaffold(
+          body: _listPage[val],
+          bottomNavigationBar: CustomNavigationBar(
+            selectedIndex: _selectedIndex,
+            val: val,
+          ),
+        );
+      },
+    );
   }
 }
