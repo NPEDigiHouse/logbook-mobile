@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
@@ -9,6 +8,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/unit/unit_data.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/grid_menu_row.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/list_menu_column.dart';
+import 'package:elogbook/src/presentation/features/students/menu/widgets/menu_switch.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/report_expansion_tile.dart';
 import 'package:elogbook/src/presentation/features/students/select_units/select_unit_page.dart';
 import 'package:elogbook/src/presentation/widgets/glassmorphism.dart';
@@ -240,38 +240,14 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                   ],
                 ),
                 const SizedBox(height: 28),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'Menu',
-                      style: textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: isList,
-                      builder: (context, isList, child) {
-                        return FlutterSwitch(
-                          value: isList,
-                          width: 48,
-                          height: 32,
-                          activeColor: Color(0xFF1C1B1F).withOpacity(.1),
-                          inactiveColor: Color(0xFF1C1B1F).withOpacity(.1),
-                          toggleColor: scaffoldBackgroundColor,
-                          activeIcon: Icon(
-                            Icons.view_list_rounded,
-                            color: primaryColor,
-                          ),
-                          inactiveIcon: Icon(
-                            Icons.grid_view_rounded,
-                            color: primaryColor,
-                          ),
-                          onToggle: (value) => this.isList.value = value,
-                        );
-                      },
-                    ),
-                  ],
+                ValueListenableBuilder(
+                  valueListenable: isList,
+                  builder: (context, isList, child) {
+                    return MenuSwitch(
+                      value: isList,
+                      onToggle: (value) => this.isList.value = value,
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
                 ValueListenableBuilder(
@@ -308,14 +284,14 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           labels: labels.sublist(0, 4),
           onTaps: onTaps(context).sublist(0, 4),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 12),
         GridMenuRow(
           itemColor: variant2Color,
           iconPaths: iconPaths.sublist(4, 8),
           labels: labels.sublist(4, 8),
           onTaps: onTaps(context).sublist(4, 8),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 12),
         GridMenuRow(
           length: 1,
           itemColor: variant1Color,

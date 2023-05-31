@@ -5,16 +5,14 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 
-class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
+class MainAppBar extends StatelessWidget {
   const MainAppBar({super.key});
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight + 1);
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       elevation: 0,
+      pinned: true,
       backgroundColor: scaffoldBackgroundColor,
       surfaceTintColor: scaffoldBackgroundColor,
       title: const Text('E-Logbook'),
