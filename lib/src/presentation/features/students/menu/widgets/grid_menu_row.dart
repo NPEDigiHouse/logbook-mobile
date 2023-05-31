@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/grid_menu_item.dart';
 
 class GridMenuRow extends StatelessWidget {
   final int length;
-  final MainAxisAlignment mainAxisAlignment;
   final Color itemColor;
   final List<String> iconPaths;
   final List<String> labels;
@@ -13,7 +11,6 @@ class GridMenuRow extends StatelessWidget {
   const GridMenuRow({
     super.key,
     this.length = 4,
-    this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
     required this.itemColor,
     required this.iconPaths,
     required this.labels,
@@ -22,22 +19,24 @@ class GridMenuRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = AppSize.getAppWidth(context);
-
-    final itemSize = (width / 4) - 22;
-
-    return Row(
-      mainAxisAlignment: mainAxisAlignment,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: List<GridMenuItem>.generate(length, (i) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(0),
+      primary: false,
+      shrinkWrap: true,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        crossAxisSpacing: 16,
+        childAspectRatio: 0.6,
+      ),
+      itemBuilder: (context, index) {
         return GridMenuItem(
-          size: itemSize,
           color: itemColor,
-          iconPath: iconPaths[i],
-          label: labels[i],
-          onTap: onTaps[i],
+          iconPath: iconPaths[index],
+          label: labels[index],
+          onTap: onTaps[index],
         );
-      }),
+      },
+      itemCount: length,
     );
   }
 }

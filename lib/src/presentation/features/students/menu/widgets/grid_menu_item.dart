@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 
 class GridMenuItem extends StatelessWidget {
-  final double size;
   final Color color;
   final String iconPath;
   final String label;
@@ -11,7 +10,6 @@ class GridMenuItem extends StatelessWidget {
 
   const GridMenuItem({
     super.key,
-    required this.size,
     required this.color,
     required this.iconPath,
     required this.label,
@@ -31,14 +29,14 @@ class GridMenuItem extends StatelessWidget {
               child: InkWell(
                 onTap: onTap,
                 child: Ink(
-                  width: size,
-                  height: size,
+                  width: 68,
+                  height: 68,
                   color: color.withOpacity(.1),
                   child: Center(
                     child: SvgPicture.asset(
                       iconPath,
                       color: color,
-                      width: size / 2,
+                      width: 32,
                     ),
                   ),
                 ),
@@ -46,8 +44,8 @@ class GridMenuItem extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          SizedBox(
-            width: size - 8,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Center(
               child: Text(
                 label,

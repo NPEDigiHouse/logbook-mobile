@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
+import 'package:elogbook/core/styles/color_palette.dart';
+
+final List<Color> colors = [
+  primaryColor,
+  variant2Color,
+  variant1Color,
+  errorColor,
+];
 
 final List<String> iconPaths = [
   AssetPath.getIcon('biotech_rounded.svg'),
@@ -10,7 +18,6 @@ final List<String> iconPaths = [
 
 final List<String> labels = [
   'Scientific Session',
-  'Self Reflection',
   'Professional Activity',
   'Thesis',
   'Self reflection',
