@@ -17,20 +17,20 @@ class GlobalActivityPage extends StatefulWidget {
 }
 
 class _GlobalActivityPageState extends State<GlobalActivityPage> {
-  late final ValueNotifier<bool> isList;
+  late final ValueNotifier<bool> _isList;
 
   @override
   void initState() {
     super.initState();
 
-    isList = ValueNotifier(false);
+    _isList = ValueNotifier(false);
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    isList.dispose();
+    _isList.dispose();
   }
 
   @override
@@ -105,20 +105,20 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
                 ),
                 const SizedBox(height: 28),
                 ValueListenableBuilder(
-                  valueListenable: isList,
+                  valueListenable: _isList,
                   builder: (context, isList, child) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: MenuSwitch(
                         value: isList,
-                        onToggle: (value) => this.isList.value = value,
+                        onToggle: (value) => _isList.value = value,
                       ),
                     );
                   },
                 ),
                 const SizedBox(height: 16),
                 ValueListenableBuilder(
-                  valueListenable: isList,
+                  valueListenable: _isList,
                   builder: (context, isList, child) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),

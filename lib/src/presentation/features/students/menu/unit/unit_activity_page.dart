@@ -22,20 +22,20 @@ class UnitActivityPage extends StatefulWidget {
 }
 
 class _UnitActivityPageState extends State<UnitActivityPage> {
-  late final ValueNotifier<bool> isList;
+  late final ValueNotifier<bool> _isList;
 
   @override
   void initState() {
     super.initState();
 
-    isList = ValueNotifier(false);
+    _isList = ValueNotifier(false);
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    isList.dispose();
+    _isList.dispose();
   }
 
   @override
@@ -241,17 +241,17 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                 ),
                 const SizedBox(height: 28),
                 ValueListenableBuilder(
-                  valueListenable: isList,
+                  valueListenable: _isList,
                   builder: (context, isList, child) {
                     return MenuSwitch(
                       value: isList,
-                      onToggle: (value) => this.isList.value = value,
+                      onToggle: (value) => _isList.value = value,
                     );
                   },
                 ),
                 const SizedBox(height: 16),
                 ValueListenableBuilder(
-                  valueListenable: isList,
+                  valueListenable: _isList,
                   builder: (context, isList, child) {
                     return AnimatedSwitcher(
                       duration: const Duration(milliseconds: 150),
