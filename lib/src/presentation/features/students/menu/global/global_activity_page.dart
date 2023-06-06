@@ -64,21 +64,14 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
                         left: 0,
                         top: 0,
                         child: SvgPicture.asset(
-                          AssetPath.getVector('ellipse_2.svg'),
-                        ),
-                      ),
-                      Positioned(
-                        left: 0,
-                        top: 0,
-                        child: SvgPicture.asset(
-                          AssetPath.getVector('half_ellipse2.svg'),
+                          AssetPath.getVector('circle_bg1.svg'),
                         ),
                       ),
                       Positioned(
                         right: 0,
                         bottom: 0,
                         child: SvgPicture.asset(
-                          AssetPath.getVector('half_ellipse3.svg'),
+                          AssetPath.getVector('half_ellipse2.svg'),
                         ),
                       ),
                       Padding(

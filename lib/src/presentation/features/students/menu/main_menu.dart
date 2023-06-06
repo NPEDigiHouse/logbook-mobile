@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:elogbook/src/presentation/features/students/menu/global/global_activity_page.dart';
+import 'package:elogbook/src/presentation/features/students/menu/history/history_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/unit/unit_activity_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
 
@@ -16,7 +17,7 @@ class _MainMenuState extends State<MainMenu> {
   final _listPage = [
     UnitActivityPage(),
     GlobalActivityPage(),
-    Container(),
+    HistoryPage(),
     Container(),
   ];
 
