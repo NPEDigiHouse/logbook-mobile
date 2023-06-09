@@ -102,7 +102,7 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
           ];
         },
-        body: Placeholder(),
+        body: const SizedBox.expand(),
       ),
     );
   }
@@ -150,7 +150,6 @@ class _HistoryPageState extends State<HistoryPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 checkmarkColor: primaryColor,
-                backgroundColor: scaffoldBackgroundColor,
                 selectedColor: primaryColor.withOpacity(.2),
                 selected: selected,
                 onSelected: (_) => _selectedMenu.value = _menuList[index],

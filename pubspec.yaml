@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   flutter_svg: ^1.1.6
   flutter_switch: ^0.3.2
+  grouped_list: ^5.1.2
   provider: ^6.0.5
   sleek_circular_slider: ^2.0.1
   timeline_tile: ^2.0.0
