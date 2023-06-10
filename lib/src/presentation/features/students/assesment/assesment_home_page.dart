@@ -1,4 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/student_scientific_assesment_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_test_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/assesment_menu_card.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/final_grade_card.dart';
@@ -40,7 +41,8 @@ class AssesmentHomePage extends StatelessWidget {
                 AssementMenuCard(
                   iconPath: 'icon_scientific_assignment.svg',
                   title: 'Scientific Assignment Grade',
-                  onTap: () {},
+                  onTap: () =>
+                      context.navigateTo(StudentScientificAssessmentGrade()),
                 ),
               ],
             ),
