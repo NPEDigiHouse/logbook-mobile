@@ -16,6 +16,7 @@ dependencies:
   flutter_switch: ^0.3.2
   provider: ^6.0.5
   sleek_circular_slider: ^2.0.1
+  semicircle_indicator: ^1.1.1
   timeline_tile: ^2.0.0
 
 dev_dependencies:
