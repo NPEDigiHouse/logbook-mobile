@@ -2,10 +2,10 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/top_stat_card.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
-import 'package:semicircle_indicator/semicircle_indicator.dart';
 
 class StudentTestGrade extends StatelessWidget {
   const StudentTestGrade({super.key});
@@ -25,7 +25,10 @@ class StudentTestGrade extends StatelessWidget {
               height: 16,
             ),
             TitleAssesmentCard(),
-            TopStatCard(),
+            TopStatCard(
+              title: 'Total Grades',
+              score: 1100,
+            ),
             ...[
               TestGradeScoreCard(caseName: 'Identity and Amnesia', score: 91),
               TestGradeScoreCard(
@@ -117,77 +120,6 @@ class TestGradeScoreCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class TopStatCard extends StatelessWidget {
-  const TopStatCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: scaffoldBackgroundColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-              offset: Offset(0, 0),
-              spreadRadius: 0,
-              blurRadius: 6,
-              color: Color(0xFFD4D4D4).withOpacity(.25)),
-          BoxShadow(
-              offset: Offset(0, 4),
-              spreadRadius: 0,
-              blurRadius: 24,
-              color: Color(0xFFD4D4D4).withOpacity(.25)),
-        ],
-      ),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 12,
-          ),
-          Text(
-            'Test Grade',
-            style: textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          SectionDivider(),
-          SizedBox(
-            height: 12,
-          ),
-          SemicircularIndicator(
-            contain: true,
-            radius: 100,
-            strokeCap: StrokeCap.round,
-            color: primaryColor,
-            bottomPadding: 0,
-            backgroundColor: Color(0xFFB0EAFC),
-            child: Column(
-              children: [
-                Text('1120',
-                    style: textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )),
-                Text(
-                  'Very Good',
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: secondaryColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-        ],
       ),
     );
   }

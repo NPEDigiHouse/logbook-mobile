@@ -1,6 +1,8 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/student_final_grade_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,7 +16,7 @@ class FinalGradeCard extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return InkWellContainer(
-          onTap: () {},
+          onTap: () => context.navigateTo(StudentFinalGrade()),
           color: Color(0xFF219ABF),
           radius: 12,
           child: ClipRRect(
