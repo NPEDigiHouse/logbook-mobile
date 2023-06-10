@@ -19,6 +19,7 @@ dependencies:
   semicircle_indicator: ^1.1.1
   percent_indicator: ^4.2.3
   timeline_tile: ^2.0.0
+  pie_chart: ^5.3.2
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"

@@ -3,14 +3,11 @@ import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/title_assesment_card.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/top_stat_card.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:semicircle_indicator/semicircle_indicator.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class StudentWeeklyGrade extends StatelessWidget {
   const StudentWeeklyGrade({super.key});
