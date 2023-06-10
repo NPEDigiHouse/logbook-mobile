@@ -4,7 +4,6 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/title_assesment_card.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/top_stat_card.dart';
-import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 
