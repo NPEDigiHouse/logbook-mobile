@@ -17,20 +17,20 @@ class GlobalActivityPage extends StatefulWidget {
 }
 
 class _GlobalActivityPageState extends State<GlobalActivityPage> {
-  late final ValueNotifier<bool> isList;
+  late final ValueNotifier<bool> _isList;
 
   @override
   void initState() {
     super.initState();
 
-    isList = ValueNotifier(false);
+    _isList = ValueNotifier(false);
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    isList.dispose();
+    _isList.dispose();
   }
 
   @override
@@ -64,21 +64,14 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
                         left: 0,
                         top: 0,
                         child: SvgPicture.asset(
-                          AssetPath.getVector('ellipse_2.svg'),
-                        ),
-                      ),
-                      Positioned(
-                        left: 0,
-                        top: 0,
-                        child: SvgPicture.asset(
-                          AssetPath.getVector('half_ellipse2.svg'),
+                          AssetPath.getVector('circle_bg1.svg'),
                         ),
                       ),
                       Positioned(
                         right: 0,
                         bottom: 0,
                         child: SvgPicture.asset(
-                          AssetPath.getVector('half_ellipse3.svg'),
+                          AssetPath.getVector('half_ellipse2.svg'),
                         ),
                       ),
                       Padding(
@@ -112,20 +105,20 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
                 ),
                 const SizedBox(height: 28),
                 ValueListenableBuilder(
-                  valueListenable: isList,
+                  valueListenable: _isList,
                   builder: (context, isList, child) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: MenuSwitch(
                         value: isList,
-                        onToggle: (value) => this.isList.value = value,
+                        onToggle: (value) => _isList.value = value,
                       ),
                     );
                   },
                 ),
                 const SizedBox(height: 16),
                 ValueListenableBuilder(
-                  valueListenable: isList,
+                  valueListenable: _isList,
                   builder: (context, isList, child) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),

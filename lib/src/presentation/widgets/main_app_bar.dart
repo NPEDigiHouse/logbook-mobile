@@ -11,8 +11,9 @@ class MainAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      elevation: 0,
       pinned: true,
+      elevation: 0,
+      shadowColor: Colors.transparent,
       backgroundColor: scaffoldBackgroundColor,
       surfaceTintColor: scaffoldBackgroundColor,
       title: const Text('E-Logbook'),
