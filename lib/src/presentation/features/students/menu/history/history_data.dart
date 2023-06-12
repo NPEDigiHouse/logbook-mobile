@@ -55,19 +55,19 @@ final List<Activity> activities = [
   ),
   ClinicalRecord(
     isVerified: false,
-    date: DateTime(2023, 5, 6),
+    date: DateTime(2023, 6, 8),
     patient: 'Teodaryl E',
     hasAttachment: false,
   ),
   ClinicalRecord(
     isVerified: true,
-    date: DateTime(2023, 4, 20),
+    date: DateTime(2023, 5, 8),
     patient: 'Richard Enrico S',
     hasAttachment: false,
   ),
   ClinicalRecord(
     isVerified: false,
-    date: DateTime(2023, 2, 15),
+    date: DateTime(2023, 4, 8),
     patient: 'Yusuf Syam',
     hasAttachment: true,
   ),
@@ -83,12 +83,12 @@ final List<Activity> activities = [
   ),
   ScientificSession(
     isVerified: true,
-    date: DateTime(2023, 4, 20),
+    date: DateTime(2023, 5, 8),
     sessionType: 'Group Discussion',
   ),
   ScientificSession(
     isVerified: false,
-    date: DateTime(2023, 5, 6),
+    date: DateTime(2023, 1, 8),
     sessionType: 'Journal Reading',
   ),
 ];

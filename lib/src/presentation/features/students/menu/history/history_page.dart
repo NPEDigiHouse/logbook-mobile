@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:grouped_list/sliver_grouped_list.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/students/menu/history/history_data.dart';
 import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -42,74 +46,251 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: NestedScrollView(
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
-            SliverToBoxAdapter(
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    right: 16,
-                    top: 0,
-                    child: SvgPicture.asset(
-                      AssetPath.getVector('circle_bg2.svg'),
+    return NestedScrollView(
+      floatHeaderSlivers: true,
+      headerSliverBuilder: (context, innerBoxIsScrolled) {
+        return <Widget>[
+          SliverAppBar(
+            floating: true,
+            automaticallyImplyLeading: false,
+            toolbarHeight: kToolbarHeight + 132,
+            backgroundColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarIconBrightness: Brightness.dark,
+            ),
+            flexibleSpace: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                buildTitleSection(),
+                buildSearchField(),
+                buildChoiceChips(),
+              ],
+            ),
+          ),
+        ];
+      },
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverGroupedListView<Activity, DateTime>(
+            elements: activities,
+            groupBy: (activity) => activity.date,
+            groupComparator: (date1, date2) => date1.compareTo(date2) * -1,
+            itemBuilder: (context, activity) {
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 20,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 32, 8, 0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(
-                          'History',
-                          style: textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: primaryColor,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            width: 68,
+                            height: 68,
+                            color: primaryColor.withOpacity(.1),
+                            child: Center(
+                              child: SvgPicture.asset(
+                                activity.iconPath,
+                                color: primaryColor,
+                                width: 32,
+                              ),
+                            ),
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.filter_list_rounded,
-                            color: primaryColor,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    activity.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  if (activity.isVerified)
+                                    Icon(
+                                      Icons.verified_rounded,
+                                      size: 16,
+                                      color: primaryColor,
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  style: textTheme.bodySmall?.copyWith(
+                                    color: secondaryTextColor,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: 'Supervisor:\t',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    TextSpan(text: activity.supervisor),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  style: textTheme.bodySmall?.copyWith(
+                                    color: secondaryTextColor,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: activity is ScientificSession
+                                          ? 'Session:\t'
+                                          : 'Patient:\t',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: activity is ScientificSession
+                                          ? activity.sessionType
+                                          : (activity as ClinicalRecord)
+                                              .patient,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              if (activity is ClinicalRecord)
+                                if (activity.hasAttachment)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                      horizontal: 12,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: dividerColor),
+                                      borderRadius: BorderRadius.circular(99),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.attachment_rounded,
+                                          size: 14,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'attachment_file.pdf',
+                                          style: textTheme.labelSmall?.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: 0,
+                                            height: 0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                            ],
                           ),
-                          tooltip: 'Filter',
                         ),
                       ],
                     ),
-                  )
+                  ),
+                ),
+              );
+            },
+            groupSeparatorBuilder: (date) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Divider(
+                    height: 6,
+                    thickness: 6,
+                    color: onDisableColor,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                    child: Text(
+                      timeago.format(date),
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ],
-              ),
+              );
+            },
+            separator: Divider(
+              height: 1,
+              thickness: 1,
+              indent: 24,
+              endIndent: 24,
+              color: Theme.of(context).dividerColor.withOpacity(.5),
             ),
-            SliverAppBar(
-              elevation: 0,
-              floating: true,
-              automaticallyImplyLeading: false,
-              toolbarHeight: kToolbarHeight + 75,
-              backgroundColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
-              flexibleSpace: SizedBox(
-                child: Column(
-                  children: <Widget>[
-                    buildSearchField(),
-                    buildChoiceChips(),
-                  ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Stack buildTitleSection() {
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          right: 16,
+          top: 0,
+          child: SvgPicture.asset(
+            AssetPath.getVector('circle_bg2.svg'),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 32, 8, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'History',
+                style: textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: primaryColor,
                 ),
               ),
-            ),
-          ];
-        },
-        body: const SizedBox.expand(),
-      ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.filter_list_rounded,
+                  color: primaryColor,
+                ),
+                tooltip: 'Filter',
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   Padding buildSearchField() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 6),
+      padding: const EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 20,
+      ),
       child: ValueListenableBuilder(
         valueListenable: _query,
         builder: (context, query, child) {
@@ -126,7 +307,7 @@ class _HistoryPageState extends State<HistoryPage> {
     return SizedBox(
       height: 64,
       child: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         scrollDirection: Axis.horizontal,
         itemCount: _menuList.length,
         itemBuilder: (context, index) {
