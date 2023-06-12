@@ -42,9 +42,9 @@ List<VoidCallback> onTaps(BuildContext context) {
       onTapList.add(() => context.navigateTo(CreateClinicalRecordFirstPage()));
     } else if (i == 2) {
       onTapList.add(() => context.navigateTo(CreateSelfReflectionPage()));
-    } else if (i == 7) {
+    } else if (i == 5) {
       onTapList.add(() => context.navigateTo(SglCstHomePage()));
-    } else if (i == 10) {
+    } else if (i == 8) {
       onTapList.add(() => context.navigateTo(AssesmentHomePage()));
     } else {
       onTapList.add(() {});
