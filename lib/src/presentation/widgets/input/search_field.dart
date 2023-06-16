@@ -56,7 +56,7 @@ class _SearchFieldState extends State<SearchField> {
           hintText: 'Search',
           hintStyle: textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.w400,
-            color: Color(0xFF6B7280),
+            color: const Color(0xFF6B7280),
             letterSpacing: 0,
             height: 1.2,
           ),

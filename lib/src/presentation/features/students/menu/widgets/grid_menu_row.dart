@@ -23,7 +23,7 @@ class GridMenuRow extends StatelessWidget {
       padding: const EdgeInsets.all(0),
       primary: false,
       shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         crossAxisSpacing: 16,
         childAspectRatio: 0.6,

@@ -28,14 +28,14 @@ class MenuSwitch extends StatelessWidget {
           value: value,
           width: 48,
           height: 32,
-          activeColor: Color(0xFF1C1B1F).withOpacity(.1),
-          inactiveColor: Color(0xFF1C1B1F).withOpacity(.1),
+          activeColor: const Color(0xFF1C1B1F).withOpacity(.1),
+          inactiveColor: const Color(0xFF1C1B1F).withOpacity(.1),
           toggleColor: scaffoldBackgroundColor,
-          activeIcon: Icon(
+          activeIcon: const Icon(
             Icons.view_list_rounded,
             color: primaryColor,
           ),
-          inactiveIcon: Icon(
+          inactiveIcon: const Icon(
             Icons.grid_view_rounded,
             color: primaryColor,
           ),

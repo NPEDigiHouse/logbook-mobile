@@ -37,7 +37,7 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: <Widget>[
-        MainAppBar(),
+        const MainAppBar(),
         SliverFillRemaining(
           child: SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 24),
@@ -48,7 +48,7 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: primaryColor,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       bottomRight: Radius.circular(99),
                     ),
                     boxShadow: <BoxShadow>[
@@ -149,7 +149,7 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
       padding: const EdgeInsets.all(0),
       primary: false,
       shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         crossAxisSpacing: 16,
         childAspectRatio: 0.6,
@@ -181,7 +181,7 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
         );
       },
       separatorBuilder: (context, index) {
-        return Divider(
+        return const Divider(
           height: 30,
           thickness: 1,
           color: Color(0xFFEFF0F9),

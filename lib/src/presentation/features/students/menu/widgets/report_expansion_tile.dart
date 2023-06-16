@@ -42,7 +42,7 @@ class ReportExpansionTile extends StatelessWidget {
         child: ExpansionTile(
           iconColor: primaryTextColor,
           collapsedIconColor: primaryTextColor,
-          tilePadding: EdgeInsets.only(
+          tilePadding: const EdgeInsets.only(
             left: 6,
             right: 10,
           ),
@@ -71,7 +71,7 @@ class ReportExpansionTile extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               if (isVerified)
-                Icon(
+                const Icon(
                   Icons.verified_rounded,
                   size: 16,
                   color: primaryColor,
