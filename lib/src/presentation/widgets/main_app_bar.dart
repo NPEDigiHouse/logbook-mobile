@@ -35,7 +35,7 @@ class MainAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(right: 6),
           child: IconButton(
             onPressed: () => context.back(),
-            icon: Icon(
+            icon: const Icon(
               Icons.logout_rounded,
               color: primaryColor,
               size: 30,
@@ -45,10 +45,10 @@ class MainAppBar extends StatelessWidget {
         ),
       ],
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(1),
+        preferredSize: const Size.fromHeight(1),
         child: Container(
           height: 1,
-          color: Color(0xFFE8E4E4),
+          color: const Color(0xFFE8E4E4),
         ),
       ),
     );

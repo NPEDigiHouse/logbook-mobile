@@ -35,7 +35,7 @@ class ListMenuColumn extends StatelessWidget {
         );
       },
       separatorBuilder: (context, index) {
-        return Divider(
+        return const Divider(
           height: 30,
           thickness: 1,
           color: Color(0xFFEFF0F9),

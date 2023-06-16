@@ -42,7 +42,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: <Widget>[
-        MainAppBar(),
+        const MainAppBar(),
         SliverFillRemaining(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(
@@ -86,7 +86,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                         left: 0,
                         bottom: 0,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(16),
                           ),
                           child: SvgPicture.asset(
@@ -109,7 +109,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
+                            const Text(
                               'Current Unit',
                               style: TextStyle(color: backgroundColor),
                             ),
@@ -126,7 +126,9 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                             ),
                             const SizedBox(height: 16),
                             InkWell(
-                              onTap: () => context.navigateTo(SelectUnitPage()),
+                              onTap: () {
+                                context.navigateTo(const SelectUnitPage());
+                              },
                               child: Glassmorphism(
                                 blur: 5,
                                 opacity: .15,
@@ -139,7 +141,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      Icon(
+                                      const Icon(
                                         Icons.change_circle_outlined,
                                         size: 20,
                                         color: backgroundColor,
@@ -180,7 +182,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
+                          const Text(
                             'Status',
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
@@ -203,7 +205,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text(
+                          const Text(
                             'Report time',
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
@@ -234,7 +236,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                           AssetPath.getIcon('send_alt_filled.svg'),
                           width: 20,
                         ),
-                        label: Text('Send Report'),
+                        label: const Text('Send Report'),
                       ),
                     ),
                   ],
@@ -276,7 +278,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
 
   Column buildItemGrid() {
     return Column(
-      key: ValueKey(1),
+      key: const ValueKey(1),
       children: <Widget>[
         GridMenuRow(
           itemColor: primaryColor,
@@ -305,7 +307,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
 
   Column buildItemList() {
     return Column(
-      key: ValueKey(2),
+      key: const ValueKey(2),
       children: <Widget>[
         ListMenuColumn(
           itemColor: primaryColor,
@@ -314,7 +316,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           descriptions: descriptions.sublist(0, 4),
           onTaps: onTaps(context).sublist(0, 4),
         ),
-        Divider(
+        const Divider(
           height: 30,
           thickness: 1,
           color: Color(0xFFEFF0F9),
@@ -326,7 +328,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           descriptions: descriptions.sublist(4, 8),
           onTaps: onTaps(context).sublist(4, 8),
         ),
-        Divider(
+        const Divider(
           height: 30,
           thickness: 1,
           color: Color(0xFFEFF0F9),

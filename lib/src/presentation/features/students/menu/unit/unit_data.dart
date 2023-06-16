@@ -39,13 +39,14 @@ List<VoidCallback> onTaps(BuildContext context) {
 
   for (var i = 0; i < 9; i++) {
     if (i == 0) {
-      onTapList.add(() => context.navigateTo(CreateClinicalRecordFirstPage()));
+      onTapList
+          .add(() => context.navigateTo(const CreateClinicalRecordFirstPage()));
     } else if (i == 2) {
-      onTapList.add(() => context.navigateTo(CreateSelfReflectionPage()));
+      onTapList.add(() => context.navigateTo(const CreateSelfReflectionPage()));
     } else if (i == 5) {
-      onTapList.add(() => context.navigateTo(SglCstHomePage()));
+      onTapList.add(() => context.navigateTo(const SglCstHomePage()));
     } else if (i == 8) {
-      onTapList.add(() => context.navigateTo(AssesmentHomePage()));
+      onTapList.add(() => context.navigateTo(const AssesmentHomePage()));
     } else {
       onTapList.add(() {});
     }

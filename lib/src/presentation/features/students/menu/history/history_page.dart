@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grouped_list/sliver_grouped_list.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_data.dart';
+import 'package:elogbook/src/presentation/features/students/menu/history/history_filter_bottom_sheet.dart';
 import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -87,6 +89,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       horizontal: 20,
                     ),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
@@ -122,7 +125,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   ),
                                   const SizedBox(width: 4),
                                   if (activity.isVerified)
-                                    Icon(
+                                    const Icon(
                                       Icons.verified_rounded,
                                       size: 16,
                                       color: primaryColor,
@@ -138,9 +141,9 @@ class _HistoryPageState extends State<HistoryPage> {
                                     color: secondaryTextColor,
                                   ),
                                   children: <TextSpan>[
-                                    TextSpan(
+                                    const TextSpan(
                                       text: 'Supervisor:\t',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -189,7 +192,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-                                        Icon(
+                                        const Icon(
                                           Icons.attachment_rounded,
                                           size: 14,
                                         ),
@@ -235,12 +238,12 @@ class _HistoryPageState extends State<HistoryPage> {
                 ],
               );
             },
-            separator: Divider(
+            separator: const Divider(
               height: 1,
               thickness: 1,
-              indent: 24,
-              endIndent: 24,
-              color: Theme.of(context).dividerColor.withOpacity(.5),
+              indent: 20,
+              endIndent: 20,
+              color: Color(0xFFEFF0F9),
             ),
           ),
         ],
@@ -271,8 +274,12 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
               ),
               IconButton(
-                onPressed: () {},
-                icon: Icon(
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => const HistoryFilterBottomSheet(),
+                ),
+                icon: const Icon(
                   Icons.filter_list_rounded,
                   color: primaryColor,
                 ),

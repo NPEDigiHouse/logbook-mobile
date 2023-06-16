@@ -31,11 +31,11 @@ final appBarTheme = AppBarTheme(
     ),
     elevation: 2,
     shadowColor: Colors.black38,
-    iconTheme: IconThemeData(
+    iconTheme: const IconThemeData(
       color: primaryColor,
     ),
     centerTitle: true,
-    actionsIconTheme: IconThemeData(
+    actionsIconTheme: const IconThemeData(
       color: primaryColor,
     ));
 
@@ -55,7 +55,7 @@ final filledButtonTheme = FilledButtonThemeData(
 final outlinedButtonTheme = OutlinedButtonThemeData(
   style: OutlinedButton.styleFrom(
     foregroundColor: primaryColor,
-    side: const BorderSide(color: primaryColor),
+    side: const BorderSide(color: onFormDisableColor),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(100),
     ),
@@ -75,13 +75,13 @@ final inputDecorationTheme = InputDecorationTheme(
   floatingLabelBehavior: FloatingLabelBehavior.auto,
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(14),
-    borderSide: BorderSide(
+    borderSide: const BorderSide(
       color: onFormDisableColor,
     ),
   ),
   disabledBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(14),
-    borderSide: BorderSide(
+    borderSide: const BorderSide(
       color: onFormDisableColor,
     ),
   ),

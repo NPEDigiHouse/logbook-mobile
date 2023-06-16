@@ -18,8 +18,8 @@ linter:
     container_to_sizedbox: # aturan custom
       enabled: true
       severity: warning
-      description: 'Prefer using SizedBox instead of Container when having width and height only.'
-      include: '**/*.dart'
+      description: "Prefer using SizedBox instead of Container when having width and height only."
+      include: "**/*.dart"
       exclude: []
       patterns:
         - type: InstanceCreationExpression
@@ -33,4 +33,4 @@ linter:
                   name: height
                   value: Any
           apply_fix: true
-          replacement: 'SizedBox(width: {{width}}, height: {{height}})'
+          replacement: "SizedBox(width: {{width}}, height: {{height}})"
