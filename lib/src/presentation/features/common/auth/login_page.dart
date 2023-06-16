@@ -3,14 +3,21 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/common/login/register_page.dart';
+import 'package:elogbook/src/presentation/features/common/auth/register_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/main_menu.dart';
 import 'package:elogbook/src/presentation/widgets/auth/auth_header.dart';
 import 'package:elogbook/src/presentation/widgets/auth/input_password.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +48,7 @@ class LoginPage extends StatelessWidget {
                           height: 20,
                         ),
                         TextField(
+                          controller: emailController,
                           decoration: InputDecoration(
                             label: Text('Email'),
                           ),
@@ -48,7 +56,10 @@ class LoginPage extends StatelessWidget {
                         SizedBox(
                           height: 16,
                         ),
-                        InputPassword(label: 'Passsword'),
+                        InputPassword(
+                          controller: passwordController,
+                          label: 'Passsword',
+                        ),
                         SizedBox(
                           height: 4,
                         ),
