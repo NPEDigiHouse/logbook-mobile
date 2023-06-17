@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:elogbook/src/data/datasources/auth_datasource.dart';
+import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource.dart';
 import 'package:elogbook/src/data/repositories/auth_repository_impl.dart';
 import 'package:elogbook/src/domain/repositories/auth_repository.dart';
-import 'package:elogbook/src/domain/usecases/auth_usecases/auth_usecase.dart';
+import 'package:elogbook/src/domain/usecases/auth_usecases/is_sign_in_usecase.dart';
+import 'package:elogbook/src/domain/usecases/auth_usecases/login_usecase.dart';
+import 'package:elogbook/src/domain/usecases/auth_usecases/register_usecase.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:get_it/get_it.dart';
 
@@ -28,6 +31,7 @@ void _injectDatasource() {
   locator.registerLazySingleton<AuthDataSource>(
     () => AuthDataSourceImpl(
       dio: locator(),
+      preferenceHandler: locator(),
     ),
   );
 }
@@ -39,15 +43,31 @@ void _injectUsecases() {
       repository: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    () => LoginUsecase(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => IsSignInUsecase(
+      repository: locator(),
+    ),
+  );
 }
 
 void _injectStateManagement() {
   //Auth
   locator.registerFactory(
-    () => AuthCubit(registerUsecase: locator()),
+    () => AuthCubit(
+      registerUsecase: locator(),
+      loginUsecase: locator(),
+      isSignInUsecase: locator(),
+    ),
   );
 }
 
 void _injectExternalResources() {
   locator.registerLazySingleton(() => Dio());
+  locator.registerLazySingleton<AuthPreferenceHandler>(
+      () => AuthPreferenceHandler());
 }

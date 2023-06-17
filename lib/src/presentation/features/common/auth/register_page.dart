@@ -3,6 +3,7 @@ import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
 import 'package:elogbook/src/presentation/helpers/input_helper.dart';
 import 'package:elogbook/src/presentation/widgets/auth/auth_header.dart';
 import 'package:elogbook/src/presentation/widgets/auth/input_password.dart';
@@ -82,15 +83,18 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
-      if (state is Success) {
+      if (state is RegisterSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Register successful')),
         );
+        state = Initial();
+        context.replace(LoginPage());
       }
       if (state is Failed) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Register failed')),
         );
+        state = Initial();
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -185,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     Center(child: Text('Already have an account?')),
                     Center(
                       child: InkWell(
-                        onTap: () => context.back(),
+                        onTap: () => context.replace(LoginPage()),
                         child: Text(
                           'Login here',
                           style: textTheme.bodyMedium?.copyWith(

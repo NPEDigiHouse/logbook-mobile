@@ -16,4 +16,10 @@ class Failed extends AuthState {
   Failed({required this.message});
 }
 
-class Success extends AuthState {}
+class RegisterSuccess extends AuthState {}
+
+class LoginSuccess extends AuthState {}
+
+class CredentialNotExist extends AuthState {}
+
+class CredentialExist extends AuthState {}

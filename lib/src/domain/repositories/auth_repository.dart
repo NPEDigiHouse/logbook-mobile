@@ -8,4 +8,11 @@ abstract class AuthRepository {
       required String password,
       String? fullname,
       required String email});
+
+  Future<Either<Failure, void>> login({
+    required String username,
+    required String password,
+  });
+
+  Future<Either<Failure, bool>> isSignIn();
 }

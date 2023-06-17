@@ -10,12 +10,24 @@ abstract class Failure extends Equatable {
   List<Object> get props => [message];
 }
 
+class ClientFailure extends Failure {
+  const ClientFailure(super.message);
+}
+
 class DataNotFoundFailure extends Failure {
   const DataNotFoundFailure(super.message);
 }
 
+class PreferenceFailure extends Failure {
+  const PreferenceFailure(super.message);
+}
+
 class ServerErrorFailure extends Failure {
   const ServerErrorFailure(super.message);
+}
+
+class TokenExpiredFailure extends Failure {
+  const TokenExpiredFailure(super.message);
 }
 
 class UnauthorizedFailure extends Failure {
@@ -24,4 +36,8 @@ class UnauthorizedFailure extends Failure {
 
 class BadRequestFailure extends Failure {
   const BadRequestFailure(super.message);
+}
+
+class FieldParseFailure extends Failure {
+  const FieldParseFailure(super.message);
 }

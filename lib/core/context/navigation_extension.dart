@@ -15,6 +15,18 @@ extension NavigationExtension on BuildContext {
     );
   }
 
+  void replace(Widget page, {Object? data}) {
+    Navigator.of(this).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => page,
+        transitionDuration: Duration.zero,
+        settings: RouteSettings(
+          arguments: data,
+        ),
+      ),
+    );
+  }
+
   void back() {
     Navigator.pop(this);
   }
