@@ -23,6 +23,13 @@ abstract class AuthDataSource {
 
   Future<bool> isSignIn();
   Future<void> logout();
+  Future<String> generateTokenResetPassword({required String username});
+  Future<void> resetPassword({
+    required String otp,
+    required String newPassword,
+    required String token,
+    required String username,
+  });
 }
 
 class AuthDataSourceImpl implements AuthDataSource {
@@ -137,6 +144,56 @@ class AuthDataSourceImpl implements AuthDataSource {
   Future<void> logout() async {
     try {
       await preferenceHandler.removeCredential();
+    } catch (e) {
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<String> generateTokenResetPassword({required String username}) async {
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/${username}/reset-password',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Basic ${base64Encode(utf8.encode('admin:admin'))}'
+          },
+        ),
+      );
+      if (response.statusCode == 201) {
+        final responseData = await DataResponse.fromJson(response.data);
+        return responseData.data;
+      }
+      he.handleErrorResponse(response: response);
+      throw ClientFailure(response.statusMessage ?? '');
+    } catch (e) {
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> resetPassword({
+    required String otp,
+    required String newPassword,
+    required String token,
+    required String username,
+  }) async {
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + ' /students/$username/reset-password/$token',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Basic ${base64Encode(utf8.encode('admin:admin'))}'
+          },
+        ),
+        data: {
+          'otp': otp,
+          'newPassword': newPassword,
+        },
+      );
+      he.handleErrorResponse(response: response);
     } catch (e) {
       throw ClientFailure(e.toString());
     }

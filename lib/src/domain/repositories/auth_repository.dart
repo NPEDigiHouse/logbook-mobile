@@ -16,4 +16,12 @@ abstract class AuthRepository {
 
   Future<Either<Failure, bool>> isSignIn();
   Future<Either<Failure, void>> logout();
+  Future<Either<Failure, String>> generateTokenResetPassword(
+      {required String username});
+  Future<Either<Failure, void>> resetPassword({
+    required String otp,
+    required String newPassword,
+    required String token,
+    required String username,
+  });
 }

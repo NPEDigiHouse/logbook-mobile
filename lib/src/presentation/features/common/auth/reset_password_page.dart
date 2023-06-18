@@ -8,7 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+  final String username;
+  final String token;
+  const ResetPasswordPage({
+    super.key,
+    required this.username,
+    required this.token,
+  });
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
@@ -17,6 +23,20 @@ class ResetPasswordPage extends StatefulWidget {
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController repeatPasswordController = TextEditingController();
+
+  onNewPasswordSubmit() {
+    if (passwordController.text.isEmpty) {
+      return;
+    }
+    if (passwordController.text == repeatPasswordController.text) {
+      context.navigateTo(EnterOtpPage(
+        newPassword: passwordController.text,
+        username: widget.username,
+        token: widget.token,
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +79,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: () => context.navigateTo(EnterOtpPage()),
+                  onPressed: onNewPasswordSubmit,
                   child: Text('Submit'),
                 ),
               ),

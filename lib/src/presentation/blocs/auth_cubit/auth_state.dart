@@ -25,3 +25,10 @@ class CredentialNotExist extends AuthState {}
 class CredentialExist extends AuthState {}
 
 class LogoutSuccess extends AuthState {}
+
+class GenerateTokenResetPassword extends AuthState {
+  final String token;
+  GenerateTokenResetPassword({required this.token});
+}
+
+class ResetPasswordSuccess extends AuthState {}

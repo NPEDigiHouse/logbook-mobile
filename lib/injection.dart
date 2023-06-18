@@ -3,10 +3,12 @@ import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences
 import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource.dart';
 import 'package:elogbook/src/data/repositories/auth_repository_impl.dart';
 import 'package:elogbook/src/domain/repositories/auth_repository.dart';
+import 'package:elogbook/src/domain/usecases/auth_usecases/generate_token_reset_password_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/is_sign_in_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/login_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/logout_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/register_usecase.dart';
+import 'package:elogbook/src/domain/usecases/auth_usecases/reset_password_usecase.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:get_it/get_it.dart';
 
@@ -59,6 +61,16 @@ void _injectUsecases() {
       repository: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    () => ResetPasswordUsecase(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GenerateTokenResetPasswordUsecase(
+      repository: locator(),
+    ),
+  );
 }
 
 void _injectStateManagement() {
@@ -69,6 +81,8 @@ void _injectStateManagement() {
       loginUsecase: locator(),
       isSignInUsecase: locator(),
       logoutUsecase: locator(),
+      generateTokenResetPasswordUsecase: locator(),
+      resetPasswordUsecase: locator(),
     ),
   );
 }
