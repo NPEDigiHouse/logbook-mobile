@@ -22,6 +22,7 @@ abstract class AuthDataSource {
   });
 
   Future<bool> isSignIn();
+  Future<void> logout();
 }
 
 class AuthDataSourceImpl implements AuthDataSource {
@@ -128,7 +129,16 @@ class AuthDataSourceImpl implements AuthDataSource {
       UserCredential? credential = await preferenceHandler.getCredential();
       return credential != null;
     } catch (e) {
-      return false;
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      await preferenceHandler.removeCredential();
+    } catch (e) {
+      throw ClientFailure(e.toString());
     }
   }
 }

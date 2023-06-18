@@ -23,3 +23,5 @@ class LoginSuccess extends AuthState {}
 class CredentialNotExist extends AuthState {}
 
 class CredentialExist extends AuthState {}
+
+class LogoutSuccess extends AuthState {}

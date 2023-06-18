@@ -5,6 +5,7 @@ import 'package:elogbook/src/data/repositories/auth_repository_impl.dart';
 import 'package:elogbook/src/domain/repositories/auth_repository.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/is_sign_in_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/login_usecase.dart';
+import 'package:elogbook/src/domain/usecases/auth_usecases/logout_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/register_usecase.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:get_it/get_it.dart';
@@ -49,6 +50,11 @@ void _injectUsecases() {
     ),
   );
   locator.registerLazySingleton(
+    () => LogoutUsecase(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
     () => IsSignInUsecase(
       repository: locator(),
     ),
@@ -62,6 +68,7 @@ void _injectStateManagement() {
       registerUsecase: locator(),
       loginUsecase: locator(),
       isSignInUsecase: locator(),
+      logoutUsecase: locator(),
     ),
   );
 }

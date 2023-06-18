@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/is_sign_in_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/login_usecase.dart';
+import 'package:elogbook/src/domain/usecases/auth_usecases/logout_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/register_usecase.dart';
 import 'package:equatable/equatable.dart';
 
@@ -10,10 +11,12 @@ class AuthCubit extends Cubit<AuthState> {
   final RegisterUsecase registerUsecase;
   final LoginUsecase loginUsecase;
   final IsSignInUsecase isSignInUsecase;
+  final LogoutUsecase logoutUsecase;
   AuthCubit({
     required this.registerUsecase,
     required this.loginUsecase,
     required this.isSignInUsecase,
+    required this.logoutUsecase,
   }) : super(Initial());
 
   Future<void> register(
@@ -59,8 +62,26 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final result = await isSignInUsecase.execute();
 
+      result.fold((l) => emit(Failed(message: l.message)), (r) {
+        if (r) {
+          emit(CredentialExist());
+        } else {
+          emit(CredentialNotExist());
+        }
+      });
+    } catch (e) {
+      emit(Failed(message: e.toString()));
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      final result = await logoutUsecase.execute();
+
       result.fold(
-          (l) => emit(CredentialNotExist()), (r) => emit(CredentialExist()));
+        (l) => emit(Failed(message: l.message)),
+        (r) => emit(LogoutSuccess()),
+      );
     } catch (e) {
       emit(Failed(message: e.toString()));
     }

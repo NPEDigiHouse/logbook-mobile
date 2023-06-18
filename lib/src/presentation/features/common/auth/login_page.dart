@@ -1,4 +1,5 @@
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:elogbook/src/presentation/features/common/auth/forgot_password_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
@@ -98,10 +99,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           Align(
                             alignment: Alignment.centerRight,
-                            child: Text(
-                              'Forgot your password?',
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: primaryColor,
+                            child: InkWell(
+                              onTap: () =>
+                                  context.navigateTo(ForgotPasswordPage()),
+                              child: Text(
+                                'Forgot your password?',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: primaryColor,
+                                ),
                               ),
                             ),
                           ),

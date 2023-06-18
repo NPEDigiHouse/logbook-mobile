@@ -15,4 +15,5 @@ abstract class AuthRepository {
   });
 
   Future<Either<Failure, bool>> isSignIn();
+  Future<Either<Failure, void>> logout();
 }

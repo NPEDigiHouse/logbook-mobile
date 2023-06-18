@@ -57,7 +57,7 @@ class AuthPreferenceHandler {
   }
 
   /// For Delete User Credential Data
-  Future<bool> removeUserData() async {
+  Future<bool> removeCredential() async {
     final pr = await preferences;
     try {
       pr!.remove(accessTokenKey);

@@ -1,6 +1,7 @@
+import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
@@ -34,7 +35,9 @@ class MainAppBar extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 6),
           child: IconButton(
-            onPressed: () => context.back(),
+            onPressed: () async {
+              await BlocProvider.of<AuthCubit>(context).logout();
+            },
             icon: const Icon(
               Icons.logout_rounded,
               color: primaryColor,

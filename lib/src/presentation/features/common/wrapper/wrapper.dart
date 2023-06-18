@@ -37,7 +37,7 @@ class _WrapperState extends State<Wrapper> {
         if (state is CredentialNotExist) {
           return LoginPage();
         }
-        return Scaffold(body: SizedBox());
+        return LoginPage();
       },
     );
   }
