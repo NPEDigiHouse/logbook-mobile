@@ -30,14 +30,9 @@ class SpacingRow extends StatelessWidget {
             ? children
             : [
                 for (int i = 0; i < children.length; i++) ...[
-                  Row(
-                    crossAxisAlignment: crossAxisAlignment,
-                    children: [
-                      children[i],
-                      if (i < children.length - 1 && !(children[i] is SizedBox))
-                        SizedBox(width: spacing),
-                    ],
-                  ),
+                  children[i],
+                  if (i < children.length - 1 && !(children[i] is SizedBox))
+                    SizedBox(width: spacing),
                 ],
               ],
       ),
