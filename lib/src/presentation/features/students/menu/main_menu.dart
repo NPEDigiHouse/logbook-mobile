@@ -36,7 +36,6 @@ class _MainMenuState extends State<MainMenu> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
       if (state is LogoutSuccess) {
-        print("caller");
         context.replace(LoginPage());
       }
     }, builder: (context, state) {

@@ -1,3 +1,4 @@
+import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
@@ -43,6 +44,8 @@ List<VoidCallback> onTaps(BuildContext context) {
           .add(() => context.navigateTo(const CreateClinicalRecordFirstPage()));
     } else if (i == 2) {
       onTapList.add(() => context.navigateTo(const CreateSelfReflectionPage()));
+    } else if (i == 3) {
+      onTapList.add(() => context.navigateTo(const DailyActivityPage()));
     } else if (i == 5) {
       onTapList.add(() => context.navigateTo(const SglCstHomePage()));
     } else if (i == 8) {
