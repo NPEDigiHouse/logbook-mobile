@@ -232,8 +232,6 @@ class _HistoryFilterBottomSheetState extends State<HistoryFilterBottomSheet> {
                         onPressed: () {
                           _formKey.currentState!.save();
 
-                          print(data);
-
                           Navigator.pop(context, data);
                         },
                         child: const Text(
