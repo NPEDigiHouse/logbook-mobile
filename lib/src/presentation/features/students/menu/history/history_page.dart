@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grouped_list/sliver_grouped_list.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
@@ -20,7 +21,9 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   late final List<String> _menuList;
+
   late final ValueNotifier<String> _query, _selectedMenu;
+  late final ValueNotifier<Map<String, String>?> _dataFilters;
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
     _query = ValueNotifier('');
     _selectedMenu = ValueNotifier(_menuList[0]);
+    _dataFilters = ValueNotifier(null);
 
     super.initState();
   }
@@ -55,7 +59,7 @@ class _HistoryPageState extends State<HistoryPage> {
           SliverAppBar(
             floating: true,
             automaticallyImplyLeading: false,
-            toolbarHeight: kToolbarHeight + 132,
+            toolbarHeight: kToolbarHeight + 140,
             backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             systemOverlayStyle: const SystemUiOverlayStyle(
@@ -65,8 +69,7 @@ class _HistoryPageState extends State<HistoryPage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 buildTitleSection(),
-                buildSearchField(),
-                buildChoiceChips(),
+                buildSearchFilterSection(),
               ],
             ),
           ),
@@ -274,11 +277,15 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
               ),
               IconButton(
-                onPressed: () => showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => const HistoryFilterBottomSheet(),
-                ),
+                onPressed: () async {
+                  final data = await showModalBottomSheet<Map<String, String>?>(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => const HistoryFilterBottomSheet(),
+                  );
+
+                  if (data != null) _dataFilters.value = data;
+                },
                 icon: const Icon(
                   Icons.filter_list_rounded,
                   color: primaryColor,
@@ -292,61 +299,152 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  Padding buildSearchField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 20,
-      ),
-      child: ValueListenableBuilder(
-        valueListenable: _query,
-        builder: (context, query, child) {
-          return SearchField(
-            text: query,
-            onChanged: (value) => _query.value = value,
-          );
-        },
-      ),
-    );
-  }
-
-  SizedBox buildChoiceChips() {
-    return SizedBox(
-      height: 64,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        scrollDirection: Axis.horizontal,
-        itemCount: _menuList.length,
-        itemBuilder: (context, index) {
-          return ValueListenableBuilder(
-            valueListenable: _selectedMenu,
-            builder: (context, value, child) {
-              final selected = value == _menuList[index];
-
-              return RawChip(
-                pressElevation: 0,
-                clipBehavior: Clip.antiAlias,
-                label: Text(_menuList[index]),
-                labelPadding: EdgeInsets.fromLTRB(selected ? 4 : 12, 0, 12, 0),
-                labelStyle: textTheme.bodyMedium?.copyWith(
-                  color: selected ? primaryColor : primaryTextColor,
+  ValueListenableBuilder<Map<String, String>?> buildSearchFilterSection() {
+    return ValueListenableBuilder(
+      valueListenable: _dataFilters,
+      builder: (context, data, value) {
+        return Column(
+          children: <Widget>[
+            if (data != null) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 20,
                 ),
-                side: selected
-                    ? const BorderSide(color: Colors.transparent)
-                    : const BorderSide(color: Color(0xFF8E90A3)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: textTheme.labelSmall,
+                        children: <TextSpan>[
+                          const TextSpan(text: 'From\t'),
+                          TextSpan(
+                            text: data['start_date'],
+                            style: textTheme.bodyLarge?.copyWith(
+                              color: primaryColor,
+                            ),
+                          ),
+                          const TextSpan(text: '\tto\t'),
+                          TextSpan(
+                            text: data['end_date'],
+                            style: textTheme.bodyLarge?.copyWith(
+                              color: primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: textTheme.labelSmall,
+                        children: <TextSpan>[
+                          const TextSpan(text: 'Activity\t'),
+                          TextSpan(
+                            text: data['activity']!.toCapitalize(),
+                            style: textTheme.bodyLarge?.copyWith(
+                              color: primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: textTheme.labelSmall,
+                        children: <TextSpan>[
+                          const TextSpan(text: 'Status\t'),
+                          TextSpan(
+                            text: data['status']!.toCapitalize(),
+                            style: textTheme.bodyLarge?.copyWith(
+                              color: primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () => _dataFilters.value = null,
+                        child: const Text(
+                          'Reset filter',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                checkmarkColor: primaryColor,
-                selectedColor: primaryColor.withOpacity(.2),
-                selected: selected,
-                onSelected: (_) => _selectedMenu.value = _menuList[index],
-              );
-            },
-          );
-        },
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-      ),
+              ),
+            ] else ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 20,
+                ),
+                child: ValueListenableBuilder(
+                  valueListenable: _query,
+                  builder: (context, query, child) {
+                    return SearchField(
+                      text: query,
+                      onChanged: (value) => _query.value = value,
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 64,
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _menuList.length,
+                  itemBuilder: (context, index) {
+                    return ValueListenableBuilder(
+                      valueListenable: _selectedMenu,
+                      builder: (context, value, child) {
+                        final selected = value == _menuList[index];
+                        final leftPadding = selected ? 4.0 : 12.0;
+
+                        return RawChip(
+                          pressElevation: 0,
+                          clipBehavior: Clip.antiAlias,
+                          label: Text(_menuList[index]),
+                          labelPadding:
+                              EdgeInsets.fromLTRB(leftPadding, 0, 12, 0),
+                          labelStyle: textTheme.bodyMedium?.copyWith(
+                            color: selected ? primaryColor : primaryTextColor,
+                          ),
+                          side: selected
+                              ? const BorderSide(color: Colors.transparent)
+                              : const BorderSide(color: Color(0xFF8E90A3)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          checkmarkColor: primaryColor,
+                          selectedColor: primaryColor.withOpacity(.2),
+                          selected: selected,
+                          onSelected: (_) =>
+                              _selectedMenu.value = _menuList[index],
+                        );
+                      },
+                    );
+                  },
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                ),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }
