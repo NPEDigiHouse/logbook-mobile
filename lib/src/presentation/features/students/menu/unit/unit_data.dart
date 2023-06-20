@@ -1,4 +1,5 @@
 import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
+import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
@@ -31,29 +32,22 @@ final List<String> labels = [
   'Assessment'
 ];
 
+final List<Widget> pages = [
+  CreateClinicalRecordFirstPage(),
+  AddScientificSessionPage(),
+  CreateSelfReflectionPage(),
+  DailyActivityPage(),
+  SizedBox(),
+  SglCstHomePage(),
+  SizedBox(),
+  SizedBox(),
+  AssesmentHomePage(),
+];
+
 final List<String> descriptions = List.generate(9, (_) {
   return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et.';
 });
 
 List<VoidCallback> onTaps(BuildContext context) {
-  List<VoidCallback> onTapList = [];
-
-  for (var i = 0; i < 9; i++) {
-    if (i == 0) {
-      onTapList
-          .add(() => context.navigateTo(const CreateClinicalRecordFirstPage()));
-    } else if (i == 2) {
-      onTapList.add(() => context.navigateTo(const CreateSelfReflectionPage()));
-    } else if (i == 3) {
-      onTapList.add(() => context.navigateTo(const DailyActivityPage()));
-    } else if (i == 5) {
-      onTapList.add(() => context.navigateTo(const SglCstHomePage()));
-    } else if (i == 8) {
-      onTapList.add(() => context.navigateTo(const AssesmentHomePage()));
-    } else {
-      onTapList.add(() {});
-    }
-  }
-
-  return onTapList;
+  return pages.map((e) => () => context.navigateTo(e)).toList();
 }

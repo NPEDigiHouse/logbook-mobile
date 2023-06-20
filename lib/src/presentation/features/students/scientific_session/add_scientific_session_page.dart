@@ -21,7 +21,12 @@ class AddScientificSessionPage extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                height: 20,
+                height: 16,
+              ),
+              FormSectionHeader(
+                label: 'General Info',
+                pathPrefix: 'icon_info.svg',
+                padding: 16,
               ),
               SpacingColumn(
                 horizontalPadding: 16,
@@ -45,10 +50,6 @@ class AddScientificSessionPage extends StatelessWidget {
                     onChanged: (v) {},
                     label: 'Supervisor',
                   ),
-                  BuildTextField(
-                    onChanged: (v) {},
-                    label: 'Record Id',
-                  ),
                 ],
               ),
               SizedBox(
@@ -56,20 +57,19 @@ class AddScientificSessionPage extends StatelessWidget {
               ),
               SectionDivider(),
               FormSectionHeader(
-                label: 'Patient',
-                pathPrefix: 'icon_patient.svg',
+                label: 'Scientific Session',
+                pathPrefix: 'biotech_rounded.svg',
                 padding: 16,
               ),
               SpacingColumn(
                 horizontalPadding: 16,
                 spacing: 14,
                 children: [
-                  BuildTextField(
-                    onChanged: (v) {},
-                    label: 'Patient Name',
-                  ),
                   Builder(builder: (context) {
-                    List<String> _genderType = ['Male', 'Female'];
+                    List<String> _genderType = [
+                      'Journal Reading',
+                      'Discussion'
+                    ];
                     return DropdownButtonFormField(
                       items: _genderType
                           .map(
@@ -80,21 +80,53 @@ class AddScientificSessionPage extends StatelessWidget {
                           )
                           .toList(),
                       onChanged: (v) {},
-                      value: _genderType[0],
+                      hint: Text('Session Type'),
                     );
                   }),
                   BuildTextField(
                     onChanged: (v) {},
-                    label: 'Patient Age',
+                    label: 'Topic',
+                  ),
+                  BuildTextField(
+                    onChanged: (v) {},
+                    label: 'Clinical rotation',
+                  ),
+                  BuildTextField(
+                    onChanged: (v) {},
+                    label: 'Title',
+                  ),
+                  BuildTextField(
+                    onChanged: (v) {},
+                    label: 'Reference',
+                  ),
+                  Builder(builder: (context) {
+                    List<String> _genderType = ['Participant', 'Handler'];
+                    return DropdownButtonFormField(
+                      items: _genderType
+                          .map(
+                            (e) => DropdownMenuItem(
+                              child: Text(e),
+                              value: e,
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (v) {},
+                      hint: Text('Role'),
+                    );
+                  }),
+                  TextFormField(
+                    maxLines: 5,
+                    minLines: 5,
+                    decoration: InputDecoration(
+                      label: Text('Additional Notes'),
+                    ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   FilledButton(
-                    onPressed: () => context.navigateTo(
-                      CreateClinicalRecordSecondPage(),
-                    ),
-                    child: Text('Next'),
+                    onPressed: () {},
+                    child: Text('Submit'),
                   ).fullWidth(),
                 ],
               ),

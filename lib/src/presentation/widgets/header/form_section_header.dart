@@ -30,8 +30,12 @@ class FormSectionHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           horizontalPadding: padding,
           children: [
-            SvgPicture.asset(
-              AssetPath.getIcon(pathPrefix),
+            SizedBox(
+              width: 24,
+              height: 24,
+              child: SvgPicture.asset(
+                AssetPath.getIcon(pathPrefix),
+              ),
             ),
             SizedBox(
               width: 8,
