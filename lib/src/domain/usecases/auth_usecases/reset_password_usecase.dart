@@ -11,13 +11,11 @@ class ResetPasswordUsecase {
     required String otp,
     required String newPassword,
     required String token,
-    required String username,
   }) async {
     return await repository.resetPassword(
       newPassword: newPassword,
       otp: otp,
       token: token,
-      username: username,
     );
   }
 }

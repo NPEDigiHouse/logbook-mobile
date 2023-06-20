@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ResetPasswordPage extends StatefulWidget {
-  final String username;
+  final String email;
   final String token;
   const ResetPasswordPage({
     super.key,
-    required this.username,
+    required this.email,
     required this.token,
   });
 
@@ -31,7 +31,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     if (passwordController.text == repeatPasswordController.text) {
       context.navigateTo(EnterOtpPage(
         newPassword: passwordController.text,
-        username: widget.username,
+        email: widget.email,
         token: widget.token,
       ));
     }
@@ -70,7 +70,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 height: 16,
               ),
               InputPassword(
-                controller: passwordController,
+                controller: repeatPasswordController,
                 label: 'Repeat Password',
               ),
               SizedBox(

@@ -68,10 +68,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, String>> generateTokenResetPassword(
-      {required String username}) async {
+      {required String email}) async {
     try {
-      final result =
-          await dataSource.generateTokenResetPassword(username: username);
+      final result = await dataSource.generateTokenResetPassword(email: email);
       return Right(result);
     } catch (e) {
       return Left(ServerErrorFailure(e.toString()));
@@ -83,14 +82,12 @@ class AuthRepositoryImpl implements AuthRepository {
     required String otp,
     required String newPassword,
     required String token,
-    required String username,
   }) async {
     try {
       final result = await dataSource.resetPassword(
         newPassword: newPassword,
         otp: otp,
         token: token,
-        username: username,
       );
       return Right(result);
     } catch (e) {

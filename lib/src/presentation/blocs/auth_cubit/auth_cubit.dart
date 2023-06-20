@@ -93,10 +93,10 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> generateTokenResetPassword({required String username}) async {
+  Future<void> generateTokenResetPassword({required String email}) async {
     try {
       final result =
-          await generateTokenResetPasswordUsecase.execute(username: username);
+          await generateTokenResetPasswordUsecase.execute(username: email);
 
       result.fold(
         (l) => emit(Failed(message: l.message)),
@@ -111,11 +111,9 @@ class AuthCubit extends Cubit<AuthState> {
     required String otp,
     required String newPassword,
     required String token,
-    required String username,
   }) async {
     try {
       final result = await resetPasswordUsecase.execute(
-        username: username,
         newPassword: newPassword,
         token: token,
         otp: otp,

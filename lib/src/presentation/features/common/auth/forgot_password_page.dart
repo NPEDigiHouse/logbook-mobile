@@ -16,12 +16,12 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   void onResetPasswordSubmit() {
-    if (usernameController.text.isNotEmpty) {
+    if (emailController.text.isNotEmpty) {
       BlocProvider.of<AuthCubit>(context)
-          .generateTokenResetPassword(username: usernameController.text);
+          .generateTokenResetPassword(email: emailController.text);
     }
   }
 
@@ -29,10 +29,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
       if (state is GenerateTokenResetPassword) {
-        
         context.navigateTo(
           ResetPasswordPage(
-            username: usernameController.text,
+            email: emailController.text,
             token: state.token,
           ),
         );
@@ -69,9 +68,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   height: 24,
                 ),
                 TextField(
-                  controller: usernameController,
+                  controller: emailController,
                   decoration: InputDecoration(
-                    label: Text('Username'),
+                    label: Text('Email'),
                   ),
                 ),
                 SizedBox(

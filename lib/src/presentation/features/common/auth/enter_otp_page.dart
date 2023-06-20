@@ -13,13 +13,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class EnterOtpPage extends StatefulWidget {
-  final String username;
+  final String email;
   final String newPassword;
   final String token;
   const EnterOtpPage({
     super.key,
     required this.newPassword,
-    required this.username,
+    required this.email,
     required this.token,
   });
 
@@ -30,7 +30,6 @@ class EnterOtpPage extends StatefulWidget {
 class _EnterOtpPageState extends State<EnterOtpPage> {
   late List<TextEditingController> _controllers;
   late List<FocusNode> _focusNodes;
-  String otp = '';
 
   @override
   void initState() {
@@ -48,15 +47,16 @@ class _EnterOtpPageState extends State<EnterOtpPage> {
   }
 
   void onOtpSubmitted() {
+    String otp = '';
     _controllers.forEach((element) {
       otp += element.text;
     });
     otp.trim();
     BlocProvider.of<AuthCubit>(context).resetPassword(
-        otp: otp,
-        newPassword: widget.newPassword,
-        token: widget.token,
-        username: widget.username);
+      otp: otp,
+      newPassword: widget.newPassword,
+      token: widget.token,
+    );
   }
 
   @override
@@ -101,7 +101,7 @@ class _EnterOtpPageState extends State<EnterOtpPage> {
                         TextSpan(
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => context.back(),
-                          text: widget.username,
+                          text: widget.email,
                           style: textTheme.bodyLarge?.copyWith(
                             color: secondaryColor,
                             fontStyle: FontStyle.italic,

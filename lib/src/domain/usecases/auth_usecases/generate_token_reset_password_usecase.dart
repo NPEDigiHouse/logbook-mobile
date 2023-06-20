@@ -9,7 +9,7 @@ class GenerateTokenResetPasswordUsecase {
 
   Future<Either<Failure, String>> execute({required String username}) async {
     return await repository.generateTokenResetPassword(
-      username: username,
+      email: username,
     );
   }
 }
