@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class EnterOtpPage extends StatefulWidget {
   final String email;
@@ -100,7 +101,9 @@ class _EnterOtpPageState extends State<EnterOtpPage> {
                       children: [
                         TextSpan(
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => context.back(),
+                            ..onTap = () {
+                              launchUrlString('googlegmail://');
+                            },
                           text: widget.email,
                           style: textTheme.bodyLarge?.copyWith(
                             color: secondaryColor,
@@ -122,10 +125,14 @@ class _EnterOtpPageState extends State<EnterOtpPage> {
                             controller: _controllers[i],
                             focusNode: _focusNodes[i],
                             onChanged: (e) {
-                              if (_controllers[i].text.isNotEmpty &&
-                                  i < _focusNodes.length - 1) {
-                                FocusScope.of(context)
-                                    .requestFocus(_focusNodes[i + 1]);
+                              if (_controllers[i].text.isNotEmpty) {
+                                if (i < _focusNodes.length - 1) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_focusNodes[i + 1]);
+                                } else {
+                                  FocusScope.of(context).unfocus();
+                                  onOtpSubmitted();
+                                }
                               }
                             },
                           ),

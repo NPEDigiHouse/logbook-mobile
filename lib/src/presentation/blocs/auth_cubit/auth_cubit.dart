@@ -32,6 +32,7 @@ class AuthCubit extends Cubit<AuthState> {
       String? fullname,
       required String email}) async {
     try {
+      emit(Loading());
       final result = await registerUsecase.execute(
         username: username,
         studentId: studentId,
@@ -52,6 +53,8 @@ class AuthCubit extends Cubit<AuthState> {
     required String password,
   }) async {
     try {
+      emit(Loading());
+
       final result = await loginUsecase.execute(
         username: username,
         password: password,
@@ -66,6 +69,8 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> isSignIn() async {
     try {
+      emit(Loading());
+
       final result = await isSignInUsecase.execute();
 
       result.fold((l) => emit(Failed(message: l.message)), (r) {
@@ -82,6 +87,8 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     try {
+      emit(Loading());
+
       final result = await logoutUsecase.execute();
 
       result.fold(
@@ -95,6 +102,8 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> generateTokenResetPassword({required String email}) async {
     try {
+      emit(Loading());
+
       final result =
           await generateTokenResetPasswordUsecase.execute(username: email);
 
@@ -112,6 +121,8 @@ class AuthCubit extends Cubit<AuthState> {
     required String newPassword,
     required String token,
   }) async {
+    emit(Loading());
+
     try {
       final result = await resetPasswordUsecase.execute(
         newPassword: newPassword,
