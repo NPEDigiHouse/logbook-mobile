@@ -54,8 +54,12 @@ extension VariantAppBar on AppBar {
         color: backgroundColor,
         fontWeight: FontWeight.bold,
       ),
+      actions: this.actions,
       backgroundColor: primaryColor,
       iconTheme: const IconThemeData(
+        color: backgroundColor,
+      ),
+      actionsIconTheme: IconThemeData(
         color: backgroundColor,
       ),
     );

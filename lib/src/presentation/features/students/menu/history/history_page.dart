@@ -1,3 +1,4 @@
+import 'package:elogbook/src/presentation/features/students/clinical_record/pages/detail_clinical_record_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -85,7 +86,9 @@ class _HistoryPageState extends State<HistoryPage> {
               return Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: activity is ClinicalRecord
+                      ? () => context.navigateTo(DetailClinicalRecordPage())
+                      : () {},
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 12,
