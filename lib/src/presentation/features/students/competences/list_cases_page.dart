@@ -1,4 +1,3 @@
-import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
