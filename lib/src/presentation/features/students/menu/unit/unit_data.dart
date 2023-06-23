@@ -2,6 +2,7 @@ import 'package:elogbook/src/presentation/features/students/clinical_record/page
 import 'package:elogbook/src/presentation/features/students/competences/competences_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
+import 'package:elogbook/src/presentation/features/students/training/add_training_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
@@ -38,7 +39,7 @@ final List<Widget> pages = [
   AddScientificSessionPage(),
   CreateSelfReflectionPage(),
   DailyActivityPage(),
-  SizedBox(),
+  AddTrainingPage(),
   SglCstHomePage(),
   CompetenceHomePage(),
   SizedBox(),

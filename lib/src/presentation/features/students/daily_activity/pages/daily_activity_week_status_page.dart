@@ -5,7 +5,6 @@ import 'package:elogbook/src/presentation/features/students/daily_activity/pages
 import 'package:elogbook/src/presentation/widgets/header/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
-import 'package:elogbook/src/presentation/widgets/spacing_row.dart';
 import 'package:flutter/material.dart';
 
 class DailyActivityWeekStatusPage extends StatelessWidget {
