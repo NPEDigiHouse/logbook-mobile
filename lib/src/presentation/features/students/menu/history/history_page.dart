@@ -48,6 +48,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void dispose() {
     _query.dispose();
     _selectedMenu.dispose();
+    _dataFilters.dispose();
 
     super.dispose();
   }
@@ -419,14 +420,13 @@ class _HistoryPageState extends State<HistoryPage> {
                       valueListenable: _selectedMenu,
                       builder: (context, value, child) {
                         final selected = value == _menuList[index];
-                        final leftPadding = selected ? 4.0 : 12.0;
+                        final left = selected ? 4.0 : 12.0;
 
                         return RawChip(
                           pressElevation: 0,
                           clipBehavior: Clip.antiAlias,
                           label: Text(_menuList[index]),
-                          labelPadding:
-                              EdgeInsets.fromLTRB(leftPadding, 0, 12, 0),
+                          labelPadding: EdgeInsets.fromLTRB(left, 0, 12, 0),
                           labelStyle: textTheme.bodyMedium?.copyWith(
                             color: selected ? primaryColor : primaryTextColor,
                           ),
@@ -439,8 +439,9 @@ class _HistoryPageState extends State<HistoryPage> {
                           checkmarkColor: primaryColor,
                           selectedColor: primaryColor.withOpacity(.2),
                           selected: selected,
-                          onSelected: (_) =>
-                              _selectedMenu.value = _menuList[index],
+                          onSelected: (_) {
+                            _selectedMenu.value = _menuList[index];
+                          },
                         );
                       },
                     );

@@ -1,11 +1,11 @@
-import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
-import 'package:elogbook/src/presentation/features/students/competences/competences_home_page.dart';
-import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
-import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/assesment_home_page.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
+import 'package:elogbook/src/presentation/features/students/competences/competences_home_page.dart';
+import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
+import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/students/self_reflection/create_self_reflection_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/sgl_cst_home_page.dart';
 
@@ -34,15 +34,15 @@ final List<String> labels = [
 ];
 
 final List<Widget> pages = [
-  CreateClinicalRecordFirstPage(),
-  AddScientificSessionPage(),
-  CreateSelfReflectionPage(),
-  DailyActivityPage(),
-  SizedBox(),
-  SglCstHomePage(),
-  CompetenceHomePage(),
-  SizedBox(),
-  AssesmentHomePage(),
+  const CreateClinicalRecordFirstPage(),
+  const AddScientificSessionPage(),
+  const CreateSelfReflectionPage(),
+  const DailyActivityPage(),
+  const SizedBox(),
+  const SglCstHomePage(),
+  const CompetenceHomePage(),
+  const SizedBox(),
+  const AssesmentHomePage(),
 ];
 
 final List<String> descriptions = List.generate(9, (_) {
