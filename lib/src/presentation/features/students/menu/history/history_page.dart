@@ -1,5 +1,3 @@
-import 'package:elogbook/src/presentation/features/students/clinical_record/pages/detail_clinical_record_page.dart';
-import 'package:elogbook/src/presentation/features/students/scientific_session/detail_scientific_session_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,8 +8,10 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/pages/detail_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_data.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_filter_bottom_sheet.dart';
+import 'package:elogbook/src/presentation/features/students/scientific_session/detail_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -89,11 +89,12 @@ class _HistoryPageState extends State<HistoryPage> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: activity is ClinicalRecord
-                      ? () => context.navigateTo(DetailClinicalRecordPage())
-                      : activity is ScientificSession
-                          ? () =>
-                              context.navigateTo(DetailScientificSessionPage())
-                          : () {},
+                      ? () => context.navigateTo(
+                            const DetailClinicalRecordPage(),
+                          )
+                      : () => context.navigateTo(
+                            const DetailScientificSessionPage(),
+                          ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 12,
@@ -455,5 +456,4 @@ class _HistoryPageState extends State<HistoryPage> {
       },
     );
   }
-
 }
