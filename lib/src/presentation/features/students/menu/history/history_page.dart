@@ -1,5 +1,3 @@
-import 'package:elogbook/src/presentation/features/students/clinical_record/pages/detail_clinical_record_page.dart';
-import 'package:elogbook/src/presentation/features/students/scientific_session/detail_scientific_session_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,8 +8,10 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/pages/detail_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_data.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_filter_bottom_sheet.dart';
+import 'package:elogbook/src/presentation/features/students/scientific_session/detail_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -48,6 +48,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void dispose() {
     _query.dispose();
     _selectedMenu.dispose();
+    _dataFilters.dispose();
 
     super.dispose();
   }
@@ -88,11 +89,12 @@ class _HistoryPageState extends State<HistoryPage> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: activity is ClinicalRecord
-                      ? () => context.navigateTo(DetailClinicalRecordPage())
-                      : activity is ScientificSession
-                          ? () =>
-                              context.navigateTo(DetailScientificSessionPage())
-                          : () {},
+                      ? () => context.navigateTo(
+                            const DetailClinicalRecordPage(),
+                          )
+                      : () => context.navigateTo(
+                            const DetailScientificSessionPage(),
+                          ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 12,
@@ -419,14 +421,13 @@ class _HistoryPageState extends State<HistoryPage> {
                       valueListenable: _selectedMenu,
                       builder: (context, value, child) {
                         final selected = value == _menuList[index];
-                        final leftPadding = selected ? 4.0 : 12.0;
+                        final left = selected ? 4.0 : 12.0;
 
                         return RawChip(
                           pressElevation: 0,
                           clipBehavior: Clip.antiAlias,
                           label: Text(_menuList[index]),
-                          labelPadding:
-                              EdgeInsets.fromLTRB(leftPadding, 0, 12, 0),
+                          labelPadding: EdgeInsets.fromLTRB(left, 0, 12, 0),
                           labelStyle: textTheme.bodyMedium?.copyWith(
                             color: selected ? primaryColor : primaryTextColor,
                           ),
@@ -439,8 +440,9 @@ class _HistoryPageState extends State<HistoryPage> {
                           checkmarkColor: primaryColor,
                           selectedColor: primaryColor.withOpacity(.2),
                           selected: selected,
-                          onSelected: (_) =>
-                              _selectedMenu.value = _menuList[index],
+                          onSelected: (_) {
+                            _selectedMenu.value = _menuList[index];
+                          },
                         );
                       },
                     );
@@ -454,5 +456,4 @@ class _HistoryPageState extends State<HistoryPage> {
       },
     );
   }
-
 }

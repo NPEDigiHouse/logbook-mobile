@@ -3,19 +3,19 @@ import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/nav_item.dart';
 
 class CustomNavigationBar extends StatelessWidget {
-  final int val;
+  final int value;
   final ValueNotifier<int> selectedIndex;
 
   const CustomNavigationBar({
     super.key,
-    required this.val,
+    required this.value,
     required this.selectedIndex,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFFEFF0F9),
+      color: const Color(0xFFEFF0F9),
       height: 80,
       width: AppSize.getAppWidth(context),
       child: Builder(
@@ -41,7 +41,7 @@ class CustomNavigationBar extends StatelessWidget {
                   iconPath: listIconPath[i],
                   label: listTitle[i],
                   onTap: () => selectedIndex.value = i,
-                  isActive: val == i,
+                  isActive: value == i,
                 ),
             ],
           );
