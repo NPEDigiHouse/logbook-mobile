@@ -1,3 +1,5 @@
+import 'package:elogbook/src/presentation/features/students/references/references_page.dart';
+import 'package:elogbook/src/presentation/features/students/training/add_training_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
@@ -38,10 +40,10 @@ final List<Widget> pages = [
   const AddScientificSessionPage(),
   const CreateSelfReflectionPage(),
   const DailyActivityPage(),
-  const SizedBox(),
+  const AddTrainingPage(),
   const SglCstHomePage(),
   const CompetenceHomePage(),
-  const SizedBox(),
+  const ReferencePage(),
   const AssesmentHomePage(),
 ];
 
