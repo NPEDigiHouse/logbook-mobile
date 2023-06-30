@@ -3,24 +3,24 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 
 final List<Color> colors = [
-  primaryColor,
+  // primaryColor,
   variant2Color,
   variant1Color,
-  errorColor,
+  // errorColor,
 ];
 
 final List<String> iconPaths = [
-  AssetPath.getIcon('biotech_rounded.svg'),
+  // AssetPath.getIcon('biotech_rounded.svg'),
   AssetPath.getIcon('health_metrics_rounded.svg'),
   AssetPath.getIcon('menu_book_rounded.svg'),
-  AssetPath.getIcon('flag_rounded.svg'),
+  // AssetPath.getIcon('flag_rounded.svg'),
 ];
 
 final List<String> labels = [
-  'Scientific Session',
+  // 'Scientific Session',
   'Professional Activity',
   'Thesis',
-  'Self reflection',
+  // 'Self reflection',
 ];
 
 final List<String> descriptions = List.generate(4, (_) {

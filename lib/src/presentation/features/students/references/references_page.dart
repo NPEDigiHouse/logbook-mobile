@@ -1,15 +1,9 @@
-import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
-import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/students/competences/list_cases_page.dart';
-import 'package:elogbook/src/presentation/features/students/competences/list_skills_page.dart';
 import 'package:elogbook/src/presentation/widgets/header/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ReferencePage extends StatelessWidget {
   const ReferencePage({super.key});
