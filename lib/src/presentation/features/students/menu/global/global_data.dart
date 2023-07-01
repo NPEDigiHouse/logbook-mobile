@@ -1,3 +1,6 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/src/presentation/features/students/professional_activity/create_professional_activity_page.dart';
+import 'package:elogbook/src/presentation/features/students/thesis/add_thesis_page.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
@@ -23,8 +26,15 @@ final List<String> labels = [
   // 'Self reflection',
 ];
 
+final List<Widget> pages = [
+  const CreateProfessionalActivityPage(),
+  const AddThesisPage(),
+];
+
 final List<String> descriptions = List.generate(4, (_) {
   return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et.';
 });
 
-final List<VoidCallback> onTaps = List.generate(4, (_) => () {});
+List<VoidCallback> onTaps(BuildContext context) {
+  return pages.map((e) => () => context.navigateTo(e)).toList();
+}

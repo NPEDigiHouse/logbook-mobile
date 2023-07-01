@@ -159,7 +159,7 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
           color: colors[index],
           iconPath: iconPaths[index],
           label: labels[index],
-          onTap: onTaps[index],
+          onTap: onTaps(context)[index],
         );
       },
       itemCount: labels.length,
@@ -177,7 +177,7 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
           iconPath: iconPaths[index],
           label: labels[index],
           description: descriptions[index],
-          onTap: onTaps[index],
+          onTap: onTaps(context)[index],
         );
       },
       separatorBuilder: (context, index) {

@@ -35,6 +35,7 @@ class FormSectionHeader extends StatelessWidget {
               height: 24,
               child: SvgPicture.asset(
                 AssetPath.getIcon(pathPrefix),
+                color: primaryColor,
               ),
             ),
             SizedBox(
