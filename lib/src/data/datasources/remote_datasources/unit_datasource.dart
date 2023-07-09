@@ -6,6 +6,7 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/units/unit_model.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/helpers/handle_error_response.dart'
     as he;
@@ -13,6 +14,7 @@ import 'package:elogbook/src/data/datasources/remote_datasources/helpers/handle_
 abstract class UnitDatasource {
   Future<List<UnitModel>> fetchAllUnit();
   Future<void> changeUnitActive({required String unitId});
+  Future<ActiveUnitModel> getActiveUnit();
 }
 
 class UnitDatasourceImpl implements UnitDatasource {
@@ -78,6 +80,28 @@ class UnitDatasourceImpl implements UnitDatasource {
           retryOriginalRequest: this.fetchAllUnit(),
         );
       }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<ActiveUnitModel> getActiveUnit() async {
+    try {
+      final credential = await preferenceHandler.getCredential();
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/units',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}}'
+          },
+        ),
+      );
+      final dataResponse =
+          await DataResponse<ActiveUnitModel>.fromJson(response.data);
+      return dataResponse.data;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
