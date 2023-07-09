@@ -51,6 +51,7 @@ void _injectDatasource() {
     () => UnitDatasourceImpl(
       dio: locator(),
       authDataSource: locator<AuthDataSource>(),
+      preferenceHandler: locator(),
     ),
   );
 }

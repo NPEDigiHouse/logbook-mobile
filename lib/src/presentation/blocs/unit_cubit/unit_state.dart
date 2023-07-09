@@ -16,6 +16,8 @@ class FetchSuccess extends UnitState {
   FetchSuccess({required this.units});
 }
 
+class ChangeActiveSuccess extends UnitState {}
+
 class Failed extends UnitState {
   final String message;
   Failed({required this.message});
