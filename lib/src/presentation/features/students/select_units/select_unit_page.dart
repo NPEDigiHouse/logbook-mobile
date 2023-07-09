@@ -1,7 +1,9 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/students/select_units/widgets/select_unit_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectUnitPage extends StatefulWidget {
   const SelectUnitPage({super.key});
@@ -12,6 +14,12 @@ class SelectUnitPage extends StatefulWidget {
 
 class _SelectUnitPageState extends State<SelectUnitPage> {
   ValueNotifier<int> _selectedIndex = ValueNotifier(0);
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<UnitCubit>(context, listen: false)..fetchUnits();
+  }
 
   @override
   void dispose() {
@@ -53,25 +61,36 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
         ],
       ),
       body: SafeArea(
-        child: ValueListenableBuilder(
-            valueListenable: _selectedIndex,
-            builder: (context, value, _) {
-              return ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                separatorBuilder: (context, index) => SizedBox(
-                  height: 16,
-                ),
-                itemBuilder: (context, index) {
-                  return SelectUnitCard(
-                    unitName: dummyUnitName[index],
-                    index: index,
-                    value: value,
-                    selectedIndex: _selectedIndex,
+        child: BlocBuilder<UnitCubit, UnitState>(
+          builder: (context, state) {
+            if (state is FetchSuccess) {
+              return ValueListenableBuilder(
+                valueListenable: _selectedIndex,
+                builder: (context, value, _) {
+                  return ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 16,
+                    ),
+                    itemBuilder: (context, index) {
+                      return SelectUnitCard(
+                        unitName: state.units[index].name,
+                        index: index,
+                        value: value,
+                        selectedIndex: _selectedIndex,
+                      );
+                    },
+                    itemCount: state.units.length,
                   );
                 },
-                itemCount: dummyUnitName.length,
               );
-            }),
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
       ),
     );
   }

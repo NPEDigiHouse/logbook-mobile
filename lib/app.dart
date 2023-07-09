@@ -1,4 +1,5 @@
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:elogbook/core/app/app_settings.dart';
@@ -29,6 +30,7 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         BlocProvider(create: (_) => di.locator<AuthCubit>()),
+        BlocProvider(create: (_) => di.locator<UnitCubit>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
