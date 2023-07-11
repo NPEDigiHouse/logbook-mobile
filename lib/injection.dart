@@ -12,7 +12,9 @@ import 'package:elogbook/src/domain/usecases/auth_usecases/login_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/logout_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/register_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/reset_password_usecase.dart';
+import 'package:elogbook/src/domain/usecases/unit_usecases/change_unit_active_usecase.dart';
 import 'package:elogbook/src/domain/usecases/unit_usecases/fetch_units_usecase.dart';
+import 'package:elogbook/src/domain/usecases/unit_usecases/get_active_unit_usecase.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:get_it/get_it.dart';
@@ -93,6 +95,16 @@ void _injectUsecases() {
       repository: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    () => GetActiveUnitUsecase(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => ChangeActiveUnitUsecase(
+      repository: locator(),
+    ),
+  );
 }
 
 void _injectStateManagement() {
@@ -111,6 +123,8 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => UnitCubit(
       fetchUnitsUsecase: locator(),
+      changeActiveUnitUsecase: locator(),
+      getActiveUnitUsecase: locator(),
     ),
   );
 }

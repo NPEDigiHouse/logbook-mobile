@@ -4,7 +4,6 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
-import 'package:elogbook/src/presentation/helpers/input_helper.dart';
 import 'package:elogbook/src/presentation/widgets/auth/auth_header.dart';
 import 'package:elogbook/src/presentation/widgets/auth/input_password.dart';
 import 'package:flutter/material.dart';

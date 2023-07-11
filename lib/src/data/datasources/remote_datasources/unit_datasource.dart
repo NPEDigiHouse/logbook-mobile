@@ -39,6 +39,7 @@ class UnitDatasourceImpl implements UnitDatasource {
           },
         ),
       );
+      print(response.statusCode);
       if (response.statusCode != 200) {
         he.handleErrorResponse(
           response: response,

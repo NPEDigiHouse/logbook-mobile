@@ -63,7 +63,9 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
       body: SafeArea(
         child: BlocBuilder<UnitCubit, UnitState>(
           builder: (context, state) {
+            print(state.toString());
             if (state is FetchSuccess) {
+              print(state.units);
               return ValueListenableBuilder(
                 valueListenable: _selectedIndex,
                 builder: (context, value, _) {
