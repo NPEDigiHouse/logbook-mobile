@@ -106,24 +106,32 @@ class AuthDataSourceImpl implements AuthDataSource {
         return;
       }
 
-      final response = await dio.post(
-        ApiService.baseUrl + '/refresh-token',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Basic ${base64Encode(utf8.encode('admin:admin'))}'
-          },
-        ),
-      );
+      final response =
+          await dio.post(ApiService.baseUrl + '/users/refresh-token',
+              options: Options(
+                headers: {
+                  "content-type": 'application/json',
+                  "authorization":
+                      'Basic ${base64Encode(utf8.encode('admin:admin'))}'
+                },
+                followRedirects: false,
+                validateStatus: (status) {
+                  return status! < 500;
+                },
+              ),
+              data: {
+            'refreshToken': refreshToken,
+          });
 
       if (response.statusCode == 200) {
-        final responseData = response.data;
-        final newAccessToken = responseData['accessToken'];
-
+        final responseData =
+            await DataResponse<Map<String, dynamic>>.fromJson(response.data);
+        final newAccessToken = responseData.data['accessToken'];
         await preferenceHandler.setUserData(UserCredential(
             accessToken: newAccessToken, refreshToken: refreshToken));
       } else {
-        he.handleErrorResponse(response: response);
+        print(response.statusCode);
+        // he.handleErrorResponse(response: response);
       }
     } catch (e) {
       throw ClientFailure(e.toString());
@@ -164,7 +172,7 @@ class AuthDataSourceImpl implements AuthDataSource {
           'email': email,
         },
       );
-      print(response.data);
+      // print(response.data);
       if (response.statusCode == 201) {
         final Map<String, dynamic> responseData =
             await DataResponse<Map<String, dynamic>>.fromJson(response.data)
@@ -186,10 +194,10 @@ class AuthDataSourceImpl implements AuthDataSource {
     required String token,
   }) async {
     try {
-      print(otp);
-      print(newPassword);
-      print(token);
-      print('Basic ${base64Encode(utf8.encode('admin:admin'))}');
+      // print(otp);
+      // print(newPassword);
+      // print(token);
+      // print('Basic ${base64Encode(utf8.encode('admin:admin'))}');
       final response = await dio.post(
         ApiService.baseUrl + '/students/reset-password/$token',
         options: Options(

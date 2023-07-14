@@ -18,6 +18,12 @@ class FetchSuccess extends UnitState {
 
 class ChangeActiveSuccess extends UnitState {}
 
+class GetActiveUnitSuccess extends UnitState {
+  final ActiveUnitModel activeUnit;
+
+  GetActiveUnitSuccess({required this.activeUnit});
+}
+
 class Failed extends UnitState {
   final String message;
   Failed({required this.message});

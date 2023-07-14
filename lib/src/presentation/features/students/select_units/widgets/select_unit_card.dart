@@ -1,8 +1,10 @@
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/select_units/widgets/custom_bottom_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectUnitCard extends StatelessWidget {
   const SelectUnitCard({
@@ -11,11 +13,13 @@ class SelectUnitCard extends StatelessWidget {
     required ValueNotifier<int> selectedIndex,
     required this.value,
     required this.index,
+    required this.unitId,
   }) : _selectedIndex = selectedIndex;
 
   final String unitName;
   final ValueNotifier<int> _selectedIndex;
   final int value;
+  final String unitId;
   final int index;
 
   @override
@@ -85,7 +89,9 @@ class SelectUnitCard extends StatelessWidget {
               value: index,
               groupValue: value,
               onChanged: (v) {
-                _selectedIndex.value = v!;
+                BlocProvider.of<UnitCubit>(context, listen: false)
+                  ..changeUnitActive(unitId: unitId)
+                      .whenComplete(() => _selectedIndex.value = v!);
                 showModalBottomSheet(
                   context: context,
                   backgroundColor: Colors.transparent,

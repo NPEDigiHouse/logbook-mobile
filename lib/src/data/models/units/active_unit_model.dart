@@ -8,12 +8,16 @@ class ActiveUnitModel {
   final String? checkOutStatus;
   final String? unitId;
   final String? unitName;
+  final int? checkInTime;
+  final int? checkOutTime;
 
   ActiveUnitModel({
-    required this.checkInStatus,
-    required this.checkOutStatus,
-    required this.unitId,
-    required this.unitName,
+    this.checkInStatus,
+    this.checkOutStatus,
+    this.unitId,
+    this.unitName,
+    this.checkInTime,
+    this.checkOutTime,
   });
 
   factory ActiveUnitModel.fromJson(Map<String, dynamic> data) =>

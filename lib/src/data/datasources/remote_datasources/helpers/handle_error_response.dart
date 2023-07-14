@@ -17,6 +17,6 @@ Future<void> handleErrorResponse(
       await retryOriginalRequest;
       break;
     default:
-      break;
+      return null;
   }
 }

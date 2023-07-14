@@ -19,6 +19,7 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
   void initState() {
     super.initState();
     BlocProvider.of<UnitCubit>(context, listen: false)..fetchUnits();
+    // BlocProvider.of<UnitCubit>(context, listen: false)..getActiveUnit();
   }
 
   @override
@@ -29,17 +30,6 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
 
   @override
   Widget build(BuildContext context) {
-    final dummyUnitName = [
-      "Obstetrics and Gynecology",
-      "Sattelite Hospital",
-      "Neuroopthalmology",
-      "Infection & Immunology",
-      "Vitro Retina",
-      "Glaucoma",
-      "Pediatric,Opthalmology, and Strabismus",
-      "Emergency Unit",
-    ];
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -63,9 +53,12 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
       body: SafeArea(
         child: BlocBuilder<UnitCubit, UnitState>(
           builder: (context, state) {
-            print(state.toString());
+            // print(state.toString());
+            if (state is GetActiveUnitSuccess) {
+              print(state.activeUnit);
+            }
             if (state is FetchSuccess) {
-              print(state.units);
+              // print(state.units);
               return ValueListenableBuilder(
                 valueListenable: _selectedIndex,
                 builder: (context, value, _) {
@@ -75,10 +68,12 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
                       height: 16,
                     ),
                     itemBuilder: (context, index) {
+                      print(state.units[index].id);
                       return SelectUnitCard(
                         unitName: state.units[index].name,
                         index: index,
                         value: value,
+                        unitId: state.units[index].id,
                         selectedIndex: _selectedIndex,
                       );
                     },

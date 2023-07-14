@@ -39,7 +39,7 @@ class UnitDatasourceImpl implements UnitDatasource {
           },
         ),
       );
-      print(response.statusCode);
+      // print(response.statusCode);
       if (response.statusCode != 200) {
         he.handleErrorResponse(
           response: response,
@@ -52,7 +52,7 @@ class UnitDatasourceImpl implements UnitDatasource {
 
       List<UnitModel> units =
           dataResponse.data.map((e) => UnitModel.fromJson(e)).toList();
-      print(units);
+      // print(units);
       return units;
     } catch (e) {
       print(e.toString());
@@ -64,22 +64,27 @@ class UnitDatasourceImpl implements UnitDatasource {
   Future<void> changeUnitActive({required String unitId}) async {
     try {
       final credential = await preferenceHandler.getCredential();
-      final response = await dio.put(ApiService.baseUrl + '/units/set-unit',
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}}'
-            },
-          ),
-          data: {
+      final response =
+          await dio.put(ApiService.baseUrl + '/students/units/set-unit',
+              options: Options(
+                headers: {
+                  "content-type": 'application/json',
+                  "authorization": 'Bearer ${credential?.accessToken}'
+                },
+                followRedirects: false,
+                validateStatus: (status) {
+                  return status! < 500;
+                },
+              ),
+              data: {
             'unitId': unitId,
           });
       if (response.statusCode != 200) {
-        he.handleErrorResponse(
-          response: response,
-          refreshToken: authDataSource.refreshToken(),
-          retryOriginalRequest: this.fetchAllUnit(),
-        );
+        print(response.statusMessage);
+        await authDataSource.refreshToken();
+        return changeUnitActive(unitId: unitId);
+      } else {
+        print('success');
       }
     } catch (e) {
       print(e.toString());
@@ -91,18 +96,33 @@ class UnitDatasourceImpl implements UnitDatasource {
   Future<ActiveUnitModel> getActiveUnit() async {
     try {
       final credential = await preferenceHandler.getCredential();
+      // print(credential?.accessToken);
       final response = await dio.get(
         ApiService.baseUrl + '/students/units',
         options: Options(
           headers: {
             "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}}'
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
           },
         ),
       );
-      final dataResponse =
-          await DataResponse<ActiveUnitModel>.fromJson(response.data);
-      return dataResponse.data;
+
+      print('Bearer ${credential?.accessToken}');
+
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+        await authDataSource.refreshToken();
+        return getActiveUnit();
+      } else {
+        print(response.data);
+        final dataResponse = await DataResponse.fromJson(response.data);
+        final activeUnitModel = ActiveUnitModel.fromJson(dataResponse.data);
+        return activeUnitModel;
+      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

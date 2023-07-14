@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/units/unit_model.dart';
 import 'package:elogbook/src/domain/usecases/unit_usecases/change_unit_active_usecase.dart';
 import 'package:elogbook/src/domain/usecases/unit_usecases/fetch_units_usecase.dart';
@@ -60,11 +61,10 @@ class UnitCubit extends Cubit<UnitState> {
 
       result.fold(
         (l) => emit(Failed(message: l.message)),
-        (r) => emit(
-          ChangeActiveSuccess(),
-        ),
+        (r) => emit(GetActiveUnitSuccess(activeUnit: r)),
       );
     } catch (e) {
+      print("Error");
       emit(
         Failed(
           message: e.toString(),
