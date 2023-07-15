@@ -1,28 +1,28 @@
+import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
+import 'package:elogbook/src/presentation/features/supervisor/history/history_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/profile/profile_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/students_home/students_home_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/tasks/task_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
-import 'package:elogbook/src/presentation/features/students/menu/global/global_activity_page.dart';
-import 'package:elogbook/src/presentation/features/students/menu/history/history_page.dart';
-import 'package:elogbook/src/presentation/features/students/menu/profile/profile_page.dart';
-import 'package:elogbook/src/presentation/features/students/menu/unit/unit_activity_page.dart';
-import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
 
-class MainMenu extends StatefulWidget {
-  const MainMenu({super.key});
+class MainMenuSupervisor extends StatefulWidget {
+  const MainMenuSupervisor({super.key});
 
   @override
-  State<MainMenu> createState() => _MainMenuState();
+  State<MainMenuSupervisor> createState() => _MainMenuSupervisorState();
 }
 
-class _MainMenuState extends State<MainMenu> {
+class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
   final ValueNotifier<int> _selectedIndex = ValueNotifier(0);
 
   final _listPage = [
-    const UnitActivityPage(),
-    const GlobalActivityPage(),
+    const TaskPage(),
     const HistoryPage(),
+    const StudentsHomePage(),
     const ProfilePage(),
   ];
 
@@ -49,17 +49,12 @@ class _MainMenuState extends State<MainMenu> {
               body: _listPage[value],
               bottomNavigationBar: CustomNavigationBar(
                 listIconPath: [
-                  "icon_unit.svg",
-                  "icon_globe.svg",
+                  "icon_task.svg",
                   "icon_history.svg",
+                  "icon_residents.svg",
                   "icon_user.svg"
                 ],
-                listTitle: [
-                  "Unit\nActivity",
-                  "Global\nActivity",
-                  "History",
-                  "Profile"
-                ],
+                listTitle: ['Tasks', 'History', 'Students', 'Profile'],
                 selectedIndex: _selectedIndex,
                 value: value,
               ),

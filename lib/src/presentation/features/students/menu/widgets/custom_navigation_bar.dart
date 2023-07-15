@@ -5,10 +5,14 @@ import 'package:elogbook/src/presentation/features/students/menu/widgets/nav_ite
 class CustomNavigationBar extends StatelessWidget {
   final int value;
   final ValueNotifier<int> selectedIndex;
+  final List<String> listIconPath;
+  final List<String> listTitle;
 
   const CustomNavigationBar({
     super.key,
     required this.value,
+    required this.listIconPath,
+    required this.listTitle,
     required this.selectedIndex,
   });
 
@@ -20,20 +24,6 @@ class CustomNavigationBar extends StatelessWidget {
       width: AppSize.getAppWidth(context),
       child: Builder(
         builder: (context) {
-          List<String> listIconPath = [
-            "icon_unit.svg",
-            "icon_globe.svg",
-            "icon_history.svg",
-            "icon_user.svg"
-          ];
-
-          List<String> listTitle = [
-            "Unit\nActivity",
-            "Global\nActivity",
-            "History",
-            "Profile"
-          ];
-
           return Row(
             children: <Widget>[
               for (int i = 0; i < listTitle.length; i++)
