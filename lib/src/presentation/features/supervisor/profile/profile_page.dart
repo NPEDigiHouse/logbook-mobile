@@ -98,19 +98,13 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
                 const Text(
-                  'Student',
+                  'Supervisor',
                   style: TextStyle(color: secondaryColor),
                 ),
                 const SizedBox(height: 28),
                 ProfileItemMenuCard(
                   iconPath: 'person_filled.svg',
-                  title: 'Personal Data',
-                  onTap: () {},
-                ),
-                const SizedBox(height: 14),
-                ProfileItemMenuCard(
-                  iconPath: 'stats_chart_filled.svg',
-                  title: 'Unit Statisics',
+                  title: 'Personal & Statistic',
                   onTap: () {},
                 ),
                 const SizedBox(height: 14),

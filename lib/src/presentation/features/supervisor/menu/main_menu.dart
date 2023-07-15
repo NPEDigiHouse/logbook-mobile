@@ -1,7 +1,7 @@
 import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
 import 'package:elogbook/src/presentation/features/supervisor/history/history_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/profile/profile_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/students_home/students_home_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/list_resident/list_resident_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/tasks/task_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +22,7 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
   final _listPage = [
     const TaskPage(),
     const HistoryPage(),
-    const StudentsHomePage(),
+    const ListResidentPage(),
     const ProfilePage(),
   ];
 

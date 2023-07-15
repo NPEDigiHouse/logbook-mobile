@@ -1,10 +1,13 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/supervisor/list_resident/resident_menu_page.dart';
+import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
 import 'package:flutter/material.dart';
 
-class StudentsHomePage extends StatelessWidget {
-  const StudentsHomePage({super.key});
+class ListResidentPage extends StatelessWidget {
+  const ListResidentPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,7 @@ class StudentsHomePage extends StatelessWidget {
               SliverList.separated(
                 itemCount: 10,
                 itemBuilder: (context, index) {
-                  return _buildStudentCard();
+                  return _buildStudentCard(context);
                 },
                 separatorBuilder: (context, index) {
                   return SizedBox(
@@ -62,34 +65,38 @@ class StudentsHomePage extends StatelessWidget {
     );
   }
 
-  Row _buildStudentCard() {
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 28,
-        ),
-        SizedBox(
-          width: 12,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Muh.Ikhsan',
-              style: textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: primaryTextColor,
+  Widget _buildStudentCard(BuildContext context) {
+    return InkWellContainer(
+      color: Colors.white,
+      onTap: () => context.navigateTo(ResidentMenuPage()),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 28,
+          ),
+          SizedBox(
+            width: 12,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Muh.Ikhsan',
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: primaryTextColor,
+                ),
               ),
-            ),
-            Text(
-              'H071191049',
-              style: textTheme.bodyMedium?.copyWith(
-                color: secondaryTextColor,
+              Text(
+                'H071191049',
+                style: textTheme.bodyMedium?.copyWith(
+                  color: secondaryTextColor,
+                ),
               ),
-            ),
-          ],
-        )
-      ],
+            ],
+          )
+        ],
+      ),
     );
   }
 }

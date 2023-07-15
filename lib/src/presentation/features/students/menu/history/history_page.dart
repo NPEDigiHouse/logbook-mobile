@@ -258,6 +258,7 @@ class _HistoryPageState extends State<HistoryPage> {
               color: Color(0xFFEFF0F9),
             ),
           ),
+        
         ],
       ),
     );
@@ -450,6 +451,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   separatorBuilder: (_, __) => const SizedBox(width: 8),
                 ),
               ),
+            
             ],
           ],
         );
