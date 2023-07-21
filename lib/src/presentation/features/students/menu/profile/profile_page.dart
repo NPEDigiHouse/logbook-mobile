@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/personal_data_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/profile_item_menu_card.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
 
@@ -105,7 +107,7 @@ class ProfilePage extends StatelessWidget {
                 ProfileItemMenuCard(
                   iconPath: 'person_filled.svg',
                   title: 'Personal Data',
-                  onTap: () {},
+                  onTap: () => context.navigateTo(const PersonalDataPage()),
                 ),
                 const SizedBox(height: 14),
                 ProfileItemMenuCard(
