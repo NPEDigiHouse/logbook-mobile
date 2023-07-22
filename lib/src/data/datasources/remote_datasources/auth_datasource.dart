@@ -7,6 +7,7 @@ import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences
 import 'package:elogbook/src/data/datasources/remote_datasources/helpers/handle_error_response.dart'
     as he;
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/data/models/user/user_token.dart';
 
 abstract class AuthDataSource {
   Future<void> register(
@@ -21,6 +22,7 @@ abstract class AuthDataSource {
     required String password,
   });
   Future<void> refreshToken();
+  Future<UserCredential> getUserCredential();
 
   Future<bool> isSignIn();
   Future<void> logout();
@@ -85,8 +87,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
       if (response.statusCode == 200) {
         final dataResponse = await DataResponse.fromJson(response.data);
-        UserCredential credential =
-            await UserCredential.fromJson(dataResponse.data);
+        UserToken credential = await UserToken.fromJson(dataResponse.data);
         await preferenceHandler.setUserData(credential);
       }
       he.handleErrorResponse(
@@ -99,7 +100,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   Future<void> refreshToken() async {
     try {
-      UserCredential? credential = await preferenceHandler.getCredential();
+      UserToken? credential = await preferenceHandler.getCredential();
       String? refreshToken = credential!.refreshToken;
       if (refreshToken == null) {
         // Handle jika refresh token tidak tersedia
@@ -127,8 +128,8 @@ class AuthDataSourceImpl implements AuthDataSource {
         final responseData =
             await DataResponse<Map<String, dynamic>>.fromJson(response.data);
         final newAccessToken = responseData.data['accessToken'];
-        await preferenceHandler.setUserData(UserCredential(
-            accessToken: newAccessToken, refreshToken: refreshToken));
+        await preferenceHandler.setUserData(
+            UserToken(accessToken: newAccessToken, refreshToken: refreshToken));
       } else {
         print(response.statusCode);
         // he.handleErrorResponse(response: response);
@@ -141,7 +142,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   Future<bool> isSignIn() async {
     try {
-      UserCredential? credential = await preferenceHandler.getCredential();
+      UserToken? credential = await preferenceHandler.getCredential();
       return credential != null;
     } catch (e) {
       throw ClientFailure(e.toString());
@@ -214,6 +215,34 @@ class AuthDataSourceImpl implements AuthDataSource {
       he.handleErrorResponse(response: response);
     } catch (e) {
       print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<UserCredential> getUserCredential() async {
+    try {
+      final credential = await preferenceHandler.getCredential();
+      // print(credential?.accessToken);
+      final response = await dio.get(
+        ApiService.baseUrl + '/users',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+
+      final dataResponse =
+          await DataResponse<UserCredential>.fromJson(response.data);
+
+      return dataResponse.data;
+    } catch (e) {
       throw ClientFailure(e.toString());
     }
   }

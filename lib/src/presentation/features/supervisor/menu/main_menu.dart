@@ -50,7 +50,7 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
               bottomNavigationBar: CustomNavigationBar(
                 listIconPath: [
                   "icon_task.svg",
-                  "icon_history.svg",
+                  "icon_supervisor_history.svg",
                   "icon_residents.svg",
                   "icon_user.svg"
                 ],

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -89,6 +90,16 @@ class AuthRepositoryImpl implements AuthRepository {
         otp: otp,
         token: token,
       );
+      return Right(result);
+    } catch (e) {
+      return Left(ServerErrorFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserCredential>> getCredential() async {
+    try {
+      final result = await dataSource.getUserCredential();
       return Right(result);
     } catch (e) {
       return Left(ServerErrorFailure(e.toString()));

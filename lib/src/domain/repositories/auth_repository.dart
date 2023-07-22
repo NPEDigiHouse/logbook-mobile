@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:elogbook/core/utils/failure.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, void>> register(
@@ -8,6 +9,8 @@ abstract class AuthRepository {
       required String password,
       String? fullname,
       required String email});
+
+  Future<Either<Failure, UserCredential>> getCredential();
 
   Future<Either<Failure, void>> login({
     required String username,

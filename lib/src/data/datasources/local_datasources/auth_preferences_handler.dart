@@ -1,4 +1,4 @@
-import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/data/models/user/user_token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthPreferenceHandler {
@@ -28,7 +28,7 @@ class AuthPreferenceHandler {
   static const refreshTokenKey = 'REFRESH_TOKEN';
 
   Future<bool> setUserData(
-    UserCredential user,
+    UserToken user,
   ) async {
     final pr = await preferences;
     try {
@@ -41,13 +41,13 @@ class AuthPreferenceHandler {
   }
 
   /// For Get Use Credential Data
-  Future<UserCredential?> getCredential() async {
+  Future<UserToken?> getCredential() async {
     final pr = await preferences;
     if (pr!.containsKey(accessTokenKey)) {
       String accessToken = pr.getString(accessTokenKey) ?? '';
       String refreshToken = pr.getString(refreshTokenKey) ?? '';
 
-      return UserCredential(
+      return UserToken(
         accessToken: accessToken,
         refreshToken: refreshToken,
       );
