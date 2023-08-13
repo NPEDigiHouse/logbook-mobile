@@ -6,6 +6,7 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/clinical_records/clinical_record_post_model.dart';
+import 'package:elogbook/src/data/models/clinical_records/detail_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/list_clinical_record_model.dart';
 
 abstract class ClinicalRecordsDatasource {
@@ -14,6 +15,8 @@ abstract class ClinicalRecordsDatasource {
   });
   Future<void> uploadClinicalRecordAttachment({required String filePath});
   Future<ListClinicalRecordModel> getStudentClinicalRecords();
+  Future<DetailClinicalRecordModel> getDetailClinicalRecord(
+      {required String clinicalRecordId});
 }
 
 class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
@@ -90,6 +93,34 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       }
       final dataResponse =
           await DataResponse<ListClinicalRecordModel>.fromJson(response.data);
+
+      return dataResponse.data;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<DetailClinicalRecordModel> getDetailClinicalRecord(
+      {required String clinicalRecordId}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/clinical-records/$clinicalRecordId',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      // print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<DetailClinicalRecordModel>.fromJson(response.data);
 
       return dataResponse.data;
     } catch (e) {

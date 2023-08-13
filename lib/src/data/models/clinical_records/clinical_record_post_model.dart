@@ -44,6 +44,8 @@ class ExaminationsPostModel {
   });
 
   Map<String, dynamic> toJson() => _$ExaminationsPostModelToJson(this);
+  factory ExaminationsPostModel.fromJson(Map<String, dynamic> data) =>
+      _$ExaminationsPostModelFromJson(data);
 }
 
 @JsonSerializable()
@@ -57,6 +59,8 @@ class DiagnosisPostModel {
   });
 
   Map<String, dynamic> toJson() => _$DiagnosisPostModelToJson(this);
+  factory DiagnosisPostModel.fromJson(Map<String, dynamic> data) =>
+      _$DiagnosisPostModelFromJson(data);
 }
 
 @JsonSerializable()
@@ -70,6 +74,8 @@ class ManagementPostModel {
   });
 
   Map<String, dynamic> toJson() => _$ManagementPostModelToJson(this);
+  factory ManagementPostModel.fromJson(Map<String, dynamic> data) =>
+      _$ManagementPostModelFromJson(data);
 }
 
 @JsonSerializable()
@@ -83,4 +89,6 @@ class ManagementTypeRole {
   });
 
   Map<String, dynamic> toJson() => _$ManagementTypeRoleToJson(this);
+  factory ManagementTypeRole.fromJson(Map<String, dynamic> data) =>
+      _$ManagementTypeRoleFromJson(data);
 }
