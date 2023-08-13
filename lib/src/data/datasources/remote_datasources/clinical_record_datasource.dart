@@ -2,15 +2,18 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/clinical_records/clinical_record_post_model.dart';
+import 'package:elogbook/src/data/models/clinical_records/list_clinical_record_model.dart';
 
 abstract class ClinicalRecordsDatasource {
   Future<void> uploadClinicalRecord({
     required ClinicalRecordPostModel clinicalRecordPostModel,
   });
   Future<void> uploadClinicalRecordAttachment({required String filePath});
+  Future<ListClinicalRecordModel> getStudentClinicalRecords();
 }
 
 class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
@@ -62,6 +65,33 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       if (response != 201) {
         throw Exception();
       }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<ListClinicalRecordModel> getStudentClinicalRecords() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/clinical-records',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      // print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<ListClinicalRecordModel>.fromJson(response.data);
+
+      return dataResponse.data;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
