@@ -62,6 +62,9 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       if (response != 201) {
         throw Exception();
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
   }
 }
