@@ -32,3 +32,9 @@ class GenerateTokenResetPassword extends AuthState {
 }
 
 class ResetPasswordSuccess extends AuthState {}
+
+class GetCredentialSuccess extends AuthState {
+  final UserCredential credential;
+
+  GetCredentialSuccess({required this.credential});
+}
