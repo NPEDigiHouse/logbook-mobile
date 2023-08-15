@@ -8,6 +8,7 @@ abstract class ScientificSessionDataSource {
   Future<void> uploadScientificSession({
     required ScientificSessionPostModel scientificSessionPostModel,
   });
+  Future<void> uploadScientificSessionAttachment({required String filePath});
 }
 
 class SelfReflectionDataSourceImpl implements ScientificSessionDataSource {
@@ -32,6 +33,32 @@ class SelfReflectionDataSourceImpl implements ScientificSessionDataSource {
                 },
               ),
               data: scientificSessionPostModel.toJson());
+      if (response != 201) {
+        throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> uploadScientificSessionAttachment(
+      {required String filePath}) async {
+    final credential = await preferenceHandler.getCredential();
+    FormData formData = FormData.fromMap({
+      'attachments': await MultipartFile.fromFile(filePath),
+    });
+    try {
+      final response = await dio.post(
+          ApiService.baseUrl + '/scientific-sessions/attachments',
+          options: Options(
+            headers: {
+              "content-type": 'multipart/form-data',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+          ),
+          data: formData);
       if (response != 201) {
         throw Exception();
       }
