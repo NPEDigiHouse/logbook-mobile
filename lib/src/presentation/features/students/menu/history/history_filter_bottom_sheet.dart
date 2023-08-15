@@ -77,174 +77,175 @@ class _HistoryFilterBottomSheetState extends State<HistoryFilterBottomSheet> {
           top: Radius.circular(24),
         ),
       ),
-      child: ValueListenableBuilder(
-          valueListenable: _formNotifier,
-          builder: (context, data, child) {
-            return Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Center(
-                      child: Container(
-                        width: 48,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2),
-                          color: const Color(0xFFD1D5DB),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: <Widget>[
-                        const Icon(
-                          Icons.filter_list_rounded,
-                          color: primaryColor,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Filter',
-                          style: textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: primaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Choose the date range',
-                      style: textTheme.titleSmall?.copyWith(
-                        color: const Color(0xFF6B7280),
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: TextFormField(
-                            controller: _startDateController,
-                            keyboardType: TextInputType.none,
-                            showCursor: false,
-                            decoration: const InputDecoration(
-                              label: Text('Start Date'),
-                            ),
-                            onSaved: (value) {
-                              _formNotifier.value['start_date'] = value!;
-                            },
-                            onTap: () => showFilterDateRangePicker(context),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _endDateController,
-                            keyboardType: TextInputType.none,
-                            showCursor: false,
-                            decoration: const InputDecoration(
-                              label: Text('End Date'),
-                            ),
-                            onSaved: (value) {
-                              _formNotifier.value['end_date'] = value!;
-                            },
-                            onTap: () => showFilterDateRangePicker(context),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Select Activity',
-                      style: textTheme.titleSmall?.copyWith(
-                        color: const Color(0xFF6B7280),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    DropdownButtonFormField(
-                      value: _activities.first.toLowerCase(),
-                      items: _activities.map((e) {
-                        return DropdownMenuItem(
-                          value: e.toLowerCase(),
-                          child: Text(e),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        _formNotifier.value['activity'] = value!;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Status',
-                      style: textTheme.titleSmall?.copyWith(
-                        color: const Color(0xFF6B7280),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    ValueListenableBuilder(
-                      valueListenable: _statusNotifier,
-                      builder: (context, status, child) {
-                        return SizedBox(
-                          width: double.infinity,
-                          child: SegmentedButton(
-                            selected: {status},
-                            selectedIcon: const Icon(
-                              Icons.check_rounded,
-                              color: primaryColor,
-                            ),
-                            segments: <ButtonSegment<Status>>[
-                              ButtonSegment(
-                                value: Status.unverified,
-                                label: Text(
-                                  'Unverified',
-                                  style: TextStyle(
-                                    color: status == Status.unverified
-                                        ? primaryColor
-                                        : primaryTextColor,
-                                  ),
-                                ),
-                              ),
-                              ButtonSegment(
-                                value: Status.verified,
-                                label: Text(
-                                  'Verified',
-                                  style: TextStyle(
-                                    color: status == Status.verified
-                                        ? primaryColor
-                                        : primaryTextColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                            onSelectionChanged: (value) {
-                              _statusNotifier.value = value.first;
-                              _formNotifier.value['status'] = value.first.name;
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          _formKey.currentState!.save();
-
-                          Navigator.pop(context, data);
-                        },
-                        child: const Text(
-                          'Apply',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                  ],
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Center(
+                child: Container(
+                  width: 48,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(2),
+                    color: const Color(0xFFD1D5DB),
+                  ),
                 ),
               ),
-            );
-          }),
+              const SizedBox(height: 16),
+              Row(
+                children: <Widget>[
+                  const Icon(
+                    Icons.filter_list_rounded,
+                    color: primaryColor,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Filter',
+                    style: textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Choose the date range',
+                style: textTheme.titleSmall?.copyWith(
+                  color: const Color(0xFF6B7280),
+                ),
+              ),
+              const SizedBox(height: 18),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextFormField(
+                      controller: _startDateController,
+                      keyboardType: TextInputType.none,
+                      showCursor: false,
+                      decoration: const InputDecoration(
+                        label: Text('Start Date'),
+                      ),
+                      onSaved: (value) {
+                        _formNotifier.value['start_date'] = value!;
+                      },
+                      onTap: () => showFilterDateRangePicker(context),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _endDateController,
+                      keyboardType: TextInputType.none,
+                      showCursor: false,
+                      decoration: const InputDecoration(
+                        label: Text('End Date'),
+                      ),
+                      onSaved: (value) {
+                        _formNotifier.value['end_date'] = value!;
+                      },
+                      onTap: () => showFilterDateRangePicker(context),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Select Activity',
+                style: textTheme.titleSmall?.copyWith(
+                  color: const Color(0xFF6B7280),
+                ),
+              ),
+              const SizedBox(height: 10),
+              DropdownButtonFormField(
+                value: _activities.first.toLowerCase(),
+                items: _activities.map((e) {
+                  return DropdownMenuItem(
+                    value: e.toLowerCase(),
+                    child: Text(e),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  _formNotifier.value['activity'] = value!;
+                },
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Status',
+                style: textTheme.titleSmall?.copyWith(
+                  color: const Color(0xFF6B7280),
+                ),
+              ),
+              const SizedBox(height: 10),
+              ValueListenableBuilder(
+                valueListenable: _statusNotifier,
+                builder: (context, status, child) {
+                  return SizedBox(
+                    width: double.infinity,
+                    child: SegmentedButton(
+                      selected: {status},
+                      selectedIcon: const Icon(
+                        Icons.check_rounded,
+                        color: primaryColor,
+                      ),
+                      segments: <ButtonSegment<Status>>[
+                        ButtonSegment(
+                          value: Status.unverified,
+                          label: Text(
+                            'Unverified',
+                            style: TextStyle(
+                              color: status == Status.unverified
+                                  ? primaryColor
+                                  : primaryTextColor,
+                            ),
+                          ),
+                        ),
+                        ButtonSegment(
+                          value: Status.verified,
+                          label: Text(
+                            'Verified',
+                            style: TextStyle(
+                              color: status == Status.verified
+                                  ? primaryColor
+                                  : primaryTextColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                      onSelectionChanged: (value) {
+                        _statusNotifier.value = value.first;
+                        _formNotifier.value['status'] = value.first.name;
+                      },
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ValueListenableBuilder(
+                  valueListenable: _formNotifier,
+                  builder: (context, data, child) {
+                    return OutlinedButton(
+                      onPressed: () {
+                        _formKey.currentState!.save();
+
+                        Navigator.pop(context, data);
+                      },
+                      child: const Text(
+                        'Apply',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

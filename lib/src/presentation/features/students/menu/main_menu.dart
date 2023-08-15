@@ -48,13 +48,13 @@ class _MainMenuState extends State<MainMenu> {
             return Scaffold(
               body: _listPage[value],
               bottomNavigationBar: CustomNavigationBar(
-                listIconPath: [
+                listIconPath: const [
                   "icon_unit.svg",
                   "icon_globe.svg",
                   "icon_history.svg",
                   "icon_user.svg"
                 ],
-                listTitle: [
+                listTitle: const [
                   "Unit\nActivity",
                   "Global\nActivity",
                   "History",

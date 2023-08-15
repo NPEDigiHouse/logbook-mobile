@@ -6,6 +6,7 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/personal_data_page.dart';
+import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/unit_statistics_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/profile_item_menu_card.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
 
@@ -113,7 +114,7 @@ class ProfilePage extends StatelessWidget {
                 ProfileItemMenuCard(
                   iconPath: 'stats_chart_filled.svg',
                   title: 'Unit Statisics',
-                  onTap: () {},
+                  onTap: () => context.navigateTo(const UnitStatisticsPage()),
                 ),
                 const SizedBox(height: 14),
                 ProfileItemMenuCard(
