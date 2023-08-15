@@ -15,6 +15,7 @@ abstract class UnitDatasource {
   Future<List<UnitModel>> fetchAllUnit();
   Future<void> changeUnitActive({required String unitId});
   Future<ActiveUnitModel> getActiveUnit();
+  Future<void> checkInActiveUnit();
 }
 
 class UnitDatasourceImpl implements UnitDatasource {
@@ -122,6 +123,33 @@ class UnitDatasourceImpl implements UnitDatasource {
         final dataResponse = await DataResponse.fromJson(response.data);
         final activeUnitModel = ActiveUnitModel.fromJson(dataResponse.data);
         return activeUnitModel;
+      }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> checkInActiveUnit() async {
+    try {
+      final credential = await preferenceHandler.getCredential();
+      // print(credential?.accessToken);
+      final response = await dio.post(
+        ApiService.baseUrl + '/students/units/check-in',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+      if (response.statusCode != 200) {
+        throw Exception();
       }
     } catch (e) {
       print(e.toString());
