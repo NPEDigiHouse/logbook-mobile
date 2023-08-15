@@ -1,5 +1,6 @@
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/forgot_password_page.dart';
+import 'package:elogbook/src/presentation/features/common/wrapper/wrapper.dart';
 import 'package:elogbook/src/presentation/features/supervisor/menu/main_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
@@ -45,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
       if (state is LoginSuccess) {
-        context.replace(MainMenuSupervisor());
+        context.replace(Wrapper());
         state = Initial();
       }
       if (state is Failed) {
