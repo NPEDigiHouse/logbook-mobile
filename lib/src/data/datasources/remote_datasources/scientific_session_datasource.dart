@@ -4,8 +4,10 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/scientific_session/list_scientific_session_model.dart';
+import 'package:elogbook/src/data/models/scientific_session/scientific_roles.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_session_detail_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_session_post_model.dart';
+import 'package:elogbook/src/data/models/scientific_session/session_types_model.dart';
 
 abstract class ScientificSessionDataSource {
   Future<void> uploadScientificSession({
@@ -15,6 +17,8 @@ abstract class ScientificSessionDataSource {
       {required String scientificSessionId});
   Future<void> uploadScientificSessionAttachment({required String filePath});
   Future<ListScientificSessionModel> getStudentScientificSessions();
+  Future<List<SessionTypesModel>> getListSessionTypes();
+  Future<List<ScientificRoles>> getListScientificRoles();
 }
 
 class SelfReflectionDataSourceImpl implements ScientificSessionDataSource {
@@ -123,6 +127,60 @@ class SelfReflectionDataSourceImpl implements ScientificSessionDataSource {
       final dataResponse =
           await DataResponse<ListScientificSessionModel>.fromJson(
               response.data);
+
+      return dataResponse.data;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<ScientificRoles>> getListScientificRoles() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/scientific-roles',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      // print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<List<ScientificRoles>>.fromJson(response.data);
+
+      return dataResponse.data;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<SessionTypesModel>> getListSessionTypes() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/session-types',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      // print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<List<SessionTypesModel>>.fromJson(response.data);
 
       return dataResponse.data;
     } catch (e) {
