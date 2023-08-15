@@ -224,6 +224,7 @@ class AuthDataSourceImpl implements AuthDataSource {
     try {
       final credential = await preferenceHandler.getCredential();
       // print(credential?.accessToken);
+      print(credential?.accessToken);
       final response = await dio.get(
         ApiService.baseUrl + '/users',
         options: Options(
@@ -231,18 +232,24 @@ class AuthDataSourceImpl implements AuthDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
+          // followRedirects: false,
+          // validateStatus: (status) {
+          //   return status! < 500;
+          // },
         ),
       );
+      print(response.data);
 
       final dataResponse =
-          await DataResponse<UserCredential>.fromJson(response.data);
+          await DataResponse<Map<String, dynamic>>.fromJson(response.data);
+      UserCredential userCredential =
+          UserCredential.fromJson(dataResponse.data);
 
-      return dataResponse.data;
+      print(userCredential);
+      return userCredential;
     } catch (e) {
+      print("ERROR");
+      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

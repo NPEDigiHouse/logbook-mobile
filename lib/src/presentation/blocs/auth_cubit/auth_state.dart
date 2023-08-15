@@ -22,7 +22,11 @@ class LoginSuccess extends AuthState {}
 
 class CredentialNotExist extends AuthState {}
 
-class CredentialExist extends AuthState {}
+class CredentialExist extends AuthState {
+  final UserCredential credential;
+
+  CredentialExist({required this.credential});
+}
 
 class LogoutSuccess extends AuthState {}
 
@@ -32,9 +36,3 @@ class GenerateTokenResetPassword extends AuthState {
 }
 
 class ResetPasswordSuccess extends AuthState {}
-
-class GetCredentialSuccess extends AuthState {
-  final UserCredential credential;
-
-  GetCredentialSuccess({required this.credential});
-}

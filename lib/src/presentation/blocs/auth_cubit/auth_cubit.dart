@@ -73,18 +73,31 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> isSignIn() async {
     try {
+      print("1");
       emit(Loading());
 
       final result = await isSignInUsecase.execute();
 
-      result.fold((l) => emit(Failed(message: l.message)), (r) {
-        if (r) {
-          emit(CredentialExist());
-        } else {
-          emit(CredentialNotExist());
-        }
-      });
+      result.fold(
+        (l) => emit(Failed(message: l.message)),
+        (r) async {
+          print("2");
+
+          if (r) {
+            final credentialResult = await getCredentialUsecase.execute();
+            print("3");
+
+            credentialResult.fold(
+              (l) => emit(Failed(message: l.message)),
+              (r) => emit(CredentialExist(credential: r)),
+            );
+          } else {
+            emit(CredentialNotExist());
+          }
+        },
+      );
     } catch (e) {
+      print(e.toString());
       emit(Failed(message: e.toString()));
     }
   }
@@ -137,23 +150,6 @@ class AuthCubit extends Cubit<AuthState> {
       result.fold(
         (l) => emit(Failed(message: l.message)),
         (r) => emit(ResetPasswordSuccess()),
-      );
-    } catch (e) {
-      emit(Failed(message: e.toString()));
-    }
-  }
-
-  Future<void> getCredential() async {
-    emit(Loading());
-
-    try {
-      final result = await getCredentialUsecase.execute();
-
-      result.fold(
-        (l) => emit(Failed(message: l.message)),
-        (r) => emit(
-          GetCredentialSuccess(credential: r),
-        ),
       );
     } catch (e) {
       emit(Failed(message: e.toString()));

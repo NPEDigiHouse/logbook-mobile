@@ -1,6 +1,8 @@
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/main_menu.dart';
+import 'package:elogbook/src/presentation/features/supervisor/menu/main_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,7 +34,11 @@ class _WrapperState extends State<Wrapper> {
           );
         }
         if (state is CredentialExist) {
-          return MainMenu();
+          final UserCredential credential = state.credential;
+          print(credential.role);
+          return credential.role == 'SUPERVISOR'
+              ? MainMenuSupervisor()
+              : MainMenu();
         }
         if (state is CredentialNotExist) {
           return LoginPage();
