@@ -4,7 +4,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 
 class PersonalDataField extends StatelessWidget {
   final String label;
-  final String value;
+  final String? value;
 
   const PersonalDataField({
     super.key,
@@ -23,8 +23,8 @@ class PersonalDataField extends StatelessWidget {
             color: secondaryTextColor,
           ),
         ),
-        const SizedBox(height: 2),
-        Text(value),
+        const SizedBox(height: 4),
+        Text(value ?? 'none'),
       ],
     );
   }
