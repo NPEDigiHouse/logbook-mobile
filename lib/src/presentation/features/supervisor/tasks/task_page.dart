@@ -1,7 +1,6 @@
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_data.dart';
-import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;

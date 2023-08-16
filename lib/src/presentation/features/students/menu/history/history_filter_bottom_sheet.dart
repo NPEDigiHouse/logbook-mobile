@@ -77,9 +77,9 @@ class _HistoryFilterBottomSheetState extends State<HistoryFilterBottomSheet> {
           top: Radius.circular(24),
         ),
       ),
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -160,10 +160,10 @@ class _HistoryFilterBottomSheetState extends State<HistoryFilterBottomSheet> {
               ),
               const SizedBox(height: 10),
               DropdownButtonFormField(
-                value: _activities.first.toLowerCase(),
+                value: _activities.first,
                 items: _activities.map((e) {
                   return DropdownMenuItem(
-                    value: e.toLowerCase(),
+                    value: e,
                     child: Text(e),
                   );
                 }).toList(),

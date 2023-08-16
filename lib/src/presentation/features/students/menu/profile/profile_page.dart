@@ -5,6 +5,7 @@ import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/export_data_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/personal_data_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/unit_statistics_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/profile_item_menu_card.dart';
@@ -120,7 +121,7 @@ class ProfilePage extends StatelessWidget {
                 ProfileItemMenuCard(
                   iconPath: 'file_export_filled.svg',
                   title: 'Export Data',
-                  onTap: () {},
+                  onTap: () => context.navigateTo(const ExportDataPage()),
                 ),
                 const SizedBox(height: 14),
                 ProfileItemMenuCard(
