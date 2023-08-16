@@ -5,6 +5,7 @@ import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/change_password_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/export_data_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/personal_data_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/unit_statistics_page.dart';
@@ -127,7 +128,7 @@ class ProfilePage extends StatelessWidget {
                 ProfileItemMenuCard(
                   iconPath: 'lock_filled.svg',
                   title: 'Change Password',
-                  onTap: () {},
+                  onTap: () => context.navigateTo(const ChangePasswordPage()),
                 ),
               ],
             ),
