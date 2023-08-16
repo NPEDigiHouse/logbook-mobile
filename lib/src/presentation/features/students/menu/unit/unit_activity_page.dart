@@ -1,4 +1,8 @@
+import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
@@ -27,6 +31,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(
+        () => BlocProvider.of<UnitCubit>(context)..getActiveUnit());
     _isList = ValueNotifier(false);
   }
 
@@ -39,6 +45,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
 
   @override
   Widget build(BuildContext context) {
+    final unitCubit = context.watch<UnitCubit>().state;
     return CustomScrollView(
       slivers: <Widget>[
         const MainAppBar(),
@@ -105,59 +112,73 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                           horizontal: 20,
                           vertical: 16,
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            const Text(
-                              'Current Unit',
-                              style: TextStyle(color: backgroundColor),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Obstetrics and Gynecology',
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18,
-                                color: backgroundColor,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            InkWell(
-                              onTap: () {
-                                context.navigateTo(const SelectUnitPage());
-                              },
-                              child: Glassmorphism(
-                                blur: 5,
-                                opacity: .15,
-                                radius: 99,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
+                        child: Builder(
+                          builder: (context) {
+                            if (unitCubit is GetActiveUnitSuccess) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  const Text(
+                                    'Current Unit',
+                                    style: TextStyle(color: backgroundColor),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      const Icon(
-                                        Icons.change_circle_outlined,
-                                        size: 20,
-                                        color: backgroundColor,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        'Change Unit',
-                                        style: textTheme.labelLarge?.copyWith(
-                                          color: backgroundColor,
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    unitCubit.activeUnit.unitName ??
+                                        'No Unit Active',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18,
+                                      color: backgroundColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  InkWell(
+                                    onTap: () {
+                                      context.navigateTo(SelectUnitPage(
+                                        activeUnitModel: unitCubit.activeUnit,
+                                      ));
+                                    },
+                                    child: Glassmorphism(
+                                      blur: 5,
+                                      opacity: .15,
+                                      radius: 99,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            const Icon(
+                                              Icons.change_circle_outlined,
+                                              size: 20,
+                                              color: backgroundColor,
+                                            ),
+                                            const SizedBox(width: 5),
+                                            Text(
+                                              'Change Unit',
+                                              style: textTheme.labelLarge
+                                                  ?.copyWith(
+                                                color: backgroundColor,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          ],
+                                ],
+                              );
+                            }
+                            return CustomShimmer(
+                                child: SizedBox(
+                              height: 100,
+                            ));
+                          },
                         ),
                       ),
                     ],

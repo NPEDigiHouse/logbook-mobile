@@ -10,17 +10,13 @@ class SelectUnitCard extends StatelessWidget {
   const SelectUnitCard({
     super.key,
     required this.unitName,
-    required ValueNotifier<int> selectedIndex,
-    required this.value,
-    required this.index,
     required this.unitId,
-  }) : _selectedIndex = selectedIndex;
+    required this.activeUnitId,
+  });
 
   final String unitName;
-  final ValueNotifier<int> _selectedIndex;
-  final int value;
   final String unitId;
-  final int index;
+  final String activeUnitId;
 
   @override
   Widget build(BuildContext context) {
@@ -61,13 +57,13 @@ class SelectUnitCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (value == index)
+                  if (activeUnitId == unitId)
                     Text(
                       "Currently selected",
                       style:
                           textTheme.labelSmall?.copyWith(color: primaryColor),
                     ),
-                  if (value == index)
+                  if (activeUnitId == unitId)
                     SizedBox(
                       height: 2,
                     ),
@@ -86,20 +82,12 @@ class SelectUnitCard extends StatelessWidget {
               width: 12,
             ),
             Radio.adaptive(
-              value: index,
-              groupValue: value,
+              value: unitId,
+              groupValue: activeUnitId,
               onChanged: (v) {
-                BlocProvider.of<UnitCubit>(context, listen: false)
-                  ..changeUnitActive(unitId: unitId)
-                      .whenComplete(() => _selectedIndex.value = v!);
-                showModalBottomSheet(
-                  context: context,
-                  backgroundColor: Colors.transparent,
-                  builder: (BuildContext context) {
-                    return CustomBottomAlert(
-                        message: 'Successfully replaced unit!');
-                  },
-                );
+                final unitCubit =
+                    BlocProvider.of<UnitCubit>(context, listen: false);
+                unitCubit.changeUnitActive(unitId: unitId);
               },
             ),
           ],

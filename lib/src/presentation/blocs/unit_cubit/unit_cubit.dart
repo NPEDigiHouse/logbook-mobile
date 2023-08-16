@@ -42,8 +42,10 @@ class UnitCubit extends Cubit<UnitState> {
 
       final result = await changeActiveUnitUsecase.execute(unitId: unitId);
 
-      result.fold((l) => emit(Failed(message: l.message)),
-          (r) => emit(ChangeActiveSuccess()));
+      result.fold(
+        (l) => emit(Failed(message: l.message)),
+        (r) => emit(ChangeActiveSuccess()),
+      );
     } catch (e) {
       emit(
         Failed(

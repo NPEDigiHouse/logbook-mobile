@@ -63,10 +63,13 @@ class UnitDatasourceImpl implements UnitDatasource {
 
   @override
   Future<void> changeUnitActive({required String unitId}) async {
+    final credential = await preferenceHandler.getCredential();
+
+    print(credential?.accessToken);
+    print(unitId);
     try {
-      final credential = await preferenceHandler.getCredential();
       final response =
-          await dio.put(ApiService.baseUrl + '/students/units/set-unit',
+          await dio.put(ApiService.baseUrl + '/students/units',
               options: Options(
                 headers: {
                   "content-type": 'application/json',
@@ -82,8 +85,9 @@ class UnitDatasourceImpl implements UnitDatasource {
           });
       if (response.statusCode != 200) {
         print(response.statusMessage);
-        await authDataSource.refreshToken();
-        return changeUnitActive(unitId: unitId);
+        print("Faileddd");
+        // await authDataSource.refreshToken();
+        // return changeUnitActive(unitId: unitId);
       } else {
         print('success');
       }
