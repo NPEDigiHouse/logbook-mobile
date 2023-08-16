@@ -6,5 +6,6 @@ import 'package:elogbook/src/data/models/units/unit_model.dart';
 abstract class UnitRepository {
   Future<Either<Failure, List<UnitModel>>> fetchUnits();
   Future<Either<Failure, void>> changeUnitActive({required String unitId});
+  Future<Either<Failure, void>> checkInActiveUnit();
   Future<Either<Failure, ActiveUnitModel>> getUnitActive();
 }

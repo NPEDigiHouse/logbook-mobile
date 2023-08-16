@@ -68,24 +68,24 @@ class UnitDatasourceImpl implements UnitDatasource {
     print(credential?.accessToken);
     print(unitId);
     try {
-      final response =
-          await dio.put(ApiService.baseUrl + '/students/units',
-              options: Options(
-                headers: {
-                  "content-type": 'application/json',
-                  "authorization": 'Bearer ${credential?.accessToken}'
-                },
-                followRedirects: false,
-                validateStatus: (status) {
-                  return status! < 500;
-                },
-              ),
-              data: {
+      final response = await dio.put(ApiService.baseUrl + '/students/units',
+          options: Options(
+            headers: {
+              "content-type": 'application/json',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            },
+          ),
+          data: {
             'unitId': unitId,
           });
       if (response.statusCode != 200) {
         print(response.statusMessage);
         print("Faileddd");
+        throw Exception();
         // await authDataSource.refreshToken();
         // return changeUnitActive(unitId: unitId);
       } else {
@@ -146,13 +146,14 @@ class UnitDatasourceImpl implements UnitDatasource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
+          // followRedirects: false,
+          // validateStatus: (status) {
+          //   return status! < 500;
+          // },
         ),
       );
-      if (response.statusCode != 200) {
+      print(response.statusCode);
+      if (response.statusCode != 201) {
         throw Exception();
       }
     } catch (e) {

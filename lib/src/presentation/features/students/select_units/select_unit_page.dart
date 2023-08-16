@@ -5,7 +5,6 @@ import 'package:elogbook/src/presentation/features/students/select_units/widgets
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/students/select_units/widgets/select_unit_card.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectUnitPage extends StatefulWidget {
@@ -55,6 +54,21 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
                 builder: (BuildContext context) {
                   return CustomBottomAlert(
                     message: 'Successfully replaced unit!',
+                  );
+                },
+              ).whenComplete(() {
+                BlocProvider.of<UnitCubit>(context, listen: false)
+                    .getActiveUnit();
+                Navigator.pop(context); // Jika ini adalah tujuan yang benar
+              });
+            } else if (state is ChangeActiveFailed) {
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (BuildContext context) {
+                  return CustomBottomAlert(
+                    message: 'Failed to change active unit',
+                    isFailed: true,
                   );
                 },
               ).whenComplete(() {

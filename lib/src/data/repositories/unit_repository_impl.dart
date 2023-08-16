@@ -44,4 +44,16 @@ class UnitReposityImpl implements UnitRepository {
       return Left(ServerErrorFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> checkInActiveUnit() async {
+    try {
+      final result = await dataSource.checkInActiveUnit();
+      return Right(result);
+    } catch (e) {
+      return Left(
+        ServerErrorFailure(e.toString()),
+      );
+    }
+  }
 }

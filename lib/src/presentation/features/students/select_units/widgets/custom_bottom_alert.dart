@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 
 class CustomBottomAlert extends StatefulWidget {
   final String message;
+  final bool isFailed;
 
-  const CustomBottomAlert({super.key, required this.message});
+  const CustomBottomAlert(
+      {super.key, required this.message, this.isFailed = false});
 
   @override
   _CustomBottomAlertState createState() => _CustomBottomAlertState();
@@ -68,7 +70,7 @@ class _CustomBottomAlertState extends State<CustomBottomAlert>
             )
           ],
           borderRadius: BorderRadius.circular(8),
-          color: primaryColor,
+          color: widget.isFailed ? errorColor : primaryColor,
         ),
         child: Row(
           children: [
