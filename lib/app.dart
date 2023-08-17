@@ -1,4 +1,5 @@
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +32,7 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => di.locator<AuthCubit>()),
         BlocProvider(create: (_) => di.locator<UnitCubit>()),
+        BlocProvider(create: (_) => di.locator<SupervisorsCubit>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,11 +1,14 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/src/data/models/clinical_records/clinical_record_post_model.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_third_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/build_examination.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:flutter/material.dart';
 
 class CreateClinicalRecordSecondPage extends StatefulWidget {
-  const CreateClinicalRecordSecondPage({super.key});
+  final ClinicalRecordPostModel clinicalRecord;
+  const CreateClinicalRecordSecondPage(
+      {super.key, required this.clinicalRecord});
 
   @override
   State<CreateClinicalRecordSecondPage> createState() =>

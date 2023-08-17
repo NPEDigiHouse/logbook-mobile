@@ -35,7 +35,7 @@ class _WrapperState extends State<Wrapper> {
         }
         if (state is CredentialExist) {
           final UserCredential credential = state.credential;
-          print(credential.role);
+          print(credential);
           return credential.role == 'SUPERVISOR'
               ? MainMenuSupervisor()
               : MainMenu();

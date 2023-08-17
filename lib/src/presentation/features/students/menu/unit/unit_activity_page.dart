@@ -1,5 +1,6 @@
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -376,7 +377,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                   ),
                           ],
                         ),
-                      if (activeUnitModel.checkInStatus == 'VERIFIED') ...[
+                      // ! Ubah ke VERIFIED setelah integrasi supervior Selesai
+                      if (activeUnitModel.checkInStatus != null) ...[
                         const SizedBox(height: 28),
                         ValueListenableBuilder(
                           valueListenable: _isList,
@@ -401,7 +403,11 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                   child: child,
                                 );
                               },
-                              child: isList ? buildItemList() : buildItemGrid(),
+                              child: isList
+                                  ? buildItemList(
+                                      activeUnitModel: activeUnitModel)
+                                  : buildItemGrid(
+                                      activeUnitModel: activeUnitModel),
                             );
                           },
                         ),
@@ -425,7 +431,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     );
   }
 
-  Column buildItemGrid() {
+  Column buildItemGrid({required ActiveUnitModel activeUnitModel}) {
     return Column(
       key: const ValueKey(1),
       children: <Widget>[
@@ -433,7 +439,13 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           itemColor: primaryColor,
           iconPaths: iconPaths.sublist(0, 4),
           labels: labels.sublist(0, 4),
-          onTaps: onTaps(context).sublist(0, 4),
+          onTaps: [
+            () => context.navigateTo(
+                  CreateClinicalRecordFirstPage(
+                      activeUnitModel: activeUnitModel),
+                ),
+            ...onTaps(context).sublist(1, 4)
+          ],
         ),
         const SizedBox(height: 12),
         GridMenuRow(
@@ -454,7 +466,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     );
   }
 
-  Column buildItemList() {
+  Column buildItemList({required ActiveUnitModel activeUnitModel}) {
     return Column(
       key: const ValueKey(2),
       children: <Widget>[
@@ -463,7 +475,13 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           iconPaths: iconPaths.sublist(0, 4),
           labels: labels.sublist(0, 4),
           descriptions: descriptions.sublist(0, 4),
-          onTaps: onTaps(context).sublist(0, 4),
+          onTaps: [
+            () => context.navigateTo(
+                  CreateClinicalRecordFirstPage(
+                      activeUnitModel: activeUnitModel),
+                ),
+            ...onTaps(context).sublist(1, 4)
+          ],
         ),
         const Divider(
           height: 30,

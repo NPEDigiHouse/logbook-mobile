@@ -4,30 +4,30 @@ part 'clinical_record_post_model.g.dart';
 
 @JsonSerializable()
 class ClinicalRecordPostModel {
-  final String? patientName;
-  final int? patientAge;
-  final String? gender;
-  final String? recordId;
-  final String? notes;
-  final String? studentFeedback;
-  final String? supervisorId;
-  final String? attachment;
-  final List<ExaminationsPostModel>? examinations;
-  final List<DiagnosisPostModel>? diagnosis;
-  final List<ManagementPostModel>? managements;
+  String? patientName;
+  int? patientAge;
+  String? gender;
+  String? recordId;
+  String? notes;
+  String? studentFeedback;
+  String? supervisorId;
+  String? attachment;
+  List<ExaminationsPostModel>? examinations;
+  List<DiagnosisPostModel>? diagnosis;
+  List<ManagementPostModel>? managements;
 
   ClinicalRecordPostModel({
-    required this.attachment,
-    required this.diagnosis,
-    required this.examinations,
-    required this.gender,
-    required this.managements,
-    required this.notes,
-    required this.patientAge,
-    required this.patientName,
-    required this.recordId,
-    required this.studentFeedback,
-    required this.supervisorId,
+    this.attachment,
+    this.diagnosis,
+    this.examinations,
+    this.gender,
+    this.managements,
+    this.notes,
+    this.patientAge,
+    this.patientName,
+    this.recordId,
+    this.studentFeedback,
+    this.supervisorId,
   });
 
   Map<String, dynamic> toJson() => _$ClinicalRecordPostModelToJson(this);

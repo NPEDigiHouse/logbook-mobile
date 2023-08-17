@@ -1,13 +1,22 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/src/data/models/clinical_records/clinical_record_post_model.dart';
+import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_second_page.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/header/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/input/build_text_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class CreateClinicalRecordFirstPage extends StatefulWidget {
-  const CreateClinicalRecordFirstPage({super.key});
+  final ActiveUnitModel activeUnitModel;
+  const CreateClinicalRecordFirstPage(
+      {super.key, required this.activeUnitModel});
 
   @override
   State<CreateClinicalRecordFirstPage> createState() =>
@@ -16,6 +25,27 @@ class CreateClinicalRecordFirstPage extends StatefulWidget {
 
 class _CreateClinicalRecordFirstPageState
     extends State<CreateClinicalRecordFirstPage> {
+  final ClinicalRecordPostModel clinicalRecord = ClinicalRecordPostModel();
+  final TextEditingController patientNameController = TextEditingController();
+  final TextEditingController patientAgeController = TextEditingController();
+  final TextEditingController recordIdController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() =>
+        BlocProvider.of<SupervisorsCubit>(context, listen: false)
+          ..getAllSupervisors());
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    patientAgeController.dispose();
+    patientNameController.dispose();
+    recordIdController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,21 +69,42 @@ class _CreateClinicalRecordFirstPageState
                       label: Text('Datetime'),
                       enabled: false,
                     ),
-                    initialValue: '02/20/2023 23:11:26',
+                    initialValue: DateFormat('dd/MM/yyyy HH:mm:ss')
+                        .format(DateTime.now()),
                   ),
                   TextFormField(
                     decoration: InputDecoration(
                       label: Text('Unit'),
                       enabled: false,
                     ),
-                    initialValue: 'Pediatric Opthalmology',
+                    initialValue: widget.activeUnitModel.unitName,
                   ),
+                  BlocBuilder<SupervisorsCubit, SupervisorsState>(
+                      builder: (context, state) {
+                    List<SupervisorModel> _supervisors = [];
+                    if (state is FetchSuccess) {
+                      _supervisors.clear();
+                      _supervisors.addAll(state.supervisors);
+                    }
+                    return DropdownButtonFormField(
+                      hint: Text('Supervisor'),
+                      items: _supervisors
+                          .map(
+                            (e) => DropdownMenuItem(
+                              child: Text(e.fullName!),
+                              value: e,
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (v) {
+                        if (v != null) clinicalRecord.supervisorId = v.id;
+                      },
+                      value: null,
+                    );
+                  }),
                   BuildTextField(
                     onChanged: (v) {},
-                    label: 'Supervisor',
-                  ),
-                  BuildTextField(
-                    onChanged: (v) {},
+                    controller: recordIdController,
                     label: 'Record Id',
                   ),
                 ],
@@ -74,6 +125,7 @@ class _CreateClinicalRecordFirstPageState
                   BuildTextField(
                     onChanged: (v) {},
                     label: 'Patient Name',
+                    controller: patientNameController,
                   ),
                   Builder(builder: (context) {
                     List<String> _genderType = ['Male', 'Female'];
@@ -86,21 +138,42 @@ class _CreateClinicalRecordFirstPageState
                             ),
                           )
                           .toList(),
-                      onChanged: (v) {},
+                      onChanged: (v) {
+                        // Patient Male
+                      },
                       value: _genderType[0],
                     );
                   }),
                   BuildTextField(
                     onChanged: (v) {},
                     label: 'Patient Age',
+                    controller: patientAgeController,
+                    isOnlyNumber: true,
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   FilledButton(
-                    onPressed: () => context.navigateTo(
-                      CreateClinicalRecordSecondPage(),
-                    ),
+                    onPressed: () {
+                      clinicalRecord.patientName = patientNameController.text;
+                      if (patientAgeController.text.isNotEmpty)
+                        clinicalRecord.patientAge =
+                            int.parse(patientAgeController.text);
+                      clinicalRecord.recordId = recordIdController.text;
+                      print(clinicalRecord.patientName);
+                      print(clinicalRecord.supervisorId);
+                      if (clinicalRecord.patientAge == null ||
+                          clinicalRecord.patientName!.isEmpty ||
+                          clinicalRecord.recordId!.isEmpty ||
+                          clinicalRecord.supervisorId == null) {
+                        return;
+                      }
+                      context.navigateTo(
+                        CreateClinicalRecordSecondPage(
+                          clinicalRecord: clinicalRecord,
+                        ),
+                      );
+                    },
                     child: Text('Next'),
                   ).fullWidth(),
                 ],
