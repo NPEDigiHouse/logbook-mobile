@@ -36,7 +36,7 @@ final List<String> labels = [
 ];
 
 final List<Widget> pages = [
-  const CreateClinicalRecordFirstPage(),
+  SizedBox(),
   const AddScientificSessionPage(),
   const CreateSelfReflectionPage(),
   const DailyActivityPage(),

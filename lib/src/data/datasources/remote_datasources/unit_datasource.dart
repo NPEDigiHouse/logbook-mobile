@@ -146,10 +146,10 @@ class UnitDatasourceImpl implements UnitDatasource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          // followRedirects: false,
-          // validateStatus: (status) {
-          //   return status! < 500;
-          // },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
         ),
       );
       print(response.statusCode);

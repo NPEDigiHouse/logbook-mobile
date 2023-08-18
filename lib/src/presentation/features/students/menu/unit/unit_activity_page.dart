@@ -1,5 +1,6 @@
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -59,6 +60,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
               }
             },
             child: Builder(builder: (context) {
+              print(unitCubit);
               if (unitCubit is GetActiveUnitSuccess) {
                 final ActiveUnitModel activeUnitModel = unitCubit.activeUnit;
                 //       return
@@ -203,91 +205,97 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      ReportExpansionTile(
-                        isVerified: activeUnitModel.checkInStatus == 'VERIFIED',
-                        leadingIcon: Icons.arrow_upward_rounded,
-                        leadingColor: variant2Color,
-                        title: 'Check In',
-                        subtitle: activeUnitModel.checkInStatus == null
-                            ? 'Not Submitted yet'
-                            : DateFormat('yyyy-MM-dd HH:mm:ss').format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    activeUnitModel.checkInTime!),
-                              ),
-                        children: <Widget>[
-                          activeUnitModel.checkInStatus == null
-                              ? SizedBox(
-                                  width: double.infinity,
-                                  child: FilledButton.icon(
-                                    onPressed: () {
-                                      BlocProvider.of<UnitCubit>(context,
-                                          listen: false)
-                                        ..checkInActiveUnit();
-                                    },
-                                    icon: SvgPicture.asset(
-                                      AssetPath.getIcon('send_alt_filled.svg'),
-                                      width: 20,
-                                    ),
-                                    label: const Text('Send Report'),
-                                  ),
-                                )
-                              : Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: onDisableColor,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      const Text(
-                                        'Status',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500),
+                      if (activeUnitModel.unitName != null)
+                        ReportExpansionTile(
+                          isVerified:
+                              activeUnitModel.checkInStatus == 'VERIFIED',
+                          leadingIcon: Icons.arrow_upward_rounded,
+                          leadingColor: variant2Color,
+                          title: 'Check In',
+                          subtitle: activeUnitModel.checkInStatus == null
+                              ? 'Not Submitted yet'
+                              : DateFormat('yyyy-MM-dd HH:mm:ss').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      activeUnitModel.checkInTime!),
+                                ),
+                          children: <Widget>[
+                            activeUnitModel.checkInStatus == null
+                                ? SizedBox(
+                                    width: double.infinity,
+                                    child: FilledButton.icon(
+                                      onPressed: () {
+                                        BlocProvider.of<UnitCubit>(context,
+                                            listen: false)
+                                          ..checkInActiveUnit();
+                                      },
+                                      icon: SvgPicture.asset(
+                                        AssetPath.getIcon(
+                                            'send_alt_filled.svg'),
+                                        width: 20,
                                       ),
-                                      const SizedBox(height: 4),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 4,
+                                      label: const Text('Send Report'),
+                                    ),
+                                  )
+                                : Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: onDisableColor,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        const Text(
+                                          'Status',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500),
                                         ),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(99),
-                                          color: successColor.withOpacity(.25),
-                                        ),
-                                        child: Text(
-                                          activeUnitModel.checkInStatus ?? '-',
-                                          style: textTheme.bodySmall?.copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            color: successColor,
+                                        const SizedBox(height: 4),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(99),
+                                            color:
+                                                successColor.withOpacity(.25),
+                                          ),
+                                          child: Text(
+                                            activeUnitModel.checkInStatus ??
+                                                '-',
+                                            style:
+                                                textTheme.bodySmall?.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: successColor,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      const Text(
-                                        'Report time',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        DateFormat('yyyy-MM-dd HH:mm:ss')
-                                            .format(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              activeUnitModel.checkInTime!),
+                                        const SizedBox(height: 8),
+                                        const Text(
+                                          'Report time',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500),
                                         ),
-                                        style: textTheme.bodySmall?.copyWith(
-                                          color: secondaryTextColor,
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          DateFormat('yyyy-MM-dd HH:mm:ss')
+                                              .format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                activeUnitModel.checkInTime!),
+                                          ),
+                                          style: textTheme.bodySmall?.copyWith(
+                                            color: secondaryTextColor,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                        ],
-                      ),
+                          ],
+                        ),
                       const SizedBox(height: 12),
                       if (activeUnitModel.checkInStatus == 'VERIFIED')
                         ReportExpansionTile(
@@ -376,7 +384,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                   ),
                           ],
                         ),
-                      if (activeUnitModel.checkInStatus == 'VERIFIED') ...[
+                      // ! Ubah ke VERIFIED setelah integrasi supervior Selesai
+                      if (activeUnitModel.checkInStatus != null) ...[
                         const SizedBox(height: 28),
                         ValueListenableBuilder(
                           valueListenable: _isList,
@@ -401,7 +410,11 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                   child: child,
                                 );
                               },
-                              child: isList ? buildItemList() : buildItemGrid(),
+                              child: isList
+                                  ? buildItemList(
+                                      activeUnitModel: activeUnitModel)
+                                  : buildItemGrid(
+                                      activeUnitModel: activeUnitModel),
                             );
                           },
                         ),
@@ -425,7 +438,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     );
   }
 
-  Column buildItemGrid() {
+  Column buildItemGrid({required ActiveUnitModel activeUnitModel}) {
     return Column(
       key: const ValueKey(1),
       children: <Widget>[
@@ -433,7 +446,13 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           itemColor: primaryColor,
           iconPaths: iconPaths.sublist(0, 4),
           labels: labels.sublist(0, 4),
-          onTaps: onTaps(context).sublist(0, 4),
+          onTaps: [
+            () => context.navigateTo(
+                  CreateClinicalRecordFirstPage(
+                      activeUnitModel: activeUnitModel),
+                ),
+            ...onTaps(context).sublist(1, 4)
+          ],
         ),
         const SizedBox(height: 12),
         GridMenuRow(
@@ -454,7 +473,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     );
   }
 
-  Column buildItemList() {
+  Column buildItemList({required ActiveUnitModel activeUnitModel}) {
     return Column(
       key: const ValueKey(2),
       children: <Widget>[
@@ -463,7 +482,13 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           iconPaths: iconPaths.sublist(0, 4),
           labels: labels.sublist(0, 4),
           descriptions: descriptions.sublist(0, 4),
-          onTaps: onTaps(context).sublist(0, 4),
+          onTaps: [
+            () => context.navigateTo(
+                  CreateClinicalRecordFirstPage(
+                      activeUnitModel: activeUnitModel),
+                ),
+            ...onTaps(context).sublist(1, 4)
+          ],
         ),
         const Divider(
           height: 30,

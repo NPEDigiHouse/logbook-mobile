@@ -1,10 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/clinical_record_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/supervisors_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/unit_datasource.dart';
 import 'package:elogbook/src/data/repositories/auth_repository_impl.dart';
+import 'package:elogbook/src/data/repositories/clinical_record_repository_impl.dart';
+import 'package:elogbook/src/data/repositories/supervisor_repository_impl.dart';
 import 'package:elogbook/src/data/repositories/unit_repository_impl.dart';
 import 'package:elogbook/src/domain/repositories/auth_repository.dart';
+import 'package:elogbook/src/domain/repositories/clinical_record_repository.dart';
+import 'package:elogbook/src/domain/repositories/supervisor_repository.dart';
 import 'package:elogbook/src/domain/repositories/unit_repository.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/generate_token_reset_password_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/get_credential_usecase.dart';
@@ -13,12 +19,23 @@ import 'package:elogbook/src/domain/usecases/auth_usecases/login_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/logout_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/register_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/reset_password_usecase.dart';
+import 'package:elogbook/src/domain/usecases/clinical_record_usecases/get_affected_parts_usecase.dart';
+import 'package:elogbook/src/domain/usecases/clinical_record_usecases/get_diagnosis_types_usecase.dart';
+import 'package:elogbook/src/domain/usecases/clinical_record_usecases/get_examination_types_usecase.dart';
+import 'package:elogbook/src/domain/usecases/clinical_record_usecases/get_management_roles_usecase.dart';
+import 'package:elogbook/src/domain/usecases/clinical_record_usecases/get_management_types_usecase.dart';
+import 'package:elogbook/src/domain/usecases/clinical_record_usecases/upload_clinical_record_attachment_usecase.dart';
+import 'package:elogbook/src/domain/usecases/clinical_record_usecases/upload_clinical_record_usecase.dart';
+import 'package:elogbook/src/domain/usecases/supervisor_usecases/get_all_supervisors_usecase.dart';
 import 'package:elogbook/src/domain/usecases/unit_usecases/change_unit_active_usecase.dart';
 import 'package:elogbook/src/domain/usecases/unit_usecases/check_in_active_unit_usecase.dart';
 import 'package:elogbook/src/domain/usecases/unit_usecases/fetch_units_usecase.dart';
 import 'package:elogbook/src/domain/usecases/unit_usecases/get_active_unit_usecase.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:get_it/get_it.dart';
 
 final locator = GetIt.instance;
@@ -42,6 +59,16 @@ void _injectRepository() {
       dataSource: locator(),
     ),
   );
+  locator.registerLazySingleton<SupervisorRepository>(
+    () => SupervisorRepositoryImpl(
+      dataSource: locator(),
+    ),
+  );
+  locator.registerLazySingleton<ClinicalRecordRepository>(
+    () => ClinicalRecordRepositoryImpl(
+      dataSource: locator(),
+    ),
+  );
 }
 
 void _injectDatasource() {
@@ -55,6 +82,18 @@ void _injectDatasource() {
     () => UnitDatasourceImpl(
       dio: locator(),
       authDataSource: locator<AuthDataSource>(),
+      preferenceHandler: locator(),
+    ),
+  );
+  locator.registerLazySingleton<SupervisorsDataSource>(
+    () => SupervisorsDataSourceImpl(
+      dio: locator(),
+      preferenceHandler: locator(),
+    ),
+  );
+  locator.registerLazySingleton<ClinicalRecordsDatasource>(
+    () => ClinicalRecordsDatasourceImpl(
+      dio: locator(),
       preferenceHandler: locator(),
     ),
   );
@@ -117,6 +156,50 @@ void _injectUsecases() {
       repository: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    () => GetAllSupervisorsUsecase(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetAffectedPartsUsecase(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => GetDiagnosisTypesUsecase(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => GetExaminationTypesUsecase(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => GetManagementRolesUsecase(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => GetManagementTypesUsecase(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => UploadClinicalRecordAttachmentUsecase(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => UploadClinicalRecordUsecase(
+      repository: locator(),
+    ),
+  );
 }
 
 void _injectStateManagement() {
@@ -139,6 +222,22 @@ void _injectStateManagement() {
       changeActiveUnitUsecase: locator(),
       getActiveUnitUsecase: locator(),
       checkInActiveUnitUsecase: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => SupervisorsCubit(
+      getAllSupervisorsUsecase: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => ClinicalRecordCubit(
+      getAffectedPartsUsecase: locator(),
+      getDiagnosisTypesUsecase: locator(),
+      getExaminationTypesUsecase: locator(),
+      getManagementRolesUsecase: locator(),
+      getManagementTypesUsecase: locator(),
+      uploadClinicalRecordAttachmentUsecase: locator(),
+      uploadClinicalRecordUsecase: locator(),
     ),
   );
 }

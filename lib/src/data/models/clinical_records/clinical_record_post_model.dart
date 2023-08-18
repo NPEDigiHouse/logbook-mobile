@@ -4,30 +4,30 @@ part 'clinical_record_post_model.g.dart';
 
 @JsonSerializable()
 class ClinicalRecordPostModel {
-  final String? patientName;
-  final int? patientAge;
-  final String? gender;
-  final String? recordId;
-  final String? notes;
-  final String? studentFeedback;
-  final String? supervisorId;
-  final String? attachment;
-  final List<ExaminationsPostModel>? examinations;
-  final List<DiagnosisPostModel>? diagnosis;
-  final List<ManagementPostModel>? managements;
+  String? patientName;
+  int? patientAge;
+  String? gender;
+  String? recordId;
+  String? notes;
+  String? studentFeedback;
+  String? supervisorId;
+  String? attachment;
+  List<ExaminationsPostModel>? examinations;
+  List<DiagnosisPostModel>? diagnosiss;
+  List<ManagementPostModel>? managements;
 
   ClinicalRecordPostModel({
-    required this.attachment,
-    required this.diagnosis,
-    required this.examinations,
-    required this.gender,
-    required this.managements,
-    required this.notes,
-    required this.patientAge,
-    required this.patientName,
-    required this.recordId,
-    required this.studentFeedback,
-    required this.supervisorId,
+    this.attachment,
+    this.diagnosiss,
+    this.examinations,
+    this.gender,
+    this.managements,
+    this.notes,
+    this.patientAge,
+    this.patientName,
+    this.recordId,
+    this.studentFeedback,
+    this.supervisorId,
   });
 
   Map<String, dynamic> toJson() => _$ClinicalRecordPostModelToJson(this);
@@ -35,12 +35,12 @@ class ClinicalRecordPostModel {
 
 @JsonSerializable()
 class ExaminationsPostModel {
-  final String? affectedPartId;
-  final List<String>? examinationTypeId;
+  String? affectedPartId;
+  List<String>? examinationTypeId;
 
   ExaminationsPostModel({
-    required this.affectedPartId,
-    required this.examinationTypeId,
+    this.affectedPartId,
+    this.examinationTypeId,
   });
 
   Map<String, dynamic> toJson() => _$ExaminationsPostModelToJson(this);
@@ -50,12 +50,12 @@ class ExaminationsPostModel {
 
 @JsonSerializable()
 class DiagnosisPostModel {
-  final String? affectedPartId;
-  final List<String>? diagnosisTypeId;
+  String? affectedPartId;
+  List<String>? diagnosisTypeId;
 
   DiagnosisPostModel({
-    required this.affectedPartId,
-    required this.diagnosisTypeId,
+    this.affectedPartId,
+    this.diagnosisTypeId,
   });
 
   Map<String, dynamic> toJson() => _$DiagnosisPostModelToJson(this);
@@ -65,12 +65,12 @@ class DiagnosisPostModel {
 
 @JsonSerializable()
 class ManagementPostModel {
-  final String? affectedPartId;
-  final List<ManagementTypeRole>? managementTypeId;
+  String? affectedPartId;
+  List<ManagementTypeRole>? management;
 
   ManagementPostModel({
-    required this.affectedPartId,
-    required this.managementTypeId,
+    this.affectedPartId,
+    this.management,
   });
 
   Map<String, dynamic> toJson() => _$ManagementPostModelToJson(this);
@@ -80,12 +80,12 @@ class ManagementPostModel {
 
 @JsonSerializable()
 class ManagementTypeRole {
-  final String? managementTypeId;
-  final String? managementRoleId;
+  String? managementTypeId;
+  String? managementRoleId;
 
   ManagementTypeRole({
-    required this.managementRoleId,
-    required this.managementTypeId,
+    this.managementRoleId,
+    this.managementTypeId,
   });
 
   Map<String, dynamic> toJson() => _$ManagementTypeRoleToJson(this);

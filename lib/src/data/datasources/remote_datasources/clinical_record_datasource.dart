@@ -13,12 +13,13 @@ import 'package:elogbook/src/data/models/clinical_records/examination_types_mode
 import 'package:elogbook/src/data/models/clinical_records/list_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/management_role_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/management_types_model.dart';
+import 'package:path/path.dart';
 
 abstract class ClinicalRecordsDatasource {
   Future<void> uploadClinicalRecord({
     required ClinicalRecordPostModel clinicalRecordPostModel,
   });
-  Future<void> uploadClinicalRecordAttachment({required String filePath});
+  Future<String> uploadClinicalRecordAttachment({required String filePath});
   Future<ListClinicalRecordModel> getStudentClinicalRecords();
   Future<DetailClinicalRecordModel> getDetailClinicalRecord(
       {required String clinicalRecordId});
@@ -27,7 +28,7 @@ abstract class ClinicalRecordsDatasource {
       {required String unitId});
   Future<List<ExaminationTypesModel>> getExaminationTypes(
       {required String unitId});
-  Future<List<ManagementRole>> getManagementRoles();
+  Future<List<ManagementRoleModel>> getManagementRoles();
   Future<List<AffectedPart>> getAffectedParts({required String unitId});
 }
 
@@ -41,19 +42,23 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   @override
   Future<void> uploadClinicalRecord(
       {required ClinicalRecordPostModel clinicalRecordPostModel}) async {
+    final credential = await preferenceHandler.getCredential();
+
     try {
       final response = await dio.post(ApiService.baseUrl + '/clinical-records',
           options: Options(
             headers: {
               "content-type": 'application/json',
-              "authorization":
-                  'Bearer ${base64Encode(utf8.encode('admin:admin'))}'
+              "authorization": 'Bearer ${credential?.accessToken}'
             },
           ),
           data: clinicalRecordPostModel.toJson());
-      if (response != 201) {
+      print(response.statusCode);
+      print(response.data);
+      if (response.statusCode != 201) {
         throw Exception();
       }
+      print(response.statusCode);
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -61,27 +66,36 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   }
 
   @override
-  Future<void> uploadClinicalRecordAttachment(
+  Future<String> uploadClinicalRecordAttachment(
       {required String filePath}) async {
+    print(filePath);
     final credential = await preferenceHandler.getCredential();
-    FormData formData = FormData.fromMap({
-      'attachments': await MultipartFile.fromFile(filePath),
-    });
+
     try {
-      final response =
-          await dio.post(ApiService.baseUrl + '/clinical-records/attachments',
-              options: Options(
-                headers: {
-                  "content-type": 'multipart/form-data',
-                  "authorization": 'Bearer ${credential?.accessToken}'
-                },
-              ),
-              data: formData);
-      if (response != 201) {
-        throw Exception();
+      final response = await dio.post(
+        ApiService.baseUrl + '/clinical-records/attachments',
+        options: Options(
+          headers: {
+            "content-type": 'multipart/form-data',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+        data: FormData.fromMap(
+          {
+            'attachments': await MultipartFile.fromFile(
+              filePath,
+              filename: basename(filePath),
+            ),
+          },
+        ),
+      );
+      if (response == 201) {
+        return await response.data['data'];
       }
+      // throw Exception();
+      return await response.data['data'];
     } catch (e) {
-      print(e.toString());
+      print("ini" + e.toString());
       throw ClientFailure(e.toString());
     }
   }
@@ -160,9 +174,12 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         throw Exception();
       }
       final dataResponse =
-          await DataResponse<List<DiagnosisTypesModel>>.fromJson(response.data);
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<DiagnosisTypesModel> listData = dataResponse.data
+          .map((e) => DiagnosisTypesModel.fromJson(e))
+          .toList();
 
-      return dataResponse.data;
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -188,10 +205,12 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         throw Exception();
       }
       final dataResponse =
-          await DataResponse<List<ExaminationTypesModel>>.fromJson(
-              response.data);
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<ExaminationTypesModel> listData = dataResponse.data
+          .map((e) => ExaminationTypesModel.fromJson(e))
+          .toList();
 
-      return dataResponse.data;
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -217,10 +236,12 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         throw Exception();
       }
       final dataResponse =
-          await DataResponse<List<ManagementTypesModel>>.fromJson(
-              response.data);
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<ManagementTypesModel> listData = dataResponse.data
+          .map((e) => ManagementTypesModel.fromJson(e))
+          .toList();
 
-      return dataResponse.data;
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -245,9 +266,11 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         throw Exception();
       }
       final dataResponse =
-          await DataResponse<List<AffectedPart>>.fromJson(response.data);
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<AffectedPart> affectedParts =
+          dataResponse.data.map((e) => AffectedPart.fromJson(e)).toList();
 
-      return dataResponse.data;
+      return affectedParts;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -255,11 +278,11 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   }
 
   @override
-  Future<List<ManagementRole>> getManagementRoles() async {
+  Future<List<ManagementRoleModel>> getManagementRoles() async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
-        ApiService.baseUrl + '/manegement-roles',
+        ApiService.baseUrl + '/management-roles',
         options: Options(
           headers: {
             "content-type": 'application/json',
@@ -272,9 +295,12 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         throw Exception();
       }
       final dataResponse =
-          await DataResponse<List<ManagementRole>>.fromJson(response.data);
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<ManagementRoleModel> listData = dataResponse.data
+          .map((e) => ManagementRoleModel.fromJson(e))
+          .toList();
 
-      return dataResponse.data;
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

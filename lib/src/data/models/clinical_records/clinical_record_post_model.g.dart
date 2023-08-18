@@ -10,7 +10,7 @@ ClinicalRecordPostModel _$ClinicalRecordPostModelFromJson(
         Map<String, dynamic> json) =>
     ClinicalRecordPostModel(
       attachment: json['attachment'] as String?,
-      diagnosis: (json['diagnosis'] as List<dynamic>?)
+      diagnosiss: (json['diagnosiss'] as List<dynamic>?)
           ?.map((e) => DiagnosisPostModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       examinations: (json['examinations'] as List<dynamic>?)
@@ -41,7 +41,7 @@ Map<String, dynamic> _$ClinicalRecordPostModelToJson(
       'supervisorId': instance.supervisorId,
       'attachment': instance.attachment,
       'examinations': instance.examinations,
-      'diagnosis': instance.diagnosis,
+      'diagnosiss': instance.diagnosiss,
       'managements': instance.managements,
     };
 
@@ -78,7 +78,7 @@ Map<String, dynamic> _$DiagnosisPostModelToJson(DiagnosisPostModel instance) =>
 ManagementPostModel _$ManagementPostModelFromJson(Map<String, dynamic> json) =>
     ManagementPostModel(
       affectedPartId: json['affectedPartId'] as String?,
-      managementTypeId: (json['managementTypeId'] as List<dynamic>?)
+      management: (json['management'] as List<dynamic>?)
           ?.map((e) => ManagementTypeRole.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -87,7 +87,7 @@ Map<String, dynamic> _$ManagementPostModelToJson(
         ManagementPostModel instance) =>
     <String, dynamic>{
       'affectedPartId': instance.affectedPartId,
-      'managementTypeId': instance.managementTypeId,
+      'management': instance.management,
     };
 
 ManagementTypeRole _$ManagementTypeRoleFromJson(Map<String, dynamic> json) =>
