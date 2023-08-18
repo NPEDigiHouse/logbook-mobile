@@ -3,14 +3,14 @@ import 'package:json_annotation/json_annotation.dart';
 part 'management_role_model.g.dart';
 
 @JsonSerializable()
-class ManagementRole {
+class ManagementRoleModel {
   final String? id;
   final String? roleName;
 
-  ManagementRole({this.id, this.roleName});
+  ManagementRoleModel({this.id, this.roleName});
 
-  factory ManagementRole.fromJson(Map<String, dynamic> json) =>
-      _$ManagementRoleFromJson(json);
+  factory ManagementRoleModel.fromJson(Map<String, dynamic> json) =>
+      _$ManagementRoleModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ManagementRoleToJson(this);
+  Map<String, dynamic> toJson() => _$ManagementRoleModelToJson(this);
 }

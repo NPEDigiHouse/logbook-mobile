@@ -54,7 +54,7 @@ StudentCredentialProfile _$StudentCredentialProfileFromJson(
       checkOutStatus: json['checkOutStatus'] as String?,
       clinicId: json['clinicId'] as String?,
       fullName: json['fullName'] as String?,
-      graduationDate: json['graduationDate'] as String?,
+      graduationDate: json['graduationDate'] as int?,
       phoneNumber: json['phoneNumber'] as String?,
       preClinicId: json['preClinicId'] as String?,
       studentId: json['studentId'] as String?,

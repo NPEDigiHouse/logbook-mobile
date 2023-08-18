@@ -44,6 +44,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
       if (state is LoginSuccess) {
+        Future.microtask(() {
+          print("fall");
+          BlocProvider.of<AuthCubit>(context)..isSignIn();
+        });
         context.replace(Wrapper());
         state = Initial();
       }

@@ -16,15 +16,22 @@ class Wrapper extends StatefulWidget {
 class _WrapperState extends State<Wrapper> {
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     Future.microtask(() {
-      BlocProvider.of<AuthCubit>(context).isSignIn();
+      print("fall");
+      BlocProvider.of<AuthCubit>(context)..isSignIn();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is LoginSuccess) {
+          BlocProvider.of<AuthCubit>(context)..isSignIn();
+        }
+      },
       builder: (context, state) {
         if (state is Loading) {
           return Scaffold(
@@ -33,6 +40,7 @@ class _WrapperState extends State<Wrapper> {
             ),
           );
         }
+        print(state);
         if (state is CredentialExist) {
           final UserCredential credential = state.credential;
           print(credential);
@@ -43,6 +51,7 @@ class _WrapperState extends State<Wrapper> {
         if (state is CredentialNotExist) {
           return LoginPage();
         }
+
         return LoginPage();
       },
     );

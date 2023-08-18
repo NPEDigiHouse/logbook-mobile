@@ -43,7 +43,7 @@ class StudentCredentialProfile {
   final String? address;
   final String? fullName;
   final String? clinicId;
-  final String? graduationDate;
+  final int? graduationDate;
   final String? phoneNumber;
   final String? preClinicId;
   final String? checkInStatus;

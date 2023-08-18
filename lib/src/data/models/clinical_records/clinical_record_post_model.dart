@@ -13,12 +13,12 @@ class ClinicalRecordPostModel {
   String? supervisorId;
   String? attachment;
   List<ExaminationsPostModel>? examinations;
-  List<DiagnosisPostModel>? diagnosis;
+  List<DiagnosisPostModel>? diagnosiss;
   List<ManagementPostModel>? managements;
 
   ClinicalRecordPostModel({
     this.attachment,
-    this.diagnosis,
+    this.diagnosiss,
     this.examinations,
     this.gender,
     this.managements,
@@ -35,12 +35,12 @@ class ClinicalRecordPostModel {
 
 @JsonSerializable()
 class ExaminationsPostModel {
-  final String? affectedPartId;
-  final List<String>? examinationTypeId;
+  String? affectedPartId;
+  List<String>? examinationTypeId;
 
   ExaminationsPostModel({
-    required this.affectedPartId,
-    required this.examinationTypeId,
+    this.affectedPartId,
+    this.examinationTypeId,
   });
 
   Map<String, dynamic> toJson() => _$ExaminationsPostModelToJson(this);
@@ -50,12 +50,12 @@ class ExaminationsPostModel {
 
 @JsonSerializable()
 class DiagnosisPostModel {
-  final String? affectedPartId;
-  final List<String>? diagnosisTypeId;
+  String? affectedPartId;
+  List<String>? diagnosisTypeId;
 
   DiagnosisPostModel({
-    required this.affectedPartId,
-    required this.diagnosisTypeId,
+    this.affectedPartId,
+    this.diagnosisTypeId,
   });
 
   Map<String, dynamic> toJson() => _$DiagnosisPostModelToJson(this);
@@ -65,12 +65,12 @@ class DiagnosisPostModel {
 
 @JsonSerializable()
 class ManagementPostModel {
-  final String? affectedPartId;
-  final List<ManagementTypeRole>? managementTypeId;
+  String? affectedPartId;
+  List<ManagementTypeRole>? management;
 
   ManagementPostModel({
-    required this.affectedPartId,
-    required this.managementTypeId,
+    this.affectedPartId,
+    this.management,
   });
 
   Map<String, dynamic> toJson() => _$ManagementPostModelToJson(this);
@@ -80,12 +80,12 @@ class ManagementPostModel {
 
 @JsonSerializable()
 class ManagementTypeRole {
-  final String? managementTypeId;
-  final String? managementRoleId;
+  String? managementTypeId;
+  String? managementRoleId;
 
   ManagementTypeRole({
-    required this.managementRoleId,
-    required this.managementTypeId,
+    this.managementRoleId,
+    this.managementTypeId,
   });
 
   Map<String, dynamic> toJson() => _$ManagementTypeRoleToJson(this);
