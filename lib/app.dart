@@ -2,8 +2,6 @@ import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
-import 'package:elogbook/src/presentation/features/students/menu/history/history_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:elogbook/core/app/app_settings.dart';

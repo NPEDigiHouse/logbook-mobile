@@ -41,7 +41,7 @@ class InOutReportingList extends StatelessWidget {
                     studentId: students[index].id,
                     isVerified: students[index].isVerified,
                     onTap: () {
-                      showModalBottomSheet<Map<String, String>?>(
+                      showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
                         builder: (context) => CheckReportBottomSheet(
