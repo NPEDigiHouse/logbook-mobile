@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
-import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/in_out_reporting_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 
-class MainMenuHeadSection extends StatelessWidget {
-  const MainMenuHeadSection({super.key});
+class MainMenu extends StatelessWidget {
+  final String username;
+  final String role;
+  final List<MenuItem> menuItems;
+
+  const MainMenu({
+    super.key,
+    required this.username,
+    required this.role,
+    required this.menuItems,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,14 +77,14 @@ class MainMenuHeadSection extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Khairun Nisa',
+                            username,
                             style: textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Head of Division',
+                            role,
                             style: textTheme.bodySmall?.copyWith(
                               color: primaryColor,
                             ),
@@ -120,20 +127,7 @@ class MainMenuHeadSection extends StatelessWidget {
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
                 ),
-                children: <Widget>[
-                  buildMenuCard(
-                    name: 'Tasks',
-                    iconPath: 'round_task_filled.svg',
-                    onTap: () {},
-                  ),
-                  buildMenuCard(
-                    name: 'In-Out Reporting',
-                    iconPath: 'file_arrow_up_down_filled.svg',
-                    onTap: () {
-                      context.navigateTo(const InOutReportingPage());
-                    },
-                  ),
-                ],
+                children: menuItems,
               ),
             ],
           ),
@@ -141,12 +135,22 @@ class MainMenuHeadSection extends StatelessWidget {
       ),
     );
   }
+}
 
-  InkWellContainer buildMenuCard({
-    required String name,
-    required String iconPath,
-    required VoidCallback onTap,
-  }) {
+class MenuItem extends StatelessWidget {
+  final String name;
+  final String iconPath;
+  final VoidCallback onTap;
+
+  const MenuItem({
+    super.key,
+    required this.name,
+    required this.iconPath,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return InkWellContainer(
       onTap: onTap,
       padding: const EdgeInsets.symmetric(

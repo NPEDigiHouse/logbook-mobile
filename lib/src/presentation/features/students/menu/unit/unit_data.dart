@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/assesment_home_page.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
 import 'package:elogbook/src/presentation/features/students/competences/competences_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/references/references_page.dart';

@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
-import 'package:elogbook/src/data/models/clinical_records/clinical_record_post_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:elogbook/src/presentation/widgets/header/form_section_header.dart';

@@ -2,21 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/dummy_models.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 
 class InOutReportingItem extends StatelessWidget {
-  final String checkDate;
-  final String studentName;
-  final String studentId;
-  final bool isVerified;
+  final StudentCheckReport student;
   final VoidCallback? onTap;
 
   const InOutReportingItem({
     super.key,
-    required this.checkDate,
-    required this.studentName,
-    required this.studentId,
-    required this.isVerified,
+    required this.student,
     this.onTap,
   });
 
@@ -48,7 +43,7 @@ class InOutReportingItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  checkDate,
+                  student.date,
                   style: textTheme.labelSmall?.copyWith(
                     color: secondaryTextColor,
                   ),
@@ -58,13 +53,13 @@ class InOutReportingItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
-                      studentName,
+                      student.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(width: 4),
-                    if (isVerified)
+                    if (student.isVerified)
                       const Icon(
                         Icons.verified_rounded,
                         size: 16,
@@ -74,7 +69,7 @@ class InOutReportingItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  checkDate,
+                  student.id,
                   style: textTheme.bodySmall?.copyWith(
                     color: primaryColor,
                   ),
