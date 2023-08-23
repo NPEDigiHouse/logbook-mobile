@@ -6,6 +6,7 @@ import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
@@ -47,6 +48,8 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => di.locator<CompetenceCubit>()),
         BlocProvider(create: (_) => di.locator<SglCstCubit>()),
         BlocProvider(create: (_) => di.locator<ProfileCubit>()),
+        BlocProvider(
+            create: (_) => di.locator<SelfReflectionSupervisorCubit>()),
         BlocProvider(
             create: (_) => di.locator<ClinicalRecordSupervisorCubit>()),
         BlocProvider(

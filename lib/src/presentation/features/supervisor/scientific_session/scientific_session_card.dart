@@ -3,7 +3,6 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/clinical_records/clinical_record_list_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_session_on_list_model.dart';
 import 'package:elogbook/src/presentation/features/supervisor/scientific_session/detail_scientific_session_page.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,7 @@ class ScientificSessionCard extends StatelessWidget {
                   color: primaryColor.withOpacity(.1),
                   child: Center(
                     child: SvgPicture.asset(
-                      AssetPath.getIcon('clinical_notes_rounded.svg'),
+                      AssetPath.getIcon('biotech_rounded.svg'),
                       color: primaryColor,
                       width: 32,
                     ),
