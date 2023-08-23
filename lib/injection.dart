@@ -46,6 +46,7 @@ import 'package:elogbook/src/domain/usecases/unit_usecases/fetch_units_usecase.d
 import 'package:elogbook/src/domain/usecases/unit_usecases/get_active_unit_usecase.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
@@ -342,6 +343,11 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => ProfileCubit(
       dataSource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => ClinicalRecordSupervisorCubit(
+      datasource: locator(),
     ),
   );
 }

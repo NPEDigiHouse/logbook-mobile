@@ -85,7 +85,8 @@ class _HistoryPageState extends State<HistoryPage> {
             groupBy: (activity) => activity.date,
             groupComparator: (date1, date2) => date1.compareTo(date2) * -1,
             itemBuilder: (context, activity) {
-              return Material(
+              return 
+              Material(
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: activity is ClinicalRecord
@@ -228,6 +229,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                 ),
               );
+           
             },
             groupSeparatorBuilder: (date) {
               return Column(

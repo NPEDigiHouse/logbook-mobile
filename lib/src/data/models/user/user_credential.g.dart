@@ -24,6 +24,7 @@ UserCredential _$UserCredentialFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String?,
       id: json['id'] as String?,
       role: json['role'] as String?,
+      fullname: json['fullname'] as String?,
       username: json['username'] as String?,
       student: json['student'] == null
           ? null
@@ -42,6 +43,7 @@ Map<String, dynamic> _$UserCredentialToJson(UserCredential instance) =>
       'role': instance.role,
       'username': instance.username,
       'email': instance.email,
+      'fullname': instance.fullname,
       'student': instance.student,
       'supervisor': instance.supervisor,
     };
@@ -53,7 +55,7 @@ StudentCredentialProfile _$StudentCredentialProfileFromJson(
       checkInStatus: json['checkInStatus'] as String?,
       checkOutStatus: json['checkOutStatus'] as String?,
       clinicId: json['clinicId'] as String?,
-      fullName: json['fullName'] as String?,
+      fullname: json['fullname'] as String?,
       graduationDate: json['graduationDate'] as int?,
       phoneNumber: json['phoneNumber'] as String?,
       preClinicId: json['preClinicId'] as String?,
@@ -74,7 +76,7 @@ Map<String, dynamic> _$StudentCredentialProfileToJson(
     <String, dynamic>{
       'studentId': instance.studentId,
       'address': instance.address,
-      'fullName': instance.fullName,
+      'fullname': instance.fullname,
       'clinicId': instance.clinicId,
       'graduationDate': instance.graduationDate,
       'phoneNumber': instance.phoneNumber,
@@ -95,7 +97,7 @@ Map<String, dynamic> _$StudentCredentialProfileToJson(
 SupervisorCredentialProfile _$SupervisorCredentialProfileFromJson(
         Map<String, dynamic> json) =>
     SupervisorCredentialProfile(
-      fullName: json['fullName'] as String?,
+      fullname: json['fullname'] as String?,
       id: json['id'] as String?,
       supervisorId: json['supervisorId'] as String?,
     );
@@ -105,5 +107,5 @@ Map<String, dynamic> _$SupervisorCredentialProfileToJson(
     <String, dynamic>{
       'id': instance.id,
       'supervisorId': instance.supervisorId,
-      'fullName': instance.fullName,
+      'fullname': instance.fullname,
     };

@@ -1,3 +1,4 @@
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
@@ -8,7 +9,9 @@ import 'package:elogbook/src/presentation/features/students/menu/widgets/profile
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final UserCredential credential;
+
+  const ProfilePage({super.key, required this.credential});
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +95,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 56),
                 Text(
-                  'Khairun Nisa',
+                  credential.fullname!,
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

@@ -105,7 +105,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
             PersonalDataForm(
               title: 'Student',
               dataMap: {
-                'Fullname': widget.userData.student!.fullName ?? '',
+                'Fullname': widget.userData.student!.fullname ?? '',
                 'Clinic ID': widget.userData.student!.clinicId,
                 'Preclinic ID': widget.userData.student!.preClinicId,
                 'S.Ked Graduation Date':

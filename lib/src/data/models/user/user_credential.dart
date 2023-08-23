@@ -21,6 +21,7 @@ class UserCredential {
   final String? role;
   final String? username;
   final String? email;
+  final String? fullname;
   final StudentCredentialProfile? student;
   final SupervisorCredentialProfile? supervisor;
 
@@ -29,6 +30,7 @@ class UserCredential {
       this.email,
       this.id,
       this.role,
+      this.fullname,
       this.username,
       this.student,
       this.supervisor});
@@ -41,7 +43,7 @@ class UserCredential {
 class StudentCredentialProfile {
   final String? studentId;
   final String? address;
-  final String? fullName;
+  final String? fullname;
   final String? clinicId;
   final int? graduationDate;
   final String? phoneNumber;
@@ -63,7 +65,7 @@ class StudentCredentialProfile {
       required this.checkInStatus,
       required this.checkOutStatus,
       required this.clinicId,
-      required this.fullName,
+      required this.fullname,
       required this.graduationDate,
       required this.phoneNumber,
       required this.preClinicId,
@@ -86,10 +88,10 @@ class StudentCredentialProfile {
 class SupervisorCredentialProfile {
   final String? id;
   final String? supervisorId;
-  final String? fullName;
+  final String? fullname;
 
   SupervisorCredentialProfile(
-      {required this.fullName, required this.id, required this.supervisorId});
+      {required this.fullname, required this.id, required this.supervisorId});
 
   factory SupervisorCredentialProfile.fromJson(Map<String, dynamic> data) =>
       _$SupervisorCredentialProfileFromJson(data);

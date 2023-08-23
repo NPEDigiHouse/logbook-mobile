@@ -18,6 +18,8 @@ final List<String> iconPaths = [
   AssetPath.getIcon('school_rounded.svg'),
   AssetPath.getIcon('auto_stories_rounded.svg'),
   AssetPath.getIcon('feed_rounded.svg'),
+  AssetPath.getIcon('summarize_rounded.svg'),
+  AssetPath.getIcon('auto_stories_rounded.svg'),
 ];
 
 final List<String> labels = [
@@ -29,19 +31,23 @@ final List<String> labels = [
   'SGL and CST',
   'Competence',
   'Reference',
-  'Assessment'
+  'Assessment',
+  'Problem Consultation',
+  'Final Score',
 ];
 
 final List<Widget> pages = [
   SizedBox(),
   SizedBox(),
-  const CreateSelfReflectionPage(),
-  const DailyActivityPage(),
-  const AddTrainingPage(),
-  const SglCstHomePage(),
   SizedBox(),
-  const ReferencePage(),
-  const AssesmentHomePage(),
+  SizedBox(),
+  SizedBox(),
+  SizedBox(),
+  SizedBox(),
+  SizedBox(),
+  SizedBox(),
+  SizedBox(),
+  SizedBox(),
 ];
 
 final List<String> descriptions = List.generate(9, (_) {

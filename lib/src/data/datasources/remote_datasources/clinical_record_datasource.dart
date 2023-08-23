@@ -4,6 +4,7 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/clinical_records/affected_part_model.dart';
+import 'package:elogbook/src/data/models/clinical_records/clinical_record_list_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/clinical_record_post_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/detail_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/diagnosis_types_model.dart';
@@ -11,6 +12,8 @@ import 'package:elogbook/src/data/models/clinical_records/examination_types_mode
 import 'package:elogbook/src/data/models/clinical_records/list_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/management_role_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/management_types_model.dart';
+import 'package:elogbook/src/data/models/clinical_records/verify_clinical_record_model.dart';
+import 'package:elogbook/src/presentation/features/supervisor/clinical_record/widgets/verify_dialog.dart';
 import 'package:path/path.dart';
 
 abstract class ClinicalRecordsDatasource {
@@ -28,6 +31,10 @@ abstract class ClinicalRecordsDatasource {
       {required String unitId});
   Future<List<ManagementRoleModel>> getManagementRoles();
   Future<List<AffectedPart>> getAffectedParts({required String unitId});
+  Future<List<ClinicalRecordListModel>> getClinicalRecordsBySupervisor();
+  Future<void> verifiyClinicalRecord(
+      {required String clinicalRecordId,
+      required VerifyClinicalRecordModel model});
 }
 
 class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
@@ -143,10 +150,10 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       if (response.statusCode != 200) {
         throw Exception();
       }
-      final dataResponse =
-          await DataResponse<DetailClinicalRecordModel>.fromJson(response.data);
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
-      return dataResponse.data;
+      final result = DetailClinicalRecordModel.fromJson(dataResponse.data);
+      return result;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -299,6 +306,67 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           .toList();
 
       return listData;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<ClinicalRecordListModel>> getClinicalRecordsBySupervisor() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/clinical-records',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      // print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<ClinicalRecordListModel> listData = dataResponse.data
+          .map((e) => ClinicalRecordListModel.fromJson(e))
+          .toList();
+
+      return listData;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> verifiyClinicalRecord(
+      {required String clinicalRecordId,
+      required VerifyClinicalRecordModel model}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.put(
+        ApiService.baseUrl + '/clinical-records/$clinicalRecordId',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+        data: model.toJson(),
+      );
+      print(response);
+      // print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

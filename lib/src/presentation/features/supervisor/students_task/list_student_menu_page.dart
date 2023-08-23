@@ -2,23 +2,15 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/supervisor/list_resident/list_resident_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/resident_menu_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 
-class StudentDummyHelper {
-  final String name;
-  final String id;
-
-  const StudentDummyHelper({
-    required this.name,
-    required this.id,
-  });
-}
-
-class ListResidentPage extends StatelessWidget {
-  const ListResidentPage({super.key});
+class ListStudentMenuPage extends StatelessWidget {
+  final String title;
+  const ListStudentMenuPage({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -34,25 +26,14 @@ class ListResidentPage extends StatelessWidget {
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ).variant(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: CustomScrollView(
             slivers: [
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 16,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Text(
-                  'Students',
-                  style: textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: primaryColor,
-                  ),
-                ),
-              ),
               SliverToBoxAdapter(
                 child: SizedBox(
                   height: 16,
