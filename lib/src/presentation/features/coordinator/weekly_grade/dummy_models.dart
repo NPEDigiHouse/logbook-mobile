@@ -13,16 +13,16 @@ class StudentWeeklyGrade {
 }
 
 class WeeklyGrade {
-  final int weekNumber;
+  final int week;
   final String date;
-  final String location;
-  final int grade;
+  final String place;
+  final double? score;
 
   WeeklyGrade(
-    this.weekNumber,
+    this.week,
     this.date,
-    this.location,
-    this.grade,
+    this.place,
+    this.score,
   );
 }
 
@@ -44,6 +44,12 @@ final List<StudentWeeklyGrade> students = List.generate(
         'Kamis, 30 Mar 2023',
         'RS UMI',
         65,
+      ),
+      WeeklyGrade(
+        3,
+        'Ahad, 7 April 2023',
+        'Puskesmas',
+        null,
       ),
     ],
   ),

@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
@@ -8,13 +9,15 @@ class WeeklyGradeCard extends StatelessWidget {
   final String date;
   final String place;
   final double? score;
+  final VoidCallback? onTap;
 
   const WeeklyGradeCard({
     super.key,
+    required this.week,
     required this.date,
     required this.place,
-    required this.week,
     this.score,
+    this.onTap,
   });
 
   @override
@@ -70,39 +73,65 @@ class WeeklyGradeCard extends StatelessWidget {
               ),
             ),
             if (score != null)
-              CircularPercentIndicator(
-                radius: 38.0,
-                lineWidth: 5.0,
-                backgroundColor: const Color(0xFFADDAE7),
-                animation: true,
-                percent: score! / 100,
-                center: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        Color(0xFF2489B4),
-                        Color(0xFF29C5F6),
-                      ],
+              GestureDetector(
+                onTap: onTap,
+                child: CircularPercentIndicator(
+                  radius: 38.0,
+                  lineWidth: 5.0,
+                  backgroundColor: const Color(0xFFADDAE7),
+                  animation: true,
+                  percent: score! / 100,
+                  center: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          Color(0xFF2489B4),
+                          Color(0xFF29C5F6),
+                        ],
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        score!.toStringAsFixed(0),
+                        style: textTheme.titleLarge?.copyWith(
+                          color: scaffoldBackgroundColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                  child: Center(
-                    child: Text(
-                      score!.toStringAsFixed(0),
-                      style: textTheme.titleLarge?.copyWith(
-                        color: scaffoldBackgroundColor,
-                        fontWeight: FontWeight.bold,
+                  circularStrokeCap: CircularStrokeCap.round,
+                  progressColor: primaryColor,
+                ),
+              )
+            else
+              GestureDetector(
+                onTap: onTap,
+                child: CircleAvatar(
+                  radius: 38,
+                  backgroundColor: const Color(0xFF848FA9),
+                  child: CircleAvatar(
+                    radius: 33,
+                    backgroundColor: scaffoldBackgroundColor,
+                    child: DottedBorder(
+                      dashPattern: const [3, 2],
+                      borderType: BorderType.Circle,
+                      borderPadding: const EdgeInsets.all(2),
+                      color: const Color(0xFF848FA9),
+                      child: const Center(
+                        child: Icon(
+                          Icons.add_rounded,
+                          color: Color(0xFF848FA9),
+                          size: 28,
+                        ),
                       ),
                     ),
                   ),
                 ),
-                circularStrokeCap: CircularStrokeCap.round,
-                progressColor: primaryColor,
-              )
-            else
-              Container(),
+              ),
           ],
         ),
       ),

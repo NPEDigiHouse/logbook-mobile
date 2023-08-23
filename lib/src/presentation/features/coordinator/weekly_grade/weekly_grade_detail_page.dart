@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/coordinator/weekly_grade/dummy_models.dart';
+import 'package:elogbook/src/presentation/widgets/cards/weekly_grade_card.dart';
 
-class StudentDetailGradePage extends StatefulWidget {
+class WeeklyGradeDetailPage extends StatefulWidget {
   final StudentWeeklyGrade student;
 
-  const StudentDetailGradePage({super.key, required this.student});
+  const WeeklyGradeDetailPage({super.key, required this.student});
 
   @override
-  State<StudentDetailGradePage> createState() => _StudentDetailGradePageState();
+  State<WeeklyGradeDetailPage> createState() => _WeeklyGradeDetailPageState();
 }
 
-class _StudentDetailGradePageState extends State<StudentDetailGradePage> {
+class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
   late final List<String> _menuList;
   late final ValueNotifier<String> _selectedMenu;
 
@@ -41,10 +43,20 @@ class _StudentDetailGradePageState extends State<StudentDetailGradePage> {
           minHeight: AppSize.getAppHeight(context),
         ),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              SafeArea(
+                child: GestureDetector(
+                  onTap: () => context.back(),
+                  child: const Icon(
+                    Icons.arrow_back_rounded,
+                    color: primaryColor,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(
@@ -107,12 +119,14 @@ class _StudentDetailGradePageState extends State<StudentDetailGradePage> {
                     ),
                     Text(
                       'Supervisor',
-                      style: textTheme.bodySmall,
+                      style: textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       widget.student.supervisor,
-                      style: textTheme.bodySmall?.copyWith(
+                      style: const TextStyle(
                         color: secondaryTextColor,
                       ),
                     ),
@@ -131,12 +145,13 @@ class _StudentDetailGradePageState extends State<StudentDetailGradePage> {
                 'Sort By',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
+                  color: primaryColor,
                 ),
               ),
               SizedBox(
-                height: 64,
+                height: 56,
                 child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.zero,
                   scrollDirection: Axis.horizontal,
                   itemCount: _menuList.length,
                   itemBuilder: (context, index) {
@@ -174,8 +189,25 @@ class _StudentDetailGradePageState extends State<StudentDetailGradePage> {
                   separatorBuilder: (_, __) => const SizedBox(width: 8),
                 ),
               ),
+              const SizedBox(height: 8),
+              ListView.separated(
+                primary: false,
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                itemBuilder: (_, i) {
+                  final grades = widget.student.grades;
 
-              
+                  return WeeklyGradeCard(
+                    date: grades[i].date,
+                    place: grades[i].place,
+                    week: grades[i].week,
+                    score: grades[i].score,
+                    onTap: () {},
+                  );
+                },
+                separatorBuilder: (_, __) => const SizedBox(height: 16),
+                itemCount: widget.student.grades.length,
+              ),
             ],
           ),
         ),
