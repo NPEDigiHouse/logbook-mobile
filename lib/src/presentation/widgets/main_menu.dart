@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
-import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/in_out_reporting_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 
-class MainMenuHeadSection extends StatelessWidget {
-  const MainMenuHeadSection({super.key});
+class MainMenu extends StatelessWidget {
+  final String username;
+  final String role;
+  final List<MenuItem> menuItems;
+
+  const MainMenu({
+    super.key,
+    required this.username,
+    required this.role,
+    required this.menuItems,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,14 +77,14 @@ class MainMenuHeadSection extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Khairun Nisa',
+                            username,
                             style: textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Head of Division',
+                            role,
                             style: textTheme.bodySmall?.copyWith(
                               color: primaryColor,
                             ),
@@ -104,36 +111,17 @@ class MainMenuHeadSection extends StatelessWidget {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
-                child: Divider(
-                  height: 6,
-                  thickness: 6,
-                  color: onDisableColor,
-                ),
-              ),
+              const SizedBox(height: 40),
               GridView(
                 padding: const EdgeInsets.all(0),
                 primary: false,
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
+                  mainAxisSpacing: 24,
                   crossAxisSpacing: 16,
                 ),
-                children: <Widget>[
-                  buildMenuCard(
-                    name: 'Tasks',
-                    iconPath: 'round_task_filled.svg',
-                    onTap: () {},
-                  ),
-                  buildMenuCard(
-                    name: 'In-Out Reporting',
-                    iconPath: 'file_arrow_up_down_filled.svg',
-                    onTap: () {
-                      context.navigateTo(const InOutReportingPage());
-                    },
-                  ),
-                ],
+                children: menuItems,
               ),
             ],
           ),
@@ -141,12 +129,24 @@ class MainMenuHeadSection extends StatelessWidget {
       ),
     );
   }
+}
 
-  InkWellContainer buildMenuCard({
-    required String name,
-    required String iconPath,
-    required VoidCallback onTap,
-  }) {
+class MenuItem extends StatelessWidget {
+  final String name;
+  final String iconPath;
+  final VoidCallback onTap;
+  final bool isVerification;
+
+  const MenuItem({
+    super.key,
+    required this.name,
+    required this.iconPath,
+    required this.onTap,
+    this.isVerification = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return InkWellContainer(
       onTap: onTap,
       padding: const EdgeInsets.symmetric(
@@ -177,7 +177,7 @@ class MainMenuHeadSection extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Verification',
+            isVerification ? 'Verification' : 'Input Score',
             style: textTheme.bodySmall?.copyWith(
               color: const Color(0xFF848FA9),
             ),

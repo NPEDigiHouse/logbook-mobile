@@ -9,8 +9,8 @@ import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scienti
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_data.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
-import 'package:elogbook/src/presentation/widgets/header/form_section_header.dart';
-import 'package:elogbook/src/presentation/widgets/input/build_text_field.dart';
+import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/build_text_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -3,17 +3,17 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/in_out_reporting_page.dart';
+import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/dummy_models.dart';
 
 class CheckReportBottomSheet extends StatelessWidget {
   final String title;
-  final RotatedBox titleIcon;
+  final int iconQuarterTurns;
   final StudentCheckReport student;
 
   const CheckReportBottomSheet({
     super.key,
     required this.title,
-    required this.titleIcon,
+    required this.iconQuarterTurns,
     required this.student,
   });
 
@@ -44,7 +44,13 @@ class CheckReportBottomSheet extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: <Widget>[
-                titleIcon,
+                RotatedBox(
+                  quarterTurns: iconQuarterTurns,
+                  child: const Icon(
+                    Icons.arrow_right_alt_rounded,
+                    color: primaryColor,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 Text(
                   title,
@@ -116,7 +122,9 @@ class CheckReportBottomSheet extends StatelessWidget {
                 ),
                 label: const Text(
                   'Verify',
-                  style: TextStyle(fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),

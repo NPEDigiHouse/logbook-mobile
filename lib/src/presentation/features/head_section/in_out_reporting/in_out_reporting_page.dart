@@ -5,9 +5,9 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/tab_menu/check_in_page.dart';
-import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/tab_menu/check_out_page.dart';
-import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
+import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/check_report_page.dart';
+import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/dummy_models.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 
 class InOutReportingPage extends StatefulWidget {
   const InOutReportingPage({super.key});
@@ -18,16 +18,25 @@ class InOutReportingPage extends StatefulWidget {
 
 class _InOutReportingPageState extends State<InOutReportingPage>
     with SingleTickerProviderStateMixin {
-  final List<Widget> _pages = const <Widget>[
-    CheckInPage(),
-    CheckOutPage(),
-  ];
-
+  late final List<Widget> _pages;
   late final ValueNotifier<String> _query;
   late final TabController _tabController;
 
   @override
   void initState() {
+    _pages = [
+      CheckReportPage(
+        title: 'Check In Reporting',
+        iconQuarterTurns: 3,
+        students: students,
+      ),
+      const CheckReportPage(
+        title: 'Check Out Reporting',
+        iconQuarterTurns: 1,
+        students: [],
+      ),
+    ];
+
     _query = ValueNotifier('');
     _tabController = TabController(length: 2, vsync: this);
 
@@ -153,18 +162,4 @@ class _InOutReportingPageState extends State<InOutReportingPage>
       ),
     );
   }
-}
-
-class StudentCheckReport {
-  final String id;
-  final String name;
-  final String date;
-  final bool isVerified;
-
-  StudentCheckReport(
-    this.id,
-    this.name,
-    this.date,
-    this.isVerified,
-  );
 }

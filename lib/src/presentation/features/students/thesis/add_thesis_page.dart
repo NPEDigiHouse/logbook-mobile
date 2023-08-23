@@ -1,5 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/src/presentation/widgets/input/build_text_field.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/build_text_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 

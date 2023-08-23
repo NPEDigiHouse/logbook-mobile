@@ -14,6 +14,7 @@ const errorColor = Color(0xFFD1495B);
 const successColor = Color(0xFF56B9A1);
 const onDisableColor = Color(0xFFF3F4F6);
 const onFormDisableColor = Color(0xFF9CA3AF);
+const borderColor = Color(0xFF8E90A3);
 
 // Color scheme
 final colorScheme = ColorScheme.fromSeed(
