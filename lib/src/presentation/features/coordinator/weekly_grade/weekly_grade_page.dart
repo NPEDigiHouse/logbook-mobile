@@ -6,7 +6,7 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/coordinator/weekly_grade/dummy_models.dart';
-import 'package:elogbook/src/presentation/features/coordinator/weekly_grade/student_detail_grade_page.dart';
+import 'package:elogbook/src/presentation/features/coordinator/weekly_grade/weekly_grade_detail_page.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 
 class WeeklyGradePage extends StatefulWidget {
@@ -103,7 +103,7 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
                       ),
                     ),
                     onTap: () => context.navigateTo(
-                      StudentDetailGradePage(student: students[index]),
+                      WeeklyGradeDetailPage(student: students[index]),
                     ),
                   );
                 },
