@@ -3,7 +3,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/resident_menu_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
-import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 
 class ListResidentPage extends StatelessWidget {

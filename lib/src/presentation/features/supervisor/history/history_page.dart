@@ -12,7 +12,7 @@ import 'package:elogbook/src/presentation/features/students/clinical_record/page
 import 'package:elogbook/src/presentation/features/students/menu/history/history_data.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_filter_bottom_sheet.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/detail_scientific_session_page.dart';
-import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -421,19 +421,20 @@ class _HistoryPageState extends State<HistoryPage> {
                       valueListenable: _selectedMenu,
                       builder: (context, value, child) {
                         final selected = value == _menuList[index];
-                        final left = selected ? 4.0 : 12.0;
 
                         return RawChip(
                           pressElevation: 0,
                           clipBehavior: Clip.antiAlias,
                           label: Text(_menuList[index]),
-                          labelPadding: EdgeInsets.fromLTRB(left, 0, 12, 0),
+                          labelPadding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                          ),
                           labelStyle: textTheme.bodyMedium?.copyWith(
                             color: selected ? primaryColor : primaryTextColor,
                           ),
-                          side: selected
-                              ? const BorderSide(color: Colors.transparent)
-                              : const BorderSide(color: Color(0xFF8E90A3)),
+                          side: BorderSide(
+                            color: selected ? Colors.transparent : borderColor,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),

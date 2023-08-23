@@ -111,20 +111,14 @@ class MainMenu extends StatelessWidget {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
-                child: Divider(
-                  height: 6,
-                  thickness: 6,
-                  color: onDisableColor,
-                ),
-              ),
+              const SizedBox(height: 40),
               GridView(
                 padding: const EdgeInsets.all(0),
                 primary: false,
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
+                  mainAxisSpacing: 24,
                   crossAxisSpacing: 16,
                 ),
                 children: menuItems,
@@ -141,12 +135,14 @@ class MenuItem extends StatelessWidget {
   final String name;
   final String iconPath;
   final VoidCallback onTap;
+  final bool isVerification;
 
   const MenuItem({
     super.key,
     required this.name,
     required this.iconPath,
     required this.onTap,
+    this.isVerification = true,
   });
 
   @override
@@ -181,7 +177,7 @@ class MenuItem extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Verification',
+            isVerification ? 'Verification' : 'Input Score',
             style: textTheme.bodySmall?.copyWith(
               color: const Color(0xFF848FA9),
             ),
