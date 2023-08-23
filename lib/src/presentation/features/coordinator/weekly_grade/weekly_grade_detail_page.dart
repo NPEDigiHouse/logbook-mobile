@@ -5,6 +5,7 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/coordinator/weekly_grade/dummy_models.dart';
+import 'package:elogbook/src/presentation/features/coordinator/weekly_grade/weekly_grade_score_dialog.dart';
 import 'package:elogbook/src/presentation/widgets/cards/weekly_grade_card.dart';
 
 class WeeklyGradeDetailPage extends StatefulWidget {
@@ -202,7 +203,15 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                     place: grades[i].place,
                     week: grades[i].week,
                     score: grades[i].score,
-                    onTap: () {},
+                    onTap: () => showDialog(
+                      context: context,
+                      barrierLabel: '',
+                      barrierDismissible: false,
+                      builder: (_) => WeeklyGradeScoreDialog(
+                        week: grades[i].week,
+                        score: grades[i].score,
+                      ),
+                    ),
                   );
                 },
                 separatorBuilder: (_, __) => const SizedBox(height: 16),
