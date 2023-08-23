@@ -475,12 +475,12 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           iconPaths: iconPaths.sublist(4, 8),
           labels: labels.sublist(4, 8),
           onTaps: [
+            onTaps(context)[4],
             onTaps(context)[5],
-            onTaps(context)[6],
             () => context.navigateTo(
                   CompetenceHomePage(unitId: activeUnitModel.unitId!),
                 ),
-            onTaps(context)[8],
+            onTaps(context)[7],
           ],
         ),
         const SizedBox(height: 12),
@@ -527,12 +527,12 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           labels: labels.sublist(4, 8),
           descriptions: descriptions.sublist(4, 8),
           onTaps: [
+            onTaps(context)[4],
             onTaps(context)[5],
-            onTaps(context)[6],
             () => context.navigateTo(
                   CompetenceHomePage(unitId: activeUnitModel.unitId!),
                 ),
-            onTaps(context)[8],
+            onTaps(context)[7],
           ],
         ),
         const Divider(
