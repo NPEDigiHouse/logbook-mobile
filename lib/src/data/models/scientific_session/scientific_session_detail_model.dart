@@ -12,17 +12,28 @@ class ScientificSessionDetailModel {
   final String? title;
   final String? topic;
   final DateTime? updatedAt;
+  final String? attachment;
+  final String? sessionType;
+  final String? unit;
+  final String? verificationStatus;
+  final String? studentFeedback;
+  final String? supervisorFeedback;
 
-  ScientificSessionDetailModel({
-    this.rating,
-    this.reference,
-    this.role,
-    this.studentName,
-    this.supervisorName,
-    this.title,
-    this.topic,
-    this.updatedAt,
-  });
+  ScientificSessionDetailModel(
+      {this.rating,
+      this.reference,
+      this.role,
+      this.studentName,
+      this.supervisorName,
+      this.title,
+      this.topic,
+      this.updatedAt,
+      this.attachment,
+      this.sessionType,
+      this.unit,
+      this.verificationStatus,
+      this.studentFeedback,
+      this.supervisorFeedback});
 
   factory ScientificSessionDetailModel.fromJson(Map<String, dynamic> json) =>
       _$ScientificSessionDetailModelFromJson(json);

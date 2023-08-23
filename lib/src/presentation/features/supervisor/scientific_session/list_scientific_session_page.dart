@@ -3,40 +3,43 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/clinical_record/clinical_record_card.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/list_resident_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/resident_menu_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/scientific_session/clinical_record_card.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ListClinicalRecord extends StatefulWidget {
-  const ListClinicalRecord({super.key});
+class ListScientificSessionPage extends StatefulWidget {
+  const ListScientificSessionPage({super.key});
 
   @override
-  State<ListClinicalRecord> createState() => _ListClinicalRecordState();
+  State<ListScientificSessionPage> createState() =>
+      _ListScientificSessionPageState();
 }
 
-class _ListClinicalRecordState extends State<ListClinicalRecord> {
+class _ListScientificSessionPageState extends State<ListScientificSessionPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ClinicalRecordSupervisorCubit>(context)
-      ..getClinicalRecords();
+    BlocProvider.of<ScientificSessionSupervisorCubit>(context)
+      ..getScientificSessionList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Clinical Records'),
+        title: Text('Scientific Session'),
       ).variant(),
       body: SafeArea(
-        child: BlocBuilder<ClinicalRecordSupervisorCubit,
-            ClinicalRecordSupervisorState>(
+        child: BlocBuilder<ScientificSessionSupervisorCubit,
+            ScientificSessionSupervisorState>(
           builder: (context, state) {
-            if (state.clinicalRecords == null) {
+            if (state.listData == null) {
               return Center(
                 child: CircularProgressIndicator(),
               );
@@ -62,10 +65,10 @@ class _ListClinicalRecordState extends State<ListClinicalRecord> {
                     ),
                   ),
                   SliverList.separated(
-                    itemCount: state.clinicalRecords!.length,
+                    itemCount: state.listData!.length,
                     itemBuilder: (context, index) {
-                      return ClinicalRecordCard(
-                        clinicalRecord: state.clinicalRecords![index],
+                      return ScientificSessionCard(
+                        scientificSession: state.listData![index],
                       );
                     },
                     separatorBuilder: (context, index) {

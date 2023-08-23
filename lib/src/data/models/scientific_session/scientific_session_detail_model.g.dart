@@ -19,6 +19,12 @@ ScientificSessionDetailModel _$ScientificSessionDetailModelFromJson(
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
+      attachment: json['attachment'] as String?,
+      sessionType: json['sessionType'] as String?,
+      unit: json['unit'] as String?,
+      verificationStatus: json['verificationStatus'] as String?,
+      studentFeedback: json['studentFeedback'] as String?,
+      supervisorFeedback: json['supervisorFeedback'] as String?,
     );
 
 Map<String, dynamic> _$ScientificSessionDetailModelToJson(
@@ -32,4 +38,10 @@ Map<String, dynamic> _$ScientificSessionDetailModelToJson(
       'title': instance.title,
       'topic': instance.topic,
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      'attachment': instance.attachment,
+      'sessionType': instance.sessionType,
+      'unit': instance.unit,
+      'verificationStatus': instance.verificationStatus,
+      'studentFeedback': instance.studentFeedback,
+      'supervisorFeedback': instance.supervisorFeedback,
     };

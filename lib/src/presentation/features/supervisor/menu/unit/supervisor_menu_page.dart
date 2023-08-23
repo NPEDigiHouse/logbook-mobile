@@ -10,6 +10,7 @@ import 'package:elogbook/src/presentation/features/students/menu/widgets/menu_sw
 import 'package:elogbook/src/presentation/features/supervisor/clinical_record/list_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/list_resident_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/menu/unit/supervisor_unit_data.dart';
+import 'package:elogbook/src/presentation/features/supervisor/scientific_session/list_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/students_task/list_student_menu_page.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -166,7 +167,8 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
             labels: labels.sublist(0, 4),
             onTaps: [
               () => context.navigateTo(ListClinicalRecord()),
-              ...labels.sublist(1, 4).map((e) {
+              () => context.navigateTo(ListScientificSessionPage()),
+              ...labels.sublist(2, 4).map((e) {
                 return () => context.navigateTo(
                       ListStudentMenuPage(
                         title: e,
