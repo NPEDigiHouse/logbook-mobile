@@ -50,7 +50,6 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
   @override
   Widget build(BuildContext context) {
     final unitCubit = context.watch<UnitCubit>().state;
-    final credentialCubit = context.watch<AuthCubit>().state;
     return CustomScrollView(
       slivers: <Widget>[
         const MainAppBar(),
@@ -403,11 +402,10 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        if (credentialCubit is CredentialExist)
-                          ValueListenableBuilder(
-                            valueListenable: _isList,
-                            builder: (context, isList, child) {
-                              return AnimatedSwitcher(
+                        ValueListenableBuilder(
+                          valueListenable: _isList,
+                          builder: (context, isList, child) {
+                            return AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 150),
                                 reverseDuration:
                                     const Duration(milliseconds: 150),
@@ -420,15 +418,12 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                 child: isList
                                     ? buildItemList(
                                         activeUnitModel: activeUnitModel,
-                                        nim: credentialCubit
-                                            .credential.student!.studentId!)
+                                      )
                                     : buildItemGrid(
                                         activeUnitModel: activeUnitModel,
-                                        nim: credentialCubit
-                                            .credential.student!.studentId!),
-                              );
-                            },
-                          ),
+                                      ));
+                          },
+                        ),
                       ],
                     ],
                   ),
@@ -449,8 +444,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     );
   }
 
-  Column buildItemGrid(
-      {required ActiveUnitModel activeUnitModel, required String nim}) {
+  Column buildItemGrid({required ActiveUnitModel activeUnitModel}) {
     return Column(
       key: const ValueKey(1),
       children: <Widget>[
@@ -495,8 +489,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     );
   }
 
-  Column buildItemList(
-      {required ActiveUnitModel activeUnitModel, required String nim}) {
+  Column buildItemList({required ActiveUnitModel activeUnitModel}) {
     return Column(
       key: const ValueKey(2),
       children: <Widget>[

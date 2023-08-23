@@ -58,6 +58,15 @@ StudentCredentialProfile _$StudentCredentialProfileFromJson(
       phoneNumber: json['phoneNumber'] as String?,
       preClinicId: json['preClinicId'] as String?,
       studentId: json['studentId'] as String?,
+      academicSupervisorId: json['academicSupervisorId'] as String?,
+      academicSupervisorName: json['academicSupervisorName'] as String?,
+      examinerDPKName: json['examinerDPKName'] as String?,
+      examinerDPKid: json['examinerDPKid'] as String?,
+      pkmStation: json['pkmStation'] as String?,
+      priodLengthStation: json['priodLengthStation'] as int?,
+      rsStation: json['rsStation'] as String?,
+      supervisingDPKId: json['supervisingDPKId'] as String?,
+      supervisingDPKName: json['supervisingDPKName'] as String?,
     );
 
 Map<String, dynamic> _$StudentCredentialProfileToJson(
@@ -72,6 +81,15 @@ Map<String, dynamic> _$StudentCredentialProfileToJson(
       'preClinicId': instance.preClinicId,
       'checkInStatus': instance.checkInStatus,
       'checkOutStatus': instance.checkOutStatus,
+      'academicSupervisorName': instance.academicSupervisorName,
+      'academicSupervisorId': instance.academicSupervisorId,
+      'supervisingDPKName': instance.supervisingDPKName,
+      'supervisingDPKId': instance.supervisingDPKId,
+      'examinerDPKName': instance.examinerDPKName,
+      'examinerDPKid': instance.examinerDPKid,
+      'rsStation': instance.rsStation,
+      'pkmStation': instance.pkmStation,
+      'priodLengthStation': instance.priodLengthStation,
     };
 
 SupervisorCredentialProfile _$SupervisorCredentialProfileFromJson(

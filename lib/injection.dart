@@ -3,6 +3,7 @@ import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences
 import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/clinical_record_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/competence_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/profile_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/scientific_session_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/self_reflection_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/sglcst_datasource.dart';
@@ -46,6 +47,7 @@ import 'package:elogbook/src/domain/usecases/unit_usecases/get_active_unit_useca
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
@@ -142,6 +144,12 @@ void _injectDatasource() {
   );
   locator.registerLazySingleton<SglCstDataSource>(
     () => SglCstDataSourceImpl(
+      dio: locator(),
+      preferenceHandler: locator(),
+    ),
+  );
+  locator.registerLazySingleton<ProfileDataSource>(
+    () => ProfileDataSourceImpl(
       dio: locator(),
       preferenceHandler: locator(),
     ),
@@ -328,6 +336,11 @@ void _injectStateManagement() {
   );
   locator.registerFactory(
     () => SglCstCubit(
+      dataSource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => ProfileCubit(
       dataSource: locator(),
     ),
   );

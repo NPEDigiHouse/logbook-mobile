@@ -50,7 +50,7 @@ class _WrapperState extends State<Wrapper> {
                       -1
                   ? HeadSectionHomePage()
                   : MainMenuSupervisor()
-              : MainMenu();
+              : MainMenu(credential: credential,);
         }
         if (state is CredentialNotExist) {
           return LoginPage();

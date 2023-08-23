@@ -1,3 +1,4 @@
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
@@ -10,7 +11,8 @@ import 'package:elogbook/src/presentation/features/students/menu/unit/unit_activ
 import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
 
 class MainMenu extends StatefulWidget {
-  const MainMenu({super.key});
+  final UserCredential credential;
+  const MainMenu({super.key, required this.credential});
 
   @override
   State<MainMenu> createState() => _MainMenuState();
@@ -18,13 +20,6 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   final ValueNotifier<int> _selectedIndex = ValueNotifier(0);
-
-  final _listPage = [
-    const UnitActivityPage(),
-    const GlobalActivityPage(),
-    const HistoryPage(),
-    const ProfilePage(),
-  ];
 
   @override
   void dispose() {
@@ -35,6 +30,12 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final _listPage = [
+      const UnitActivityPage(),
+      const GlobalActivityPage(),
+      const HistoryPage(),
+      ProfilePage(credential: widget.credential),
+    ];
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is LogoutSuccess) {

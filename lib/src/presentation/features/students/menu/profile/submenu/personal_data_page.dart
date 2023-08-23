@@ -1,13 +1,23 @@
 import 'dart:ui';
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/personal_data_form.dart';
 
-class PersonalDataPage extends StatelessWidget {
-  const PersonalDataPage({super.key});
+class PersonalDataPage extends StatefulWidget {
+  final UserCredential userData;
+  const PersonalDataPage({super.key, required this.userData});
 
+  @override
+  State<PersonalDataPage> createState() => _PersonalDataPageState();
+}
+
+class _PersonalDataPageState extends State<PersonalDataPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,11 +41,22 @@ class PersonalDataPage extends StatelessWidget {
             Center(
               child: Stack(
                 children: <Widget>[
-                  CircleAvatar(
-                    radius: 50,
-                    foregroundImage: AssetImage(
-                      AssetPath.getImage('profile_default.png'),
-                    ),
+                  BlocBuilder<ProfileCubit, ProfileState>(
+                    builder: (context, state) {
+                      if (state.profilePic != null) {
+                        return CircleAvatar(
+                          radius: 50,
+                          foregroundImage: MemoryImage(state.profilePic!),
+                        );
+                      } else {
+                        return CircleAvatar(
+                          radius: 50,
+                          foregroundImage: AssetImage(
+                            AssetPath.getImage('profile_default.png'),
+                          ),
+                        );
+                      }
+                    },
                   ),
                   Positioned(
                     bottom: 0,
@@ -81,37 +102,42 @@ class PersonalDataPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            const PersonalDataForm(
+            PersonalDataForm(
               title: 'Student',
               dataMap: {
-                'Fullname': 'Khairun Nisa',
-                'Clinic ID': '90123',
-                'Preclinic ID': '90123',
-                'S.Ked Graduation Date': '02/20/2023',
+                'Fullname': widget.userData.student!.fullName ?? '',
+                'Clinic ID': widget.userData.student!.clinicId,
+                'Preclinic ID': widget.userData.student!.preClinicId,
+                'S.Ked Graduation Date':
+                    ReusableFunctionHelper.datetimeToString(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            widget.userData.student!.graduationDate! * 1000)),
               },
             ),
-            const PersonalDataForm(
+            PersonalDataForm(
               title: 'Contact',
               dataMap: {
-                'Phone Number/Whatsapp': '+62 821 9824 6668',
-                'Email': 'Phantom26isn@gmail.com',
-                'Address': 'BTP Blok E No 159',
+                'Phone Number/Whatsapp': widget.userData.student!.phoneNumber,
+                'Email': widget.userData.email,
+                'Address': widget.userData.student!.address,
               },
             ),
-            const PersonalDataForm(
+            PersonalDataForm(
               title: 'Academic Adviser and DPK',
               dataMap: {
-                'Academic Adviser': 'Setia Budi S.Ked',
-                'Supervising DPK': 'Dr Bayu Ajid',
-                'Examiner DPK': 'Muhammad Devon S.Ked',
+                'Academic Adviser':
+                    widget.userData.student!.academicSupervisorName,
+                'Supervising DPK': widget.userData.student!.supervisingDPKName,
+                'Examiner DPK': widget.userData.student!.examinerDPKName,
               },
             ),
-            const PersonalDataForm(
+            PersonalDataForm(
               title: 'Station',
               dataMap: {
-                'Period and length of station': null,
-                'RS Station': null,
-                'PKM Station': null,
+                'Period and length of station':
+                    widget.userData.student!.priodLengthStation.toString(),
+                'RS Station': widget.userData.student!.rsStation,
+                'PKM Station': widget.userData.student!.pkmStation,
               },
             ),
           ],

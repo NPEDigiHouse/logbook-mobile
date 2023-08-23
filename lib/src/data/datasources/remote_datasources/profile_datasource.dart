@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -52,16 +53,16 @@ class ProfileDataSourceImpl extends ProfileDataSource {
       'attachments': await MultipartFile.fromFile(path),
     });
     try {
-      final response = await dio.post(ApiService.baseUrl + '/users/pic',
-          options: Options(
-            headers: {
-              "content-type": 'multipart/form-data',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-          ),
-          data: formData,
-          
-          );
+      final response = await dio.post(
+        ApiService.baseUrl + '/users/pic',
+        options: Options(
+          headers: {
+            "content-type": 'multipart/form-data',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+        data: formData,
+      );
       if (response != 201) {
         throw Exception();
       }
@@ -77,12 +78,19 @@ class ProfileDataSourceImpl extends ProfileDataSource {
       final credential = await preferenceHandler.getCredential();
       final response = await dio.get(
         ApiService.baseUrl + '/users/pic',
-        options: Options(headers: {
-          "content-type": 'multipart/form-data',
-          "authorization": 'Bearer ${credential?.accessToken}'
-        }, responseType: ResponseType.bytes),
+        options: Options(
+          headers: {
+            "content-type": 'multipart/form-data',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
       );
-      if (response != 200) {
+      print(response.data);
+      if (response.statusCode != 200) {
         throw Exception();
       } else {
         final List<int> bytes = response.data;

@@ -48,6 +48,15 @@ class StudentCredentialProfile {
   final String? preClinicId;
   final String? checkInStatus;
   final String? checkOutStatus;
+  final String? academicSupervisorName;
+  final String? academicSupervisorId;
+  final String? supervisingDPKName;
+  final String? supervisingDPKId;
+  final String? examinerDPKName;
+  final String? examinerDPKid;
+  final String? rsStation;
+  final String? pkmStation;
+  final int? priodLengthStation;
 
   StudentCredentialProfile(
       {required this.address,
@@ -58,7 +67,16 @@ class StudentCredentialProfile {
       required this.graduationDate,
       required this.phoneNumber,
       required this.preClinicId,
-      required this.studentId});
+      required this.studentId,
+      this.academicSupervisorId,
+      this.academicSupervisorName,
+      this.examinerDPKName,
+      this.examinerDPKid,
+      this.pkmStation,
+      this.priodLengthStation,
+      this.rsStation,
+      this.supervisingDPKId,
+      this.supervisingDPKName});
 
   factory StudentCredentialProfile.fromJson(Map<String, dynamic> data) =>
       _$StudentCredentialProfileFromJson(data);
