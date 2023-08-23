@@ -5,7 +5,7 @@ import 'package:elogbook/src/presentation/features/students/assesment/pages/stud
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_weekly_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/assesment_menu_card.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/final_grade_card.dart';
-import 'package:elogbook/src/presentation/widgets/header/unit_header.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 

@@ -1,8 +1,8 @@
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/widgets/header/unit_header.dart';
-import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 
@@ -114,20 +114,18 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                     valueListenable: _selectedMenu,
                     builder: (context, value, child) {
                       final selected = value == _menuList[index];
-                      final leftPadding = selected ? 4.0 : 12.0;
 
                       return RawChip(
                         pressElevation: 0,
                         clipBehavior: Clip.antiAlias,
                         label: Text(_menuList[index]),
-                        labelPadding:
-                            EdgeInsets.fromLTRB(leftPadding, 0, 12, 0),
+                        labelPadding: const EdgeInsets.symmetric(horizontal: 6),
                         labelStyle: textTheme.bodyMedium?.copyWith(
                           color: selected ? primaryColor : primaryTextColor,
                         ),
-                        side: selected
-                            ? const BorderSide(color: Colors.transparent)
-                            : const BorderSide(color: Color(0xFF8E90A3)),
+                        side: BorderSide(
+                          color: selected ? Colors.transparent : borderColor,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

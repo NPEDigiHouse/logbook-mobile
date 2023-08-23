@@ -7,7 +7,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/check_report_page.dart';
 import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/dummy_models.dart';
-import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 
 class InOutReportingPage extends StatefulWidget {
   const InOutReportingPage({super.key});
