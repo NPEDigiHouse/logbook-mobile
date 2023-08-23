@@ -1,13 +1,17 @@
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/competences/widgets/add_competence_dialog.dart';
 import 'package:elogbook/src/presentation/widgets/header/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/input/search_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ListSkillsPage extends StatefulWidget {
-  const ListSkillsPage({super.key});
+  final String unitId;
+  const ListSkillsPage({super.key, required this.unitId});
 
   @override
   State<ListSkillsPage> createState() => _ListSkillsPageState();
@@ -32,6 +36,9 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
     _dataFilters = ValueNotifier(null);
 
     super.initState();
+    Future.microtask(() {
+      BlocProvider.of<CompetenceCubit>(context)..getListSkills();
+    });
   }
 
   @override
@@ -49,7 +56,14 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
         title: Text("List Skills"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => showDialog(
+            context: context,
+            barrierLabel: '',
+            barrierDismissible: false,
+            builder: (_) => AddCompetenceDialog(
+                  type: CompetenceType.skillType,
+                  unitId: widget.unitId,
+                )).then((value) {}),
         child: Icon(
           Icons.add_rounded,
         ),
@@ -72,13 +86,27 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                   SizedBox(
                     height: 24,
                   ),
-                  ListView.separated(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) =>
-                        TestGradeScoreCard(caseName: '', score: 1),
-                    separatorBuilder: (context, index) => SizedBox(height: 12),
-                    itemCount: 10,
+                  BlocBuilder<CompetenceCubit, CompetenceState>(
+                    builder: (context, state) {
+                      if (state.listSkillsModel != null) {
+                        final data = state.listSkillsModel!.listSkills!;
+                        return ListView.separated(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) => TestGradeScoreCard(
+                            caseName: data[index].skillName!,
+                            caseType: data[index].skillType!,
+                            isVerified:
+                                data[index].verificationStatus == 'VERIFIED',
+                          ),
+                          separatorBuilder: (context, index) =>
+                              SizedBox(height: 12),
+                          itemCount: data.length,
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    },
                   ),
                 ],
               )
@@ -154,11 +182,13 @@ class TestGradeScoreCard extends StatelessWidget {
   const TestGradeScoreCard({
     super.key,
     required this.caseName,
-    required this.score,
+    required this.caseType,
+    required this.isVerified,
   });
 
   final String caseName;
-  final int score;
+  final String caseType;
+  final bool isVerified;
 
   @override
   Widget build(BuildContext context) {
@@ -205,23 +235,25 @@ class TestGradeScoreCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Sifilis (3A)',
+                        caseName,
                         style: textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Icon(
-                        Icons.verified,
-                        size: 18,
-                        color: primaryColor,
-                      ),
+                      if (isVerified) ...[
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Icon(
+                          Icons.verified,
+                          size: 18,
+                          color: primaryColor,
+                        ),
+                      ]
                     ],
                   ),
                   Text(
-                    'Obtained & Discussed',
+                    caseType,
                     style: textTheme.bodySmall?.copyWith(
                       color: secondaryTextColor,
                     ),

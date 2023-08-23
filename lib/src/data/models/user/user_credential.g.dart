@@ -7,7 +7,7 @@ part of 'user_credential.dart';
 // **************************************************************************
 
 Badges _$BadgesFromJson(Map<String, dynamic> json) => Badges(
-      id: json['id'] as String?,
+      id: json['id'] as int?,
       name: json['name'] as String?,
     );
 

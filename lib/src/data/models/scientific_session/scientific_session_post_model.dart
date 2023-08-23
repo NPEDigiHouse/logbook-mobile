@@ -5,9 +5,11 @@ part 'scientific_session_post_model.g.dart';
 @JsonSerializable()
 class ScientificSessionPostModel {
   final String? supervisorId;
-  final String? sessionType;
+  final int? sessionType;
   final String? reference;
-  final String? role;
+  final String? topic;
+  final String? title;
+  final int? role;
   final String? notes;
   final String? attachment;
 
@@ -16,6 +18,8 @@ class ScientificSessionPostModel {
     this.reference,
     this.role,
     this.notes,
+    this.topic,
+    this.title,
     this.sessionType,
     this.supervisorId,
   });

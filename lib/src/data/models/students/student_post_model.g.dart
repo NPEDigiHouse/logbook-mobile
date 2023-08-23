@@ -12,7 +12,7 @@ StudentPostModel _$StudentPostModelFromJson(Map<String, dynamic> json) =>
       address: json['address'] as String?,
       clinicId: json['clinicId'] as String?,
       examinerDPK: json['examinerDPK'] as String?,
-      graduationDate: json['graduationDate'] as String?,
+      graduationDate: json['graduationDate'] as int?,
       pkmStation: json['pkmStation'] as String?,
       preclinicId: json['preclinicId'] as String?,
       phoneNumber: json['phoneNumber'] as String?,

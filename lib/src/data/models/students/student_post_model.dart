@@ -8,7 +8,7 @@ class StudentPostModel {
   final String? preclinicId;
   final String? phoneNumber;
   final String? address;
-  final String? graduationDate;
+  final int? graduationDate;
   final String? academicSupervisor;
   final String? examinerDPK;
   final String? supervisingDPK;

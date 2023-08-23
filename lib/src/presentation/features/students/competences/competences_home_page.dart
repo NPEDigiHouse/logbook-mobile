@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CompetenceHomePage extends StatefulWidget {
-  const CompetenceHomePage({super.key});
+  final String unitId;
+  const CompetenceHomePage({super.key, required this.unitId});
 
   @override
   State<CompetenceHomePage> createState() => _CompetenceHomePageState();
@@ -43,7 +44,9 @@ class _CompetenceHomePageState extends State<CompetenceHomePage> {
                     children: [
                       Expanded(
                         child: CompetenceCard(
-                          onTap: () => context.navigateTo(ListCasesPage()),
+                          onTap: () => context.navigateTo(ListCasesPage(
+                            unitId: widget.unitId,
+                          )),
                           title: 'Cases',
                           desc: 'Lorem ipsum dolor sit amet consectetur.',
                           iconData: Icons.cases_rounded,
@@ -54,7 +57,9 @@ class _CompetenceHomePageState extends State<CompetenceHomePage> {
                       ),
                       Expanded(
                         child: CompetenceCard(
-                          onTap: () => context.navigateTo(ListSkillsPage()),
+                          onTap: () => context.navigateTo(ListSkillsPage(
+                            unitId: widget.unitId,
+                          )),
                           title: 'Skills',
                           desc: 'Lorem ipsum dolor sit amet consectetur',
                           iconData: Icons.back_hand_rounded,

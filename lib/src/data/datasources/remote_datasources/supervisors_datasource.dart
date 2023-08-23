@@ -35,7 +35,7 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
       if (response.statusCode != 200) {
         throw Exception();
       }
-      print(response.data);
+      // print(response.data);
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<SupervisorModel> supervisors =

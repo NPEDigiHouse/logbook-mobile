@@ -4,7 +4,7 @@ part 'user_credential.g.dart';
 
 @JsonSerializable()
 class Badges {
-  final String? id;
+  final int? id;
   final String? name;
 
   Badges({this.id, this.name});

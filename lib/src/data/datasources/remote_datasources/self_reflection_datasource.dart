@@ -29,9 +29,14 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
               "content-type": 'application/json',
               "authorization": 'Bearer ${credential?.accessToken}'
             },
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            },
           ),
           data: selfReflectionPostModel.toJson());
-      if (response != 201) {
+      print(response);
+      if (response.statusCode != 201) {
         throw Exception();
       }
     } catch (e) {

@@ -37,12 +37,12 @@ final List<String> labels = [
 
 final List<Widget> pages = [
   SizedBox(),
-  const AddScientificSessionPage(),
+  SizedBox(),
   const CreateSelfReflectionPage(),
   const DailyActivityPage(),
   const AddTrainingPage(),
   const SglCstHomePage(),
-  const CompetenceHomePage(),
+  SizedBox(),
   const ReferencePage(),
   const AssesmentHomePage(),
 ];

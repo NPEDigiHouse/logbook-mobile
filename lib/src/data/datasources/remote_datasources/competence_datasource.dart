@@ -11,8 +11,8 @@ import 'package:elogbook/src/data/models/competences/list_student_skills_model.d
 import 'package:elogbook/src/data/models/competences/skill_post_model.dart';
 
 abstract class CompetenceDataSource {
-  Future<ListStudentCasesModel> getStudentCases({required String nim});
-  Future<ListStudentSkillsModel> getStudentSkills({required String nim});
+  Future<List<StudentCaseModel>> getStudentCases({required String unitId});
+  Future<List<StudentSkillModel>> getStudentSkills({required String unitId});
   Future<void> addSkill({required SkillPostModel skillPostModel});
   Future<void> addCase({required CasePostModel casePostModel});
   Future<ListCasesModel> getListCase();
@@ -40,7 +40,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
                 },
               ),
               data: casePostModel.toJson());
-      if (response != 201) {
+      if (response.statusCode != 201) {
         throw Exception();
       }
     } catch (e) {
@@ -63,7 +63,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
                 },
               ),
               data: skillPostModel.toJson());
-      if (response != 201) {
+      if (response.statusCode != 201) {
         throw Exception();
       }
     } catch (e) {
@@ -89,10 +89,10 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
       if (response.statusCode != 200) {
         throw Exception();
       }
-      final dataResponse =
-          await DataResponse<ListCasesModel>.fromJson(response.data);
-
-      return dataResponse.data;
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+      print(dataResponse);
+      final result = ListCasesModel.fromJson(dataResponse.data);
+      return result;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -116,10 +116,10 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
       if (response.statusCode != 200) {
         throw Exception();
       }
-      final dataResponse =
-          await DataResponse<ListSkillsModel>.fromJson(response.data);
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
-      return dataResponse.data;
+      final result = ListSkillsModel.fromJson(dataResponse.data);
+      return result;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -127,11 +127,42 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
   }
 
   @override
-  Future<ListStudentCasesModel> getStudentCases({required String nim}) async {
+  Future<List<StudentCaseModel>> getStudentCases(
+      {required String unitId}) async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
-        ApiService.baseUrl + '/competencies/cases/students/$nim',
+        ApiService.baseUrl + '/case-types/units/$unitId',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      // print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      print("TERP");
+      final dataResponse =
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<StudentCaseModel> listData =
+          dataResponse.data.map((e) => StudentCaseModel.fromJson(e)).toList();
+      return listData;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<StudentSkillModel>> getStudentSkills(
+      {required String unitId}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/skill-types/units/$unitId',
         options: Options(
           headers: {
             "content-type": 'application/json',
@@ -144,36 +175,11 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         throw Exception();
       }
       final dataResponse =
-          await DataResponse<ListStudentCasesModel>.fromJson(response.data);
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<StudentSkillModel> listData =
+          dataResponse.data.map((e) => StudentSkillModel.fromJson(e)).toList();
 
-      return dataResponse.data;
-    } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
-    }
-  }
-
-  @override
-  Future<ListStudentSkillsModel> getStudentSkills({required String nim}) async {
-    final credential = await preferenceHandler.getCredential();
-    try {
-      final response = await dio.get(
-        ApiService.baseUrl + '/competencies/cases/students/$nim',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
-      );
-      // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
-      final dataResponse =
-          await DataResponse<ListStudentSkillsModel>.fromJson(response.data);
-
-      return dataResponse.data;
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

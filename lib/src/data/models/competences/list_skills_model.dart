@@ -6,12 +6,12 @@ part 'list_skills_model.g.dart';
 class ListSkillsModel {
   final String? studentId;
   final String? studentName;
-  final List<SkillModel>? listCases;
+  final List<SkillModel>? listSkills;
 
   ListSkillsModel({
     this.studentId,
     this.studentName,
-    this.listCases,
+    this.listSkills,
   });
 
   factory ListSkillsModel.fromJson(Map<String, dynamic> json) =>

@@ -21,11 +21,11 @@ abstract class ScientificSessionDataSource {
   Future<List<ScientificRoles>> getListScientificRoles();
 }
 
-class SelfReflectionDataSourceImpl implements ScientificSessionDataSource {
+class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
   final Dio dio;
   final AuthPreferenceHandler preferenceHandler;
 
-  SelfReflectionDataSourceImpl(
+  ScientificSessionDataSourceImpl(
       {required this.dio, required this.preferenceHandler});
 
   @override
@@ -41,9 +41,14 @@ class SelfReflectionDataSourceImpl implements ScientificSessionDataSource {
                   "content-type": 'application/json',
                   "authorization": 'Bearer ${credential?.accessToken}'
                 },
+                followRedirects: false,
+                validateStatus: (status) {
+                  return status! < 500;
+                },
               ),
               data: scientificSessionPostModel.toJson());
-      if (response != 201) {
+      print(response.data);
+      if (response.statusCode != 201) {
         throw Exception();
       }
     } catch (e) {
@@ -124,6 +129,7 @@ class SelfReflectionDataSourceImpl implements ScientificSessionDataSource {
       if (response.statusCode != 200) {
         throw Exception();
       }
+      print(response.data);
       final dataResponse =
           await DataResponse<ListScientificSessionModel>.fromJson(
               response.data);
@@ -153,9 +159,10 @@ class SelfReflectionDataSourceImpl implements ScientificSessionDataSource {
         throw Exception();
       }
       final dataResponse =
-          await DataResponse<List<ScientificRoles>>.fromJson(response.data);
-
-      return dataResponse.data;
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<ScientificRoles> listData =
+          dataResponse.data.map((e) => ScientificRoles.fromJson(e)).toList();
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -180,9 +187,10 @@ class SelfReflectionDataSourceImpl implements ScientificSessionDataSource {
         throw Exception();
       }
       final dataResponse =
-          await DataResponse<List<SessionTypesModel>>.fromJson(response.data);
-
-      return dataResponse.data;
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<SessionTypesModel> listData =
+          dataResponse.data.map((e) => SessionTypesModel.fromJson(e)).toList();
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

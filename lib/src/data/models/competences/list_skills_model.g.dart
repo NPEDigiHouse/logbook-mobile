@@ -10,7 +10,7 @@ ListSkillsModel _$ListSkillsModelFromJson(Map<String, dynamic> json) =>
     ListSkillsModel(
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
-      listCases: (json['listCases'] as List<dynamic>?)
+      listSkills: (json['listSkills'] as List<dynamic>?)
           ?.map((e) => SkillModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -19,7 +19,7 @@ Map<String, dynamic> _$ListSkillsModelToJson(ListSkillsModel instance) =>
     <String, dynamic>{
       'studentId': instance.studentId,
       'studentName': instance.studentName,
-      'listCases': instance.listCases,
+      'listSkills': instance.listSkills,
     };
 
 SkillModel _$SkillModelFromJson(Map<String, dynamic> json) => SkillModel(

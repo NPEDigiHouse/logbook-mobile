@@ -1,6 +1,9 @@
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
+import 'package:elogbook/src/presentation/features/students/competences/competences_home_page.dart';
+import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -47,6 +50,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
   @override
   Widget build(BuildContext context) {
     final unitCubit = context.watch<UnitCubit>().state;
+    final credentialCubit = context.watch<AuthCubit>().state;
     return CustomScrollView(
       slivers: <Widget>[
         const MainAppBar(),
@@ -214,9 +218,9 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                           title: 'Check In',
                           subtitle: activeUnitModel.checkInStatus == null
                               ? 'Not Submitted yet'
-                              : DateFormat('yyyy-MM-dd HH:mm:ss').format(
+                              : DateFormat('dd, MMM yyyy, HH.mm').format(
                                   DateTime.fromMillisecondsSinceEpoch(
-                                      activeUnitModel.checkInTime!),
+                                      activeUnitModel.checkInTime! * 1000),
                                 ),
                           children: <Widget>[
                             activeUnitModel.checkInStatus == null
@@ -282,10 +286,11 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          DateFormat('yyyy-MM-dd HH:mm:ss')
+                                          DateFormat('dd, MMM yyyy, HH.mm')
                                               .format(
                                             DateTime.fromMillisecondsSinceEpoch(
-                                                activeUnitModel.checkInTime!),
+                                                activeUnitModel.checkInTime! *
+                                                    1000),
                                           ),
                                           style: textTheme.bodySmall?.copyWith(
                                             color: secondaryTextColor,
@@ -306,9 +311,9 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                           title: 'Check Out',
                           subtitle: activeUnitModel.checkOutStatus == null
                               ? 'Not Submitted yet'
-                              : DateFormat('yyyy-MM-dd HH:mm:ss').format(
+                              : DateFormat('dd, MMM yyyy, HH.mm').format(
                                   DateTime.fromMillisecondsSinceEpoch(
-                                      activeUnitModel.checkOutTime!),
+                                      activeUnitModel.checkOutTime! * 1000),
                                 ),
                           children: <Widget>[
                             activeUnitModel.checkOutStatus == null
@@ -370,10 +375,11 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          DateFormat('yyyy-MM-dd HH:mm:ss')
+                                          DateFormat('dd, MMM yyyy, HH.mm')
                                               .format(
                                             DateTime.fromMillisecondsSinceEpoch(
-                                                activeUnitModel.checkOutTime!),
+                                                activeUnitModel.checkOutTime! *
+                                                    1000),
                                           ),
                                           style: textTheme.bodySmall?.copyWith(
                                             color: secondaryTextColor,
@@ -397,27 +403,32 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        ValueListenableBuilder(
-                          valueListenable: _isList,
-                          builder: (context, isList, child) {
-                            return AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 150),
-                              reverseDuration:
-                                  const Duration(milliseconds: 150),
-                              transitionBuilder: (child, animation) {
-                                return FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                );
-                              },
-                              child: isList
-                                  ? buildItemList(
-                                      activeUnitModel: activeUnitModel)
-                                  : buildItemGrid(
-                                      activeUnitModel: activeUnitModel),
-                            );
-                          },
-                        ),
+                        if (credentialCubit is CredentialExist)
+                          ValueListenableBuilder(
+                            valueListenable: _isList,
+                            builder: (context, isList, child) {
+                              return AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 150),
+                                reverseDuration:
+                                    const Duration(milliseconds: 150),
+                                transitionBuilder: (child, animation) {
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  );
+                                },
+                                child: isList
+                                    ? buildItemList(
+                                        activeUnitModel: activeUnitModel,
+                                        nim: credentialCubit
+                                            .credential.student!.studentId!)
+                                    : buildItemGrid(
+                                        activeUnitModel: activeUnitModel,
+                                        nim: credentialCubit
+                                            .credential.student!.studentId!),
+                              );
+                            },
+                          ),
                       ],
                     ],
                   ),
@@ -438,7 +449,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     );
   }
 
-  Column buildItemGrid({required ActiveUnitModel activeUnitModel}) {
+  Column buildItemGrid(
+      {required ActiveUnitModel activeUnitModel, required String nim}) {
     return Column(
       key: const ValueKey(1),
       children: <Widget>[
@@ -451,7 +463,10 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                   CreateClinicalRecordFirstPage(
                       activeUnitModel: activeUnitModel),
                 ),
-            ...onTaps(context).sublist(1, 4)
+            () => context.navigateTo(
+                  AddScientificSessionPage(activeUnitModel: activeUnitModel),
+                ),
+            ...onTaps(context).sublist(2, 4)
           ],
         ),
         const SizedBox(height: 12),
@@ -459,7 +474,14 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           itemColor: variant2Color,
           iconPaths: iconPaths.sublist(4, 8),
           labels: labels.sublist(4, 8),
-          onTaps: onTaps(context).sublist(4, 8),
+          onTaps: [
+            onTaps(context)[5],
+            onTaps(context)[6],
+            () => context.navigateTo(
+                  CompetenceHomePage(unitId: activeUnitModel.unitId!),
+                ),
+            onTaps(context)[8],
+          ],
         ),
         const SizedBox(height: 12),
         GridMenuRow(
@@ -473,7 +495,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     );
   }
 
-  Column buildItemList({required ActiveUnitModel activeUnitModel}) {
+  Column buildItemList(
+      {required ActiveUnitModel activeUnitModel, required String nim}) {
     return Column(
       key: const ValueKey(2),
       children: <Widget>[
@@ -487,7 +510,10 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                   CreateClinicalRecordFirstPage(
                       activeUnitModel: activeUnitModel),
                 ),
-            ...onTaps(context).sublist(1, 4)
+            () => context.navigateTo(
+                  AddScientificSessionPage(activeUnitModel: activeUnitModel),
+                ),
+            ...onTaps(context).sublist(2, 4)
           ],
         ),
         const Divider(
@@ -500,7 +526,14 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           iconPaths: iconPaths.sublist(4, 8),
           labels: labels.sublist(4, 8),
           descriptions: descriptions.sublist(4, 8),
-          onTaps: onTaps(context).sublist(4, 8),
+          onTaps: [
+            onTaps(context)[5],
+            onTaps(context)[6],
+            () => context.navigateTo(
+                  CompetenceHomePage(unitId: activeUnitModel.unitId!),
+                ),
+            onTaps(context)[8],
+          ],
         ),
         const Divider(
           height: 30,
