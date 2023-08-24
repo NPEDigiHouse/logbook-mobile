@@ -3,6 +3,7 @@ import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/assesment_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/pages/list_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/students/competences/competences_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/references/references_page.dart';
@@ -448,7 +449,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                   ),
                 ),
             () => context.navigateTo(
-                  CreateClinicalRecordFirstPage(
+                  ListClinicalRecordPage(
                     activeUnitModel: activeUnitModel,
                   ),
                 ),
@@ -506,8 +507,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                   ),
                 ),
             () => context.navigateTo(
-                  CreateClinicalRecordFirstPage(
-                      activeUnitModel: activeUnitModel),
+                  ListClinicalRecordPage(activeUnitModel: activeUnitModel),
                 ),
             () => context.navigateTo(
                   AddScientificSessionPage(activeUnitModel: activeUnitModel),

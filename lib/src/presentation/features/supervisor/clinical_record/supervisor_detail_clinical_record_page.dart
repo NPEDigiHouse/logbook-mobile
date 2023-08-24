@@ -12,16 +12,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class DetailClinicalRecordPage extends StatefulWidget {
+class SupervisorDetailClinicalRecordPage extends StatefulWidget {
   final String id;
-  const DetailClinicalRecordPage({super.key, required this.id});
+  const SupervisorDetailClinicalRecordPage({super.key, required this.id});
 
   @override
-  State<DetailClinicalRecordPage> createState() =>
-      _DetailClinicalRecordPageState();
+  State<SupervisorDetailClinicalRecordPage> createState() =>
+      _SupervisorDetailClinicalRecordPageState();
 }
 
-class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
+class _SupervisorDetailClinicalRecordPageState
+    extends State<SupervisorDetailClinicalRecordPage> {
   @override
   void initState() {
     // TODO: implement initState

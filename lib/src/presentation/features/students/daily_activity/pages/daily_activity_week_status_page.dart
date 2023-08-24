@@ -201,6 +201,7 @@ class _DailyActivityWeekStatusPageState
                       ],
                     ),
                   ),
+                  
                   ...List.generate(
                       state.studentActivityPerweek!.activities!.length,
                       (index) {

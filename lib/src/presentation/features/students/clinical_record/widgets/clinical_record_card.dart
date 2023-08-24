@@ -1,17 +1,20 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
-import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/clinical_records/clinical_record_list_model.dart';
+import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/pages/detail_clinical_record_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/clinical_record/supervisor_detail_clinical_record_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'supervisor_detail_clinical_record_page.dart';
-
 class ClinicalRecordCard extends StatelessWidget {
-  final ClinicalRecordListModel clinicalRecord;
-  const ClinicalRecordCard({super.key, required this.clinicalRecord});
+  const ClinicalRecordCard({
+    super.key,
+    required this.model,
+  });
+
+  final StudentClinicalRecordModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +22,8 @@ class ClinicalRecordCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () => context.navigateTo(
-          SupervisorDetailClinicalRecordPage(
-            id: clinicalRecord.id!,
+          DetailClinicalRecordPage(
+            id: model.clinicalRecordId!,
           ),
         ),
         child: Padding(
@@ -52,15 +55,10 @@ class ClinicalRecordCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      clinicalRecord.studentId ?? '-',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
                     Row(
                       children: <Widget>[
                         Text(
-                          clinicalRecord.studentName ?? '',
+                          'Clinical Record',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: textTheme.titleSmall?.copyWith(
@@ -68,7 +66,7 @@ class ClinicalRecordCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        if (clinicalRecord.status == 'VERIFIED')
+                        if (model.verificationStatus == 'VERIFIED')
                           const Icon(
                             Icons.verified_rounded,
                             size: 16,
@@ -86,15 +84,12 @@ class ClinicalRecordCard extends StatelessWidget {
                         ),
                         children: <TextSpan>[
                           const TextSpan(
-                            text: 'Date:\t',
+                            text: 'Supervisor:\t',
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          TextSpan(
-                              text: ReusableFunctionHelper.datetimeToString(
-                            clinicalRecord.time!,
-                          )),
+                          TextSpan(text: model.supervisorName!),
                         ],
                       ),
                     ),
@@ -114,44 +109,12 @@ class ClinicalRecordCard extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: clinicalRecord.patientName ?? '',
+                            text: model.patientName ?? '',
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 8),
-                    if (clinicalRecord.attachment != null)
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 4,
-                            horizontal: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: dividerColor),
-                            borderRadius: BorderRadius.circular(99),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const Icon(
-                                Icons.attachment_rounded,
-                                size: 14,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                'attachment_file.pdf',
-                                style: textTheme.labelSmall?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 0,
-                                  height: 0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                   ],
                 ),
               ),

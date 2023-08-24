@@ -9,6 +9,7 @@ import 'package:elogbook/src/data/datasources/remote_datasources/profile_datasou
 import 'package:elogbook/src/data/datasources/remote_datasources/scientific_session_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/self_reflection_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/sglcst_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/student_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/supervisors_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/unit_datasource.dart';
 import 'package:elogbook/src/data/repositories/auth_repository_impl.dart';
@@ -58,6 +59,7 @@ import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cu
 import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:get_it/get_it.dart';
@@ -169,6 +171,12 @@ void _injectDatasource() {
   );
   locator.registerLazySingleton<ActivityDataSource>(
     () => ActivityDataSourceImpl(
+      dio: locator(),
+      preferenceHandler: locator(),
+    ),
+  );
+  locator.registerLazySingleton<StudentDataSource>(
+    () => StudentDataSourceImpl(
       dio: locator(),
       preferenceHandler: locator(),
     ),
@@ -386,6 +394,11 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => ActivityCubit(
       datasource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => StudentCubit(
+      dataSource: locator(),
     ),
   );
 }

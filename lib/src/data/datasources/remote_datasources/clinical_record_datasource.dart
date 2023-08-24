@@ -49,15 +49,21 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
     final credential = await preferenceHandler.getCredential();
 
     try {
-      final response = await dio.post(ApiService.baseUrl + '/clinical-records',
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-          ),
-          data: clinicalRecordPostModel.toJson());
-      print(response.statusCode);
+      final response = await dio.post(
+        ApiService.baseUrl + '/clinical-records',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+        data: clinicalRecordPostModel.toJson(),
+      );
+      print(response);
       print(response.data);
       if (response.statusCode != 201) {
         throw Exception();

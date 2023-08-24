@@ -90,7 +90,9 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: InkWell(
                   onTap: activity is ClinicalRecord
                       ? () => context.navigateTo(
-                            const DetailClinicalRecordPage(),
+                            DetailClinicalRecordPage(
+                              id: '',
+                            ),
                           )
                       : () => context.navigateTo(
                             const DetailScientificSessionPage(),

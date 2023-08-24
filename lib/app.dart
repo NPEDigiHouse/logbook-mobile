@@ -10,6 +10,7 @@ import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cu
 import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,7 @@ class App extends StatelessWidget {
             create: (_) => di.locator<ScientificSessionSupervisorCubit>()),
         BlocProvider(create: (_) => di.locator<DailyActivityCubit>()),
         BlocProvider(create: (_) => di.locator<ActivityCubit>()),
+        BlocProvider(create: (_) => di.locator<StudentCubit>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

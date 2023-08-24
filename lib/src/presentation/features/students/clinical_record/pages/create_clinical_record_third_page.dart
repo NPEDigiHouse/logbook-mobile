@@ -56,7 +56,6 @@ class _CreateClinicalRecordThirdPageState
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     notesController.dispose();
   }
@@ -67,7 +66,9 @@ class _CreateClinicalRecordThirdPageState
     return BlocListener<ClinicalRecordCubit, ClinicalRecordState>(
       listener: (context, state) {
         if (state.clinicalRecordPostSuccess) {
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
         }
       },
       child: Scaffold(
@@ -186,8 +187,7 @@ class _CreateClinicalRecordThirdPageState
                           if (notesController.text.isNotEmpty) {
                             widget.clinicalRecordData.clinicalRecordPostModel
                                 .notes = notesController.text;
-                            widget.clinicalRecordData.clinicalRecordPostModel
-                                .attachment = '';
+
                             widget.clinicalRecordData.clinicalRecordPostModel
                                 .studentFeedback = 'haha';
 

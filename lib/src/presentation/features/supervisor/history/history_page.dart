@@ -1,3 +1,4 @@
+import 'package:elogbook/src/presentation/features/supervisor/clinical_record/supervisor_detail_clinical_record_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -85,13 +86,12 @@ class _HistoryPageState extends State<HistoryPage> {
             groupBy: (activity) => activity.date,
             groupComparator: (date1, date2) => date1.compareTo(date2) * -1,
             itemBuilder: (context, activity) {
-              return 
-              Material(
+              return Material(
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: activity is ClinicalRecord
                       ? () => context.navigateTo(
-                            const DetailClinicalRecordPage(),
+                            SupervisorDetailClinicalRecordPage(id: ''),
                           )
                       : () => context.navigateTo(
                             const DetailScientificSessionPage(),
@@ -229,7 +229,6 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                 ),
               );
-           
             },
             groupSeparatorBuilder: (date) {
               return Column(
