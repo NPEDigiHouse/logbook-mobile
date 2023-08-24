@@ -158,7 +158,7 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
         return GridMenuItem(
           color: colors[index],
           menuModel: listGlobalMenu[index],
-          onTap: onTaps(context)[index],
+          onTap: () {},
         );
       },
       itemCount: listGlobalMenu.length,
@@ -174,7 +174,7 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
         return ListMenuItem(
           color: colors[index],
           menuModel: listGlobalMenu[index],
-          onTap: onTaps(context)[index],
+          onTap: () {},
         );
       },
       separatorBuilder: (context, index) {

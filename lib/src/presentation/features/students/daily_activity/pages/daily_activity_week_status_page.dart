@@ -1,51 +1,222 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
+import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/pages/create_daily_activity_page.dart';
-import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class DailyActivityWeekStatusPage extends StatelessWidget {
-  final DailyActivityTempModel model;
+class DailyActivityWeekStatusPage extends StatefulWidget {
+  final String dailyActivityId;
+  final int weekName;
 
-  const DailyActivityWeekStatusPage({super.key, required this.model});
+  const DailyActivityWeekStatusPage(
+      {super.key, required this.dailyActivityId, required this.weekName});
+
+  @override
+  State<DailyActivityWeekStatusPage> createState() =>
+      _DailyActivityWeekStatusPageState();
+}
+
+class _DailyActivityWeekStatusPageState
+    extends State<DailyActivityWeekStatusPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => BlocProvider.of<DailyActivityCubit>(context)
+        ..getStudentActivityPerweek(id: widget.dailyActivityId),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final dummyData = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-    ];
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Week ${model.week}'),
+        title: Text('Daily Activity - Week ${widget.weekName}'),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 16),
-        child: SpacingColumn(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          horizontalPadding: 16,
-          spacing: 20,
-          children: [
-            UnitHeader(),
-            ...List.generate(
-              model.listAttendance.where((element) => element != 0).length,
-              (index) => DailyActivityStatusCard(
-                attendance: model.listAttendance[index],
-                day: dummyData[index],
-                status: 'Verified',
-              ),
-            )
-          ],
+        child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
+          builder: (context, state) {
+            if (state.studentActivityPerweek != null) {
+              return SpacingColumn(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                horizontalPadding: 16,
+                spacing: 20,
+                children: [
+                  Container(
+                    width: AppSize.getAppWidth(context),
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(.12),
+                          offset: Offset(0, 2),
+                          blurRadius: 20,
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(12),
+                      color: scaffoldBackgroundColor,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Week ${state.studentActivityPerweek!.weekName}',
+                              style: textTheme.titleLarge,
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: state.studentActivityPerweek!
+                                            .verificationStatus ==
+                                        'VERIFIED'
+                                    ? successColor
+                                    : errorColor,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    state.studentActivityPerweek!
+                                                .verificationStatus ==
+                                            'VERIFIED'
+                                        ? Icons.verified_rounded
+                                        : Icons.hourglass_bottom_rounded,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  Text(
+                                    '${state.studentActivityPerweek?.verificationStatus}',
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFF6F7F8),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                height: 84,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        width: 24,
+                                        height: 24,
+                                        decoration: BoxDecoration(
+                                          color: errorColor.withOpacity(
+                                            .2,
+                                          ),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        padding: EdgeInsets.all(2),
+                                        child: SvgPicture.asset(
+                                            AssetPath.getIcon(
+                                                'emoji_alfa.svg'))),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      '${state.studentActivityPerweek!.alpha}',
+                                      style: textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        height: 1,
+                                      ),
+                                    ),
+                                    Text('Alpha'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFF6F7F8),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                height: 84,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        width: 24,
+                                        height: 24,
+                                        decoration: BoxDecoration(
+                                          color: primaryColor.withOpacity(
+                                            .2,
+                                          ),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        padding: EdgeInsets.all(2),
+                                        child: SvgPicture.asset(
+                                            AssetPath.getIcon(
+                                                'emoji_hadir.svg'))),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      '${state.studentActivityPerweek!.attend}',
+                                      style: textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        height: 1,
+                                      ),
+                                    ),
+                                    Text('Hadir'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  ...List.generate(
+                      state.studentActivityPerweek!.activities!.length,
+                      (index) {
+                    final data = state.studentActivityPerweek!.activities!;
+                    return DailyActivityStatusCard(
+                        verificationStatus: data[index].verificationStatus!,
+                        day: data[index].day!,
+                        status: data[index].activityStatus!);
+                  }).toList(),
+                ],
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
         ),
       ),
     );
@@ -54,22 +225,21 @@ class DailyActivityWeekStatusPage extends StatelessWidget {
 
 class DailyActivityStatusCard extends StatelessWidget {
   final String day;
+  final String verificationStatus;
   final String status;
-  final int attendance;
   const DailyActivityStatusCard(
       {super.key,
-      required this.status,
+      required this.verificationStatus,
       required this.day,
-      required this.attendance});
+      required this.status});
 
   @override
   Widget build(BuildContext context) {
-    List<String> emoji = [
-      'emoji_hadir.svg',
-      'sakit_emoji.svg',
-      'izin_emoji.svg',
-      'emoji_alfa.svg',
-    ];
+    Map<String, String> emoji = {
+      'ATTEND': 'emoji_hadir.svg',
+      'SICK': 'sakit_emoji.svg',
+      'NOT_ATTEND': 'emoji_alfa.svg',
+    };
     return InkWellContainer(
       padding: EdgeInsets.all(16),
       radius: 12,
@@ -91,7 +261,7 @@ class DailyActivityStatusCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SvgPicture.asset(
-            AssetPath.getIcon(emoji[attendance - 1]),
+            AssetPath.getIcon(emoji[status]!),
             width: 50,
             height: 50,
             fit: BoxFit.cover,
@@ -105,15 +275,6 @@ class DailyActivityStatusCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(
-            '20 Feb 2023, 23:59 WIB',
-            style: textTheme.bodyMedium?.copyWith(
-              color: secondaryTextColor,
-            ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
           Row(
             children: [
               RichText(
@@ -124,7 +285,7 @@ class DailyActivityStatusCard extends StatelessWidget {
                   text: 'Verify Status: ',
                   children: [
                     TextSpan(
-                      text: status,
+                      text: verificationStatus,
                       style: textTheme.titleSmall?.copyWith(
                         color: primaryTextColor,
                         fontWeight: FontWeight.bold,

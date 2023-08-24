@@ -2,6 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/features/students/competences/list_cases_page.dart';
 import 'package:elogbook/src/presentation/features/students/competences/list_skills_page.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -11,8 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CompetenceHomePage extends StatefulWidget {
+  final ActiveUnitModel model;
   final String unitId;
-  const CompetenceHomePage({super.key, required this.unitId});
+  const CompetenceHomePage(
+      {super.key, required this.unitId, required this.model});
 
   @override
   State<CompetenceHomePage> createState() => _CompetenceHomePageState();
@@ -36,7 +39,9 @@ class _CompetenceHomePageState extends State<CompetenceHomePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UnitHeader(),
+                  UnitHeader(
+                    unitName: widget.model.unitName!,
+                  ),
                   SizedBox(
                     height: 32,
                   ),

@@ -2,6 +2,7 @@ import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
@@ -54,6 +55,7 @@ class App extends StatelessWidget {
             create: (_) => di.locator<ClinicalRecordSupervisorCubit>()),
         BlocProvider(
             create: (_) => di.locator<ScientificSessionSupervisorCubit>()),
+        BlocProvider(create: (_) => di.locator<DailyActivityCubit>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

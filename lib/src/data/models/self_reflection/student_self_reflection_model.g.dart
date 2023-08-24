@@ -12,7 +12,7 @@ StudentSelfReflectionModel _$StudentSelfReflectionModelFromJson(
       studentName: json['studentName'] as String?,
       studentId: json['studentId'] as String?,
       listSelfReflections: (json['listSelfReflections'] as List<dynamic>?)
-          ?.map((e) => SelfReflectionData.fromJson(e as Map<String, dynamic>))
+          ?.map(SelfReflectionData.fromJson)
           .toList(),
     );
 

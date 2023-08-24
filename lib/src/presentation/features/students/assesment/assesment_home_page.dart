@@ -1,4 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_scientific_assesment_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_test_grade_page.dart';
@@ -10,7 +11,9 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 
 class AssesmentHomePage extends StatelessWidget {
-  const AssesmentHomePage({super.key});
+  final ActiveUnitModel activeUnitModel;
+
+  const AssesmentHomePage({super.key, required this.activeUnitModel});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,9 @@ class AssesmentHomePage extends StatelessWidget {
           horizontalPadding: 16,
           spacing: 12,
           children: [
-            UnitHeader(),
+            UnitHeader(
+              unitName: activeUnitModel.unitName!,
+            ),
             SizedBox(
               height: 12,
             ),

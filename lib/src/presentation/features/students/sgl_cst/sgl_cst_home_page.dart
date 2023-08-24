@@ -2,6 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/list_cst_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/list_sgl_page.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -11,7 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SglCstHomePage extends StatefulWidget {
-  const SglCstHomePage({super.key});
+  final ActiveUnitModel activeUnitModel;
+
+  const SglCstHomePage({super.key, required this.activeUnitModel});
 
   @override
   State<SglCstHomePage> createState() => _SglCstHomePageState();
@@ -35,7 +38,9 @@ class _SglCstHomePageState extends State<SglCstHomePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UnitHeader(),
+                  UnitHeader(
+                    unitName: widget.activeUnitModel.unitName!,
+                  ),
                   SizedBox(
                     height: 32,
                   ),

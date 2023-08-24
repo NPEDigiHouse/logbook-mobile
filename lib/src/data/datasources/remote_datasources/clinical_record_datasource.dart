@@ -13,7 +13,6 @@ import 'package:elogbook/src/data/models/clinical_records/list_clinical_record_m
 import 'package:elogbook/src/data/models/clinical_records/management_role_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/management_types_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/verify_clinical_record_model.dart';
-import 'package:elogbook/src/presentation/features/supervisor/clinical_record/widgets/verify_dialog.dart';
 import 'package:path/path.dart';
 
 abstract class ClinicalRecordsDatasource {

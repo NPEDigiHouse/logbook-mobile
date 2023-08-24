@@ -212,7 +212,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
         ListMenuColumn(
           itemColor: primaryColor,
           menus: listSupervisorMenu.sublist(0, 4),
-          onTaps: onTaps(context).sublist(0, 4),
+          onTaps: [],
         ),
         const Divider(
           height: 30,
@@ -222,7 +222,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
         ListMenuColumn(
           itemColor: variant2Color,
           menus: listSupervisorMenu.sublist(4, 8),
-          onTaps: onTaps(context).sublist(4, 8),
+          onTaps: [],
         ),
         const Divider(
           height: 30,
@@ -233,7 +233,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
           length: 1,
           itemColor: variant1Color,
           menus: listSupervisorMenu.sublist(8, listSupervisorMenu.length),
-          onTaps: onTaps(context).sublist(8, onTaps(context).length),
+          onTaps: [],
         ),
       ],
     );

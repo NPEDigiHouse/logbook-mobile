@@ -1,4 +1,5 @@
 import 'package:elogbook/core/styles/color_palette.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
@@ -6,7 +7,9 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 
 class ReferencePage extends StatelessWidget {
-  const ReferencePage({super.key});
+  final ActiveUnitModel activeUnitModel;
+
+  const ReferencePage({super.key, required this.activeUnitModel});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,9 @@ class ReferencePage extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UnitHeader(),
+                  UnitHeader(
+                    unitName: activeUnitModel.unitName!,
+                  ),
                   SizedBox(
                     height: 24,
                   ),

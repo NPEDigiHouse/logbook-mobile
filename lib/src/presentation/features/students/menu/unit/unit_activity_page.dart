@@ -438,14 +438,19 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           menus: listStudentMenu.sublist(0, 4),
           onTaps: [
             () => context.navigateTo(
-                  SglCstHomePage(),
+                  SglCstHomePage(
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
-                  DailyActivityPage(),
+                  DailyActivityPage(
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
                   CreateClinicalRecordFirstPage(
-                      activeUnitModel: activeUnitModel),
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
                   AddScientificSessionPage(activeUnitModel: activeUnitModel),
@@ -458,16 +463,23 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           menus: listStudentMenu.sublist(4, 8),
           onTaps: [
             () => context.navigateTo(
-                  CompetenceHomePage(unitId: activeUnitModel.unitId!),
+                  CompetenceHomePage(
+                    unitId: activeUnitModel.unitId!,
+                    model: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
-                  AssesmentHomePage(),
+                  AssesmentHomePage(
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
                   SizedBox(),
                 ),
             () => context.navigateTo(
-                  ReferencePage(),
+                  ReferencePage(
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
           ],
         ),
@@ -484,10 +496,14 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           menus: listStudentMenu.sublist(0, 4),
           onTaps: [
             () => context.navigateTo(
-                  SglCstHomePage(),
+                  SglCstHomePage(
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
-                  DailyActivityPage(),
+                  DailyActivityPage(
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
                   CreateClinicalRecordFirstPage(
@@ -508,16 +524,23 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           menus: listStudentMenu.sublist(4, 8),
           onTaps: [
             () => context.navigateTo(
-                  CompetenceHomePage(unitId: activeUnitModel.unitId!),
+                  CompetenceHomePage(
+                    unitId: activeUnitModel.unitId!,
+                    model: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
-                  AssesmentHomePage(),
+                  AssesmentHomePage(
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
                   SizedBox(),
                 ),
             () => context.navigateTo(
-                  ReferencePage(),
+                  ReferencePage(
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
           ],
         ),

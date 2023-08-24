@@ -78,7 +78,7 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UnitHeader(),
+                  // UnitHeader(),
                   SizedBox(
                     height: 16,
                   ),

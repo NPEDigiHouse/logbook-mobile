@@ -79,7 +79,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UnitHeader(),
+                  // UnitHeader(),
                   SizedBox(
                     height: 16,
                   ),
