@@ -1,20 +1,33 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/pages/create_daily_activity_page.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DailyActivityWeekStatusPage extends StatelessWidget {
-  const DailyActivityWeekStatusPage({super.key});
+  final DailyActivityTempModel model;
+
+  const DailyActivityWeekStatusPage({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
+    final dummyData = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Week 3'),
+        title: Text('Week ${model.week}'),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 16),
@@ -25,8 +38,12 @@ class DailyActivityWeekStatusPage extends StatelessWidget {
           children: [
             UnitHeader(),
             ...List.generate(
-              5,
-              (index) => DailyActivityStatusCard(),
+              model.listAttendance.where((element) => element != 0).length,
+              (index) => DailyActivityStatusCard(
+                attendance: model.listAttendance[index],
+                day: dummyData[index],
+                status: 'Verified',
+              ),
             )
           ],
         ),
@@ -36,10 +53,23 @@ class DailyActivityWeekStatusPage extends StatelessWidget {
 }
 
 class DailyActivityStatusCard extends StatelessWidget {
-  const DailyActivityStatusCard({super.key});
+  final String day;
+  final String status;
+  final int attendance;
+  const DailyActivityStatusCard(
+      {super.key,
+      required this.status,
+      required this.day,
+      required this.attendance});
 
   @override
   Widget build(BuildContext context) {
+    List<String> emoji = [
+      'emoji_hadir.svg',
+      'sakit_emoji.svg',
+      'izin_emoji.svg',
+      'emoji_alfa.svg',
+    ];
     return InkWellContainer(
       padding: EdgeInsets.all(16),
       radius: 12,
@@ -60,22 +90,17 @@ class DailyActivityStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SvgPicture.asset(
+            AssetPath.getIcon(emoji[attendance - 1]),
             width: 50,
             height: 50,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: dividerColor,
-                border: Border.all(
-                  width: 1,
-                  color: Colors.grey,
-                )),
+            fit: BoxFit.cover,
           ),
           SizedBox(
             height: 16,
           ),
           Text(
-            'Monday',
+            day,
             style: textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -99,7 +124,7 @@ class DailyActivityStatusCard extends StatelessWidget {
                   text: 'Verify Status: ',
                   children: [
                     TextSpan(
-                      text: 'Waiting',
+                      text: status,
                       style: textTheme.titleSmall?.copyWith(
                         color: primaryTextColor,
                         fontWeight: FontWeight.bold,

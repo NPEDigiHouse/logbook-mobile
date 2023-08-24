@@ -1,9 +1,9 @@
+import 'package:elogbook/src/data/datasources/local_datasources/static_datasource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/students/menu/global/global_data.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/grid_menu_item.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/list_menu_item.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/menu_switch.dart';
@@ -157,12 +157,11 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
       itemBuilder: (context, index) {
         return GridMenuItem(
           color: colors[index],
-          iconPath: iconPaths[index],
-          label: labels[index],
+          menuModel: listGlobalMenu[index],
           onTap: onTaps(context)[index],
         );
       },
-      itemCount: labels.length,
+      itemCount: listGlobalMenu.length,
     );
   }
 
@@ -174,9 +173,7 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
       itemBuilder: (context, index) {
         return ListMenuItem(
           color: colors[index],
-          iconPath: iconPaths[index],
-          label: labels[index],
-          description: descriptions[index],
+          menuModel: listGlobalMenu[index],
           onTap: onTaps(context)[index],
         );
       },
@@ -187,7 +184,7 @@ class _GlobalActivityPageState extends State<GlobalActivityPage> {
           color: Color(0xFFEFF0F9),
         );
       },
-      itemCount: labels.length,
+      itemCount: listGlobalMenu.length,
     );
   }
 }

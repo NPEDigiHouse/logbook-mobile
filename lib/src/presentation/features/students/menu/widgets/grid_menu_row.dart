@@ -1,19 +1,18 @@
+import 'package:elogbook/src/data/datasources/local_datasources/static_datasource.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/grid_menu_item.dart';
 
 class GridMenuRow extends StatelessWidget {
   final int length;
   final Color itemColor;
-  final List<String> iconPaths;
-  final List<String> labels;
+  final List<MenuModel> menus;
   final List<VoidCallback> onTaps;
 
   const GridMenuRow({
     super.key,
     this.length = 4,
     required this.itemColor,
-    required this.iconPaths,
-    required this.labels,
+    required this.menus,
     required this.onTaps,
   });
 
@@ -31,8 +30,7 @@ class GridMenuRow extends StatelessWidget {
       itemBuilder: (context, index) {
         return GridMenuItem(
           color: itemColor,
-          iconPath: iconPaths[index],
-          label: labels[index],
+          menuModel: menus[index],
           onTap: onTaps[index],
         );
       },

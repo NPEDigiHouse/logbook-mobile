@@ -1,5 +1,6 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/data/models/units/unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/select_units/widgets/custom_bottom_alert.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,16 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
             },
             builder: (context, state) {
               if (state is FetchSuccess) {
-                // print(state.units);
+                final List<UnitModel> data = [
+                  UnitModel(
+                    id: widget.activeUnitModel.unitId!,
+                    name: widget.activeUnitModel.unitName!,
+                  ),
+                  ...state.units
+                      .where((element) =>
+                          element.id != widget.activeUnitModel.unitId)
+                      .toList()
+                ];
                 return ListView.separated(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                   separatorBuilder: (context, index) => SizedBox(
@@ -97,8 +107,8 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
                   ),
                   itemBuilder: (context, index) {
                     return SelectUnitCard(
-                      unitName: state.units[index].name,
-                      unitId: state.units[index].id,
+                      unitName: data[index].name,
+                      unitId: data[index].id,
                       activeUnitId: widget.activeUnitModel.unitId ?? '',
                     );
                   },

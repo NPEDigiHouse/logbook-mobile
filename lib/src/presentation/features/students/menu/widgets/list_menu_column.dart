@@ -1,21 +1,19 @@
+import 'package:elogbook/src/data/datasources/local_datasources/static_datasource.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/list_menu_item.dart';
 
 class ListMenuColumn extends StatelessWidget {
   final int length;
   final Color itemColor;
-  final List<String> iconPaths;
-  final List<String> labels;
-  final List<String> descriptions;
+  final List<MenuModel> menus;
+
   final List<VoidCallback> onTaps;
 
   const ListMenuColumn({
     super.key,
     this.length = 4,
     required this.itemColor,
-    required this.iconPaths,
-    required this.labels,
-    required this.descriptions,
+    required this.menus,
     required this.onTaps,
   });
 
@@ -28,9 +26,7 @@ class ListMenuColumn extends StatelessWidget {
       itemBuilder: (context, index) {
         return ListMenuItem(
           color: itemColor,
-          iconPath: iconPaths[index],
-          label: labels[index],
-          description: descriptions[index],
+          menuModel: menus[index],
           onTap: onTaps[index],
         );
       },

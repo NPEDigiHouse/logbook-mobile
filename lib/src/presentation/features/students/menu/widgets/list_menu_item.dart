@@ -1,3 +1,5 @@
+import 'package:elogbook/core/helpers/asset_path.dart';
+import 'package:elogbook/src/data/datasources/local_datasources/static_datasource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
@@ -5,17 +7,14 @@ import 'package:elogbook/core/styles/text_style.dart';
 
 class ListMenuItem extends StatelessWidget {
   final Color color;
-  final String iconPath;
-  final String label;
-  final String description;
+  final MenuModel menuModel;
+
   final VoidCallback onTap;
 
   const ListMenuItem({
     super.key,
     required this.color,
-    required this.iconPath,
-    required this.label,
-    required this.description,
+    required this.menuModel,
     required this.onTap,
   });
 
@@ -36,7 +35,7 @@ class ListMenuItem extends StatelessWidget {
                   color: color.withOpacity(.1),
                   child: Center(
                     child: SvgPicture.asset(
-                      iconPath,
+                      AssetPath.getIcon(menuModel.iconPath),
                       color: color,
                       width: 32,
                     ),
@@ -53,7 +52,7 @@ class ListMenuItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  label,
+                  menuModel.labels,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: textTheme.titleSmall?.copyWith(
@@ -62,7 +61,7 @@ class ListMenuItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  description,
+                  menuModel.desc ?? 'lorem',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: textTheme.bodySmall?.copyWith(

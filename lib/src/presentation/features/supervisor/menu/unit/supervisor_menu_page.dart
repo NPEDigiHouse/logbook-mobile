@@ -2,14 +2,13 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/datasources/local_datasources/static_datasource.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/grid_menu_row.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/list_menu_column.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/menu_switch.dart';
 import 'package:elogbook/src/presentation/features/supervisor/clinical_record/list_clinical_record_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/list_resident/list_resident_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/menu/unit/supervisor_unit_data.dart';
 import 'package:elogbook/src/presentation/features/supervisor/scientific_session/list_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/list_self_reflection_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/students_task/list_student_menu_page.dart';
@@ -164,16 +163,15 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
       children: <Widget>[
         GridMenuRow(
             itemColor: primaryColor,
-            iconPaths: iconPaths.sublist(0, 4),
-            labels: labels.sublist(0, 4),
+            menus: listSupervisorMenu.sublist(0, 4),
             onTaps: [
               () => context.navigateTo(ListClinicalRecord()),
               () => context.navigateTo(ListScientificSessionPage()),
               () => context.navigateTo(ListSelfReflectionsPage()),
-              ...labels.sublist(3, 4).map((e) {
+              ...listSupervisorMenu.sublist(3, 4).map((e) {
                 return () => context.navigateTo(
                       ListStudentMenuPage(
-                        title: e,
+                        title: e.labels,
                       ),
                     );
               }).toList()
@@ -181,12 +179,11 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
         const SizedBox(height: 12),
         GridMenuRow(
             itemColor: variant2Color,
-            iconPaths: iconPaths.sublist(4, 8),
-            labels: labels.sublist(4, 8),
-            onTaps: labels.sublist(4, 8).map((e) {
+            menus: listSupervisorMenu.sublist(4, 8),
+            onTaps: listSupervisorMenu.sublist(4, 8).map((e) {
               return () => context.navigateTo(
                     ListStudentMenuPage(
-                      title: e,
+                      title: e.labels,
                     ),
                   );
             }).toList()),
@@ -194,12 +191,13 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
         GridMenuRow(
             length: 1,
             itemColor: variant1Color,
-            iconPaths: iconPaths.sublist(8, iconPaths.length),
-            labels: labels.sublist(8, labels.length),
-            onTaps: labels.sublist(8, labels.length).map((e) {
+            menus: listSupervisorMenu.sublist(8, listSupervisorMenu.length),
+            onTaps: listSupervisorMenu
+                .sublist(8, listSupervisorMenu.length)
+                .map((e) {
               return () => context.navigateTo(
                     ListStudentMenuPage(
-                      title: e,
+                      title: e.labels,
                     ),
                   );
             }).toList()),
@@ -213,9 +211,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
       children: <Widget>[
         ListMenuColumn(
           itemColor: primaryColor,
-          iconPaths: iconPaths.sublist(0, 4),
-          labels: labels.sublist(0, 4),
-          descriptions: descriptions.sublist(0, 4),
+          menus: listSupervisorMenu.sublist(0, 4),
           onTaps: onTaps(context).sublist(0, 4),
         ),
         const Divider(
@@ -225,9 +221,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
         ),
         ListMenuColumn(
           itemColor: variant2Color,
-          iconPaths: iconPaths.sublist(4, 8),
-          labels: labels.sublist(4, 8),
-          descriptions: descriptions.sublist(4, 8),
+          menus: listSupervisorMenu.sublist(4, 8),
           onTaps: onTaps(context).sublist(4, 8),
         ),
         const Divider(
@@ -238,9 +232,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
         ListMenuColumn(
           length: 1,
           itemColor: variant1Color,
-          iconPaths: iconPaths.sublist(8, iconPaths.length),
-          labels: labels.sublist(8, labels.length),
-          descriptions: descriptions.sublist(8, descriptions.length),
+          menus: listSupervisorMenu.sublist(8, listSupervisorMenu.length),
           onTaps: onTaps(context).sublist(8, onTaps(context).length),
         ),
       ],
