@@ -88,9 +88,13 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
                   "content-type": 'application/json',
                   "authorization": 'Bearer ${credential?.accessToken}'
                 },
+                followRedirects: false,
+                validateStatus: (status) {
+                  return status! < 500;
+                },
               ),
               data: model.toJson());
-      if (response.statusCode != 201) {
+      if (response.statusCode != 200) {
         throw Exception();
       }
     } catch (e) {

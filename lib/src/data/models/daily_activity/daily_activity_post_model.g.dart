@@ -12,8 +12,8 @@ DailyActivityPostModel _$DailyActivityPostModelFromJson(
       activityStatus: json['activityStatus'] as String?,
       detail: json['detail'] as String?,
       supervisorId: json['supervisorId'] as String?,
-      locationId: json['locationId'] as String?,
-      activityNameId: json['activityNameId'] as String?,
+      locationId: json['locationId'] as int?,
+      activityNameId: json['activityNameId'] as int?,
     );
 
 Map<String, dynamic> _$DailyActivityPostModelToJson(

@@ -7,8 +7,8 @@ class DailyActivityPostModel {
   final String? activityStatus;
   final String? detail;
   final String? supervisorId;
-  final String? locationId;
-  final String? activityNameId;
+  final int? locationId;
+  final int? activityNameId;
 
   DailyActivityPostModel({
     this.activityStatus,

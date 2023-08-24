@@ -206,9 +206,12 @@ class _DailyActivityWeekStatusPageState
                       (index) {
                     final data = state.studentActivityPerweek!.activities!;
                     return DailyActivityStatusCard(
-                        verificationStatus: data[index].verificationStatus!,
-                        day: data[index].day!,
-                        status: data[index].activityStatus!);
+                      id: data[index].id!,
+                      verificationStatus: data[index].verificationStatus!,
+                      day: data[index].day!,
+                      dailyActivityId: widget.dailyActivityId,
+                      status: data[index].activityStatus!,
+                    );
                   }).toList(),
                 ],
               );
@@ -224,11 +227,15 @@ class _DailyActivityWeekStatusPageState
 }
 
 class DailyActivityStatusCard extends StatelessWidget {
+  final String? dailyActivityId;
+  final String id;
   final String day;
   final String verificationStatus;
   final String status;
   const DailyActivityStatusCard(
       {super.key,
+      required this.dailyActivityId,
+      required this.id,
       required this.verificationStatus,
       required this.day,
       required this.status});
@@ -243,7 +250,10 @@ class DailyActivityStatusCard extends StatelessWidget {
     return InkWellContainer(
       padding: EdgeInsets.all(16),
       radius: 12,
-      onTap: () => context.navigateTo(CreateDailyActivityPage()),
+      onTap: () => context.navigateTo(CreateDailyActivityPage(
+        modelId: id,
+        id: dailyActivityId!,
+      )),
       color: Colors.white,
       boxShadow: [
         BoxShadow(
