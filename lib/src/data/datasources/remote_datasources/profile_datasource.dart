@@ -86,6 +86,7 @@ class ProfileDataSourceImpl extends ProfileDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
+          responseType: ResponseType.bytes,
         ),
       );
       print(response.data);
