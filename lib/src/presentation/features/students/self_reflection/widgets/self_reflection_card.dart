@@ -4,6 +4,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
 import 'package:elogbook/src/presentation/features/students/self_reflection/self_reflection_detail_page.dart';
+import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -74,7 +75,10 @@ class StudentSelfReflectionCard extends StatelessWidget {
                     const SizedBox(height: 12),
                     Text(
                       model.content ?? '',
-                      maxLines: 4,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodyMedium
+                          ?.copyWith(color: secondaryTextColor),
                     ),
                     const SizedBox(height: 8),
                   ],

@@ -1,18 +1,14 @@
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/self_reflection/self_reflection_post_model.dart';
 import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
-import 'package:elogbook/src/data/models/self_reflection/verify_self_reflection_model.dart';
-import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class StudentSelfReflectionCard extends StatelessWidget {
+class SupervisorSelfReflectionCard extends StatelessWidget {
   final SelfReflectionData data;
-  const StudentSelfReflectionCard({super.key, required this.data});
+  const SupervisorSelfReflectionCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {

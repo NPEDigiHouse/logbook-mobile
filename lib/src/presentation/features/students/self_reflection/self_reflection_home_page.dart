@@ -3,10 +3,10 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
-import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
-import 'package:elogbook/src/presentation/features/students/scientific_session/widgets/scientific_session_card.dart';
 import 'package:elogbook/src/presentation/features/students/self_reflection/create_self_reflection_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/self_reflection/student_self_reflection_card.dart';
+import 'package:elogbook/src/presentation/features/students/self_reflection/widgets/self_reflection_card.dart';
+import 'package:elogbook/src/presentation/features/supervisor/self_reflection/supervisor_self_reflection_card.dart';
+import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -97,11 +97,12 @@ class _StudentSelfReflectionHomePageState
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) =>
                                     StudentSelfReflectionCard(
-                                  data: state.selfReflectionResponse!
+                                  model: state.selfReflectionResponse!
                                       .listSelfReflections![index],
                                 ),
-                                separatorBuilder: (context, index) =>
-                                    SizedBox(height: 12),
+                                separatorBuilder: (context, index) => SizedBox(
+                                  child: ItemDivider(),
+                                ),
                                 itemCount: data.length,
                               ),
                             ],

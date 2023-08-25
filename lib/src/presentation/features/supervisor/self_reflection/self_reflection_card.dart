@@ -4,8 +4,6 @@ import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/self_reflection/self_reflection_model.dart';
-import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
-import 'package:elogbook/src/presentation/features/supervisor/scientific_session/detail_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/self_reflection_student_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

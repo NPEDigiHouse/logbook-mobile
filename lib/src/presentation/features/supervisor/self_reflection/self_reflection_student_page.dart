@@ -2,7 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
-import 'package:elogbook/src/presentation/features/supervisor/self_reflection/student_self_reflection_card.dart';
+import 'package:elogbook/src/presentation/features/supervisor/self_reflection/supervisor_self_reflection_card.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -99,7 +99,7 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
                   SliverList.separated(
                     itemCount: state.listData!.length,
                     itemBuilder: (context, index) {
-                      return StudentSelfReflectionCard(
+                      return SupervisorSelfReflectionCard(
                         data: state.data!.listSelfReflections![index],
                       );
                     },
