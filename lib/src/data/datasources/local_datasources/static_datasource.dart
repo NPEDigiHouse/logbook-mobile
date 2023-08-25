@@ -63,7 +63,7 @@ final List<MenuModel> listStudentMenu = [
   ),
   MenuModel(
     iconPath: 'consultation_icon.svg',
-    labels: 'Problem Consultation',
+    labels: 'Special Reports',
   ),
   MenuModel(
     iconPath: 'auto_stories_rounded.svg',
@@ -98,7 +98,7 @@ final List<MenuModel> listSupervisorMenu = [
   ),
   MenuModel(
     iconPath: 'consultation_icon.svg',
-    labels: 'Problem Consultation',
+    labels: 'Special Reports',
   ),
   MenuModel(
     iconPath: 'auto_stories_rounded.svg',

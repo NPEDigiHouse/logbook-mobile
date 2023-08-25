@@ -2,15 +2,13 @@ import 'package:elogbook/src/data/datasources/local_datasources/static_datasourc
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/assesment_home_page.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/list_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/students/competences/competences_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/references/references_page.dart';
-import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/list_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/sgl_cst_home_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/scientific_session/list_scientific_session_page.dart';
+import 'package:elogbook/src/presentation/features/students/special_reports/special_report_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -478,7 +476,9 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                   ),
                 ),
             () => context.navigateTo(
-                  SizedBox(),
+                  SpecialReportHomePage(
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
                   ReferencePage(
@@ -537,7 +537,9 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                   ),
                 ),
             () => context.navigateTo(
-                  SizedBox(),
+                  SpecialReportHomePage(
+                    activeUnitModel: activeUnitModel,
+                  ),
                 ),
             () => context.navigateTo(
                   ReferencePage(
