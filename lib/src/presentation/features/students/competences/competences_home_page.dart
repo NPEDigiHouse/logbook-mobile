@@ -50,6 +50,7 @@ class _CompetenceHomePageState extends State<CompetenceHomePage> {
                       Expanded(
                         child: CompetenceCard(
                           onTap: () => context.navigateTo(ListCasesPage(
+                            model: widget.model,
                             unitId: widget.unitId,
                           )),
                           title: 'Cases',
@@ -63,6 +64,7 @@ class _CompetenceHomePageState extends State<CompetenceHomePage> {
                       Expanded(
                         child: CompetenceCard(
                           onTap: () => context.navigateTo(ListSkillsPage(
+                            model: widget.model,
                             unitId: widget.unitId,
                           )),
                           title: 'Skills',

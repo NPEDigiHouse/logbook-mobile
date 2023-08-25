@@ -11,7 +11,7 @@ StudentScientificSessionResponse _$StudentScientificSessionResponseFromJson(
     StudentScientificSessionResponse(
       unverifiedCounts: json['unverifiedCounts'] as int?,
       verifiedCounts: json['verifiedCounts'] as int?,
-      listClinicalRecords: (json['listClinicalRecords'] as List<dynamic>?)
+      listScientificSessions: (json['listScientificSessions'] as List<dynamic>?)
           ?.map((e) =>
               StudentScientificSessionModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -22,7 +22,7 @@ Map<String, dynamic> _$StudentScientificSessionResponseToJson(
     <String, dynamic>{
       'unverifiedCounts': instance.unverifiedCounts,
       'verifiedCounts': instance.verifiedCounts,
-      'listClinicalRecords': instance.listClinicalRecords,
+      'listScientificSessions': instance.listScientificSessions,
     };
 
 StudentScientificSessionModel _$StudentScientificSessionModelFromJson(

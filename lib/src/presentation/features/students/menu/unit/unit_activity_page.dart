@@ -8,7 +8,9 @@ import 'package:elogbook/src/presentation/features/students/competences/competen
 import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/references/references_page.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
+import 'package:elogbook/src/presentation/features/students/scientific_session/list_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/sgl_cst_home_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/scientific_session/list_scientific_session_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -376,7 +378,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                           ],
                         ),
                       // ! Ubah ke VERIFIED setelah integrasi supervior Selesai
-                      if (activeUnitModel.checkInStatus != null) ...[
+                      if (activeUnitModel.checkInStatus == 'VERIFIED') ...[
                         const SizedBox(height: 28),
                         ValueListenableBuilder(
                           valueListenable: _isList,
@@ -454,7 +456,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                   ),
                 ),
             () => context.navigateTo(
-                  AddScientificSessionPage(activeUnitModel: activeUnitModel),
+                  StudentListScientificSessionPage(
+                      activeUnitModel: activeUnitModel),
                 ),
           ],
         ),
@@ -509,9 +512,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
             () => context.navigateTo(
                   ListClinicalRecordPage(activeUnitModel: activeUnitModel),
                 ),
-            () => context.navigateTo(
-                  AddScientificSessionPage(activeUnitModel: activeUnitModel),
-                ),
+            () => StudentListScientificSessionPage(
+                activeUnitModel: activeUnitModel),
           ],
         ),
         const Divider(

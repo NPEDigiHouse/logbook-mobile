@@ -94,7 +94,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             SupervisorDetailClinicalRecordPage(id: ''),
                           )
                       : () => context.navigateTo(
-                            const DetailScientificSessionPage(),
+                            DetailScientificSessionPage(id: ''),
                           ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(

@@ -91,10 +91,11 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
             builder: (context, state) {
               if (state is FetchSuccess) {
                 final List<UnitModel> data = [
-                  UnitModel(
-                    id: widget.activeUnitModel.unitId!,
-                    name: widget.activeUnitModel.unitName!,
-                  ),
+                  if (widget.activeUnitModel.unitId != null)
+                    UnitModel(
+                      id: widget.activeUnitModel.unitId!,
+                      name: widget.activeUnitModel.unitName!,
+                    ),
                   ...state.units
                       .where((element) =>
                           element.id != widget.activeUnitModel.unitId)

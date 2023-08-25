@@ -1,12 +1,10 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
-import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/clinical_record_card.dart';
+import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
+import 'package:elogbook/src/presentation/features/students/scientific_session/widgets/scientific_session_card.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -15,16 +13,19 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ListClinicalRecordPage extends StatefulWidget {
+class StudentListScientificSessionPage extends StatefulWidget {
   final ActiveUnitModel activeUnitModel;
 
-  const ListClinicalRecordPage({super.key, required this.activeUnitModel});
+  const StudentListScientificSessionPage(
+      {super.key, required this.activeUnitModel});
 
   @override
-  State<ListClinicalRecordPage> createState() => _ListClinicalRecordPageState();
+  State<StudentListScientificSessionPage> createState() =>
+      _StudentListScientificSessionPageState();
 }
 
-class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
+class _StudentListScientificSessionPageState
+    extends State<StudentListScientificSessionPage> {
   late final ValueNotifier<String> _query, _selectedMenu;
   late final ValueNotifier<Map<String, String>?> _dataFilters;
 
@@ -34,7 +35,7 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
     _selectedMenu = ValueNotifier('All');
     _dataFilters = ValueNotifier(null);
     BlocProvider.of<StudentCubit>(context)
-      ..getStudentClinicalRecordOfActiveUnit();
+      ..getStudentScientificSessionOfActiveUnit();
     super.initState();
   }
 
@@ -50,11 +51,11 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Clinical Records"),
+        title: Text("Scientific Session"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.navigateTo(CreateClinicalRecordFirstPage(
-            activeUnitModel: widget.activeUnitModel)),
+        onPressed: () => context.navigateTo(
+            AddScientificSessionPage(activeUnitModel: widget.activeUnitModel)),
         child: Icon(
           Icons.add_rounded,
         ),
@@ -64,7 +65,7 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
           padding: EdgeInsets.symmetric(vertical: 16),
           child: BlocBuilder<StudentCubit, StudentState>(
             builder: (context, state) {
-              if (state.clinicalRecordResponse != null) {
+              if (state.scientificSessionResponse != null) {
                 return SpacingColumn(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   onlyPading: true,
@@ -77,26 +78,44 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                     SectionDivider(),
                     Builder(
                       builder: (context) {
-                        if (state.clinicalRecordResponse != null) {
-                          final data = state
-                              .clinicalRecordResponse!.listClinicalRecords!;
+                        if (state.scientificSessionResponse != null) {
+                          final data = state.scientificSessionResponse!
+                              .listScientificSessions!;
                           if (data.isEmpty) {
                             return EmptyData(
                               subtitle:
-                                  'Please upload clinical record data first!',
+                                  'Please upload scientific session data first!',
                               title: 'Data Still Empty',
                             );
                           }
-                          return ListView.separated(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) => ClinicalRecordCard(
-                              model: state.clinicalRecordResponse!
-                                  .listClinicalRecords![index],
-                            ),
-                            separatorBuilder: (context, index) =>
-                                SizedBox(height: 12),
-                            itemCount: data.length,
+                          return Column(
+                            children: [
+                              SizedBox(
+                                height: 16,
+                              ),
+                              buildSearchFilterSection(
+                                verifiedCount: state
+                                    .scientificSessionResponse!.verifiedCounts!,
+                                unverifiedCount: state
+                                    .scientificSessionResponse!
+                                    .unverifiedCounts!,
+                              ),
+                              SizedBox(
+                                height: 24,
+                              ),
+                              ListView.separated(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) =>
+                                    StudentScientificSessionCard(
+                                  model: state.scientificSessionResponse!
+                                      .listScientificSessions![index],
+                                ),
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: 12),
+                                itemCount: data.length,
+                              ),
+                            ],
                           );
                         } else {
                           return SizedBox.shrink();

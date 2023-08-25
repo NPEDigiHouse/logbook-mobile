@@ -1,16 +1,22 @@
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/competences/widgets/add_competence_dialog.dart';
+import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ListCasesPage extends StatefulWidget {
+  final ActiveUnitModel model;
+
   final String unitId;
-  const ListCasesPage({super.key, required this.unitId});
+  const ListCasesPage({super.key, required this.model, required this.unitId});
 
   @override
   State<ListCasesPage> createState() => _ListCasesPageState();
@@ -72,25 +78,31 @@ class _ListCasesPageState extends State<ListCasesPage> {
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 16),
           child: SpacingColumn(
+            crossAxisAlignment: CrossAxisAlignment.start,
             onlyPading: true,
             horizontalPadding: 16,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // UnitHeader(),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  buildSearchFilterSection(),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  BlocBuilder<CompetenceCubit, CompetenceState>(
-                    builder: (context, state) {
-                      if (state.listCasesModel != null) {
-                        final data = state.listCasesModel!.listCases!;
-                        return ListView.separated(
+              UnitHeader(unitName: widget.model.unitName!),
+              SizedBox(
+                height: 12,
+              ),
+              BlocBuilder<CompetenceCubit, CompetenceState>(
+                builder: (context, state) {
+                  if (state.listCasesModel != null) {
+                    final data = state.listCasesModel!.listCases!;
+                    if (data.isEmpty) {
+                      return EmptyData(
+                        subtitle: 'Please add case data first!',
+                        title: 'Data Still Empty',
+                      );
+                    }
+                    return Column(
+                      children: [
+                        buildSearchFilterSection(),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        ListView.separated(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (context, index) => TestGradeScoreCard(
@@ -102,13 +114,13 @@ class _ListCasesPageState extends State<ListCasesPage> {
                           separatorBuilder: (context, index) =>
                               SizedBox(height: 12),
                           itemCount: data.length,
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
-                    },
-                  ),
-                ],
+                        ),
+                      ],
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
               )
             ],
           ),

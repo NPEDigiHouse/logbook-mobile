@@ -5,12 +5,12 @@ part 'student_scientific_session_model.g.dart';
 class StudentScientificSessionResponse {
   final int? unverifiedCounts;
   final int? verifiedCounts;
-  final List<StudentScientificSessionModel>? listClinicalRecords;
+  final List<StudentScientificSessionModel>? listScientificSessions;
 
   StudentScientificSessionResponse({
     this.unverifiedCounts,
     this.verifiedCounts,
-    this.listClinicalRecords,
+    this.listScientificSessions,
   });
 
   factory StudentScientificSessionResponse.fromJson(

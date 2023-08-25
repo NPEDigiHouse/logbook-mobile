@@ -121,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 56),
                 Text(
-                  widget.credential.fullname!,
+                  widget.credential.fullname ?? '-',
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

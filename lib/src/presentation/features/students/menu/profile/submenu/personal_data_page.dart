@@ -105,13 +105,12 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
             PersonalDataForm(
               title: 'Student',
               dataMap: {
-                'Fullname': widget.userData.student!.fullname ?? '',
+                'Fullname': widget.userData.student!.fullname ?? '-',
                 'Clinic ID': widget.userData.student!.clinicId,
                 'Preclinic ID': widget.userData.student!.preClinicId,
-                'S.Ked Graduation Date':
-                    ReusableFunctionHelper.datetimeToString(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            widget.userData.student!.graduationDate! * 1000)),
+                'S.Ked Graduation Date': ReusableFunctionHelper
+                    .datetimeToString(DateTime.fromMillisecondsSinceEpoch(
+                        widget.userData.student!.graduationDate ?? 0 * 1000)),
               },
             ),
             PersonalDataForm(
