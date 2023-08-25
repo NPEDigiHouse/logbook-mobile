@@ -4,9 +4,11 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:path/path.dart';
 
 abstract class UserDataSource {
   Future<UserCredential> getUserCredential();
+  Future<String> uploadProfilePicture(String path);
 }
 
 class UserDataSourceImpl implements UserDataSource {
@@ -45,6 +47,44 @@ class UserDataSourceImpl implements UserDataSource {
     } catch (e) {
       print("ERROR");
       print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<String> uploadProfilePicture(String path) async {
+    final credential = await preferenceHandler.getCredential();
+
+    try {
+      final response = await dio.post(
+        ApiService.baseUrl + '/users/pic',
+        options: Options(
+          headers: {
+            "content-type": 'multipart/form-data',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+        data: FormData.fromMap(
+          {
+            'pic': await MultipartFile.fromFile(
+              path,
+              filename: basename(path),
+            ),
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode == 201) {
+        return await response.data['data'];
+      }
+      // throw Exception();
+      return await response.data['data'];
+    } catch (e) {
+      print("ini" + e.toString());
       throw ClientFailure(e.toString());
     }
   }

@@ -1,12 +1,16 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/personal_data_form.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PersonalDataPage extends StatefulWidget {
   final String userId;
@@ -17,6 +21,31 @@ class PersonalDataPage extends StatefulWidget {
 }
 
 class _PersonalDataPageState extends State<PersonalDataPage> {
+  Future<void> uploadFile(BuildContext context) async {
+    final status = await Permission.storage.request();
+    if (status.isGranted) {
+      // Izin diberikan, lanjutkan dengan tindakan yang diperlukan
+      FilePickerResult? result =
+          await FilePicker.platform.pickFiles(type: FileType.image);
+
+      if (result != null) {
+        File file = File(result.files.single.path!);
+        try {
+          BlocProvider.of<ProfileCubit>(context)
+            ..uploadProfilePic(path: file.path);
+        } catch (e) {
+          print('Error uploading file: $e');
+        }
+      }
+    } else if (status.isDenied) {
+      // Pengguna menolak izin, Anda dapat memberi tahu pengguna untuk mengaktifkannya di pengaturan
+      print('Storage permission is denied');
+    } else if (status.isPermanentlyDenied) {
+      // Pengguna secara permanen menolak izin, arahkan pengguna ke pengaturan aplikasi
+      openAppSettings();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -43,9 +72,13 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
           ),
         ),
       ),
-      body: BlocBuilder<ProfileCubit, ProfileState>(
+      body: BlocConsumer<ProfileCubit, ProfileState>(
+        listener: (context, state) {
+          if (state.successUploadProfilePic) {
+            BlocProvider.of<ProfileCubit>(context)..getProfilePic();
+          }
+        },
         builder: (context, state) {
-          print(state.userCredential!.student!.graduationDate);
           if (state.userCredential != null) {
             return SingleChildScrollView(
               child: Column(
@@ -54,22 +87,35 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
                   Center(
                     child: Stack(
                       children: <Widget>[
-                        BlocBuilder<ProfileCubit, ProfileState>(
-                          builder: (context, state) {
-                            if (state.profilePic != null) {
-                              return CircleAvatar(
-                                radius: 50,
-                                foregroundImage: MemoryImage(state.profilePic!),
-                              );
-                            } else {
-                              return CircleAvatar(
-                                radius: 50,
-                                foregroundImage: AssetImage(
-                                  AssetPath.getImage('profile_default.png'),
-                                ),
-                              );
-                            }
-                          },
+                        InkWell(
+                          onTap: () => uploadFile(context),
+                          child: BlocBuilder<ProfileCubit, ProfileState>(
+                            builder: (context, state) {
+                              if (state.stateProfilePic ==
+                                  RequestState.loading) {
+                                return Container(
+                                  width: 100,
+                                  height: 100,
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                );
+                              }
+                              if (state.profilePic != null) {
+                                return CircleAvatar(
+                                  radius: 50,
+                                  foregroundImage:
+                                      MemoryImage(state.profilePic!),
+                                );
+                              } else {
+                                return CircleAvatar(
+                                  radius: 50,
+                                  foregroundImage: AssetImage(
+                                    AssetPath.getImage('profile_default.png'),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                         ),
                         Positioned(
                           bottom: 0,
@@ -161,7 +207,8 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
                     title: 'Station',
                     dataMap: {
                       'Period and length of station (Weeks)': state
-                          .userCredential!.student!.periodLengthStation.toString(),
+                          .userCredential!.student!.periodLengthStation
+                          .toString(),
                       'RS Station': state.userCredential!.student!.rsStation,
                       'PKM Station': state.userCredential!.student!.pkmStation,
                     },

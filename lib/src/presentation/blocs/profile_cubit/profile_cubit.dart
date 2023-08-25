@@ -14,7 +14,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit({
     required this.dataSource,
     required this.userDataSource,
-  }) : super(ProfileState());
+  }) : super(ProfileState(stateProfilePic: RequestState.init));
 
   Future<void> getProfilePic() async {
     print("call");
@@ -60,6 +60,28 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(
         state.copyWith(
           requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> uploadProfilePic({required String path}) async {
+    try {
+      emit(state.copyWith(
+        stateProfilePic: RequestState.loading,
+      ));
+
+      await userDataSource.uploadProfilePicture(path);
+      try {
+        emit(state.copyWith(successUploadProfilePic: true));
+      } catch (e) {
+        emit(state.copyWith(stateProfilePic: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          stateProfilePic: RequestState.error,
         ),
       );
     }
