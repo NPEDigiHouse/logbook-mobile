@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/activity_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/assesment_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/clinical_record_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/competence_datasource.dart';
@@ -49,6 +50,7 @@ import 'package:elogbook/src/domain/usecases/unit_usecases/check_in_active_unit_
 import 'package:elogbook/src/domain/usecases/unit_usecases/fetch_units_usecase.dart';
 import 'package:elogbook/src/domain/usecases/unit_usecases/get_active_unit_usecase.dart';
 import 'package:elogbook/src/presentation/blocs/activity_cubit/activity_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
@@ -184,6 +186,12 @@ void _injectDatasource() {
   );
   locator.registerLazySingleton<UserDataSource>(
     () => UserDataSourceImpl(
+      dio: locator(),
+      preferenceHandler: locator(),
+    ),
+  );
+  locator.registerLazySingleton<AssesmentDataSource>(
+    () => AssesmentDataSourceImpl(
       dio: locator(),
       preferenceHandler: locator(),
     ),
@@ -362,6 +370,12 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => SelfReflectionCubit(
       selfReflectionUsecase: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => AssesmentCubit(
+      dataSource: locator(),
+      studentDataSource: locator(),
     ),
   );
   locator.registerFactory(

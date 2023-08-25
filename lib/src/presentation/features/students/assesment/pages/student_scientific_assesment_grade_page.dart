@@ -27,7 +27,10 @@ class StudentScientificAssessmentGrade extends StatelessWidget {
             SizedBox(
               height: 16,
             ),
-            TitleAssesmentCard(),
+            TitleAssesmentCard(
+              title: "Scientific Assignment Grade",
+              subtitle: 's',
+            ),
             TopStatCard(
               title: 'Scientific Assignment Statistic',
               score: 1100,

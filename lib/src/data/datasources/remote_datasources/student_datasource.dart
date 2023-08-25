@@ -3,6 +3,7 @@ import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
+import 'package:elogbook/src/data/models/assessment/mini_cex_list_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/student_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
@@ -13,6 +14,7 @@ abstract class StudentDataSource {
   Future<StudentScientificSessionResponse>
       getStudentScientificSessionOfActiveUnit();
   Future<StudentSelfReflectionModel> getStudentSelfReflection();
+  Future<List<MiniCexListModel>> getStudentMiniCex();
   Future<void> updateStudentProfile(StudentProfile model);
 }
 
@@ -141,6 +143,39 @@ class StudentDataSourceImpl implements StudentDataSource {
       if (response.statusCode != 200) {
         throw Exception();
       }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<MiniCexListModel>> getStudentMiniCex() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/mini-cexs',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<MiniCexListModel> listData =
+          dataResponse.data.map((e) => MiniCexListModel.fromJson(e)).toList();
+
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

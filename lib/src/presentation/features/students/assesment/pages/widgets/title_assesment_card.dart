@@ -3,8 +3,12 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:flutter/material.dart';
 
 class TitleAssesmentCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
   const TitleAssesmentCard({
     super.key,
+    required this.title,
+    required this.subtitle,
   });
 
   @override
@@ -34,10 +38,42 @@ class TitleAssesmentCard extends StatelessWidget {
             ),
           ),
           Text(
-            "\"Example Case Title Title Here\"",
+            "\"${title}\"",
             style: textTheme.bodyLarge?.copyWith(
               color: scaffoldBackgroundColor,
             ),
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: Colors.white.withOpacity(.75),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 16,
+                      color: primaryColor,
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Text(
+                      "${subtitle}",
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: primaryTextColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),

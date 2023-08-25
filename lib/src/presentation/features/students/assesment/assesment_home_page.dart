@@ -2,7 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_scientific_assesment_grade_page.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/student_test_grade_page.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_test_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_weekly_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/assesment_menu_card.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/final_grade_card.dart';
@@ -57,8 +57,10 @@ class AssesmentHomePage extends StatelessWidget {
               children: [
                 AssementMenuCard(
                   iconPath: 'icon_test.svg',
-                  title: 'Test Grade',
-                  onTap: () => context.navigateTo(StudentTestGrade()),
+                  title: 'Mini Cex',
+                  onTap: () => context.navigateTo(StudentTestGrade(
+                    unitName: activeUnitModel.unitName!,
+                  )),
                 ),
                 SizedBox(
                   width: 12,

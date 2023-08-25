@@ -34,8 +34,12 @@ class EmptyData extends StatelessWidget {
             style: textTheme.titleLarge?.copyWith(
                 color: primaryTextColor, fontWeight: FontWeight.bold),
           ),
-          Text(
-            subtitle,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Text(
+              subtitle,
+              textAlign: TextAlign.center,
+            ),
           )
         ],
       ),
