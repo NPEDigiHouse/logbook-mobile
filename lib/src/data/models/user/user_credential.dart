@@ -58,7 +58,7 @@ class StudentCredentialProfile {
   final String? examinerDPKid;
   final String? rsStation;
   final String? pkmStation;
-  final int? priodLengthStation;
+  final int? periodLengthStation;
 
   StudentCredentialProfile(
       {required this.address,
@@ -75,7 +75,7 @@ class StudentCredentialProfile {
       this.examinerDPKName,
       this.examinerDPKid,
       this.pkmStation,
-      this.priodLengthStation,
+      this.periodLengthStation,
       this.rsStation,
       this.supervisingDPKId,
       this.supervisingDPKName});

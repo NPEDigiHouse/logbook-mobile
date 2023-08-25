@@ -2,7 +2,6 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
-import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:flutter/material.dart';
 

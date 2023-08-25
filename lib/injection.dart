@@ -12,6 +12,7 @@ import 'package:elogbook/src/data/datasources/remote_datasources/sglcst_datasour
 import 'package:elogbook/src/data/datasources/remote_datasources/student_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/supervisors_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/unit_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/user_datasource.dart';
 import 'package:elogbook/src/data/repositories/auth_repository_impl.dart';
 import 'package:elogbook/src/data/repositories/clinical_record_repository_impl.dart';
 import 'package:elogbook/src/data/repositories/scientific_session_repository_impl.dart';
@@ -177,6 +178,12 @@ void _injectDatasource() {
   );
   locator.registerLazySingleton<StudentDataSource>(
     () => StudentDataSourceImpl(
+      dio: locator(),
+      preferenceHandler: locator(),
+    ),
+  );
+  locator.registerLazySingleton<UserDataSource>(
+    () => UserDataSourceImpl(
       dio: locator(),
       preferenceHandler: locator(),
     ),
@@ -369,6 +376,7 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => ProfileCubit(
       dataSource: locator(),
+      userDataSource: locator(),
     ),
   );
   locator.registerFactory(

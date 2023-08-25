@@ -65,7 +65,7 @@ StudentCredentialProfile _$StudentCredentialProfileFromJson(
       examinerDPKName: json['examinerDPKName'] as String?,
       examinerDPKid: json['examinerDPKid'] as String?,
       pkmStation: json['pkmStation'] as String?,
-      priodLengthStation: json['priodLengthStation'] as int?,
+      periodLengthStation: json['periodLengthStation'] as int?,
       rsStation: json['rsStation'] as String?,
       supervisingDPKId: json['supervisingDPKId'] as String?,
       supervisingDPKName: json['supervisingDPKName'] as String?,
@@ -91,7 +91,7 @@ Map<String, dynamic> _$StudentCredentialProfileToJson(
       'examinerDPKid': instance.examinerDPKid,
       'rsStation': instance.rsStation,
       'pkmStation': instance.pkmStation,
-      'priodLengthStation': instance.priodLengthStation,
+      'periodLengthStation': instance.periodLengthStation,
     };
 
 SupervisorCredentialProfile _$SupervisorCredentialProfileFromJson(

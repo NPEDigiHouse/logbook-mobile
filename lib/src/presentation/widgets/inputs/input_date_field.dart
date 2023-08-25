@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 class InputDateField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
+  final String? initialValue;
   final FutureOr<void> Function(DateTime date)? action;
   const InputDateField(
       {super.key,
       required this.action,
+      this.initialValue,
       required this.controller,
       required this.hintText});
 
@@ -18,6 +20,15 @@ class InputDateField extends StatefulWidget {
 }
 
 class _InputDateFieldState extends State<InputDateField> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.initialValue != null) {
+      widget.controller.text = widget.initialValue!;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -29,14 +40,22 @@ class _InputDateFieldState extends State<InputDateField> {
           initialDate: widget.controller.text.isEmpty
               ? DateTime.now()
               : ReusableFunctionHelper.stringToDateTime(widget.controller.text),
-          firstDate: DateTime.now().subtract(
-            Duration(days: 30),
-          ),
-          lastDate: DateTime.now().add(
-            const Duration(
-              days: 30,
-            ),
-          ),
+          firstDate: widget.controller.text.isEmpty
+              ? DateTime.now().subtract(
+                  Duration(days: 30),
+                )
+              : ReusableFunctionHelper.stringToDateTime(widget.controller.text)
+                  .subtract(
+                  Duration(days: 30),
+                ),
+          lastDate: widget.controller.text.isEmpty
+              ? DateTime.now().add(
+                  const Duration(days: 1000),
+                )
+              : ReusableFunctionHelper.stringToDateTime(widget.controller.text)
+                  .add(
+                  Duration(days: 1000),
+                ),
         );
 
         if (selected == null) return;

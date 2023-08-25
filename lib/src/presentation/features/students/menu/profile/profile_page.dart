@@ -26,9 +26,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    BlocProvider.of<ProfileCubit>(context)..getProfilePic();
+    BlocProvider.of<ProfileCubit>(context)
+      ..getProfilePic()
+      ..getUserCredential();
   }
 
   @override
@@ -121,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 56),
                 Text(
-                  widget.credential.fullname ?? '-',
+                  widget.credential?.fullname ?? '-',
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -135,7 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   iconPath: 'person_filled.svg',
                   title: 'Personal Data',
                   onTap: () => context.navigateTo(PersonalDataPage(
-                    userData: widget.credential,
+                    userId: widget.credential!.id!,
                   )),
                 ),
                 const SizedBox(height: 14),

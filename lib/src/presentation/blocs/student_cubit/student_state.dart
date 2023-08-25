@@ -5,12 +5,14 @@ class StudentState {
   final StudentClinicalRecordResponse? clinicalRecordResponse;
   final StudentScientificSessionResponse? scientificSessionResponse;
   final StudentSelfReflectionModel? selfReflectionResponse;
+  final bool successUpdateStudentProfile;
 
   StudentState({
     this.clinicalRecordResponse,
     this.scientificSessionResponse,
     this.selfReflectionResponse,
     this.requestState,
+    this.successUpdateStudentProfile = false,
   });
 
   StudentState copyWith({
@@ -19,6 +21,7 @@ class StudentState {
     final StudentScientificSessionResponse? scientificSessionResponse,
     bool isDailyActivityUpdated = false,
     StudentSelfReflectionModel? selfReflectionResponse,
+    bool successUpdateStudentProfile = false,
   }) {
     return StudentState(
       clinicalRecordResponse:
@@ -28,6 +31,7 @@ class StudentState {
           selfReflectionResponse ?? this.selfReflectionResponse,
       scientificSessionResponse:
           scientificSessionResponse ?? this.scientificSessionResponse,
+      successUpdateStudentProfile: successUpdateStudentProfile,
     );
   }
 }

@@ -2,15 +2,18 @@ import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/profile_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/user_datasource.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
-import 'package:equatable/equatable.dart';
 
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileDataSource dataSource;
+  final UserDataSource userDataSource;
   ProfileCubit({
     required this.dataSource,
+    required this.userDataSource,
   }) : super(ProfileState());
 
   Future<void> getProfilePic() async {
@@ -24,6 +27,30 @@ class ProfileCubit extends Cubit<ProfileState> {
       try {
         emit(state.copyWith(
           profilePic: result,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getUserCredential() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await userDataSource.getUserCredential();
+      try {
+        emit(state.copyWith(
+          userCredential: result,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));

@@ -3,6 +3,7 @@ import 'package:elogbook/src/data/datasources/remote_datasources/student_datasou
 import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/student_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
+import 'package:elogbook/src/data/models/students/student_profile_post.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
 part 'student_state.dart';
@@ -69,6 +70,31 @@ class StudentCubit extends Cubit<StudentState> {
       try {
         emit(state.copyWith(
           selfReflectionResponse: result,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> updateStudentData(
+      {required StudentProfile studentProfile}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.updateStudentProfile(studentProfile);
+      try {
+        emit(state.copyWith(
+          successUpdateStudentProfile: true,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
