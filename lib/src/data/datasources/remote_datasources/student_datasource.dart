@@ -5,11 +5,13 @@ import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/student_scientific_session_model.dart';
+import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
 
 abstract class StudentDataSource {
   Future<StudentClinicalRecordResponse> getStudentClinicalRecordOfActiveUnit();
   Future<StudentScientificSessionResponse>
       getStudentScientificSessionOfActiveUnit();
+  Future<StudentSelfReflectionModel> getStudentSelfReflection();
 }
 
 class StudentDataSourceImpl implements StudentDataSource {
@@ -76,6 +78,37 @@ class StudentDataSourceImpl implements StudentDataSource {
 
       final result =
           StudentScientificSessionResponse.fromJson(dataResponse.data);
+      return result;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<StudentSelfReflectionModel> getStudentSelfReflection() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/self-reflections',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+
+      final result = StudentSelfReflectionModel.fromJson(dataResponse.data);
       return result;
     } catch (e) {
       print(e.toString());

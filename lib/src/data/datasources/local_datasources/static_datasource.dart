@@ -54,6 +54,10 @@ final List<MenuModel> listStudentMenu = [
     labels: 'Scientific Session',
   ),
   MenuModel(
+    iconPath: 'emoji_objects_rounded.svg',
+    labels: 'Self Reflection',
+  ),
+  MenuModel(
     iconPath: 'school_rounded.svg',
     labels: 'Competence',
   ),
@@ -87,6 +91,10 @@ final List<MenuModel> listSupervisorMenu = [
   MenuModel(
     iconPath: 'biotech_rounded.svg',
     labels: 'Scientific Session',
+  ),
+  MenuModel(
+    iconPath: 'emoji_objects_rounded.svg',
+    labels: 'Self Reflection',
   ),
   MenuModel(
     iconPath: 'school_rounded.svg',

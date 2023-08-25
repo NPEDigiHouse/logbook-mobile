@@ -7,8 +7,11 @@ import 'package:elogbook/src/presentation/features/students/competences/competen
 import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/references/references_page.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/list_scientific_session_page.dart';
+import 'package:elogbook/src/presentation/features/students/self_reflection/create_self_reflection_page.dart';
+import 'package:elogbook/src/presentation/features/students/self_reflection/self_reflection_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/sgl_cst_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/special_report_home_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/self_reflection/self_reflection_student_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -465,6 +468,11 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           menus: listStudentMenu.sublist(4, 8),
           onTaps: [
             () => context.navigateTo(
+                  StudentSelfReflectionHomePage(
+                    activeUnitModel: activeUnitModel,
+                  ),
+                ),
+            () => context.navigateTo(
                   CompetenceHomePage(
                     unitId: activeUnitModel.unitId!,
                     model: activeUnitModel,
@@ -480,6 +488,14 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                     activeUnitModel: activeUnitModel,
                   ),
                 ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        GridMenuRow(
+          length: 1,
+          itemColor: variant1Color,
+          menus: listStudentMenu.sublist(8, listStudentMenu.length),
+          onTaps: [
             () => context.navigateTo(
                   ReferencePage(
                     activeUnitModel: activeUnitModel,
@@ -526,6 +542,11 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
           menus: listStudentMenu.sublist(4, 8),
           onTaps: [
             () => context.navigateTo(
+                  StudentSelfReflectionHomePage(
+                    activeUnitModel: activeUnitModel,
+                  ),
+                ),
+            () => context.navigateTo(
                   CompetenceHomePage(
                     unitId: activeUnitModel.unitId!,
                     model: activeUnitModel,
@@ -541,6 +562,18 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                     activeUnitModel: activeUnitModel,
                   ),
                 ),
+          ],
+        ),
+        const Divider(
+          height: 30,
+          thickness: 1,
+          color: Color(0xFFEFF0F9),
+        ),
+        ListMenuColumn(
+          length: 1,
+          itemColor: variant1Color,
+          menus: listStudentMenu.sublist(8, 9),
+          onTaps: [
             () => context.navigateTo(
                   ReferencePage(
                     activeUnitModel: activeUnitModel,
