@@ -5,11 +5,13 @@ class ScientifcSessionState {
   final List<ScientificRoles>? scientificRoles;
   final RequestState requestState;
   final bool postSuccess;
+  final String? attachment;
 
   ScientifcSessionState(
       {this.listSessionTypes,
       this.scientificRoles,
       this.postSuccess = false,
+      this.attachment,
       this.requestState = RequestState.init});
 
   ScientifcSessionState copyWith({
@@ -17,12 +19,13 @@ class ScientifcSessionState {
     final List<ScientificRoles>? scientificRoles,
     RequestState? requestState,
     bool postSuccess = false,
+    String? attachment,
   }) {
     return ScientifcSessionState(
-      listSessionTypes: listSessionTypes ?? this.listSessionTypes,
-      scientificRoles: scientificRoles ?? this.scientificRoles,
-      requestState: requestState ?? RequestState.init,
-      postSuccess: postSuccess,
-    );
+        listSessionTypes: listSessionTypes ?? this.listSessionTypes,
+        scientificRoles: scientificRoles ?? this.scientificRoles,
+        requestState: requestState ?? RequestState.init,
+        postSuccess: postSuccess,
+        attachment: attachment);
   }
 }

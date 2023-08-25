@@ -372,26 +372,6 @@ class _DetailScientificSessionPageState
                       ],
                     ),
                   ),
-                  if (state.detail!.verificationStatus != 'VERIFIED') ...[
-                    SizedBox(
-                      height: 12,
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      width: MediaQuery.of(context).size.width,
-                      child: FilledButton.icon(
-                        onPressed: () => showDialog(
-                            context: context,
-                            barrierLabel: '',
-                            barrierDismissible: false,
-                            builder: (_) => VerifyScientificSessionDialog(
-                                  id: widget.id,
-                                )).then((value) {}),
-                        icon: Icon(Icons.verified),
-                        label: Text('Verify'),
-                      ),
-                    ),
-                  ],
                   SizedBox(
                     height: 24,
                   ),

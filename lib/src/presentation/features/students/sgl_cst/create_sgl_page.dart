@@ -7,7 +7,6 @@ import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
-import 'package:elogbook/src/presentation/widgets/inputs/build_text_field.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/input_date_field.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/input_date_time_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/scientific_session_datasource.dart';
 import 'package:elogbook/src/data/models/scientific_session/list_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_roles.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_session_post_model.dart';
@@ -14,12 +15,18 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
   final GetListSessionTypesUsecase getListSessionTypesUsecase;
   final GetScientificSessionRolesUsecase getScientificSessionRolesUsecase;
   final UploadScientificSessionUsecase uploadScientificSessionUsecase;
+  final ScientificSessionDataSource ds;
 
   ScientificSessionCubit({
     required this.getListSessionTypesUsecase,
     required this.getScientificSessionRolesUsecase,
     required this.uploadScientificSessionUsecase,
+    required this.ds,
   }) : super(ScientifcSessionState());
+
+  void reset() {
+    emit(state.copyWith(attachment: null));
+  }
 
   Future<void> getListSessionTypes() async {
     try {
@@ -31,6 +38,25 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
 
       result.fold((l) => emit(state.copyWith(requestState: RequestState.error)),
           (r) => emit(state.copyWith(listSessionTypes: r)));
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> uploadAttachment({required String path}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await ds.uploadScientificSessionAttachment(filePath: path);
+
+      emit(state.copyWith(attachment: result));
     } catch (e) {
       print(e.toString());
       emit(

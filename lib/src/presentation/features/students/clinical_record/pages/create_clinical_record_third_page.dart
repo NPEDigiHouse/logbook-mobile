@@ -163,6 +163,7 @@ class _CreateClinicalRecordThirdPageState
                         ],
                       ),
                     ),
+                    
                     SizedBox(
                       height: 12,
                     ),

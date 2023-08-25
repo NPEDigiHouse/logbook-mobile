@@ -78,7 +78,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   @override
   Future<String> uploadClinicalRecordAttachment(
       {required String filePath}) async {
-    print(filePath);
+   
     final credential = await preferenceHandler.getCredential();
 
     try {

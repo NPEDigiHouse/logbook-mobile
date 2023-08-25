@@ -10,6 +10,7 @@ import 'package:elogbook/src/data/models/scientific_session/scientific_session_o
 import 'package:elogbook/src/data/models/scientific_session/scientific_session_post_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/session_types_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/verify_scientific_session_model.dart';
+import 'package:path/path.dart';
 
 abstract class ScientificSessionDataSource {
   Future<void> uploadScientificSession({
@@ -17,7 +18,7 @@ abstract class ScientificSessionDataSource {
   });
   Future<ScientificSessionDetailModel> getScientificSessionDetail(
       {required String scientificSessionId});
-  Future<void> uploadScientificSessionAttachment({required String filePath});
+  Future<String> uploadScientificSessionAttachment({required String filePath});
   Future<ListScientificSessionModel> getStudentScientificSessions();
   Future<List<SessionTypesModel>> getListSessionTypes();
   Future<List<ScientificRoles>> getListScientificRoles();
@@ -65,27 +66,35 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
   }
 
   @override
-  Future<void> uploadScientificSessionAttachment(
+  Future<String> uploadScientificSessionAttachment(
       {required String filePath}) async {
     final credential = await preferenceHandler.getCredential();
-    FormData formData = FormData.fromMap({
-      'attachments': await MultipartFile.fromFile(filePath),
-    });
+
     try {
       final response = await dio.post(
-          ApiService.baseUrl + '/scientific-sessions/attachments',
-          options: Options(
-            headers: {
-              "content-type": 'multipart/form-data',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-          ),
-          data: formData);
-      if (response != 201) {
-        throw Exception();
+        ApiService.baseUrl + '/scientific-sessions/attachments',
+        options: Options(
+          headers: {
+            "content-type": 'multipart/form-data',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+        data: FormData.fromMap(
+          {
+            'attachments': await MultipartFile.fromFile(
+              filePath,
+              filename: basename(filePath),
+            ),
+          },
+        ),
+      );
+      if (response == 201) {
+        return await response.data['data'];
       }
+      // throw Exception();
+      return await response.data['data'];
     } catch (e) {
-      print(e.toString());
+      print("ini" + e.toString());
       throw ClientFailure(e.toString());
     }
   }

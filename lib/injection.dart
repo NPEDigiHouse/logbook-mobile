@@ -356,6 +356,7 @@ void _injectStateManagement() {
       getListSessionTypesUsecase: locator(),
       getScientificSessionRolesUsecase: locator(),
       uploadScientificSessionUsecase: locator(),
+      ds: locator(),
     ),
   );
   locator.registerFactory(
