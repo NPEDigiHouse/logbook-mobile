@@ -5,15 +5,16 @@ import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ListSelfReflectionsPage extends StatefulWidget {
-  const ListSelfReflectionsPage({super.key});
+class SupervisorListSelfReflectionsPage extends StatefulWidget {
+  const SupervisorListSelfReflectionsPage({super.key});
 
   @override
-  State<ListSelfReflectionsPage> createState() =>
-      _ListSelfReflectionsPageState();
+  State<SupervisorListSelfReflectionsPage> createState() =>
+      _SupervisorListSelfReflectionsPageState();
 }
 
-class _ListSelfReflectionsPageState extends State<ListSelfReflectionsPage> {
+class _SupervisorListSelfReflectionsPageState
+    extends State<SupervisorListSelfReflectionsPage> {
   @override
   void initState() {
     super.initState();

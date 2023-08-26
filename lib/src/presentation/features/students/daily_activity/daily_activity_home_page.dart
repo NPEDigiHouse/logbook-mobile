@@ -5,7 +5,6 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
-import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/pages/daily_activity_week_status_page.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -41,34 +40,12 @@ class DailyActivityPage extends StatefulWidget {
 class _DailyActivityPageState extends State<DailyActivityPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<DailyActivityCubit>(context)..getStudentDailyActivities();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<DailyActivityTempModel> tempDailyActivies = [
-      DailyActivityTempModel(
-        week: 1,
-        startDate: 'Agu 20',
-        endDate: 'Agu 25',
-        listAttendance: [1, 2, 1, 1, 3],
-      ),
-      DailyActivityTempModel(
-        week: 2,
-        startDate: 'Agu 27',
-        endDate: 'Sep 02',
-        listAttendance: [3, 1, 4, 1, 1],
-      ),
-      DailyActivityTempModel(
-        week: 2,
-        startDate: 'Sep 04',
-        endDate: 'Sep 09',
-        listAttendance: [1, 1, 0, 0, 0],
-      ),
-    ];
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Daily Activity'),

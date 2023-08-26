@@ -346,6 +346,7 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => SupervisorsCubit(
       getAllSupervisorsUsecase: locator(),
+      dataSource: locator(),
     ),
   );
   locator.registerFactory(

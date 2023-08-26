@@ -2,13 +2,6 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/students/professional_activity/create_professional_activity_page.dart';
 import 'package:elogbook/src/presentation/features/students/thesis/add_thesis_page.dart';
 import 'package:flutter/material.dart';
-import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/assesment_home_page.dart';
-import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
-import 'package:elogbook/src/presentation/features/students/references/references_page.dart';
-import 'package:elogbook/src/presentation/features/students/self_reflection/create_self_reflection_page.dart';
-import 'package:elogbook/src/presentation/features/students/sgl_cst/sgl_cst_home_page.dart';
-import 'package:elogbook/src/presentation/features/students/training/add_training_page.dart';
 
 final List<Color> colors = [
   // primaryColor,

@@ -6,11 +6,13 @@ import 'package:elogbook/core/styles/text_style.dart';
 
 class SearchField extends StatefulWidget {
   final String text;
+  final String hint;
   final ValueChanged<String> onChanged;
 
   const SearchField({
     super.key,
     required this.text,
+    this.hint = 'Search',
     required this.onChanged,
   });
 
@@ -53,7 +55,7 @@ class _SearchFieldState extends State<SearchField> {
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: 'Search',
+          hintText: widget.hint,
           hintStyle: textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.w400,
             color: const Color(0xFF6B7280),

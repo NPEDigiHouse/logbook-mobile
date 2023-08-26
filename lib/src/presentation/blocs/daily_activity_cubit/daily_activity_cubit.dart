@@ -35,6 +35,32 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
+  Future<void> getDailyActivitiesBySupervisor(
+      {required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result =
+          await dataSource.getDailyActivityBySupervisor(studentId: studentId);
+      try {
+        emit(state.copyWith(
+          studentDailyActivity: result,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getStudentActivityPerweek({required String id}) async {
     try {
       emit(state.copyWith(
@@ -42,6 +68,30 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       ));
 
       final result = await dataSource.getStudentActivityPerweek(id: id);
+      try {
+        emit(state.copyWith(
+          studentActivityPerweek: result,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getActivityPerweekBySupervisor({required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getActivityOfDailyActivity(id: id);
       try {
         emit(state.copyWith(
           studentActivityPerweek: result,
@@ -77,6 +127,36 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       emit(
         state.copyWith(
           requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  void reset() {
+    emit(state.copyWith(stateVerifyDailyActivity: RequestState.init));
+  }
+
+  Future<void> verifiyDailyActivityById(
+      {required String id, required bool verifiedStatus}) async {
+    try {
+      emit(state.copyWith(
+        stateVerifyDailyActivity: RequestState.loading,
+      ));
+
+      await dataSource.verifiyDailyActivityById(
+          id: id, verifiedStatus: verifiedStatus);
+      try {
+        emit(state.copyWith(
+            isDailyActivityUpdated: true,
+            stateVerifyDailyActivity: RequestState.data));
+      } catch (e) {
+        emit(state.copyWith(stateVerifyDailyActivity: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          stateVerifyDailyActivity: RequestState.error,
         ),
       );
     }

@@ -21,3 +21,8 @@ class FetchSuccess extends SupervisorsState {
   final List<SupervisorModel> supervisors;
   FetchSuccess({required this.supervisors});
 }
+
+class FetchStudentSuccess extends SupervisorsState {
+  final List<SupervisorStudent> students;
+  FetchStudentSuccess({required this.students});
+}

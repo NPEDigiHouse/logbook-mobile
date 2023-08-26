@@ -100,11 +100,45 @@ class ProfilePage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
-                  'Supervisor',
-                  style: TextStyle(color: secondaryColor),
-                ),
-                const SizedBox(height: 28),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Chip(
+                    backgroundColor: primaryColor,
+                    side: BorderSide.none,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    labelStyle: textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                    ),
+                    label: Text('SUPERVISOR'),
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  ...credential.badges!
+                      .map(
+                        (e) => Row(
+                          children: [
+                            Chip(
+                              backgroundColor: primaryColor,
+                              side: BorderSide.none,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              labelStyle: textTheme.bodyMedium?.copyWith(
+                                color: Colors.white,
+                              ),
+                              label: Text(e.name!),
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList()
+                ]),
+                const SizedBox(height: 12),
                 ProfileItemMenuCard(
                   iconPath: 'person_filled.svg',
                   title: 'Personal & Statistic',

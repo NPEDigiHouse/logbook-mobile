@@ -11,14 +11,14 @@ import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ListClinicalRecord extends StatefulWidget {
-  const ListClinicalRecord({super.key});
+class SupervisorListClinicalRecord extends StatefulWidget {
+  const SupervisorListClinicalRecord({super.key});
 
   @override
-  State<ListClinicalRecord> createState() => _ListClinicalRecordState();
+  State<SupervisorListClinicalRecord> createState() => _SupervisorListClinicalRecordState();
 }
 
-class _ListClinicalRecordState extends State<ListClinicalRecord> {
+class _SupervisorListClinicalRecordState extends State<SupervisorListClinicalRecord> {
   @override
   void initState() {
     super.initState();

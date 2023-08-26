@@ -7,11 +7,9 @@ import 'package:elogbook/src/presentation/features/students/competences/competen
 import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/references/references_page.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/list_scientific_session_page.dart';
-import 'package:elogbook/src/presentation/features/students/self_reflection/create_self_reflection_page.dart';
 import 'package:elogbook/src/presentation/features/students/self_reflection/self_reflection_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/sgl_cst_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/special_report_home_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/self_reflection/self_reflection_student_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -196,6 +194,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                           ],
                         ),
                       ),
+                      
                       const SizedBox(height: 32),
                       if (activeUnitModel.unitName != null)
                         ReportExpansionTile(

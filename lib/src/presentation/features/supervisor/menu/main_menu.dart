@@ -4,6 +4,7 @@ import 'package:elogbook/src/presentation/features/supervisor/history/history_pa
 import 'package:elogbook/src/presentation/features/supervisor/menu/unit/supervisor_menu_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/profile/profile_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/list_resident_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/tasks/task_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
@@ -34,6 +35,7 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
       SupervisorMenuPage(
         credential: widget.credential,
       ),
+      TaskPage(),
       const HistoryPage(),
       ListResidentPage(),
       ProfilePage(
@@ -55,12 +57,13 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
               body: _listPage[value],
               bottomNavigationBar: CustomNavigationBar(
                 listIconPath: [
+                  "home_icon.svg",
                   "icon_task.svg",
                   "icon_supervisor_history.svg",
                   "icon_residents.svg",
                   "icon_user.svg"
                 ],
-                listTitle: ['Tasks', 'History', 'Students', 'Profile'],
+                listTitle: ['Home', 'Tasks', 'History', 'Students', 'Profile'],
                 selectedIndex: _selectedIndex,
                 value: value,
               ),

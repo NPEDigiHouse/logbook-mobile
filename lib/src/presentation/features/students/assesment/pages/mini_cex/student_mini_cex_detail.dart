@@ -85,7 +85,22 @@ class _StudentMiniCexDetailState extends State<StudentMiniCexDetail> {
             }
           });
         else
-          return SizedBox.shrink();
+          return SizedBox(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 12,
+                ),
+                OutlinedButton(
+                  onPressed: () => BlocProvider.of<AssesmentCubit>(context)
+                    ..getMiniCexStudentDetail(
+                      id: widget.id,
+                    ),
+                  child: Text('Load Mini Cex Score'),
+                ),
+              ],
+            ),
+          );
       },
     );
   }

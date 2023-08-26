@@ -2,9 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
-import 'package:elogbook/src/presentation/features/supervisor/clinical_record/clinical_record_card.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/list_resident_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/resident_menu_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/scientific_session/scientific_session_card.dart';
@@ -13,15 +11,16 @@ import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ListScientificSessionPage extends StatefulWidget {
-  const ListScientificSessionPage({super.key});
+class SupervisorListScientificSessionPage extends StatefulWidget {
+  const SupervisorListScientificSessionPage({super.key});
 
   @override
-  State<ListScientificSessionPage> createState() =>
-      _ListScientificSessionPageState();
+  State<SupervisorListScientificSessionPage> createState() =>
+      _SupervisorListScientificSessionPageState();
 }
 
-class _ListScientificSessionPageState extends State<ListScientificSessionPage> {
+class _SupervisorListScientificSessionPageState
+    extends State<SupervisorListScientificSessionPage> {
   @override
   void initState() {
     super.initState();
