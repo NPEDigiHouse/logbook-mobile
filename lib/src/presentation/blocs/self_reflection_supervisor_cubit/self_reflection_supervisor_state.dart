@@ -4,10 +4,12 @@ class SelfReflectionSupervisorState {
   final List<SelfReflectionModel>? listData;
   final StudentSelfReflectionModel? data;
   final bool isVerify;
+  final RequestState requestStateVerifiy;
 
   SelfReflectionSupervisorState({
     this.listData,
     this.data,
+    this.requestStateVerifiy = RequestState.init,
     this.isVerify = false,
   });
 
@@ -15,11 +17,13 @@ class SelfReflectionSupervisorState {
     RequestState? requestState,
     StudentSelfReflectionModel? data,
     List<SelfReflectionModel>? listData,
+    RequestState requestStateVerifiy = RequestState.init,
     bool isVerify = false,
   }) {
     return SelfReflectionSupervisorState(
         listData: listData ?? this.listData,
         data: data ?? this.data,
+        requestStateVerifiy: requestStateVerifiy,
         isVerify: isVerify);
   }
 }

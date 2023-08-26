@@ -1,6 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/supervisor_self_reflection_card.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
@@ -32,24 +33,31 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
         title: Text('List Self Reflecton'),
       ).variant(),
       body: SafeArea(
-        child: BlocBuilder<SelfReflectionSupervisorCubit,
+        child: BlocConsumer<SelfReflectionSupervisorCubit,
             SelfReflectionSupervisorState>(
+          listener: (context, state) {
+            if (state.requestStateVerifiy == RequestState.data) {
+              BlocProvider.of<SelfReflectionSupervisorCubit>(context)
+                ..getDetailSelfReflections(id: widget.studentId)
+                ..reset();
+            }
+          },
           builder: (context, state) {
             if (state.data == null) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 16,
-                    ),
+            return CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 16,
                   ),
-                  SliverToBoxAdapter(
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -83,34 +91,41 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
                       ],
                     ),
                   ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 16,
-                    ),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 16,
                   ),
-                  SliverToBoxAdapter(
-                    child: SectionDivider(),
+                ),
+                SliverToBoxAdapter(
+                  child: SectionDivider(),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 12,
                   ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(
+                ),
+                SliverList.separated(
+                  itemCount: state.data!.listSelfReflections?.length,
+                  itemBuilder: (context, index) {
+                    print(state.data!.listSelfReflections);
+                    return SupervisorSelfReflectionCard(
+                      data: state.data!.listSelfReflections![index],
+                      index: index,
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
                       height: 12,
-                    ),
+                    );
+                  },
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 16,
                   ),
-                  SliverList.separated(
-                    itemCount: state.listData!.length,
-                    itemBuilder: (context, index) {
-                      return SupervisorSelfReflectionCard(
-                        data: state.data!.listSelfReflections![index],
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: 12,
-                      );
-                    },
-                  )
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),

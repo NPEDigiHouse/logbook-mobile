@@ -29,19 +29,10 @@ class SelfReflectionCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  width: 68,
-                  height: 68,
-                  color: primaryColor.withOpacity(.1),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      AssetPath.getIcon('emoji_objects_rounded.svg'),
-                      color: primaryColor,
-                      width: 32,
-                    ),
-                  ),
+              CircleAvatar(
+                radius: 25,
+                foregroundImage: AssetImage(
+                  AssetPath.getImage('profile_default.png'),
                 ),
               ),
               const SizedBox(width: 12),
@@ -68,7 +59,7 @@ class SelfReflectionCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     RichText(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -78,7 +69,7 @@ class SelfReflectionCard extends StatelessWidget {
                         ),
                         children: <TextSpan>[
                           const TextSpan(
-                            text: 'Date:\t',
+                            text: 'Latest:\t',
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                             ),

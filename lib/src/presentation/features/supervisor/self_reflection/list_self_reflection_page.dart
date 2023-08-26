@@ -1,6 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/self_reflection_card.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,7 @@ class _SupervisorListSelfReflectionsPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scientific Session'),
+        title: Text('Self Reflection Page'),
       ).variant(),
       body: SafeArea(
         child: BlocBuilder<SelfReflectionSupervisorCubit,
@@ -47,14 +48,25 @@ class _SupervisorListSelfReflectionsPageState
                     ),
                   ),
                   SliverToBoxAdapter(
-                    child: SearchField(
-                      onChanged: (value) {},
-                      text: 'Search',
+                    child: UnitHeader(
+                      unitName: 'Nama Unit',
                     ),
                   ),
                   SliverToBoxAdapter(
                     child: SizedBox(
-                      height: 16,
+                      height: 12,
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: SearchField(
+                      onChanged: (value) {},
+                      text: '',
+                      hint: 'Search for student',
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 12,
                     ),
                   ),
                   SliverList.separated(

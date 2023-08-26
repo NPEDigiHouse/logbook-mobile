@@ -4,7 +4,6 @@ import 'package:elogbook/src/data/models/self_reflection/self_reflection_model.d
 import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
 import 'package:elogbook/src/data/models/self_reflection/verify_self_reflection_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
-import 'package:equatable/equatable.dart';
 
 part 'self_reflection_supervisor_state.dart';
 
@@ -62,24 +61,29 @@ class SelfReflectionSupervisorCubit
     }
   }
 
+  void reset() {
+    emit(state.copyWith(requestStateVerifiy: RequestState.init));
+  }
+
   Future<void> verifySelfReflection(
       {required String id, required VerifySelfReflectionModel model}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        requestStateVerifiy: RequestState.loading,
       ));
 
       await dataSource.verify(id: id, model: model);
       try {
-        emit(state.copyWith(isVerify: true));
+        emit(state.copyWith(
+            isVerify: true, requestStateVerifiy: RequestState.data));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(requestStateVerifiy: RequestState.error));
       }
     } catch (e) {
       print(e.toString());
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          requestStateVerifiy: RequestState.error,
         ),
       );
     }
