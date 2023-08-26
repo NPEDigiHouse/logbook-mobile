@@ -4,11 +4,13 @@ class BuildTextField extends StatefulWidget {
   final String label;
   final Function(String) onChanged;
   final TextEditingController? controller;
+  final String? initialValue;
   final bool isOnlyNumber;
 
   const BuildTextField(
       {Key? key,
       this.controller,
+      this.initialValue,
       this.isOnlyNumber = false,
       required this.onChanged,
       required this.label})
@@ -23,7 +25,10 @@ class _BuildTextFieldState extends State<BuildTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
+
+      
       onChanged: widget.onChanged,
+      initialValue: widget.initialValue,
       keyboardType:
           widget.isOnlyNumber ? TextInputType.number : TextInputType.text,
       decoration: InputDecoration(

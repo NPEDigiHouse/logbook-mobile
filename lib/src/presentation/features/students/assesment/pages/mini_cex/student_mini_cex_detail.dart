@@ -56,7 +56,7 @@ class _StudentMiniCexDetailState extends State<StudentMiniCexDetail> {
                   TopStatCard(
                     title: 'Total Grades',
                     score: state.miniCexStudentDetail?.grade != null
-                        ? state.miniCexStudentDetail!.grade!.toInt()
+                        ? state.miniCexStudentDetail!.grade!.toDouble()
                         : 0,
                   ),
                   ...List.generate(

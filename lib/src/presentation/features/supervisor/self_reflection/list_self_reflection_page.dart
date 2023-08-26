@@ -19,8 +19,9 @@ class _SupervisorListSelfReflectionsPageState
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<SelfReflectionSupervisorCubit>(context)
-      ..getSelfReflections();
+    Future.microtask(() =>
+        BlocProvider.of<SelfReflectionSupervisorCubit>(context)
+          ..getSelfReflections());
   }
 
   @override

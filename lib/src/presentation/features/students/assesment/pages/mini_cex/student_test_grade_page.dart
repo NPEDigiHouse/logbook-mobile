@@ -1,11 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/core/helpers/app_size.dart';
-import 'package:elogbook/core/styles/color_palette.dart';
-import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/add_mini_cex_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_mini_cex_detail.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/student_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/title_assesment_card.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -76,7 +72,6 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
                       );
                     }
                     final miniCex = state.studentMiniCexs!.first;
-
                     return Column(
                       children: [
                         TitleAssesmentCard(

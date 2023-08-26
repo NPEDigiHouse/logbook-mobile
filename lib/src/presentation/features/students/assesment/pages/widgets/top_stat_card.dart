@@ -7,7 +7,7 @@ import 'package:semicircle_indicator/semicircle_indicator.dart';
 
 class TopStatCard extends StatelessWidget {
   final String title;
-  final int score;
+  final double score;
   const TopStatCard({
     super.key,
     required this.score,
@@ -70,6 +70,7 @@ class TopStatCard extends StatelessWidget {
                 SemicircularIndicator(
                   contain: true,
                   radius: 100,
+                  progress: score,
                   strokeCap: StrokeCap.round,
                   color: primaryColor,
                   bottomPadding: 0,

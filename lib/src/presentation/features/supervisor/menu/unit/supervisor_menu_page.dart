@@ -8,6 +8,7 @@ import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart
 import 'package:elogbook/src/presentation/features/students/menu/widgets/grid_menu_row.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/list_menu_column.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/menu_switch.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/supervisor_assesment_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/clinical_record/list_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/competence/supervisor_competence_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/daily_activity/supervisor_daily_activity_home_page.dart';
@@ -180,7 +181,9 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
             onTaps: [
               () => context.navigateTo(SupervisorListSelfReflectionsPage()),
               () => context.navigateTo(SupervisorCompetencePage()),
-              () => context.navigateTo(SupervisorCompetencePage()),
+              () => context.navigateTo(SupervisorAssesmentListStudentPage(
+                    credential: widget.credential,
+                  )),
               () => context.navigateTo(SupervisorSpecialReportPage()),
             ]),
       ],

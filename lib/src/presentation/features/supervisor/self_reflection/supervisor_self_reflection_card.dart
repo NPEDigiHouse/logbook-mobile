@@ -59,7 +59,7 @@ class SupervisorSelfReflectionCard extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Text(
-                      'Self Reflection ${index + 1}',
+                      'Self Reflection #${index + 1}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: textTheme.titleSmall?.copyWith(

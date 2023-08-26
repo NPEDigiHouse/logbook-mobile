@@ -95,7 +95,7 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
           },
         ),
       );
-      // print(response.statusCode);
+      print(response);
       if (response.statusCode != 200) {
         throw Exception();
       }

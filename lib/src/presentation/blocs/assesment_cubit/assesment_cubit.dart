@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/datasources/remote_datasources/student_datasou
 import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_list_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_post_model.dart';
+import 'package:elogbook/src/data/models/assessment/student_mini_cex.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
 part 'assesment_state.dart';
@@ -47,6 +48,50 @@ class AssesmentCubit extends Cubit<AssesmentState> {
       final data = await studentDataSource.getStudentMiniCex();
       try {
         emit(state.copyWith(studentMiniCexs: data));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> studentMiniCex({required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final data = await dataSource.getStudetnMiniCex(studentId: studentId);
+      try {
+        emit(state.copyWith(studentMiniCex: data));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> assesmentMiniCex(
+      {required String id, required Map<String, dynamic> miniCex}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+      await dataSource.addScoreMiniCex(minicexId: id, listItemRating: miniCex);
+      try {
+        emit(state.copyWith(isAssesmentMiniCexSuccess: true));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }
