@@ -70,7 +70,6 @@ class TopStatCard extends StatelessWidget {
                 SemicircularIndicator(
                   contain: true,
                   radius: 100,
-                  progress: score,
                   strokeCap: StrokeCap.round,
                   color: primaryColor,
                   bottomPadding: 0,

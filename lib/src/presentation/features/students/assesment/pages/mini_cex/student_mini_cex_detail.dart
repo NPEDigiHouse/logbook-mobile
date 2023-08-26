@@ -3,11 +3,15 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/clip_donut_painter.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/top_stat_card.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
+import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:semicircle_indicator/semicircle_indicator.dart';
 
 class StudentMiniCexDetail extends StatefulWidget {
   final String id;
@@ -28,6 +32,45 @@ class _StudentMiniCexDetailState extends State<StudentMiniCexDetail> {
         id: widget.id,
       ));
     super.initState();
+  }
+
+  TotalGradeHelper? getTotalGrades(double grades) {
+    Map<String, int> scoreColors = {
+      'A': 0xFF56B9A1,
+      'B+': 0xFF7AB28C,
+      'B': 0xFF9FAE78,
+      'B-': 0xFFC4A763,
+      'C+': 0xFFE8A04E,
+      'C': 0xFFFFCB51,
+      'C-': 0xFFE79D6B,
+      'D': 0xFFC28B86,
+      'E': 0xFFD1495B,
+    };
+    String scoreLevel;
+    if (grades * 100 >= 90) {
+      scoreLevel = 'A';
+    } else if (grades * 100 >= 85) {
+      scoreLevel = 'B+';
+    } else if (grades * 100 >= 80) {
+      scoreLevel = 'B';
+    } else if (grades * 100 >= 75) {
+      scoreLevel = 'B-';
+    } else if (grades * 100 >= 70) {
+      scoreLevel = 'C+';
+    } else if (grades * 100 >= 65) {
+      scoreLevel = 'C';
+    } else if (grades * 100 >= 60) {
+      scoreLevel = 'C-';
+    } else if (grades * 100 >= 55) {
+      scoreLevel = 'D';
+    } else {
+      scoreLevel = 'E';
+    }
+
+    return TotalGradeHelper(
+        value: grades,
+        gradientScore: ScoreGradientName(
+            title: scoreLevel, color: Color(scoreColors[scoreLevel]!)));
   }
 
   @override
@@ -55,9 +98,8 @@ class _StudentMiniCexDetailState extends State<StudentMiniCexDetail> {
                   ),
                   TopStatCard(
                     title: 'Total Grades',
-                    score: state.miniCexStudentDetail?.grade != null
-                        ? state.miniCexStudentDetail!.grade!.toDouble()
-                        : 0,
+                    totalGrade: getTotalGrades(
+                        state.miniCexStudentDetail!.grade! / 100),
                   ),
                   ...List.generate(
                     state.miniCexStudentDetail!.scores!.length,
@@ -102,6 +144,111 @@ class _StudentMiniCexDetailState extends State<StudentMiniCexDetail> {
             ),
           );
       },
+    );
+  }
+}
+
+class TopStatCard extends StatelessWidget {
+  final String title;
+  final TotalGradeHelper? totalGrade;
+  const TopStatCard({
+    super.key,
+    required this.totalGrade,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: scaffoldBackgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              offset: Offset(0, 0),
+              spreadRadius: 0,
+              blurRadius: 6,
+              color: Color(0xFFD4D4D4).withOpacity(.25)),
+          BoxShadow(
+              offset: Offset(0, 4),
+              spreadRadius: 0,
+              blurRadius: 24,
+              color: Color(0xFFD4D4D4).withOpacity(.25)),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Stack(
+          clipBehavior: Clip.antiAlias,
+          children: [
+            Positioned(
+              bottom: 0,
+              left: 8,
+              child: CustomPaint(
+                size: Size(
+                    80,
+                    (80 * 1.17)
+                        .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                painter: ClipDonutPainter(),
+              ),
+            ),
+            Column(
+              children: [
+                SizedBox(
+                  height: 12,
+                ),
+                Text(
+                  title,
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                SectionDivider(),
+                SizedBox(
+                  height: 12,
+                ),
+                SemicircularIndicator(
+                  contain: true,
+                  radius: 100,
+                  progress: totalGrade != null ? totalGrade!.value : 0,
+                  strokeCap: StrokeCap.round,
+                  color: totalGrade != null
+                      ? totalGrade!.gradientScore.color
+                      : onDisableColor,
+                  bottomPadding: 0,
+                  backgroundColor: Color(0xFFB0EAFC),
+                  child: Column(
+                    children: [
+                      Text(
+                        totalGrade != null
+                            ? totalGrade!.gradientScore.title
+                            : 'Unknown',
+                        style: textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        totalGrade != null
+                            ? 'Avg : ${(totalGrade!.value * 100).toInt().toString()}'
+                            : '-',
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: secondaryColor,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
