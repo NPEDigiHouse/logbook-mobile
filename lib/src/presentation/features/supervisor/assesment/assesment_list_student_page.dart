@@ -5,27 +5,28 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
-import 'package:elogbook/src/presentation/features/supervisor/assesment/assesment_student_home_page.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/assesment_home_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/list_mini_cex_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SupervisorAssesmentListStudentPage extends StatefulWidget {
+import 'assesment_student_home_page.dart';
+
+class SupervisorAssesmentStudentPage extends StatefulWidget {
   final UserCredential credential;
-  const SupervisorAssesmentListStudentPage(
-      {super.key, required this.credential});
+  const SupervisorAssesmentStudentPage({super.key, required this.credential});
 
   @override
-  State<SupervisorAssesmentListStudentPage> createState() =>
-      _SupervisorAssesmentListStudentPageState();
+  State<SupervisorAssesmentStudentPage> createState() =>
+      _SupervisorAssesmentStudentPageState();
 }
 
-class _SupervisorAssesmentListStudentPageState
-    extends State<SupervisorAssesmentListStudentPage> {
+class _SupervisorAssesmentStudentPageState
+    extends State<SupervisorAssesmentStudentPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(
         () => BlocProvider.of<SupervisorsCubit>(context)..getAllStudents());
@@ -98,8 +99,8 @@ class _SupervisorAssesmentListStudentPageState
     return InkWellContainer(
       color: Colors.white,
       onTap: () => context.navigateTo(AssesmentStudentHomePage(
-        studentId: student.studentId ?? '',
         credential: widget.credential,
+        studentId: student.studentId!,
       )),
       child: Row(
         children: [

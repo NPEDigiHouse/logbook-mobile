@@ -1,11 +1,11 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/supervisor_mini_cex_detail_page.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../blocs/assesment_cubit/assesment_cubit.dart';
 
 class ListMiniCexPage extends StatefulWidget {
   final String studentId;
@@ -33,12 +33,20 @@ class _ListMiniCexPageState extends State<ListMiniCexPage> {
       ).variant(),
       body: BlocConsumer<AssesmentCubit, AssesmentState>(
         listener: (context, state) {
-          if (state.studentMiniCex != null) {
+          if (state.studentMiniCex != null &&
+              state.studentMiniCex!.id != null) {
             context.replace(SupervisorMiniCexDetailPage(
                 unitName: '', id: state.studentMiniCex!.id!));
           }
         },
         builder: (context, state) {
+          if (state.studentMiniCex != null &&
+              state.studentMiniCex!.id == null) {
+            return EmptyData(
+              title: 'Mini Cex Data Still Empty',
+              subtitle: 'student have not yet upload mini cex data',
+            );
+          }
           return Center(
             child: CircularProgressIndicator(),
           );

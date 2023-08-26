@@ -5,6 +5,8 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/final_grade_card.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/list_mini_cex_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/list_scientific_assignment_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/supervisor_scientific_assignment_detail_page.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -15,8 +17,11 @@ class AssesmentStudentHomePage extends StatelessWidget {
   final String studentId;
   final UserCredential credential;
 
-  const AssesmentStudentHomePage(
-      {super.key, required this.credential, required this.studentId});
+  const AssesmentStudentHomePage({
+    super.key,
+    required this.credential,
+    required this.studentId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +53,8 @@ class AssesmentStudentHomePage extends StatelessWidget {
                   iconPath: 'icon_test.svg',
                   title: 'Mini Cex',
                   desc: 'Mini Clinical Evaluation Exercise',
-                  onTap: () => context.navigateTo(ListMiniCexPage(
-                    unitName: '',
-                    studentId: studentId,
-                  )),
+                  onTap: () => context.navigateTo(
+                      ListMiniCexPage(unitName: '', studentId: studentId)),
                 ),
                 SizedBox(
                   width: 12,
@@ -59,7 +62,10 @@ class AssesmentStudentHomePage extends StatelessWidget {
                 AssementMenuCard(
                   iconPath: 'icon_scientific_assignment.svg',
                   title: 'Scientific Assignment Grade',
-                  onTap: () {},
+                  onTap: () => context.navigateTo(ListScientificAssignmentPage(
+                    unitName: '',
+                    studentId: studentId,
+                  )),
                   desc: 'Scientific assessment or assignment',
                 ),
               ],

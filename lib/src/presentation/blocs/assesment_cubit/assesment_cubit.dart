@@ -1,12 +1,12 @@
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/assesment_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/student_datasource.dart';
+import 'package:elogbook/src/data/models/assessment/list_scientific_assignment.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_list_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_post_model.dart';
 import 'package:elogbook/src/data/models/assessment/student_mini_cex.dart';
+import 'package:elogbook/src/data/models/assessment/student_scientific_assignment.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
 part 'assesment_state.dart';
@@ -117,6 +117,77 @@ class AssesmentCubit extends Cubit<AssesmentState> {
           state.copyWith(
               miniCexStudentDetail: data, requestState: RequestState.data),
         );
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getScientiicAssignmentDetail({required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final data = await dataSource.getScientificAssignmentDetail(id: id);
+      try {
+        emit(
+          state.copyWith(
+              scientificAssignmentDetail: data,
+              requestState: RequestState.data),
+        );
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> assesmentScientificAssignment(
+      {required String id, required Map<String, dynamic> sa}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+      await dataSource.addScoreScientificAssignment(id: id, score: sa);
+      try {
+        emit(state.copyWith(isAssementScientificAssignmentSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> studentScientificAssignment({required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final data =
+          await dataSource.getStudentScientificAssignment(studentId: studentId);
+      try {
+        emit(state.copyWith(scientificAssignmentStudents: data));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

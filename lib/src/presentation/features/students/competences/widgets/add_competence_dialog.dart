@@ -165,7 +165,11 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                   ),
                   Builder(
                     builder: (context) {
-                      List<String> _desc = ['OBTAINED', 'DISCUSSED'];
+                      List<String> _desc = [
+                        'OBTAINED',
+                        'DISCUSSED',
+                        'OBSERVER'
+                      ];
 
                       return DropdownButtonFormField(
                         hint: Text('Description'),

@@ -48,34 +48,36 @@ class _StudentDailyActivityWeekStatusPageState
           appBar: AppBar(
             title: Text('Daily Activity - Week ${widget.weekName}'),
           ),
-          floatingActionButton: SizedBox(
-            width: AppSize.getAppWidth(context) - 32,
-            child:
-                state.studentActivityPerweek!.verificationStatus == 'VERIFIED'
-                    ? OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(color: primaryColor),
+          floatingActionButton: (state.studentActivityPerweek != null)
+              ? SizedBox(
+                  width: AppSize.getAppWidth(context) - 32,
+                  child: state.studentActivityPerweek!.verificationStatus ==
+                          'VERIFIED'
+                      ? OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: BorderSide(color: primaryColor),
+                          ),
+                          onPressed: () {
+                            BlocProvider.of<DailyActivityCubit>(context)
+                              ..verifiyDailyActivityById(
+                                  id: widget.dailyActivityId,
+                                  verifiedStatus: false);
+                          },
+                          child: Text('Cancel Verification'),
+                        )
+                      : FilledButton.icon(
+                          onPressed: () {
+                            BlocProvider.of<DailyActivityCubit>(context)
+                              ..verifiyDailyActivityById(
+                                  id: widget.dailyActivityId,
+                                  verifiedStatus: true);
+                          },
+                          icon: Icon(Icons.verified),
+                          label: Text('Verify Activity'),
                         ),
-                        onPressed: () {
-                          BlocProvider.of<DailyActivityCubit>(context)
-                            ..verifiyDailyActivityById(
-                                id: widget.dailyActivityId,
-                                verifiedStatus: false);
-                        },
-                        child: Text('Cancel Verification'),
-                      )
-                    : FilledButton.icon(
-                        onPressed: () {
-                          BlocProvider.of<DailyActivityCubit>(context)
-                            ..verifiyDailyActivityById(
-                                id: widget.dailyActivityId,
-                                verifiedStatus: true);
-                        },
-                        icon: Icon(Icons.verified),
-                        label: Text('Verify Activity'),
-                      ),
-          ),
+                )
+              : SizedBox.shrink(),
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 16),
             child: Builder(

@@ -28,6 +28,6 @@ Map<String, dynamic> _$ScientificSessionPostModelToJson(
       'topic': instance.topic,
       'title': instance.title,
       'role': instance.role,
-      if (instance.notes != null) 'notes': instance.notes,
-      if (instance.attachment != null) 'attachment': instance.attachment,
+      'notes': instance.notes,
+      'attachment': instance.attachment,
     };

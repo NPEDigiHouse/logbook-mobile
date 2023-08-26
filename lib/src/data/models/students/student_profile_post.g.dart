@@ -23,19 +23,15 @@ StudentProfile _$StudentProfileFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$StudentProfileToJson(StudentProfile instance) =>
     <String, dynamic>{
-      if (instance.clinicId != null) 'clinicId': instance.clinicId,
-      if (instance.preclinicId != null) 'preclinicId': instance.preclinicId,
-      if (instance.phoneNumber != null) 'phoneNumber': instance.phoneNumber,
-      if (instance.address != null) 'address': instance.address,
-      if (instance.graduationDate != null)
-        'graduationDate': instance.graduationDate,
-      if (instance.academicSupervisor != null)
-        'academicSupervisor': instance.academicSupervisor,
-      if (instance.examinerDpk != null) 'examinerDPK': instance.examinerDpk,
-      if (instance.supervisingDpk != null)
-        'supervisingDPK': instance.supervisingDpk,
-      if (instance.rsStation != null) 'rsStation': instance.rsStation,
-      if (instance.pkmStation != null) 'pkmStation': instance.pkmStation,
-      if (instance.periodLengthStation != null)
-        'periodLengthStation': instance.periodLengthStation,
+      'clinicId': instance.clinicId,
+      'preclinicId': instance.preclinicId,
+      'phoneNumber': instance.phoneNumber,
+      'address': instance.address,
+      'graduationDate': instance.graduationDate,
+      'academicSupervisor': instance.academicSupervisor,
+      'examinerDPK': instance.examinerDpk,
+      'supervisingDPK': instance.supervisingDpk,
+      'rsStation': instance.rsStation,
+      'pkmStation': instance.pkmStation,
+      'periodLengthStation': instance.periodLengthStation,
     };
