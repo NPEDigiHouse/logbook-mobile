@@ -1,6 +1,7 @@
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
 import 'package:elogbook/src/presentation/features/supervisor/history/history_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/in_out_reporting/in_out_reporting_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/menu/unit/supervisor_menu_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/profile/profile_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/list_resident_page.dart';
@@ -35,9 +36,12 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
       SupervisorMenuPage(
         credential: widget.credential,
       ),
-      TaskPage(),
-      const HistoryPage(),
+      // TaskPage(),
+      if (widget.credential.badges!.indexWhere((e) => e.name == 'HEAD_DIV') !=
+          -1)
+        InOutReportingPage(),
       ListResidentPage(),
+      const HistoryPage(),
       ProfilePage(
         credential: widget.credential,
       ),
@@ -58,12 +62,24 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
               bottomNavigationBar: CustomNavigationBar(
                 listIconPath: [
                   "home_icon.svg",
-                  "icon_task.svg",
-                  "icon_supervisor_history.svg",
+                  if (widget.credential.badges!
+                          .indexWhere((e) => e.name == 'HEAD_DIV') !=
+                      -1)
+                    'wifi_protected_setup_rounded.svg',
                   "icon_residents.svg",
+                  "icon_supervisor_history.svg",
                   "icon_user.svg"
                 ],
-                listTitle: ['Home', 'Tasks', 'History', 'Students', 'Profile'],
+                listTitle: [
+                  'Tasks',
+                  if (widget.credential.badges!
+                          .indexWhere((e) => e.name == 'HEAD_DIV') !=
+                      -1)
+                    'In-Out',
+                  'Students',
+                  'History',
+                  'Profile'
+                ],
                 selectedIndex: _selectedIndex,
                 value: value,
               ),

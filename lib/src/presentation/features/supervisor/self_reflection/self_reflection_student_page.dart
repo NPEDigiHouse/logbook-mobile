@@ -8,16 +8,18 @@ import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SelfReflectionStudentPage extends StatefulWidget {
+class SupervisorSelfReflectionStudentPage extends StatefulWidget {
   final String studentId;
-  const SelfReflectionStudentPage({super.key, required this.studentId});
+  const SupervisorSelfReflectionStudentPage(
+      {super.key, required this.studentId});
 
   @override
-  State<SelfReflectionStudentPage> createState() =>
-      _SelfReflectionStudentPageState();
+  State<SupervisorSelfReflectionStudentPage> createState() =>
+      _SupervisorSelfReflectionStudentPageState();
 }
 
-class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
+class _SupervisorSelfReflectionStudentPageState
+    extends State<SupervisorSelfReflectionStudentPage> {
   @override
   void initState() {
     super.initState();

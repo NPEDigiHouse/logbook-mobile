@@ -86,7 +86,7 @@ class _StudentDailyActivityWeekStatusPageState
                   return SpacingColumn(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     horizontalPadding: 16,
-                    spacing: 20,
+                    spacing: 12,
                     children: [
                       Container(
                         width: AppSize.getAppWidth(context),
@@ -300,10 +300,6 @@ class DailyActivityStatusCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(
-            detail ?? '-',
-            style: textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
-          ),
           Row(
             children: [
               RichText(
@@ -324,6 +320,10 @@ class DailyActivityStatusCard extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          Text(
+            detail ?? '-',
+            style: textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
           ),
         ],
       ),

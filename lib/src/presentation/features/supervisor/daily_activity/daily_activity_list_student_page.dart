@@ -10,15 +10,6 @@ import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class StudentDummyHelper {
-  final String name;
-  final String id;
-
-  const StudentDummyHelper({
-    required this.name,
-    required this.id,
-  });
-}
 
 class DailyActivityListStudentPage extends StatefulWidget {
   const DailyActivityListStudentPage({super.key});

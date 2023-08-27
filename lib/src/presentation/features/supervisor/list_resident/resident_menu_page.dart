@@ -1,12 +1,21 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
+import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/dummy_models.dart';
+import 'package:elogbook/src/presentation/features/supervisor/list_resident/daily_activity/daily_activity_student_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/list_resident/detail_profile/detail_profile_student_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/list_resident/self_reflection_student_page.dart/self_reflection_student_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/list_resident/special_report/special_report_student_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/self_reflection/self_reflection_student_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ResidentMenuPage extends StatefulWidget {
-  const ResidentMenuPage({super.key});
+  final SupervisorStudent student;
+  const ResidentMenuPage({super.key, required this.student});
 
   @override
   State<ResidentMenuPage> createState() => _ResidentMenuPageState();
@@ -45,13 +54,17 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
     'icon_daily_activity.svg',
   ];
 
-  final List<VoidCallback> onTaps = [
-    () {},
-    () {},
-    () {},
-    () {},
-    () {},
-  ];
+  List<VoidCallback> onTaps(BuildContext context) => [
+        () => context.navigateTo(DetailProfileStudentPage()),
+        () => context.navigateTo(SpecialReportStudentPage()),
+        () {},
+        () => context.navigateTo(SelfReflectionStudentPage(
+              studentId: widget.student.studentId!,
+            )),
+        () => context.navigateTo(DailyActivityStudentPage(
+              studentId: widget.student.studentId!,
+            )),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +116,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
                       ),
                     ),
                     Text(
-                      'Khairunnisa',
+                      widget.student.studentName ?? '',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: textTheme.titleLarge?.copyWith(
@@ -111,7 +124,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
                       ),
                     ),
                     Text(
-                      'H071191049',
+                      widget.student.studentId ?? '',
                       style: textTheme.bodyMedium?.copyWith(
                         color: scaffoldBackgroundColor,
                       ),
@@ -142,15 +155,10 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
                   return buildResidentMenuCard(
                     context: context,
                     iconPath: iconPath[index],
-                    onTap: onTaps[index],
+                    onTap: onTaps(context)[index],
                     title: titleList[index],
                   );
                 },
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 16,
               ),
             ),
           ],

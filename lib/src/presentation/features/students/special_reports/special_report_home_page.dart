@@ -3,8 +3,6 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
-import 'package:elogbook/src/presentation/features/students/sgl_cst/list_cst_page.dart';
-import 'package:elogbook/src/presentation/features/students/sgl_cst/list_sgl_page.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/add_special_report_page.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/widgets/special_report_card.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -23,7 +21,6 @@ class SpecialReportHomePage extends StatefulWidget {
 }
 
 class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
-  final ValueNotifier<bool> isSaveAsDraft = ValueNotifier(false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -15,10 +15,12 @@ class SupervisorListClinicalRecord extends StatefulWidget {
   const SupervisorListClinicalRecord({super.key});
 
   @override
-  State<SupervisorListClinicalRecord> createState() => _SupervisorListClinicalRecordState();
+  State<SupervisorListClinicalRecord> createState() =>
+      _SupervisorListClinicalRecordState();
 }
 
-class _SupervisorListClinicalRecordState extends State<SupervisorListClinicalRecord> {
+class _SupervisorListClinicalRecordState
+    extends State<SupervisorListClinicalRecord> {
   @override
   void initState() {
     super.initState();
@@ -79,44 +81,6 @@ class _SupervisorListClinicalRecordState extends State<SupervisorListClinicalRec
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget _buildStudentCard(BuildContext context, StudentDummyHelper student) {
-    return InkWellContainer(
-      color: Colors.white,
-      onTap: () => context.navigateTo(ResidentMenuPage()),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 25,
-            foregroundImage: AssetImage(
-              AssetPath.getImage('profile_default.png'),
-            ),
-          ),
-          SizedBox(
-            width: 12,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                student.name,
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: primaryTextColor,
-                ),
-              ),
-              Text(
-                student.id,
-                style: textTheme.bodyMedium?.copyWith(
-                  color: secondaryTextColor,
-                ),
-              ),
-            ],
-          )
-        ],
       ),
     );
   }

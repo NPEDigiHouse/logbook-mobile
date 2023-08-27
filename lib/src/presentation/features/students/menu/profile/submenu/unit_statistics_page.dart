@@ -164,6 +164,7 @@ class UnitStatisticsPage extends StatelessWidget {
                 ],
               ),
             ),
+          
           ],
         ),
       ),

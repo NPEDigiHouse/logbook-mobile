@@ -18,7 +18,7 @@ class SelfReflectionCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () => context.navigateTo(
-          SelfReflectionStudentPage(
+          SupervisorSelfReflectionStudentPage(
             studentId: selfReflection.studentId!,
           ),
         ),
