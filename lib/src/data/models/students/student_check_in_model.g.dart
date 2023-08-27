@@ -8,15 +8,21 @@ part of 'student_check_in_model.dart';
 
 StudentCheckInModel _$StudentCheckInModelFromJson(Map<String, dynamic> json) =>
     StudentCheckInModel(
-      id: json['id'] as String?,
-      fullName: json['fullName'] as String?,
-      supervisorId: json['supervisorId'],
+      checkInStatus: json['checkInStatus'] as String?,
+      checkInTime: json['checkInTime'] as int?,
+      fullname: json['fullname'] as String?,
+      studentId: json['studentId'] as String?,
+      unitId: json['unitId'] as String?,
+      unitName: json['unitName'] as String?,
     );
 
 Map<String, dynamic> _$StudentCheckInModelToJson(
         StudentCheckInModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'fullName': instance.fullName,
-      'supervisorId': instance.supervisorId,
+      'checkInStatus': instance.checkInStatus,
+      'checkInTime': instance.checkInTime,
+      'fullname': instance.fullname,
+      'studentId': instance.studentId,
+      'unitId': instance.unitId,
+      'unitName': instance.unitName,
     };

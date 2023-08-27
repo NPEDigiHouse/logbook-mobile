@@ -224,7 +224,7 @@ class StudentDataSourceImpl implements StudentDataSource {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.put(
-        ApiService.baseUrl + 'students/checkins/$studentId',
+        ApiService.baseUrl + '/students/checkins/$studentId',
         options: Options(
           headers: {
             "content-type": 'application/json',

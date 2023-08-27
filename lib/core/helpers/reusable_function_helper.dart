@@ -6,7 +6,7 @@ class ReusableFunctionHelper {
   static String datetimeToString(DateTime date,
       {bool isShowTime = false, String? format}) {
     return isShowTime
-        ? DateFormat(format ?? 'HH:MM, dd MMMM yyyy', "id_ID").format(date)
+        ? DateFormat(format ?? 'dd MMMM yyyy, HH:MM', "id_ID").format(date)
         : DateFormat(format ?? 'EEEE, dd MMMM yyyy', "id_ID").format(date);
   }
 

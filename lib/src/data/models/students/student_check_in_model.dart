@@ -4,17 +4,26 @@ part 'student_check_in_model.g.dart';
 
 @JsonSerializable()
 class StudentCheckInModel {
-  @JsonKey(name: "id")
-  String? id;
-  @JsonKey(name: "fullName")
-  String? fullName;
-  @JsonKey(name: "supervisorId")
-  dynamic supervisorId;
+  @JsonKey(name: "checkInStatus")
+  String? checkInStatus;
+  @JsonKey(name: "checkInTime")
+  int? checkInTime;
+  @JsonKey(name: "fullname")
+  String? fullname;
+  @JsonKey(name: "studentId")
+  String? studentId;
+  @JsonKey(name: "unitId")
+  String? unitId;
+  @JsonKey(name: "unitName")
+  String? unitName;
 
   StudentCheckInModel({
-    this.id,
-    this.fullName,
-    this.supervisorId,
+    this.checkInStatus,
+    this.checkInTime,
+    this.fullname,
+    this.studentId,
+    this.unitId,
+    this.unitName,
   });
 
   factory StudentCheckInModel.fromJson(Map<String, dynamic> json) =>
