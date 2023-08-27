@@ -65,6 +65,7 @@ import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:get_it/get_it.dart';
 
@@ -428,6 +429,9 @@ void _injectStateManagement() {
   );
   locator.registerFactory(
     () => MiniCexProvider(),
+  );
+  locator.registerFactory(
+    () => ClinicalRecordDataNotifier(),
   );
 }
 

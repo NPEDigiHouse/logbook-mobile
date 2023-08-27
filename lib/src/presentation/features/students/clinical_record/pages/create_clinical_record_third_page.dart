@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_temp.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
@@ -66,6 +67,8 @@ class _CreateClinicalRecordThirdPageState
     return BlocListener<ClinicalRecordCubit, ClinicalRecordState>(
       listener: (context, state) {
         if (state.clinicalRecordPostSuccess) {
+          BlocProvider.of<StudentCubit>(context)
+            ..getStudentClinicalRecordOfActiveUnit();
           Navigator.pop(context);
           Navigator.pop(context);
           Navigator.pop(context);
@@ -163,7 +166,6 @@ class _CreateClinicalRecordThirdPageState
                         ],
                       ),
                     ),
-                    
                     SizedBox(
                       height: 12,
                     ),
@@ -185,20 +187,11 @@ class _CreateClinicalRecordThirdPageState
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: FilledButton(
                         onPressed: () {
-                          if (notesController.text.isNotEmpty) {
-                            widget.clinicalRecordData.clinicalRecordPostModel
-                                .notes = notesController.text;
-
-                            widget.clinicalRecordData.clinicalRecordPostModel
-                                .studentFeedback = 'haha';
-
-                            BlocProvider.of<ClinicalRecordCubit>(context)
-                              ..uploadClinicalRecord(
-                                model: widget
-                                    .clinicalRecordData.clinicalRecordPostModel,
-                              );
-                            print("berhasil");
-                          }
+                          BlocProvider.of<ClinicalRecordCubit>(context)
+                            ..uploadClinicalRecord(
+                              model: widget
+                                  .clinicalRecordData.clinicalRecordPostModel,
+                            );
                         },
                         child: Text('Submit'),
                       ).fullWidth(),

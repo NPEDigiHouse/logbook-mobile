@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'clinical_record_post_model.g.dart';
 
-@JsonSerializable()
+// @JsonSerializable()
 class ClinicalRecordPostModel {
   String? patientName;
   int? patientAge;

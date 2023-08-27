@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'scientific_session_post_model.g.dart';
 
-@JsonSerializable()
+// @JsonSerializable()
 class ScientificSessionPostModel {
   final String? supervisorId;
   final int? sessionType;
