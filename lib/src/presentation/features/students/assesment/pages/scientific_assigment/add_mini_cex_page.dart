@@ -8,15 +8,15 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddMiniCexPage extends StatefulWidget {
+class AddScientificAssignmentPage extends StatefulWidget {
   final String unitName;
-  const AddMiniCexPage({super.key, required this.unitName});
+  const AddScientificAssignmentPage({super.key, required this.unitName});
 
   @override
-  State<AddMiniCexPage> createState() => _AddMiniCexPageState();
+  State<AddScientificAssignmentPage> createState() => _AddScientificAssignmentPageState();
 }
 
-class _AddMiniCexPageState extends State<AddMiniCexPage> {
+class _AddScientificAssignmentPageState extends State<AddScientificAssignmentPage> {
   final TextEditingController fieldController = new TextEditingController();
   final ValueNotifier<bool> isSaveAsDraft = ValueNotifier(false);
   int? locationId;

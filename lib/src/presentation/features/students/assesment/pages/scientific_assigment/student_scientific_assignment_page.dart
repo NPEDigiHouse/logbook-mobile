@@ -9,15 +9,17 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class StudentTestGrade extends StatefulWidget {
+class StudentScientificAssignmentPage extends StatefulWidget {
   final String unitName;
-  const StudentTestGrade({super.key, required this.unitName});
+  const StudentScientificAssignmentPage({super.key, required this.unitName});
 
   @override
-  State<StudentTestGrade> createState() => _StudentTestGradeState();
+  State<StudentScientificAssignmentPage> createState() =>
+      _StudentScientificAssignmentPageState();
 }
 
-class _StudentTestGradeState extends State<StudentTestGrade> {
+class _StudentScientificAssignmentPageState
+    extends State<StudentScientificAssignmentPage> {
   @override
   void initState() {
     super.initState();
@@ -28,7 +30,7 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mini Cex"),
+        title: Text("Scientific Assignment"),
       ).variant(),
       body: SingleChildScrollView(
         child: SpacingColumn(
