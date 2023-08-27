@@ -1,4 +1,5 @@
 import 'package:elogbook/core/styles/color_palette.dart';
+import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/widgets/head_resident_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/supervisor_self_reflection_card.dart';
@@ -6,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelfReflectionStudentPage extends StatefulWidget {
-  final String studentId;
-  const SelfReflectionStudentPage({super.key, required this.studentId});
+  final SupervisorStudent student;
+  const SelfReflectionStudentPage({super.key, required this.student});
 
   @override
   State<SelfReflectionStudentPage> createState() =>
@@ -26,11 +27,11 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
       if (_scrollController.position.pixels < 160) {
         title.value = 'Entry Details';
       } else if (_scrollController.position.pixels >= 160) {
-        title.value = 'H071191049';
+        title.value = widget.student.studentId ?? '';
       }
     });
     BlocProvider.of<SelfReflectionSupervisorCubit>(context)
-      ..getDetailSelfReflections(id: widget.studentId);
+      ..getDetailSelfReflections(id: widget.student.studentId!);
   }
 
   @override
@@ -41,7 +42,10 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
-            ...getHeadSection(title: title, subtitle: 'Special Reports'),
+            ...getHeadSection(
+                title: title,
+                subtitle: 'Special Reports',
+                student: widget.student),
             BlocBuilder<SelfReflectionSupervisorCubit,
                 SelfReflectionSupervisorState>(
               builder: (context, state) {

@@ -3,12 +3,10 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
-import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/dummy_models.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/daily_activity/daily_activity_student_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/detail_profile/detail_profile_student_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/self_reflection_student_page.dart/self_reflection_student_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/special_report/special_report_student_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/self_reflection/self_reflection_student_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,7 +31,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
       if (_scrollController.position.pixels < 160) {
         title.value = 'Entry Details';
       } else if (_scrollController.position.pixels >= 160) {
-        title.value = 'H071191049';
+        title.value = widget.student.studentId ?? '-';
       }
     });
   }
@@ -55,14 +53,18 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
   ];
 
   List<VoidCallback> onTaps(BuildContext context) => [
-        () => context.navigateTo(DetailProfileStudentPage()),
-        () => context.navigateTo(SpecialReportStudentPage()),
+        () => context.navigateTo(DetailProfileStudentPage(
+              student: widget.student,
+            )),
+        () => context.navigateTo(SpecialReportStudentPage(
+              student: widget.student,
+            )),
         () {},
         () => context.navigateTo(SelfReflectionStudentPage(
-              studentId: widget.student.studentId!,
+              student: widget.student,
             )),
         () => context.navigateTo(DailyActivityStudentPage(
-              studentId: widget.student.studentId!,
+              student: widget.student,
             )),
       ];
 

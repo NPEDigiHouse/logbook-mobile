@@ -130,7 +130,11 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                       items: _type
                           .map(
                             (e) => DropdownMenuItem(
-                              child: Text(e),
+                              child: Text(
+                                e,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                               value: e,
                             ),
                           )
@@ -156,11 +160,16 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                         _activityLocations.addAll(state.activityLocations!);
                       }
                       return DropdownButtonFormField(
+                        isExpanded: true,
                         hint: Text('Location'),
                         items: _activityLocations
                             .map(
                               (e) => DropdownMenuItem(
-                                child: Text(e.name!),
+                                child: Text(
+                                  e.name!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                                 value: e,
                               ),
                             )

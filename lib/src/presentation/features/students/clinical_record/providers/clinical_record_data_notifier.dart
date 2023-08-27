@@ -1,119 +1,49 @@
-import 'package:elogbook/src/data/models/clinical_records/affected_part_model.dart';
-import 'package:elogbook/src/data/models/clinical_records/clinical_record_post_model.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/build_examination.dart';
+import 'package:flutter/material.dart';
 
-class ClinicalRecordData {
-  ClinicalRecordPostModel _clinicalRecordPostModel = ClinicalRecordPostModel();
+class PartModel {
+  String? partName;
+  String? partId;
+  List<TypeModel>? types;
 
-  ClinicalRecordPostModel get clinicalRecordPostModel =>
-      _clinicalRecordPostModel;
+  PartModel({this.partId, this.partName, this.types});
+}
 
-  void clear() {
-    _clinicalRecordPostModel = ClinicalRecordPostModel();
+class TypeModel {
+  String? typeName;
+  String? typeId;
+
+  TypeModel({this.typeId, this.typeName});
+}
+
+class ClinicalRecordDataNotifier extends ChangeNotifier {
+  List<PartModel> examinations = [];
+  List<PartModel> diagnostics = [];
+
+  void addExaminationsPart(PartModel model) {
+    examinations.add(model);
+    notifyListeners();
   }
 
-  void addAttachment(String path) {
-    _clinicalRecordPostModel.attachment = path;
-  }
-
-  void tempAddSecondData(List<ManagementPostModel> management,
-      List<ExaminationsPostModel> exam, List<DiagnosisPostModel> diagnosis) {
-    _clinicalRecordPostModel.managements = management;
-    _clinicalRecordPostModel.diagnosiss = diagnosis;
-    _clinicalRecordPostModel.examinations = exam;
-  }
-
-  void updateAffectedPart(
-      {required AffectedPart old,
-      required AffectedPart newAffectedPart,
-      required ClinicalRecordSectionType type}) {
-    if (ClinicalRecordSectionType == ClinicalRecordSectionType.examination) {
-      int index = _clinicalRecordPostModel.examinations!
-          .indexWhere((element) => element.affectedPartId == old.id);
-      _clinicalRecordPostModel.examinations![index].affectedPartId =
-          newAffectedPart.id;
-    }
-    if (ClinicalRecordSectionType == ClinicalRecordSectionType.diagnosis) {
-      int index = _clinicalRecordPostModel.diagnosiss!
-          .indexWhere((element) => element.affectedPartId == old.id);
-      _clinicalRecordPostModel.diagnosiss![index].affectedPartId =
-          newAffectedPart.id;
-    }
-    if (ClinicalRecordSectionType == ClinicalRecordSectionType.management) {
-      int index = _clinicalRecordPostModel.managements!
-          .indexWhere((element) => element.affectedPartId == old.id);
-      _clinicalRecordPostModel.managements![index].affectedPartId =
-          newAffectedPart.id;
-    }
-  }
-
-  void addData({
-    required ClinicalRecordSectionType type,
-    required AffectedPart affectedPart,
-    String? roleId,
-    String? id,
-  }) {
-    if (ClinicalRecordSectionType == ClinicalRecordSectionType.examination) {
-      int index = _clinicalRecordPostModel.examinations!
-          .indexWhere((element) => element.affectedPartId == affectedPart.id);
-      if (index == -1) {
-        _clinicalRecordPostModel.examinations!.add(ExaminationsPostModel(
-            affectedPartId: affectedPart.id, examinationTypeId: [id!]));
-      } else {
-        _clinicalRecordPostModel.examinations![index].examinationTypeId!
-            .add(id!);
+  void addExaminationType(TypeModel type, String partId) {
+    examinations.forEach((element) {
+      if (element.partId == partId) {
+        element.types!.add(type);
+        notifyListeners();
       }
-    }
-    if (ClinicalRecordSectionType == ClinicalRecordSectionType.diagnosis) {
-      int index = _clinicalRecordPostModel.diagnosiss!
-          .indexWhere((element) => element.affectedPartId == affectedPart.id);
-      if (index == -1) {
-        _clinicalRecordPostModel.diagnosiss!.add(DiagnosisPostModel(
-            affectedPartId: affectedPart.id, diagnosisTypeId: [id!]));
-      } else {
-        _clinicalRecordPostModel.diagnosiss![index].diagnosisTypeId!.add(id!);
+    });
+  }
+
+  void removeExaminationType(String typeId, String partId) {
+    examinations.forEach((element) {
+      if (element.partId == partId) {
+        element.types!.removeWhere((element) => element.typeId == typeId);
+        notifyListeners();
       }
-    }
-    if (ClinicalRecordSectionType == ClinicalRecordSectionType.management) {
-      int index = _clinicalRecordPostModel.managements!
-          .indexWhere((element) => element.affectedPartId == affectedPart.id);
-      if (index == -1) {
-        _clinicalRecordPostModel.managements!.add(
-            ManagementPostModel(affectedPartId: affectedPart.id, management: [
-          ManagementTypeRole(
-            managementRoleId: roleId!,
-            managementTypeId: id,
-          )
-        ]));
-      } else {
-        _clinicalRecordPostModel.managements![index].management!
-            .add(ManagementTypeRole(
-          managementRoleId: roleId!,
-          managementTypeId: id,
-        ));
-      }
-    }
+    });
   }
 
-  void addSupervisorId(String id) {
-    _clinicalRecordPostModel.supervisorId = id;
-  }
-
-  void addRecordId(String id) {
-    _clinicalRecordPostModel.recordId = id;
-  }
-
-  void addPatientData(String name, int age, String gender) {
-    _clinicalRecordPostModel.patientName = name;
-    _clinicalRecordPostModel.patientAge = age;
-    _clinicalRecordPostModel.gender = gender;
-  }
-
-  bool isFirstDataComplete() {
-    return _clinicalRecordPostModel.patientName != null &&
-        _clinicalRecordPostModel.patientAge != null &&
-        _clinicalRecordPostModel.supervisorId!.isNotEmpty &&
-        _clinicalRecordPostModel.recordId != null &&
-        _clinicalRecordPostModel.gender != null;
+  void removeExaminationPart(String partId) {
+    examinations.removeWhere((element) => element.partId == partId);
+    notifyListeners();
   }
 }

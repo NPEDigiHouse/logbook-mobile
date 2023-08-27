@@ -5,7 +5,7 @@ import 'package:elogbook/src/data/models/clinical_records/examination_types_mode
 import 'package:elogbook/src/data/models/clinical_records/management_role_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/management_types_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_temp.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';

@@ -1,13 +1,14 @@
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/students/special_reports/widgets/special_report_card.dart';
+import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/widgets/head_resident_page.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 
 class SpecialReportStudentPage extends StatefulWidget {
-  const SpecialReportStudentPage({super.key});
+  final SupervisorStudent student;
+  const SpecialReportStudentPage({super.key, required this.student});
 
   @override
   State<SpecialReportStudentPage> createState() =>
@@ -39,7 +40,7 @@ class _SpecialReportStudentPageState extends State<SpecialReportStudentPage> {
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
-            ...getHeadSection(title: title, subtitle: 'Special Reports'),
+            ...getHeadSection(title: title, subtitle: 'Special Reports',student: widget.student),
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               sliver: SliverList(

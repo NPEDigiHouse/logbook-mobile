@@ -70,7 +70,6 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
           validateStatus: (status) {
             return status! < 500;
           },
-          responseType: ResponseType.bytes,
         ),
       );
       print(response);

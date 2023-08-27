@@ -1,15 +1,16 @@
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/unit_statistics_card.dart';
-import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/unit_statistics_field.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/unit_statistics_section.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/widgets/head_resident_page.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 
 class DetailProfileStudentPage extends StatefulWidget {
-  const DetailProfileStudentPage({super.key});
+  final SupervisorStudent student;
+  const DetailProfileStudentPage({super.key, required this.student});
 
   @override
   State<DetailProfileStudentPage> createState() =>
@@ -40,7 +41,10 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
-            ...getHeadSection(title: title, subtitle: 'Detail Profile'),
+            ...getHeadSection(
+                title: title,
+                subtitle: 'Detail Profile',
+                student: widget.student),
             SliverList(
               delegate: SliverChildListDelegate(
                 [
@@ -73,13 +77,13 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Student ID',
+                          'Student Name',
                           style: textTheme.bodyMedium?.copyWith(
                             color: secondaryTextColor,
                           ),
                         ),
                         Text(
-                          'Thomas Shelby',
+                          widget.student.studentName ?? '',
                           style: textTheme.titleMedium?.copyWith(
                             color: primaryTextColor,
                           ),
@@ -94,7 +98,7 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                           ),
                         ),
                         Text(
-                          'phantom26isn@gmail.com',
+                          'mail@gmail.com',
                           style: textTheme.titleMedium?.copyWith(
                             color: primaryTextColor,
                           ),

@@ -1,4 +1,5 @@
 import 'package:elogbook/core/styles/color_palette.dart';
+import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/daily_activity/supervisor_daily_activity_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/widgets/head_resident_page.dart';
@@ -6,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DailyActivityStudentPage extends StatefulWidget {
-  final String studentId;
-  const DailyActivityStudentPage({super.key, required this.studentId});
+  final SupervisorStudent student;
+  const DailyActivityStudentPage({super.key, required this.student});
 
   @override
   State<DailyActivityStudentPage> createState() =>
@@ -26,11 +27,11 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
       if (_scrollController.position.pixels < 160) {
         title.value = 'Entry Details';
       } else if (_scrollController.position.pixels >= 160) {
-        title.value = 'H071191049';
+        title.value = widget.student.studentId ?? '';
       }
     });
     BlocProvider.of<DailyActivityCubit>(context)
-      ..getDailyActivitiesBySupervisor(studentId: widget.studentId);
+      ..getDailyActivitiesBySupervisor(studentId: widget.student.studentId!);
   }
 
   @override
@@ -41,7 +42,10 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
-            ...getHeadSection(title: title, subtitle: 'Daily Activity'),
+            ...getHeadSection(
+                title: title,
+                subtitle: 'Daily Activity',
+                student: widget.student),
             BlocBuilder<DailyActivityCubit, DailyActivityState>(
               builder: (context, state) {
                 if (state.studentDailyActivity != null)

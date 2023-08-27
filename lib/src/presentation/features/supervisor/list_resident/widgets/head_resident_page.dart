@@ -1,11 +1,14 @@
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 List<Widget> getHeadSection(
-    {required ValueListenable<String> title, required String subtitle}) {
+    {required ValueListenable<String> title,
+    required String subtitle,
+    required SupervisorStudent student}) {
   return [
     SliverAppBar(
       pinned: true,
@@ -54,7 +57,7 @@ List<Widget> getHeadSection(
               ),
             ),
             Text(
-              'Khairunnisa',
+              student.studentName ?? "",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: textTheme.titleLarge?.copyWith(
@@ -62,7 +65,7 @@ List<Widget> getHeadSection(
               ),
             ),
             Text(
-              'H071191049',
+              student.studentId ?? '',
               style: textTheme.bodyMedium?.copyWith(
                 color: scaffoldBackgroundColor,
               ),
