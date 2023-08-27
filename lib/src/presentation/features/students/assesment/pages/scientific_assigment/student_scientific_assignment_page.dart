@@ -2,6 +2,8 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/add_mini_cex_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_mini_cex_detail.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/add_scientific_assignment_page.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/student_scientific_assignment_detail.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/title_assesment_card.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -23,7 +25,7 @@ class _StudentScientificAssignmentPageState
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<AssesmentCubit>(context)..studentMiniCexs();
+    BlocProvider.of<AssesmentCubit>(context)..getStudentScientificAssignment();
   }
 
   @override
@@ -44,8 +46,8 @@ class _StudentScientificAssignmentPageState
               UnitHeader(unitName: widget.unitName),
               BlocBuilder<AssesmentCubit, AssesmentState>(
                 builder: (context, state) {
-                  if (state.studentMiniCexs != null) {
-                    if (state.studentMiniCexs!.isEmpty) {
+                  if (state.scientificAssignmentStudents != null) {
+                    if (state.scientificAssignmentStudents!.isEmpty) {
                       return SpacingColumn(
                         onlyPading: true,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,26 +63,18 @@ class _StudentScientificAssignmentPageState
                           ),
                           Center(
                             child: FilledButton(
-                              onPressed: () =>
-                                  context.navigateTo(AddMiniCexPage(
+                              onPressed: () => context
+                                  .navigateTo(AddScientificAssignmentPage(
                                 unitName: widget.unitName,
                               )),
-                              child: Text('Add Mini Cex'),
+                              child: Text('Add Scientific Assignment'),
                             ),
                           ),
                         ],
                       );
                     }
-                    final miniCex = state.studentMiniCexs!.first;
-                    return Column(
-                      children: [
-                        TitleAssesmentCard(
-                          title: miniCex.miniCexListModelCase ?? '',
-                          subtitle: miniCex.location ?? '',
-                        ),
-                        StudentMiniCexDetail(id: miniCex.id!),
-                      ],
-                    );
+                    final sa = state.scientificAssignmentStudents!.first;
+                    return WrapperScientificAssignment(id: sa.id!);
                   } else {
                     return Center(
                       child: CircularProgressIndicator(),
@@ -89,6 +83,40 @@ class _StudentScientificAssignmentPageState
                 },
               ),
             ]),
+      ),
+    );
+  }
+}
+
+class WrapperScientificAssignment extends StatefulWidget {
+  final String id;
+  const WrapperScientificAssignment({super.key, required this.id});
+
+  @override
+  State<WrapperScientificAssignment> createState() =>
+      _WrapperScientificAssignmentState();
+}
+
+class _WrapperScientificAssignmentState
+    extends State<WrapperScientificAssignment> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<AssesmentCubit>(context)
+      ..getScientiicAssignmentDetail(id: widget.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AssesmentCubit, AssesmentState>(
+      listener: (context, state) {
+        if (state.scientificAssignmentDetail != null)
+          context.replace(ScientificAssignmentDetail(
+            ss: state.scientificAssignmentDetail!,
+          ));
+      },
+      child: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }

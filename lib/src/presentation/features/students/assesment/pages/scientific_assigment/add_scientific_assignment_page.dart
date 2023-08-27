@@ -13,10 +13,12 @@ class AddScientificAssignmentPage extends StatefulWidget {
   const AddScientificAssignmentPage({super.key, required this.unitName});
 
   @override
-  State<AddScientificAssignmentPage> createState() => _AddScientificAssignmentPageState();
+  State<AddScientificAssignmentPage> createState() =>
+      _AddScientificAssignmentPageState();
 }
 
-class _AddScientificAssignmentPageState extends State<AddScientificAssignmentPage> {
+class _AddScientificAssignmentPageState
+    extends State<AddScientificAssignmentPage> {
   final TextEditingController fieldController = new TextEditingController();
   final ValueNotifier<bool> isSaveAsDraft = ValueNotifier(false);
   int? locationId;
@@ -32,14 +34,14 @@ class _AddScientificAssignmentPageState extends State<AddScientificAssignmentPag
   Widget build(BuildContext context) {
     return BlocListener<AssesmentCubit, AssesmentState>(
       listener: (context, state) {
-        if (state.isUploadMiniCexSuccess) {
+        if (state.isUploadAssignmentSuccess) {
           // BlocProvider.of<AssesmentCubit>(context)..();
           Navigator.pop(context);
         }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Add Mini Cex"),
+          title: Text("Add Scientific Assignment"),
         ).variant(),
         body: SafeArea(
           child: CustomScrollView(slivers: [
@@ -75,6 +77,7 @@ class _AddScientificAssignmentPageState extends State<AddScientificAssignmentPag
                     }
                     return DropdownButtonFormField(
                       hint: Text('Location'),
+                      isExpanded: true,
                       items: _activityLocations
                           .map(
                             (e) => DropdownMenuItem(
@@ -95,7 +98,7 @@ class _AddScientificAssignmentPageState extends State<AddScientificAssignmentPag
                       if (fieldController.text.isNotEmpty &&
                           locationId != null) {
                         BlocProvider.of<AssesmentCubit>(context)
-                          ..uploadMiniCex(
+                          ..uploadScientificAssignment(
                             model: MiniCexPostModel(
                                 location: locationId,
                                 miniCexPostModelCase: fieldController.text),

@@ -39,6 +39,29 @@ class AssesmentCubit extends Cubit<AssesmentState> {
     }
   }
 
+  Future<void> uploadScientificAssignment(
+      {required MiniCexPostModel model}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.addScientificAssignment(model: model);
+      try {
+        emit(state.copyWith(isUploadAssignmentSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> studentMiniCexs() async {
     try {
       emit(state.copyWith(
@@ -186,6 +209,28 @@ class AssesmentCubit extends Cubit<AssesmentState> {
 
       final data =
           await dataSource.getStudentScientificAssignment(studentId: studentId);
+      try {
+        emit(state.copyWith(scientificAssignmentStudents: data));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getStudentScientificAssignment() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final data = await studentDataSource.getStudentScientificAssignment();
       try {
         emit(state.copyWith(scientificAssignmentStudents: data));
       } catch (e) {

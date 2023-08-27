@@ -12,10 +12,12 @@ ListScientificAssignment _$ListScientificAssignmentFromJson(
       id: json['id'],
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
+      listScientificAssignmentCase: json['case'],
       scores: (json['scores'] as List<dynamic>?)
           ?.map((e) => Score.fromJson(e as Map<String, dynamic>))
           .toList(),
       grade: json['grade'] as int?,
+      location: json['location'],
     );
 
 Map<String, dynamic> _$ListScientificAssignmentToJson(
@@ -24,6 +26,8 @@ Map<String, dynamic> _$ListScientificAssignmentToJson(
       'id': instance.id,
       'studentId': instance.studentId,
       'studentName': instance.studentName,
+      'case': instance.listScientificAssignmentCase,
+      'location': instance.location,
       'scores': instance.scores,
       'grade': instance.grade,
     };
@@ -32,10 +36,19 @@ Score _$ScoreFromJson(Map<String, dynamic> json) => Score(
       name: json['name'] as String?,
       score: json['score'] as int?,
       id: json['id'] as int?,
+      type:
+          $enumDecodeNullable(_$ScientificAssignmentTypeEnumMap, json['type']),
     );
 
 Map<String, dynamic> _$ScoreToJson(Score instance) => <String, dynamic>{
       'name': instance.name,
       'score': instance.score,
       'id': instance.id,
+      'type': _$ScientificAssignmentTypeEnumMap[instance.type],
     };
+
+const _$ScientificAssignmentTypeEnumMap = {
+  ScientificAssignmentType.CARA_PENYAJIAN: 'CARA_PENYAJIAN',
+  ScientificAssignmentType.DISKUSI: 'DISKUSI',
+  ScientificAssignmentType.SAJIAN: 'SAJIAN',
+};

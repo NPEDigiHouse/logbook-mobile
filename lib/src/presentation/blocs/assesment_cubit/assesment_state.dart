@@ -2,6 +2,7 @@ part of 'assesment_cubit.dart';
 
 class AssesmentState {
   final bool isUploadMiniCexSuccess;
+  final bool isUploadAssignmentSuccess;
   final List<MiniCexListModel>? studentMiniCexs;
   final MiniCexStudentDetail? miniCexStudentDetail;
   final ListScientificAssignment? scientificAssignmentDetail;
@@ -16,6 +17,7 @@ class AssesmentState {
     this.studentMiniCexs,
     this.miniCexStudentDetail,
     this.studentMiniCex,
+    this.isUploadAssignmentSuccess = false,
     this.isAssesmentMiniCexSuccess = false,
     this.requestState = RequestState.init,
     this.scientificAssignmentDetail,
@@ -29,6 +31,7 @@ class AssesmentState {
     bool isAssesmentMiniCexSuccess = false,
     MiniCexStudentDetail? miniCexStudentDetail,
     StudentMiniCex? studentMiniCex,
+    bool isUploadAssignmentSuccess = false,
     List<MiniCexListModel>? studentMiniCexs,
     ListScientificAssignment? scientificAssignmentDetail,
     List<StudentScientificAssignment>? scientificAssignmentStudents,
@@ -47,6 +50,7 @@ class AssesmentState {
           scientificAssignmentStudents ?? this.scientificAssignmentStudents,
       isAssementScientificAssignmentSuccess:
           isAssementScientificAssignmentSuccess,
+      isUploadAssignmentSuccess: isUploadAssignmentSuccess,
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:elogbook/src/data/models/assessment/student_scientific_assignmen
 
 abstract class AssesmentDataSource {
   Future<void> addMiniCex({required MiniCexPostModel model});
+  Future<void> addScientificAssignment({required MiniCexPostModel model});
   Future<MiniCexStudentDetail> getMiniCexDetail({required String id});
   Future<List<StudentScientificAssignment>> getStudentScientificAssignment(
       {required String studentId});
@@ -210,6 +211,31 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
           .map((e) => StudentScientificAssignment.fromJson(e))
           .toList();
       return listData;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> addScientificAssignment(
+      {required MiniCexPostModel model}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.post(
+        ApiService.baseUrl + '/assesments/scientific-assesments',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+        data: model.toJson(),
+      );
+      print(response);
+      if (response.statusCode != 201) {
+        throw Exception();
+      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

@@ -26,10 +26,6 @@ class StudentMiniCexDetail extends StatefulWidget {
 class _StudentMiniCexDetailState extends State<StudentMiniCexDetail> {
   @override
   void initState() {
-    Future.microtask(() => BlocProvider.of<AssesmentCubit>(context)
-      ..getMiniCexStudentDetail(
-        id: widget.id,
-      ));
     super.initState();
   }
 
