@@ -16,7 +16,7 @@ ListScientificAssignment _$ListScientificAssignmentFromJson(
       scores: (json['scores'] as List<dynamic>?)
           ?.map((e) => Score.fromJson(e as Map<String, dynamic>))
           .toList(),
-      grade: json['grade'] as int?,
+      grade: (json['grade'] as num?)?.toDouble(),
       location: json['location'],
     );
 

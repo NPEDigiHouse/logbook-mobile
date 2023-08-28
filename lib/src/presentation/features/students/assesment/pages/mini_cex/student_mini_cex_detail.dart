@@ -63,9 +63,12 @@ class _StudentMiniCexDetailState extends State<StudentMiniCexDetail> {
     }
 
     return TotalGradeHelper(
-        value: grades,
-        gradientScore: ScoreGradientName(
-            title: scoreLevel, color: Color(scoreColors[scoreLevel]!)));
+      value: grades,
+      gradientScore: ScoreGradientName(
+        title: scoreLevel,
+        color: Color(scoreColors[scoreLevel]!),
+      ),
+    );
   }
 
   @override

@@ -67,6 +67,7 @@ import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cub
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
 import 'package:get_it/get_it.dart';
 
 final locator = GetIt.instance;
@@ -432,6 +433,9 @@ void _injectStateManagement() {
   );
   locator.registerFactory(
     () => ClinicalRecordDataNotifier(),
+  );
+  locator.registerFactory(
+    () => ScientificAssignmentProvider(),
   );
 }
 

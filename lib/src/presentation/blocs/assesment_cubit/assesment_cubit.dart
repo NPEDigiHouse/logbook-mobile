@@ -156,24 +156,23 @@ class AssesmentCubit extends Cubit<AssesmentState> {
   Future<void> getScientiicAssignmentDetail({required String id}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        stateSa: RequestState.loading,
       ));
 
       final data = await dataSource.getScientificAssignmentDetail(id: id);
       try {
         emit(
           state.copyWith(
-              scientificAssignmentDetail: data,
-              requestState: RequestState.data),
+              scientificAssignmentDetail: data, stateSa: RequestState.data),
         );
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(stateSa: RequestState.error));
       }
     } catch (e) {
       print(e.toString());
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          stateSa: RequestState.error,
         ),
       );
     }
@@ -187,7 +186,11 @@ class AssesmentCubit extends Cubit<AssesmentState> {
       ));
       await dataSource.addScoreScientificAssignment(id: id, score: sa);
       try {
-        emit(state.copyWith(isAssementScientificAssignmentSuccess: true));
+        emit(state.copyWith(
+          isAssementScientificAssignmentSuccess: true,
+          scientificAssignmentDetail: null,
+          stateSa: RequestState.loading,
+        ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

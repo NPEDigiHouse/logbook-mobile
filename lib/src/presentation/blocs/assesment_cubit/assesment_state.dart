@@ -10,6 +10,7 @@ class AssesmentState {
   final bool isAssementScientificAssignmentSuccess;
   final StudentMiniCex? studentMiniCex;
   final bool isAssesmentMiniCexSuccess;
+  final RequestState stateSa;
   RequestState requestState;
 
   AssesmentState({
@@ -17,6 +18,7 @@ class AssesmentState {
     this.studentMiniCexs,
     this.miniCexStudentDetail,
     this.studentMiniCex,
+    this.stateSa = RequestState.init,
     this.isUploadAssignmentSuccess = false,
     this.isAssesmentMiniCexSuccess = false,
     this.requestState = RequestState.init,
@@ -36,6 +38,7 @@ class AssesmentState {
     ListScientificAssignment? scientificAssignmentDetail,
     List<StudentScientificAssignment>? scientificAssignmentStudents,
     bool isAssementScientificAssignmentSuccess = false,
+    RequestState stateSa = RequestState.init,
   }) {
     return AssesmentState(
       isUploadMiniCexSuccess: isUploadMiniCexSuccess,
@@ -51,6 +54,7 @@ class AssesmentState {
       isAssementScientificAssignmentSuccess:
           isAssementScientificAssignmentSuccess,
       isUploadAssignmentSuccess: isUploadAssignmentSuccess,
+      stateSa: stateSa
     );
   }
 }

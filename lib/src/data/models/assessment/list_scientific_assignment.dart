@@ -18,7 +18,7 @@ class ListScientificAssignment {
   @JsonKey(name: "scores")
   List<Score>? scores;
   @JsonKey(name: "grade")
-  int? grade;
+  double? grade;
 
   ListScientificAssignment({
     this.id,

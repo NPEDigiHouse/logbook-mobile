@@ -4,7 +4,6 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/clip_donut_painter.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/top_stat_card.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';

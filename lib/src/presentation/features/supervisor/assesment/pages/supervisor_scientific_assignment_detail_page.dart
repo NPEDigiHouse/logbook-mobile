@@ -4,15 +4,16 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/assessment/list_scientific_assignment.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/clip_donut_painter.dart';
-import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
-import 'package:elogbook/src/presentation/widgets/inputs/build_text_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:semicircle_indicator/semicircle_indicator.dart';
 
 class SupervisorScientificAssignmentDetailPage extends StatefulWidget {
@@ -36,7 +37,7 @@ class _SupervisorScientificAssignmentDetailPageState
           ..getScientiicAssignmentDetail(
             id: widget.id,
           );
-        // context.read<MiniCexProvider>()..reset();
+        context.read<ScientificAssignmentProvider>()..reset();
       },
     );
     super.initState();
@@ -44,7 +45,7 @@ class _SupervisorScientificAssignmentDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    final itemRating = context.read<MiniCexProvider>();
+    final provider = context.read<ScientificAssignmentProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text("Scientific Assignment"),
@@ -53,12 +54,11 @@ class _SupervisorScientificAssignmentDetailPageState
         width: AppSize.getAppWidth(context) - 32,
         child: FilledButton.icon(
           onPressed: () {
-            itemRating.getMiniCexData();
             BlocProvider.of<AssesmentCubit>(context)
               ..assesmentScientificAssignment(
                 id: widget.id,
                 sa: {
-                  'scores': itemRating.getMiniCexData(),
+                  'scores': provider.getScientificAssignmentData(),
                 },
               );
           },
@@ -79,21 +79,63 @@ class _SupervisorScientificAssignmentDetailPageState
               BlocConsumer<AssesmentCubit, AssesmentState>(
                 listener: (context, state) {
                   if (state.isAssementScientificAssignmentSuccess) {
+                    print("call");
+                    provider.reset();
+
                     BlocProvider.of<AssesmentCubit>(context)
-                      ..getMiniCexStudentDetail(
+                      ..getScientiicAssignmentDetail(
                         id: widget.id,
                       );
-                    context.read<MiniCexProvider>()..reset();
+                    setState(() {});
+                    // provider.init(state.scientificAssignmentDetail!.scores!);
+                  }
+                  if (state.scientificAssignmentDetail != null &&
+                      state.stateSa == RequestState.data) {
+                    if (!provider.isAlreadyInit) {
+                      provider.init(state.scientificAssignmentDetail!.scores!);
+                    }
                   }
                 },
                 builder: (context, state) {
-                  if (state.scientificAssignmentDetail != null) {
-                    final scientificAssignment =
-                        state.scientificAssignmentDetail!;
-                    return Text(scientificAssignment.grade.toString());
-                    // return BuildScoreSection(
-                    //   scientificAssignment: scientificAssignment,
-                    // );
+                  if (state.scientificAssignmentDetail != null &&
+                      state.stateSa == RequestState.data) {
+                    if (provider.discussionList.isNotEmpty)
+                      return SpacingColumn(
+                        spacing: 12,
+                        children: [
+                          ScientificAssignmentHeadCard(
+                              scientificAssignment:
+                                  state.scientificAssignmentDetail!),
+                          TopStatCard(
+                              totalGrade: provider.getTotalGrades(),
+                              title: 'Total Grades'),
+                          ScientificGradeCard(
+                            title: 'Presentation',
+                            iconPath: 'assets/icons/presentation_icon.svg',
+                            saScores: provider.presentationList,
+                            type: ScientificType.presentation,
+                          ),
+                          ScientificGradeCard(
+                            title: 'Presentation Style',
+                            iconPath:
+                                'assets/icons/presentation_style_icon.svg',
+                            saScores: provider.presentationStyleList,
+                            type: ScientificType.presentation_style,
+                          ),
+                          ScientificGradeCard(
+                            title: 'Discussion',
+                            iconPath: 'assets/icons/discussion_icon.svg',
+                            saScores: provider.discussionList,
+                            type: ScientificType.discussion,
+                          ),
+                          SizedBox(
+                            height: 60,
+                          ),
+                        ],
+                      );
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                   } else {
                     return Center(
                       child: CircularProgressIndicator(),
@@ -107,176 +149,121 @@ class _SupervisorScientificAssignmentDetailPageState
   }
 }
 
-class BuildScoreSection extends StatefulWidget {
-  const BuildScoreSection({
+class ScientificGradeCard extends StatelessWidget {
+  const ScientificGradeCard({
     super.key,
-    required this.scientificAssignment,
+    required this.title,
+    required this.iconPath,
+    required this.saScores,
+    required this.type,
   });
 
-  final ListScientificAssignment scientificAssignment;
-
-  @override
-  State<BuildScoreSection> createState() => _BuildScoreSectionState();
-}
-
-class _BuildScoreSectionState extends State<BuildScoreSection> {
-  @override
-  void initState() {
-    super.initState();
-    if (widget.scientificAssignment.scores != null) {
-      // Provider.of<MiniCexProvider>(context, listen: false)
-      //   ..init(widget.scientificAssignment.scores!);
-    }
-  }
+  final ScientificType type;
+  final List<ItemRatingSA> saScores;
+  final String title;
+  final String iconPath;
 
   @override
   Widget build(BuildContext context) {
-    final itemRating = context.watch<MiniCexProvider>();
-
-    return Column(
-      children: [
-        ScientificAssignmentHeadCard(
-            scientificAssignment: widget.scientificAssignment),
-        SizedBox(
-          height: 12,
-        ),
-        TopStatCard(
-          title: 'Total Grades',
-          totalGrade: itemRating.getTotalGrades(),
-        ),
-        SizedBox(
-          height: 16,
-        ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(
-            vertical: 16,
-            horizontal: 12,
+    final pr = context.read<ScientificAssignmentProvider>();
+    return Container(
+      width: AppSize.getAppWidth(context),
+      // padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: scaffoldBackgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+              offset: Offset(0, 0),
+              spreadRadius: 0,
+              blurRadius: 6,
+              color: Color(0xFFD4D4D4).withOpacity(.25)),
+          BoxShadow(
+              offset: Offset(0, 4),
+              spreadRadius: 0,
+              blurRadius: 24,
+              color: Color(0xFFD4D4D4).withOpacity(.25)),
+        ],
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 12,
           ),
-          decoration: BoxDecoration(
-            color: scaffoldBackgroundColor,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                offset: const Offset(0, 1),
-                blurRadius: 16,
-                color: Colors.black.withOpacity(.1),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Item Ratings',
-                    style: textTheme.titleMedium,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                SvgPicture.asset(iconPath),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  title,
+                  style: textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
-                  Spacer(),
-                  SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: IconButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(primaryColor),
-                      ),
-                      padding: new EdgeInsets.all(0.0),
-                      iconSize: 14,
-                      onPressed: () {
-                        itemRating.addItemRating(
-                          ItemRatingModel(
-                            gradeItem: '',
-                            grade: 0.0,
-                            scoreController: TextEditingController(),
-                            titleController: TextEditingController(),
+                ),
+                Spacer(),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          SectionDivider(),
+          SpacingColumn(
+            horizontalPadding: 16,
+            children: [
+              for (final data in saScores)
+                Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            margin: EdgeInsets.only(right: 8),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: primaryColor,
+                            ),
                           ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.add_rounded,
-                        color: backgroundColor,
-                        size: 16,
+                          Expanded(child: Text(data.indicator)),
+                          SizedBox(
+                            width: 50,
+                            child: TextField(
+                              textAlign: TextAlign.center,
+                              controller: data.scoreController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 6),
+                                disabledBorder: InputBorder.none,
+                              ),
+                              onChanged: (v) {
+                                if (v.isNotEmpty)
+                                  pr.updateScore(
+                                    grade: double.parse(v),
+                                    id: data.id,
+                                    type: type,
+                                  );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              ItemDivider(),
-              SizedBox(
-                height: 16,
-              ),
-              ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: BuildTextField(
-                                controller:
-                                    itemRating.items[index].titleController,
-                                label: 'Item Name',
-                                onChanged: (v) {
-                                  itemRating.updateGradeItem(
-                                      v, itemRating.items[index].id!);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: BuildTextField(
-                                label: 'Score',
-                                controller:
-                                    itemRating.items[index].scoreController,
-                                onChanged: (v) {
-                                  itemRating.updateScore(
-                                      v.isNotEmpty ? double.parse(v) : 0.0,
-                                      itemRating.items[index].id!);
-                                },
-                                isOnlyNumber: true,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                itemRating.removeItemRating(
-                                    itemRating.items[index].id!);
-                              },
-                              icon: Icon(Icons.delete),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: 12,
-                    );
-                  },
-                  itemCount: itemRating.items.length),
+                    ItemDivider(),
+                  ],
+                ),
             ],
           ),
-        ),
-        SizedBox(
-          height: 80,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
