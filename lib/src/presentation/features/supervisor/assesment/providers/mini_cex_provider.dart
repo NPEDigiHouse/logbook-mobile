@@ -76,21 +76,21 @@ class MiniCexProvider extends ChangeNotifier {
     };
     total /= items.length;
     String scoreLevel;
-    if (total * 100 >= 90) {
+    if (total * 100 >= 85) {
       scoreLevel = 'A';
-    } else if (total * 100 >= 85) {
-      scoreLevel = 'B+';
     } else if (total * 100 >= 80) {
+      scoreLevel = 'A-';
+    } else if (total * 100 > 75) {
+      scoreLevel = 'B+';
+    } else if (total * 100 > 70) {
       scoreLevel = 'B';
-    } else if (total * 100 >= 75) {
+    } else if (total * 100 > 65) {
       scoreLevel = 'B-';
-    } else if (total * 100 >= 70) {
-      scoreLevel = 'C+';
-    } else if (total * 100 >= 65) {
-      scoreLevel = 'C';
     } else if (total * 100 >= 60) {
-      scoreLevel = 'C-';
-    } else if (total * 100 >= 55) {
+      scoreLevel = 'C+';
+    } else if (total * 100 >= 50) {
+      scoreLevel = 'C';
+    } else if (total * 100 >= 40) {
       scoreLevel = 'D';
     } else {
       scoreLevel = 'E';

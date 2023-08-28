@@ -5,6 +5,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/final_grade_card.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/list_mini_cex_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/list_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/list_scientific_assignment_page.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
@@ -75,7 +76,8 @@ class AssesmentStudentHomePage extends StatelessWidget {
                   iconPath: 'icon_personal_behavior.svg',
                   title: 'Personal Behavior Grade',
                   desc: 'Assessment given to personal behavior or behavior',
-                  onTap: () {},
+                  onTap: () => context.navigateTo(ListPersonalBehaviorPage(
+                      unitName: '', studentId: studentId)),
                 ),
                 SizedBox(
                   width: 12,

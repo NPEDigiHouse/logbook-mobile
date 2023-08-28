@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences
 import 'package:elogbook/src/data/models/assessment/list_scientific_assignment.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_post_model.dart';
+import 'package:elogbook/src/data/models/assessment/personal_behavior_detail.dart';
 import 'package:elogbook/src/data/models/assessment/student_mini_cex.dart';
 import 'package:elogbook/src/data/models/assessment/student_scientific_assignment.dart';
 
@@ -13,7 +14,11 @@ abstract class AssesmentDataSource {
   Future<void> addMiniCex({required MiniCexPostModel model});
   Future<void> addScientificAssignment({required MiniCexPostModel model});
   Future<MiniCexStudentDetail> getMiniCexDetail({required String id});
+  Future<PersonalBehaviorDetail> getPersonalBehaviorDetail(
+      {required String id});
   Future<List<StudentScientificAssignment>> getStudentScientificAssignment(
+      {required String studentId});
+  Future<List<StudentScientificAssignment>> getStudentPersonalBehavior(
       {required String studentId});
   Future<ListScientificAssignment> getScientificAssignmentDetail(
       {required String id});
@@ -21,6 +26,8 @@ abstract class AssesmentDataSource {
   Future<void> addScoreMiniCex(
       {required Map<String, dynamic> listItemRating,
       required String minicexId});
+  Future<void> verifyPersonalBehavior(
+      {required int id, required bool status, required String pbId});
   Future<void> addScoreScientificAssignment(
       {required Map<String, dynamic> score, required String id});
 }
@@ -234,6 +241,91 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
       );
       print(response);
       if (response.statusCode != 201) {
+        throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<PersonalBehaviorDetail> getPersonalBehaviorDetail(
+      {required String id}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/assesments/personal-behaviours/$id',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+
+      final result = PersonalBehaviorDetail.fromJson(dataResponse.data);
+      return result;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<StudentScientificAssignment>> getStudentPersonalBehavior(
+      {required String studentId}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl +
+            '/assesments/personal-behaviours/students/$studentId',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<StudentScientificAssignment> listData = dataResponse.data
+          .map((e) => StudentScientificAssignment.fromJson(e))
+          .toList();
+      return listData;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> verifyPersonalBehavior(
+      {required int id, required bool status, required String pbId}) async {
+    print(pbId);
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.put(
+        ApiService.baseUrl + '/assesments/personal-behaviours/$pbId/items',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+        data: {"id": id, "verified": status},
+      );
+      print(response);
+      if (response.statusCode != 200) {
         throw Exception();
       }
     } catch (e) {

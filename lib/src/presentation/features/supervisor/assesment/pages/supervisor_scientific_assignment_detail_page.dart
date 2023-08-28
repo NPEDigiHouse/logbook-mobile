@@ -79,7 +79,6 @@ class _SupervisorScientificAssignmentDetailPageState
               BlocConsumer<AssesmentCubit, AssesmentState>(
                 listener: (context, state) {
                   if (state.isAssementScientificAssignmentSuccess) {
-                    print("call");
                     provider.reset();
 
                     BlocProvider.of<AssesmentCubit>(context)
@@ -87,7 +86,6 @@ class _SupervisorScientificAssignmentDetailPageState
                         id: widget.id,
                       );
                     setState(() {});
-                    // provider.init(state.scientificAssignmentDetail!.scores!);
                   }
                   if (state.scientificAssignmentDetail != null &&
                       state.stateSa == RequestState.data) {

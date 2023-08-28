@@ -7,6 +7,10 @@ class AssesmentState {
   final MiniCexStudentDetail? miniCexStudentDetail;
   final ListScientificAssignment? scientificAssignmentDetail;
   final List<StudentScientificAssignment>? scientificAssignmentStudents;
+  final List<StudentScientificAssignment>? personalBehaviorStudent;
+  final PersonalBehaviorDetail? personalBehaviorDetail;
+  final bool isPersonalBehaviorVerify;
+
   final bool isAssementScientificAssignmentSuccess;
   final StudentMiniCex? studentMiniCex;
   final bool isAssesmentMiniCexSuccess;
@@ -25,6 +29,9 @@ class AssesmentState {
     this.scientificAssignmentDetail,
     this.scientificAssignmentStudents,
     this.isAssementScientificAssignmentSuccess = false,
+    this.isPersonalBehaviorVerify = false,
+    this.personalBehaviorDetail,
+    this.personalBehaviorStudent,
   });
 
   AssesmentState copyWith({
@@ -39,6 +46,9 @@ class AssesmentState {
     List<StudentScientificAssignment>? scientificAssignmentStudents,
     bool isAssementScientificAssignmentSuccess = false,
     RequestState stateSa = RequestState.init,
+    List<StudentScientificAssignment>? personalBehaviorStudent,
+    PersonalBehaviorDetail? personalBehaviorDetail,
+    bool isPersonalBehaviorVerify = false,
   }) {
     return AssesmentState(
       isUploadMiniCexSuccess: isUploadMiniCexSuccess,
@@ -54,7 +64,12 @@ class AssesmentState {
       isAssementScientificAssignmentSuccess:
           isAssementScientificAssignmentSuccess,
       isUploadAssignmentSuccess: isUploadAssignmentSuccess,
-      stateSa: stateSa
+      stateSa: stateSa,
+      isPersonalBehaviorVerify: isPersonalBehaviorVerify,
+      personalBehaviorDetail:
+          personalBehaviorDetail ?? this.personalBehaviorDetail,
+      personalBehaviorStudent:
+          personalBehaviorStudent ?? this.personalBehaviorStudent,
     );
   }
 }

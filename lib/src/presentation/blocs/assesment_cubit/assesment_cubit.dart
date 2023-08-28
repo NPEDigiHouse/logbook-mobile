@@ -5,6 +5,7 @@ import 'package:elogbook/src/data/models/assessment/list_scientific_assignment.d
 import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_list_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_post_model.dart';
+import 'package:elogbook/src/data/models/assessment/personal_behavior_detail.dart';
 import 'package:elogbook/src/data/models/assessment/student_mini_cex.dart';
 import 'package:elogbook/src/data/models/assessment/student_scientific_assignment.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
@@ -244,6 +245,82 @@ class AssesmentCubit extends Cubit<AssesmentState> {
       emit(
         state.copyWith(
           requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getPersonalBehaviorByStudentId(
+      {required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final data = await dataSource.getStudentPersonalBehavior(
+        studentId: studentId,
+      );
+      try {
+        emit(state.copyWith(personalBehaviorStudent: data));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> verifyPersonalBehavior(
+      {required int id, required bool isVerified, required String pbId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+      await dataSource.verifyPersonalBehavior(
+          id: id, status: isVerified, pbId: pbId);
+      try {
+        emit(state.copyWith(
+          isPersonalBehaviorVerify: true,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getPersonalBehaviorDetail({required String id}) async {
+    try {
+      emit(state.copyWith(
+        stateSa: RequestState.loading,
+      ));
+
+      final data = await dataSource.getPersonalBehaviorDetail(id: id);
+      try {
+        emit(
+          state.copyWith(
+            personalBehaviorDetail: data,
+          ),
+        );
+      } catch (e) {
+        emit(state.copyWith(stateSa: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          stateSa: RequestState.error,
         ),
       );
     }
