@@ -8,6 +8,8 @@ import 'package:elogbook/src/data/models/assessment/student_scientific_assignmen
 import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/student_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
+import 'package:elogbook/src/data/models/sglcst/cst_model.dart';
+import 'package:elogbook/src/data/models/sglcst/sgl_model.dart';
 import 'package:elogbook/src/data/models/students/student_check_in_model.dart';
 import 'package:elogbook/src/data/models/students/student_profile_post.dart';
 
@@ -19,6 +21,8 @@ abstract class StudentDataSource {
   Future<List<MiniCexListModel>> getStudentMiniCex();
   Future<List<StudentScientificAssignment>> getStudentScientificAssignment();
   Future<List<StudentScientificAssignment>> getStudentPersonalBehavior();
+  Future<SglResponse> getStudentSgl();
+  Future<CstResponse> getStudentCst();
   Future<void> updateStudentProfile(StudentProfile model);
   Future<List<StudentCheckInModel>> getStudentCheckIn();
   Future<void> verifyCheckIn({required String studentId});
@@ -314,6 +318,68 @@ class StudentDataSourceImpl implements StudentDataSource {
           .toList();
 
       return listData;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<CstResponse> getStudentCst() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/csts',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+
+      final result = CstResponse.fromJson(dataResponse.data);
+      return result;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<SglResponse> getStudentSgl() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/sgls',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+
+      final result = SglResponse.fromJson(dataResponse.data);
+      return result;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
