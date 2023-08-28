@@ -114,7 +114,7 @@ class BuildScoreSection extends StatefulWidget {
     required this.miniCex,
   });
 
-  final MiniCexStudentDetail miniCex;
+  final MiniCexStudentDetailModel miniCex;
 
   @override
   State<BuildScoreSection> createState() => _BuildScoreSectionState();
@@ -392,7 +392,7 @@ class MiniCexHeadCard extends StatelessWidget {
     required this.miniCex,
   });
 
-  final MiniCexStudentDetail miniCex;
+  final MiniCexStudentDetailModel miniCex;
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/personal_behavior/student_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/student_scientific_assignment_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_scientific_assesment_grade_page.dart';
@@ -71,8 +72,11 @@ class AssesmentHomePage extends StatelessWidget {
                 AssementMenuCard(
                   iconPath: 'icon_personal_behavior.svg',
                   title: 'Personal Behavior Grade',
-                  onTap: () =>
-                      context.navigateTo(StudentPersonalBehaviorGrade()),
+                  onTap: () => context.navigateTo(
+                    StudentPersonalBehaviorPage(
+                      unitName: activeUnitModel.unitName!,
+                    ),
+                  ),
                 ),
               ],
             ),

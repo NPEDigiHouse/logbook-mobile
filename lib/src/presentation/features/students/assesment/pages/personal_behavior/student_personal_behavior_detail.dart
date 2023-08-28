@@ -14,29 +14,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pie_chart/pie_chart.dart';
 
-class SupervisorPersonalBehaviorDetailPage extends StatefulWidget {
-  final String id;
-  final String unitName;
-  const SupervisorPersonalBehaviorDetailPage(
-      {super.key, required this.unitName, required this.id});
+class PersonalBehaviorDetailPage extends StatefulWidget {
+  final PersonalBehaviorDetailModel pb;
+  const PersonalBehaviorDetailPage({super.key, required this.pb});
 
   @override
-  State<SupervisorPersonalBehaviorDetailPage> createState() =>
-      _SupervisorPersonalBehaviorDetailPageState();
+  State<PersonalBehaviorDetailPage> createState() =>
+      _PersonalBehaviorDetailPageState();
 }
 
-class _SupervisorPersonalBehaviorDetailPageState
-    extends State<SupervisorPersonalBehaviorDetailPage> {
+class _PersonalBehaviorDetailPageState
+    extends State<PersonalBehaviorDetailPage> {
   @override
   void initState() {
-    Future.microtask(
-      () {
-        BlocProvider.of<AssesmentCubit>(context)
-          ..getPersonalBehaviorDetail(
-            id: widget.id,
-          );
-      },
-    );
     super.initState();
   }
 
@@ -55,16 +45,7 @@ class _SupervisorPersonalBehaviorDetailPageState
               SizedBox(
                 height: 16,
               ),
-              UnitHeader(unitName: 'Unit Name'),
-              BlocConsumer<AssesmentCubit, AssesmentState>(
-                listener: (context, state) {
-                  if (state.isPersonalBehaviorVerify) {
-                    BlocProvider.of<AssesmentCubit>(context)
-                      ..getPersonalBehaviorDetail(
-                        id: widget.id,
-                      );
-                  }
-                },
+              BlocBuilder<AssesmentCubit, AssesmentState>(
                 builder: (context, state) {
                   if (state.personalBehaviorDetail != null) {
                     if (state.personalBehaviorDetail!.scores!.isNotEmpty)
@@ -98,7 +79,6 @@ class _SupervisorPersonalBehaviorDetailPageState
                               physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return PersonalBehaviorCard(
-                                  pbId: widget.id,
                                   scoreData: state
                                       .personalBehaviorDetail!.scores![index],
                                 );
@@ -292,9 +272,7 @@ class TopStatCard extends StatelessWidget {
 
 class PersonalBehaviorCard extends StatelessWidget {
   final Score scoreData;
-  final String pbId;
-  const PersonalBehaviorCard(
-      {super.key, required this.scoreData, required this.pbId});
+  const PersonalBehaviorCard({super.key, required this.scoreData});
 
   @override
   Widget build(BuildContext context) {
@@ -335,94 +313,61 @@ class PersonalBehaviorCard extends StatelessWidget {
               const SizedBox(width: 4),
             ],
           ),
-          subtitle: (scoreData.verificationStatus != 'INPROCESS')
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 4,
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 4,
+              ),
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: scoreData.verificationStatus == 'VERIFIED'
+                          ? primaryColor
+                          : scoreData.verificationStatus == 'UNVERIFIED'
+                              ? errorColor
+                              : onFormDisableColor,
+                      borderRadius: BorderRadius.circular(24),
                     ),
-                    Row(
+                    child: Row(
                       children: [
-                        Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: scoreData.verificationStatus == 'VERIFIED'
-                                ? primaryColor
-                                : errorColor,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                scoreData.verificationStatus == 'VERIFIED'
-                                    ? Icons.check_circle
-                                    : Icons.close_rounded,
-                                color: scaffoldBackgroundColor,
-                                size: 16,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Text(
-                                scoreData.verificationStatus == 'VERIFIED'
-                                    ? 'Achieved'
-                                    : 'Not Achieved',
-                                style: textTheme.bodySmall?.copyWith(
-                                  color: scaffoldBackgroundColor,
-                                ),
-                              ),
-                            ],
+                        Icon(
+                          scoreData.verificationStatus == 'VERIFIED'
+                              ? Icons.check_circle
+                              : scoreData.verificationStatus == 'UNVERIFIED'
+                                  ? Icons.close_rounded
+                                  : Icons.hourglass_bottom,
+                          color: scaffoldBackgroundColor,
+                          size: 16,
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          scoreData.verificationStatus == 'VERIFIED'
+                              ? 'Achieved'
+                              : scoreData.verificationStatus == 'UNVERIFIED'
+                                  ? 'Not Achieved'
+                                  : 'ON PROCCESS',
+                          style: textTheme.bodySmall?.copyWith(
+                            color: scaffoldBackgroundColor,
                           ),
                         ),
                       ],
                     ),
-                  ],
-                )
-              : null,
+                  ),
+                ],
+              ),
+            ],
+          ),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Align(
               alignment: Alignment.centerLeft,
               child: Text(scoreData.name ?? ''),
             ),
-            if (scoreData.verificationStatus == 'INPROCESS') ...[
-              SizedBox(
-                height: 12,
-              ),
-              ItemDivider(),
-              SizedBox(
-                height: 12,
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    OutlinedButton(
-                      onPressed: () {
-                        BlocProvider.of<AssesmentCubit>(context)
-                          ..verifyPersonalBehavior(
-                              id: scoreData.id!, isVerified: false, pbId: pbId);
-                      },
-                      child: Text('Not Achieved'),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    FilledButton(
-                      onPressed: () {
-                        BlocProvider.of<AssesmentCubit>(context)
-                          ..verifyPersonalBehavior(
-                              id: scoreData.id!, isVerified: true, pbId: pbId);
-                      },
-                      child: Text('Achieved'),
-                    ),
-                  ],
-                ),
-              ),
-            ]
           ],
         ),
       ),

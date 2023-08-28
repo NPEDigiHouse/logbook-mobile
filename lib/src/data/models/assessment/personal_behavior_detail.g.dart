@@ -6,9 +6,9 @@ part of 'personal_behavior_detail.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PersonalBehaviorDetail _$PersonalBehaviorDetailFromJson(
+PersonalBehaviorDetailModel _$PersonalBehaviorDetailModelFromJson(
         Map<String, dynamic> json) =>
-    PersonalBehaviorDetail(
+    PersonalBehaviorDetailModel(
       id: json['id'],
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
@@ -17,8 +17,8 @@ PersonalBehaviorDetail _$PersonalBehaviorDetailFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$PersonalBehaviorDetailToJson(
-        PersonalBehaviorDetail instance) =>
+Map<String, dynamic> _$PersonalBehaviorDetailModelToJson(
+        PersonalBehaviorDetailModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'studentId': instance.studentId,

@@ -4,11 +4,11 @@ class AssesmentState {
   final bool isUploadMiniCexSuccess;
   final bool isUploadAssignmentSuccess;
   final List<MiniCexListModel>? studentMiniCexs;
-  final MiniCexStudentDetail? miniCexStudentDetail;
+  final MiniCexStudentDetailModel? miniCexStudentDetail;
   final ListScientificAssignment? scientificAssignmentDetail;
   final List<StudentScientificAssignment>? scientificAssignmentStudents;
   final List<StudentScientificAssignment>? personalBehaviorStudent;
-  final PersonalBehaviorDetail? personalBehaviorDetail;
+  final PersonalBehaviorDetailModel? personalBehaviorDetail;
   final bool isPersonalBehaviorVerify;
 
   final bool isAssementScientificAssignmentSuccess;
@@ -38,7 +38,7 @@ class AssesmentState {
     RequestState requestState = RequestState.init,
     bool isUploadMiniCexSuccess = false,
     bool isAssesmentMiniCexSuccess = false,
-    MiniCexStudentDetail? miniCexStudentDetail,
+    MiniCexStudentDetailModel? miniCexStudentDetail,
     StudentMiniCex? studentMiniCex,
     bool isUploadAssignmentSuccess = false,
     List<MiniCexListModel>? studentMiniCexs,
@@ -47,7 +47,7 @@ class AssesmentState {
     bool isAssementScientificAssignmentSuccess = false,
     RequestState stateSa = RequestState.init,
     List<StudentScientificAssignment>? personalBehaviorStudent,
-    PersonalBehaviorDetail? personalBehaviorDetail,
+    PersonalBehaviorDetailModel? personalBehaviorDetail,
     bool isPersonalBehaviorVerify = false,
   }) {
     return AssesmentState(

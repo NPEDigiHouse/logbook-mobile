@@ -275,6 +275,28 @@ class AssesmentCubit extends Cubit<AssesmentState> {
     }
   }
 
+  Future<void> getStudentPersonalBehavior() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final data = await studentDataSource.getStudentPersonalBehavior();
+      try {
+        emit(state.copyWith(personalBehaviorStudent: data));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> verifyPersonalBehavior(
       {required int id, required bool isVerified, required String pbId}) async {
     try {

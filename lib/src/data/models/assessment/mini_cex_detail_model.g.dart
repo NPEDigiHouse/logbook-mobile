@@ -6,9 +6,9 @@ part of 'mini_cex_detail_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-MiniCexStudentDetail _$MiniCexStudentDetailFromJson(
+MiniCexStudentDetailModel _$MiniCexStudentDetailModelFromJson(
         Map<String, dynamic> json) =>
-    MiniCexStudentDetail(
+    MiniCexStudentDetailModel(
       dataCase: json['case'] as String?,
       id: json['id'] as String?,
       location: json['location'] as String?,
@@ -20,8 +20,8 @@ MiniCexStudentDetail _$MiniCexStudentDetailFromJson(
       grade: (json['grade'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$MiniCexStudentDetailToJson(
-        MiniCexStudentDetail instance) =>
+Map<String, dynamic> _$MiniCexStudentDetailModelToJson(
+        MiniCexStudentDetailModel instance) =>
     <String, dynamic>{
       'case': instance.dataCase,
       'id': instance.id,

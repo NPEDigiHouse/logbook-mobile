@@ -84,7 +84,7 @@ class AuthDataSourceImpl implements AuthDataSource {
           },
         ),
       );
-
+    
       if (response.statusCode == 200) {
         final dataResponse = await DataResponse.fromJson(response.data);
         UserToken credential = await UserToken.fromJson(dataResponse.data);

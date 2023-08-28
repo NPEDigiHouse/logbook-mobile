@@ -18,6 +18,7 @@ abstract class StudentDataSource {
   Future<StudentSelfReflectionModel> getStudentSelfReflection();
   Future<List<MiniCexListModel>> getStudentMiniCex();
   Future<List<StudentScientificAssignment>> getStudentScientificAssignment();
+  Future<List<StudentScientificAssignment>> getStudentPersonalBehavior();
   Future<void> updateStudentProfile(StudentProfile model);
   Future<List<StudentCheckInModel>> getStudentCheckIn();
   Future<void> verifyCheckIn({required String studentId});
@@ -176,7 +177,7 @@ class StudentDataSourceImpl implements StudentDataSource {
         throw Exception();
       }
       final dataResponse =
-          await DataResponse<List<dynamic>>.fromJson(response.data);
+          await DataResponse<List<dynamic>>.fromJson(response.data['data']);
       List<MiniCexListModel> listData =
           dataResponse.data.map((e) => MiniCexListModel.fromJson(e)).toList();
 
@@ -257,6 +258,40 @@ class StudentDataSourceImpl implements StudentDataSource {
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/scientific-assesments',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<StudentScientificAssignment> listData = dataResponse.data
+          .map((e) => StudentScientificAssignment.fromJson(e))
+          .toList();
+
+      return listData;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<StudentScientificAssignment>> getStudentPersonalBehavior() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/personal-behaviours',
         options: Options(
           headers: {
             "content-type": 'application/json',

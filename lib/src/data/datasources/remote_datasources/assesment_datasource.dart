@@ -13,13 +13,14 @@ import 'package:elogbook/src/data/models/assessment/student_scientific_assignmen
 abstract class AssesmentDataSource {
   Future<void> addMiniCex({required MiniCexPostModel model});
   Future<void> addScientificAssignment({required MiniCexPostModel model});
-  Future<MiniCexStudentDetail> getMiniCexDetail({required String id});
-  Future<PersonalBehaviorDetail> getPersonalBehaviorDetail(
+  Future<MiniCexStudentDetailModel> getMiniCexDetail({required String id});
+  Future<PersonalBehaviorDetailModel> getPersonalBehaviorDetail(
       {required String id});
   Future<List<StudentScientificAssignment>> getStudentScientificAssignment(
       {required String studentId});
   Future<List<StudentScientificAssignment>> getStudentPersonalBehavior(
       {required String studentId});
+
   Future<ListScientificAssignment> getScientificAssignmentDetail(
       {required String id});
   Future<StudentMiniCex> getStudetnMiniCex({required String studentId});
@@ -61,7 +62,8 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
   }
 
   @override
-  Future<MiniCexStudentDetail> getMiniCexDetail({required String id}) async {
+  Future<MiniCexStudentDetailModel> getMiniCexDetail(
+      {required String id}) async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
@@ -79,7 +81,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
       }
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
-      final result = MiniCexStudentDetail.fromJson(dataResponse.data);
+      final result = MiniCexStudentDetailModel.fromJson(dataResponse.data);
       return result;
     } catch (e) {
       print(e.toString());
@@ -250,7 +252,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
   }
 
   @override
-  Future<PersonalBehaviorDetail> getPersonalBehaviorDetail(
+  Future<PersonalBehaviorDetailModel> getPersonalBehaviorDetail(
       {required String id}) async {
     final credential = await preferenceHandler.getCredential();
     try {
@@ -269,7 +271,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
       }
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
-      final result = PersonalBehaviorDetail.fromJson(dataResponse.data);
+      final result = PersonalBehaviorDetailModel.fromJson(dataResponse.data);
       return result;
     } catch (e) {
       print(e.toString());

@@ -1,10 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/add_mini_cex_page.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_mini_cex_detail.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/add_scientific_assignment_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/student_scientific_assignment_detail.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/title_assesment_card.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -43,7 +40,7 @@ class _StudentScientificAssignmentPageState
               SizedBox(
                 height: 16,
               ),
-              UnitHeader(unitName: widget.unitName),
+              // UnitHeader(unitName: widget.unitName),
               BlocBuilder<AssesmentCubit, AssesmentState>(
                 builder: (context, state) {
                   if (state.scientificAssignmentStudents != null) {

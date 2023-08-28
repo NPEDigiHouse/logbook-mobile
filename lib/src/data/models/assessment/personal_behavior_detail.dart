@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'personal_behavior_detail.g.dart';
 
 @JsonSerializable()
-class PersonalBehaviorDetail {
+class PersonalBehaviorDetailModel {
   @JsonKey(name: "id")
   dynamic id;
   @JsonKey(name: "studentId")
@@ -13,17 +13,17 @@ class PersonalBehaviorDetail {
   @JsonKey(name: "scores")
   List<Score>? scores;
 
-  PersonalBehaviorDetail({
+  PersonalBehaviorDetailModel({
     this.id,
     this.studentId,
     this.studentName,
     this.scores,
   });
 
-  factory PersonalBehaviorDetail.fromJson(Map<String, dynamic> json) =>
-      _$PersonalBehaviorDetailFromJson(json);
+  factory PersonalBehaviorDetailModel.fromJson(Map<String, dynamic> json) =>
+      _$PersonalBehaviorDetailModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PersonalBehaviorDetailToJson(this);
+  Map<String, dynamic> toJson() => _$PersonalBehaviorDetailModelToJson(this);
 }
 
 @JsonSerializable()

@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'mini_cex_detail_model.g.dart';
 
 @JsonSerializable()
-class MiniCexStudentDetail {
+class MiniCexStudentDetailModel {
   @JsonKey(name: "case")
   String? dataCase;
   @JsonKey(name: "id")
@@ -18,7 +18,7 @@ class MiniCexStudentDetail {
   @JsonKey(name: "grade")
   double? grade;
 
-  MiniCexStudentDetail({
+  MiniCexStudentDetailModel({
     this.dataCase,
     this.id,
     this.location,
@@ -28,10 +28,10 @@ class MiniCexStudentDetail {
     this.grade,
   });
 
-  factory MiniCexStudentDetail.fromJson(Map<String, dynamic> json) =>
-      _$MiniCexStudentDetailFromJson(json);
+  factory MiniCexStudentDetailModel.fromJson(Map<String, dynamic> json) =>
+      _$MiniCexStudentDetailModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MiniCexStudentDetailToJson(this);
+  Map<String, dynamic> toJson() => _$MiniCexStudentDetailModelToJson(this);
 }
 
 @JsonSerializable()
