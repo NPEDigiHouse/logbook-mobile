@@ -12,11 +12,11 @@ class HeadSectionHomePage extends StatelessWidget {
       username: 'Khairun Nisa',
       role: 'Head of Division',
       menuItems: <MenuItem>[
-        MenuItem(
-          name: 'Tasks',
-          iconPath: 'round_task_filled.svg',
-          onTap: () {},
-        ),
+        // MenuItem(
+        //   name: 'Tasks',
+        //   iconPath: 'round_task_filled.svg',
+        //   onTap: () {},
+        // ),
         MenuItem(
           name: 'In-Out Reporting',
           iconPath: 'file_arrow_up_down_filled.svg',
