@@ -47,7 +47,7 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
           slivers: [
             ...getHeadSection(
                 title: title,
-                subtitle: 'Special Reports',
+                subtitle: 'Self Reflections',
                 student: widget.student),
             BlocBuilder<SelfReflectionSupervisorCubit,
                 SelfReflectionSupervisorState>(
