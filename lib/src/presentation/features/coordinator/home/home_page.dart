@@ -12,22 +12,22 @@ class CoordinatorHomePage extends StatelessWidget {
       username: 'Khairun Nisa',
       role: 'Coordinator',
       menuItems: <MenuItem>[
-        MenuItem(
-          name: 'Tasks',
-          iconPath: 'round_task_filled.svg',
-          onTap: () {},
-        ),
+        // MenuItem(
+        //   name: 'Tasks',
+        //   iconPath: 'round_task_filled.svg',
+        //   onTap: () {},
+        // ),
         MenuItem(
           isVerification: false,
           name: 'Weekly Grades',
           iconPath: 'exam_filled.svg',
           onTap: () => context.navigateTo(const WeeklyGradePage()),
         ),
-        MenuItem(
-          name: 'Special Report',
-          iconPath: 'problem_rounded.svg',
-          onTap: () {},
-        ),
+        // MenuItem(
+        //   name: 'Special Report',
+        //   iconPath: 'problem_rounded.svg',
+        //   onTap: () {},
+        // ),
       ],
     );
   }
