@@ -33,13 +33,15 @@ class ReferenceCubit extends Cubit<ReferenceState> {
     }
   }
 
-  Future<void> getReferenceById({required int id}) async {
+  Future<void> getReferenceById(
+      {required int id, required String fileName}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result = await dataSource.downloadDataReference(id: id);
+      final result =
+          await dataSource.downloadDataReference(id: id, filename: fileName);
       try {
         emit(state.copyWith(isSuccessDownload: result));
       } catch (e) {

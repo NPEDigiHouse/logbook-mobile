@@ -9,7 +9,8 @@ import 'package:uuid/uuid.dart';
 abstract class ReferenceDataSource {
   Future<List<ReferenceOnListModel>> getReferenceByUnitId(
       {required String unitId});
-  Future<bool> downloadDataReference({required int id});
+  Future<bool> downloadDataReference(
+      {required int id, required String filename});
 }
 
 class ReferenceDataSourceImpl implements ReferenceDataSource {
@@ -48,36 +49,12 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
   }
 
   @override
-  Future<bool> downloadDataReference({required int id}) async {
+  Future<bool> downloadDataReference(
+      {required int id, required String filename}) async {
     final credential = await preferenceHandler.getCredential();
     try {
-      final response = await dio.get(
-        ApiService.baseUrl + '/references/$id',
-        options: Options(
-          responseType: ResponseType.bytes,
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
-      );
-      if (response.statusCode != 200) {
-        return false;
-      }
-
-      final type = response.headers.map['content-type']?.first;
-      String savePath = '';
-      if (type == null) {
-        return false;
-      } else {
-        if (type.contains('image')) {
-          savePath = '/storage/emulated/0/Download/${Uuid().v1()}.jpg';
-        } else if (type.contains('pdf')) {
-          savePath = '/storage/emulated/0/Download/${Uuid().v1()}.pdf';
-        } else {
-          return false;
-        }
-      } // Ubah sesuai dengan lokasi penyimpanan yang diinginkan
+      String type = filename.split('.').last;
+      final savePath = '/storage/emulated/0/Download/${Uuid().v1()}.${type}';
 
       await dio.download(
         ApiService.baseUrl + '/references/$id',

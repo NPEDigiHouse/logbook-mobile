@@ -85,7 +85,10 @@ class _ReferencePageState extends State<ReferencePage> {
                                 onTap: () {
                                   BlocProvider.of<ReferenceCubit>(context)
                                     ..getReferenceById(
-                                        id: state.references![index].id!);
+                                        id: state.references![index].id!,
+                                        fileName:
+                                            state.references![index].file ??
+                                                '');
                                 },
                               );
                             },
