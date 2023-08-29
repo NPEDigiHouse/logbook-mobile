@@ -404,4 +404,30 @@ class AssesmentCubit extends Cubit<AssesmentState> {
       );
     }
   }
+
+  Future<void> getStudentFinalScore() async {
+    try {
+      emit(state.copyWith(
+        stateSa: RequestState.loading,
+      ));
+
+      final data = await studentDataSource.getStudentFinalScore();
+      try {
+        emit(
+          state.copyWith(
+            finalScore: data,
+          ),
+        );
+      } catch (e) {
+        emit(state.copyWith(stateSa: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          stateSa: RequestState.error,
+        ),
+      );
+    }
+  }
 }

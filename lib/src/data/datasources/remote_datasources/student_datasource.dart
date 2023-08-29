@@ -3,6 +3,7 @@ import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
+import 'package:elogbook/src/data/models/assessment/final_score_response.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_list_model.dart';
 import 'package:elogbook/src/data/models/assessment/student_scientific_assignment.dart';
 import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
@@ -25,6 +26,7 @@ abstract class StudentDataSource {
   Future<SglResponse> getStudentSgl();
   Future<CstResponse> getStudentCst();
   Future<SpecialReportResponse> getStudentSpecialReports();
+  Future<FinalScoreResponse> getStudentFinalScore();
   Future<void> updateStudentProfile(StudentProfile model);
   Future<List<StudentCheckInModel>> getStudentCheckIn();
   Future<void> verifyCheckIn({required String studentId});
@@ -412,6 +414,33 @@ class StudentDataSourceImpl implements StudentDataSource {
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = SpecialReportResponse.fromJson(dataResponse.data);
+      return result;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<FinalScoreResponse> getStudentFinalScore() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/assesments/',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+
+      final result = FinalScoreResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
       print(e.toString());
