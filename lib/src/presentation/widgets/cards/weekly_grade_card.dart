@@ -6,16 +6,17 @@ import 'package:elogbook/core/styles/text_style.dart';
 
 class WeeklyGradeCard extends StatelessWidget {
   final int week;
-  final String date;
-  final String place;
+  // final String date;
+  // final String place;
+  final String status;
   final double? score;
   final VoidCallback? onTap;
 
   const WeeklyGradeCard({
     super.key,
     required this.week,
-    required this.date,
-    required this.place,
+    // required this.date,
+    required this.status,
     this.score,
     this.onTap,
   });
@@ -50,25 +51,36 @@ class WeeklyGradeCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Week $week',
-                    style: textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        'Week $week',
+                        style: textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (status == 'VERIFIED')
+                        const Icon(
+                          Icons.verified_rounded,
+                          size: 16,
+                          color: primaryColor,
+                        ),
+                    ],
                   ),
-                  Text(
-                    date,
-                    style: textTheme.titleMedium?.copyWith(
-                      color: secondaryTextColor,
-                    ),
-                  ),
-                  Text(
-                    place,
-                    style: textTheme.titleMedium?.copyWith(
-                      color: secondaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+
+                  // Text(
+                  //   date,
+                  //   style: textTheme.titleMedium?.copyWith(
+                  //     color: secondaryTextColor,
+                  //   ),
+                  // ),
+                  // Text(
+                  //   place,
+                  //   style: textTheme.titleMedium?.copyWith(
+                  //     color: secondaryColor,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
                 ],
               ),
             ),

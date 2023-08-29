@@ -196,23 +196,23 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 itemBuilder: (_, i) {
-                  final grades = widget.student.grades;
+                  // final grades = widget.student.grades;
 
-                  return WeeklyGradeCard(
-                    date: grades[i].date,
-                    place: grades[i].place,
-                    week: grades[i].week,
-                    score: grades[i].score,
-                    onTap: () => showDialog(
-                      context: context,
-                      barrierLabel: '',
-                      barrierDismissible: false,
-                      builder: (_) => WeeklyGradeScoreDialog(
-                        week: grades[i].week,
-                        score: grades[i].score,
-                      ),
-                    ),
-                  );
+                  // return WeeklyGradeCard(
+                  //   date: grades[i].date,
+                  //   place: grades[i].place,
+                  //   week: grades[i].week,
+                  //   score: grades[i].score,
+                  //   onTap: () => showDialog(
+                  //     context: context,
+                  //     barrierLabel: '',
+                  //     barrierDismissible: false,
+                  //     builder: (_) => WeeklyGradeScoreDialog(
+                  //       week: grades[i].week,
+                  //       score: grades[i].score,
+                  //     ),
+                  //   ),
+                  // );
                 },
                 separatorBuilder: (_, __) => const SizedBox(height: 16),
                 itemCount: widget.student.grades.length,

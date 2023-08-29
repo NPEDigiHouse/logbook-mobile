@@ -9,6 +9,7 @@ import 'package:elogbook/src/data/models/assessment/mini_cex_post_model.dart';
 import 'package:elogbook/src/data/models/assessment/personal_behavior_detail.dart';
 import 'package:elogbook/src/data/models/assessment/student_mini_cex.dart';
 import 'package:elogbook/src/data/models/assessment/student_scientific_assignment.dart';
+import 'package:elogbook/src/data/models/assessment/weekly_assesment_response.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
 part 'assesment_state.dart';
@@ -416,6 +417,32 @@ class AssesmentCubit extends Cubit<AssesmentState> {
         emit(
           state.copyWith(
             finalScore: data,
+          ),
+        );
+      } catch (e) {
+        emit(state.copyWith(stateSa: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          stateSa: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getStudentWeeklyAssesment() async {
+    try {
+      emit(state.copyWith(
+        stateSa: RequestState.loading,
+      ));
+
+      final data = await studentDataSource.getStudentWeeklyAssesment();
+      try {
+        emit(
+          state.copyWith(
+            weeklyAssesment: data,
           ),
         );
       } catch (e) {

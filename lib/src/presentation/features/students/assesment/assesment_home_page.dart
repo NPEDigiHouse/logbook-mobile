@@ -6,6 +6,7 @@ import 'package:elogbook/src/presentation/features/students/assesment/pages/stud
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_scientific_assesment_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_test_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/student_weekly_grade_page.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/weekly_assesment/student_weekly_assesment_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/assesment_menu_card.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/final_grade_card.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -42,7 +43,7 @@ class AssesmentHomePage extends StatelessWidget {
                 AssementMenuCard(
                   iconPath: 'icon_weekly.svg',
                   title: 'Weekly Grades',
-                  onTap: () => context.navigateTo(StudentWeeklyGrade()),
+                  onTap: () => context.navigateTo(StudentWeeklyAssementPage()),
                 ),
                 SizedBox(
                   width: 12,
