@@ -237,7 +237,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
       {required String id, required bool status}) async {
     final credential = await preferenceHandler.getCredential();
     try {
-      final response = await dio.put(ApiService.baseUrl + '/csts',
+      final response = await dio.put(ApiService.baseUrl + '/csts/$id',
           options: Options(
             headers: {
               "content-type": 'application/json',
@@ -283,7 +283,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
       {required String id, required bool status}) async {
     final credential = await preferenceHandler.getCredential();
     try {
-      final response = await dio.put(ApiService.baseUrl + '/sgls',
+      final response = await dio.put(ApiService.baseUrl + '/sgls/$id',
           options: Options(
             headers: {
               "content-type": 'application/json',

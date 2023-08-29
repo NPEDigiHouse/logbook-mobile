@@ -1,15 +1,39 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:elogbook/core/styles/color_palette.dart';
+import 'package:elogbook/src/data/models/reference/reference_on_list_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/reference/reference_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path/path.dart' as p;
+import 'package:document_file_save_plus/document_file_save_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class ReferencePage extends StatelessWidget {
+class ReferencePage extends StatefulWidget {
   final ActiveUnitModel activeUnitModel;
 
   const ReferencePage({super.key, required this.activeUnitModel});
+
+  @override
+  State<ReferencePage> createState() => _ReferencePageState();
+}
+
+class _ReferencePageState extends State<ReferencePage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<ReferenceCubit>(context)
+      ..getListReference(unitId: widget.activeUnitModel.unitId!);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +52,7 @@ class ReferencePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   UnitHeader(
-                    unitName: activeUnitModel.unitName!,
+                    unitName: widget.activeUnitModel.unitName!,
                   ),
                   SizedBox(
                     height: 24,
@@ -40,18 +64,47 @@ class ReferencePage extends StatelessWidget {
                   SizedBox(
                     height: 24,
                   ),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (contex, index) {
-                      return ReferenceCard();
+                  BlocConsumer<ReferenceCubit, ReferenceState>(
+                    listener: (context, state) {
+                      if (state.isSuccessDownload) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Success download data')),
+                        );
+                      }
                     },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: 12,
-                      );
+                    builder: (context, state) {
+                      if (state.references != null) {
+                        if (state.references!.isNotEmpty)
+                          return ListView.separated(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (contex, index) {
+                              return ReferenceCard(
+                                reference: state.references![index],
+                                onTap: () {
+                                  BlocProvider.of<ReferenceCubit>(context)
+                                    ..getReferenceById(
+                                        id: state.references![index].id!);
+                                },
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                height: 12,
+                              );
+                            },
+                            itemCount: state.references!.length,
+                          );
+                        else
+                          return EmptyData(
+                              title: 'No Reference Found',
+                              subtitle: 'no reference data has uploaded');
+                      } else
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
                     },
-                    itemCount: 5,
                   ),
                 ],
               ),
@@ -63,16 +116,26 @@ class ReferencePage extends StatelessWidget {
   }
 }
 
-class ReferenceCard extends StatelessWidget {
-  const ReferenceCard({
+// ignore: must_be_immutable
+class ReferenceCard extends StatefulWidget {
+  final ReferenceOnListModel reference;
+  final VoidCallback onTap;
+  ReferenceCard({
+    required this.reference,
     super.key,
+    required this.onTap,
   });
 
+  @override
+  State<ReferenceCard> createState() => _ReferenceCardState();
+}
+
+class _ReferenceCardState extends State<ReferenceCard> {
   @override
   Widget build(BuildContext context) {
     return InkWellContainer(
       radius: 12,
-      onTap: () {},
+      onTap: widget.onTap,
       padding: EdgeInsets.symmetric(
         vertical: 12,
         horizontal: 16,
@@ -108,7 +171,7 @@ class ReferenceCard extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                'List of Diseases According to SKDI 2012',
+                p.basename(widget.reference.file!),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

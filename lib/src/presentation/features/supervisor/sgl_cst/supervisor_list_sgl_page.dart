@@ -1,6 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
-import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/widgets/cst_card.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/widgets/sgl_card.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';

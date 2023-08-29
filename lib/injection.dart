@@ -7,6 +7,7 @@ import 'package:elogbook/src/data/datasources/remote_datasources/clinical_record
 import 'package:elogbook/src/data/datasources/remote_datasources/competence_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/daily_activity_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/profile_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/reference_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/scientific_session_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/self_reflection_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/sglcst_datasource.dart';
@@ -57,6 +58,7 @@ import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/reference/reference_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
@@ -135,6 +137,12 @@ void _injectDatasource() {
   );
   locator.registerLazySingleton<ClinicalRecordsDatasource>(
     () => ClinicalRecordsDatasourceImpl(
+      dio: locator(),
+      preferenceHandler: locator(),
+    ),
+  );
+  locator.registerLazySingleton<ReferenceDataSource>(
+    () => ReferenceDataSourceImpl(
       dio: locator(),
       preferenceHandler: locator(),
     ),
@@ -437,6 +445,11 @@ void _injectStateManagement() {
   );
   locator.registerFactory(
     () => ScientificAssignmentProvider(),
+  );
+  locator.registerFactory(
+    () => ReferenceCubit(
+      dataSource: locator(),
+    ),
   );
 }
 

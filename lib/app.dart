@@ -6,6 +6,7 @@ import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/reference/reference_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
@@ -65,9 +66,12 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => di.locator<ActivityCubit>()),
         BlocProvider(create: (_) => di.locator<StudentCubit>()),
         BlocProvider(create: (_) => di.locator<AssesmentCubit>()),
+        BlocProvider(create: (_) => di.locator<ReferenceCubit>()),
         ChangeNotifierProvider(create: (_) => di.locator<MiniCexProvider>()),
-        ChangeNotifierProvider(create: (_) => di.locator<ClinicalRecordDataNotifier>()),
-        ChangeNotifierProvider(create: (_) => di.locator<ScientificAssignmentProvider>()),
+        ChangeNotifierProvider(
+            create: (_) => di.locator<ClinicalRecordDataNotifier>()),
+        ChangeNotifierProvider(
+            create: (_) => di.locator<ScientificAssignmentProvider>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
