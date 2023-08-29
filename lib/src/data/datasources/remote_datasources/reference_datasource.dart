@@ -53,8 +53,7 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
       {required int id, required String filename}) async {
     final credential = await preferenceHandler.getCredential();
     try {
-      String type = filename.split('.').last;
-      final savePath = '/storage/emulated/0/Download/${Uuid().v1()}.${type}';
+      final savePath = '/storage/emulated/0/Download/$filename';
 
       await dio.download(
         ApiService.baseUrl + '/references/$id',
