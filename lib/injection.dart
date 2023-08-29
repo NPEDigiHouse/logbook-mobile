@@ -11,6 +11,7 @@ import 'package:elogbook/src/data/datasources/remote_datasources/reference_datas
 import 'package:elogbook/src/data/datasources/remote_datasources/scientific_session_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/self_reflection_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/sglcst_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/special_report_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/student_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/supervisors_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/unit_datasource.dart';
@@ -64,6 +65,7 @@ import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cu
 import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
@@ -143,6 +145,12 @@ void _injectDatasource() {
   );
   locator.registerLazySingleton<ReferenceDataSource>(
     () => ReferenceDataSourceImpl(
+      dio: locator(),
+      preferenceHandler: locator(),
+    ),
+  );
+  locator.registerLazySingleton<SpecialReportDataSource>(
+    () => SpecialReportDataSourceImpl(
       dio: locator(),
       preferenceHandler: locator(),
     ),
@@ -449,6 +457,12 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => ReferenceCubit(
       dataSource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => SpecialReportCubit(
+      specialReportDataSource: locator(),
+      studentDataSource: locator(),
     ),
   );
 }

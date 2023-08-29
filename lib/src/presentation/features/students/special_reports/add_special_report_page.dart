@@ -1,6 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/src/data/models/self_reflection/self_reflection_post_model.dart';
-import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,9 +17,11 @@ class _AddSpecialReportPageState extends State<AddSpecialReportPage> {
   final ValueNotifier<bool> isSaveAsDraft = ValueNotifier(false);
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SelfReflectionCubit, SelfReflectionState>(
+    return BlocListener<SpecialReportCubit, SpecialReportState>(
       listener: (context, state) {
-        if (state.isSelfReflectionPostSuccess) {
+        if (state.isSuccessPostSpecialReport) {
+          BlocProvider.of<SpecialReportCubit>(context)
+            ..getStudentSpecialReport();
           Navigator.pop(context);
         }
       },
@@ -63,10 +64,8 @@ class _AddSpecialReportPageState extends State<AddSpecialReportPage> {
                   FilledButton(
                     onPressed: () {
                       if (fieldController.text.isNotEmpty) {
-                        BlocProvider.of<SelfReflectionCubit>(context)
-                          ..uploadSelfReflection(
-                              model: SelfReflectionPostModel(
-                                  content: fieldController.text));
+                        BlocProvider.of<SpecialReportCubit>(context)
+                          ..postSpecialReport(content: fieldController.text);
                       }
                     },
                     child: Text('Submit'),

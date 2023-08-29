@@ -3,12 +3,14 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/add_special_report_page.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/widgets/special_report_card.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SpecialReportHomePage extends StatefulWidget {
@@ -21,6 +23,12 @@ class SpecialReportHomePage extends StatefulWidget {
 }
 
 class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<SpecialReportCubit>(context)..getStudentSpecialReport();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,31 +52,48 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                     height: 12,
                   ),
                   AddNewConsultionCard(),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Text(
-                    'List of Consultation on Encountered Issues',
-                    style: textTheme.titleMedium?.copyWith(
-                      height: 1.1,
-                      color: secondaryColor,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  ListView.separated(
-                    itemBuilder: (context, index) {
-                      return SpecialReportCard();
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: 12,
+                  BlocBuilder<SpecialReportCubit, SpecialReportState>(
+                    builder: (context, state) {
+                      if (state.specialReport != null)
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: 12,
+                            ),
+                            Text(
+                              'List of Consultation on Encountered Issues',
+                              style: textTheme.titleMedium?.copyWith(
+                                height: 1.1,
+                                color: secondaryColor,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            ListView.separated(
+                              itemBuilder: (context, index) {
+                                return SpecialReportCard(
+                                  data: state.specialReport!
+                                      .listProblemConsultations![index],
+                                  index: index + 1,
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  height: 12,
+                                );
+                              },
+                              itemCount: state.specialReport!
+                                  .listProblemConsultations!.length,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                            ),
+                          ],
+                        );
+                      return Center(
+                        child: CircularProgressIndicator(),
                       );
                     },
-                    itemCount: 3,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
                   )
                 ],
               ),

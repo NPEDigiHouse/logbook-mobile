@@ -1,11 +1,14 @@
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/special_reports/special_report_response.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 
 class SpecialReportCard extends StatelessWidget {
-  const SpecialReportCard({super.key});
+  final int index;
+  final ListProblemConsultation data;
+  const SpecialReportCard({super.key, required this.index, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +35,15 @@ class SpecialReportCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Senin, 21 February 2023',
+                'Problem Consultation #$index',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: textTheme.bodyMedium?.copyWith(),
+                style: textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(width: 4),
-              if (true)
+              if (data.verificationStatus == 'VERIFIED')
                 const Icon(
                   Icons.verified_rounded,
                   size: 16,
@@ -63,7 +68,7 @@ class SpecialReportCard extends StatelessWidget {
             height: 4,
           ),
           Text(
-            'Saya merasa kesulitan dalam lorem ipsum test lorem ipsum test lorem ipsum test lorem ipsum test lorem ipsum test lorem ipsum test lorem ipsum lorem ips...',
+            data.content!.trim(),
             style: textTheme.bodyMedium?.copyWith(height: 1.2),
           ),
           SizedBox(
@@ -78,9 +83,9 @@ class SpecialReportCard extends StatelessWidget {
           SizedBox(
             height: 4,
           ),
-          false
+          (data.solution != null)
               ? Text(
-                  'Saya merasa kesulitan dalam lorem ipsum test lorem ipsum test lorem ipsum test lorem ipsum test lorem ipsum test lorem ipsum test lorem ipsum lorem ips...',
+                  data.solution!.trim(),
                   style: textTheme.bodyMedium?.copyWith(height: 1.2),
                 )
               : Container(
