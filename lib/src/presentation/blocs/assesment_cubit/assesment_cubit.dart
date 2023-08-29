@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/assesment_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/student_datasource.dart';
+import 'package:elogbook/src/data/models/assessment/final_score_response.dart';
 import 'package:elogbook/src/data/models/assessment/list_scientific_assignment.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_list_model.dart';
@@ -322,6 +323,34 @@ class AssesmentCubit extends Cubit<AssesmentState> {
     }
   }
 
+  Future<void> updateFinalScore(
+      {required String unitId,
+      required String studentId,
+      required double score,
+      required String type}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+      await dataSource.scoreCbtOsce(
+          score: score, type: type, studentId: studentId, unitId: unitId);
+      try {
+        emit(state.copyWith(
+          isFinalScoreUpdate: true,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getPersonalBehaviorDetail({required String id}) async {
     try {
       emit(state.copyWith(
@@ -333,6 +362,34 @@ class AssesmentCubit extends Cubit<AssesmentState> {
         emit(
           state.copyWith(
             personalBehaviorDetail: data,
+          ),
+        );
+      } catch (e) {
+        emit(state.copyWith(stateSa: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          stateSa: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getFinalScore(
+      {required String unitId, required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        stateSa: RequestState.loading,
+      ));
+
+      final data =
+          await dataSource.getFinalScore(studentId: studentId, unitId: unitId);
+      try {
+        emit(
+          state.copyWith(
+            finalScore: data,
           ),
         );
       } catch (e) {

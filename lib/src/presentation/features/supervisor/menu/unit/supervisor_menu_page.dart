@@ -12,6 +12,7 @@ import 'package:elogbook/src/presentation/features/supervisor/assesment/assesmen
 import 'package:elogbook/src/presentation/features/supervisor/clinical_record/list_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/competence/supervisor_competence_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/daily_activity/supervisor_daily_activity_home_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/final_score/supervisor_list_student_unit_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/scientific_session/list_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/list_self_reflection_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/supervisor_sgl_cst_page.dart';
@@ -188,6 +189,18 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
                   )),
               () => context.navigateTo(SupervisorListSpecialReportPage()),
             ]),
+        if (widget.credential.badges!
+                .indexWhere((element) => element.name == 'CEU') !=
+            -1) ...[
+          const SizedBox(height: 12),
+          GridMenuRow(
+              itemColor: variant1Color,
+              length: 1,
+              menus: listSupervisorMenu.sublist(8, listSupervisorMenu.length),
+              onTaps: [
+                () => context.navigateTo(SupervisorListStudentUnitPage()),
+              ]),
+        ],
       ],
     );
   }
@@ -225,6 +238,23 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
             () => context.navigateTo(SupervisorListSpecialReportPage()),
           ],
         ),
+        if (widget.credential.badges!
+                .indexWhere((element) => element.name == 'CEU') !=
+            -1) ...[
+          const Divider(
+            height: 30,
+            thickness: 1,
+            color: Color(0xFFEFF0F9),
+          ),
+          ListMenuColumn(
+            itemColor: variant1Color,
+            length: 1,
+            menus: listSupervisorMenu.sublist(8, listSupervisorMenu.length),
+            onTaps: [
+              () => context.navigateTo(SupervisorListStudentUnitPage()),
+            ],
+          ),
+        ],
       ],
     );
   }

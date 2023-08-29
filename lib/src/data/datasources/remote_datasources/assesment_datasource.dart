@@ -3,6 +3,7 @@ import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
+import 'package:elogbook/src/data/models/assessment/final_score_response.dart';
 import 'package:elogbook/src/data/models/assessment/list_scientific_assignment.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_post_model.dart';
@@ -31,6 +32,13 @@ abstract class AssesmentDataSource {
       {required int id, required bool status, required String pbId});
   Future<void> addScoreScientificAssignment(
       {required Map<String, dynamic> score, required String id});
+  Future<FinalScoreResponse> getFinalScore(
+      {required String unitId, required String studentId});
+  Future<void> scoreCbtOsce(
+      {required String studentId,
+      required String type,
+      required String unitId,
+      required double score});
 }
 
 class AssesmentDataSourceImpl implements AssesmentDataSource {
@@ -325,6 +333,65 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
           },
         ),
         data: {"id": id, "verified": status},
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<FinalScoreResponse> getFinalScore(
+      {required String unitId, required String studentId}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/assesments/students/$studentId/units/$unitId',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+
+      final result = FinalScoreResponse.fromJson(dataResponse.data);
+      return result;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> scoreCbtOsce(
+      {required String studentId,
+      required String type,
+      required String unitId,
+      required double score}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.put(
+        ApiService.baseUrl + '/assesments/students/$studentId/units/$unitId',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+        data: {
+          'score': score,
+          'type': type,
+        },
       );
       print(response);
       if (response.statusCode != 200) {

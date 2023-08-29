@@ -45,16 +45,7 @@ class _SupervisorListCstPageState extends State<SupervisorListCstPage> {
                       height: 16,
                     ),
                   ),
-                  SliverToBoxAdapter(
-                    child: UnitHeader(
-                      unitName: 'Nama Unit',
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 12,
-                    ),
-                  ),
+             
                   SliverToBoxAdapter(
                     child: SearchField(
                       onChanged: (value) {},

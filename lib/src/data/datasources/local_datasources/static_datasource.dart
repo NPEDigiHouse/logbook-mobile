@@ -102,8 +102,8 @@ final List<MenuModel> listSupervisorMenu = [
     labels: 'Special Reports',
   ),
   MenuModel(
-    iconPath: 'auto_stories_rounded.svg',
-    labels: 'Reference',
+    iconPath: 'icon_final.svg',
+    labels: 'Final Score',
   ),
 ];
 

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/supervisors_datasource.dart';
+import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/domain/usecases/supervisor_usecases/get_all_supervisors_usecase.dart';
@@ -40,6 +41,23 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
       final result = await dataSource.getAllStudents();
 
       emit(FetchStudentSuccess(students: result));
+    } catch (e) {
+      print(e.toString());
+      emit(
+        Failed(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<void> getAllStudentUnit() async {
+    try {
+      emit(Loading());
+
+      final result = await dataSource.getAllStudentsByCeu();
+
+      emit(FetchStudentUnitSuccess(students: result));
     } catch (e) {
       print(e.toString());
       emit(

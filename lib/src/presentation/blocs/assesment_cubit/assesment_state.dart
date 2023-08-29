@@ -10,6 +10,8 @@ class AssesmentState {
   final List<StudentScientificAssignment>? personalBehaviorStudent;
   final PersonalBehaviorDetailModel? personalBehaviorDetail;
   final bool isPersonalBehaviorVerify;
+  final FinalScoreResponse? finalScore;
+  final bool isFinalScoreUpdate;
 
   final bool isAssementScientificAssignmentSuccess;
   final StudentMiniCex? studentMiniCex;
@@ -22,12 +24,14 @@ class AssesmentState {
     this.studentMiniCexs,
     this.miniCexStudentDetail,
     this.studentMiniCex,
+    this.isFinalScoreUpdate = false,
     this.stateSa = RequestState.init,
     this.isUploadAssignmentSuccess = false,
     this.isAssesmentMiniCexSuccess = false,
     this.requestState = RequestState.init,
     this.scientificAssignmentDetail,
     this.scientificAssignmentStudents,
+    this.finalScore,
     this.isAssementScientificAssignmentSuccess = false,
     this.isPersonalBehaviorVerify = false,
     this.personalBehaviorDetail,
@@ -41,11 +45,13 @@ class AssesmentState {
     MiniCexStudentDetailModel? miniCexStudentDetail,
     StudentMiniCex? studentMiniCex,
     bool isUploadAssignmentSuccess = false,
+    bool isFinalScoreUpdate = false,
     List<MiniCexListModel>? studentMiniCexs,
     ListScientificAssignment? scientificAssignmentDetail,
     List<StudentScientificAssignment>? scientificAssignmentStudents,
     bool isAssementScientificAssignmentSuccess = false,
     RequestState stateSa = RequestState.init,
+    FinalScoreResponse? finalScore,
     List<StudentScientificAssignment>? personalBehaviorStudent,
     PersonalBehaviorDetailModel? personalBehaviorDetail,
     bool isPersonalBehaviorVerify = false,
@@ -59,6 +65,7 @@ class AssesmentState {
       requestState: requestState,
       scientificAssignmentDetail:
           scientificAssignmentDetail ?? this.scientificAssignmentDetail,
+      finalScore: finalScore ?? this.finalScore,
       scientificAssignmentStudents:
           scientificAssignmentStudents ?? this.scientificAssignmentStudents,
       isAssementScientificAssignmentSuccess:
@@ -68,6 +75,7 @@ class AssesmentState {
       isPersonalBehaviorVerify: isPersonalBehaviorVerify,
       personalBehaviorDetail:
           personalBehaviorDetail ?? this.personalBehaviorDetail,
+      isFinalScoreUpdate: isFinalScoreUpdate,
       personalBehaviorStudent:
           personalBehaviorStudent ?? this.personalBehaviorStudent,
     );
