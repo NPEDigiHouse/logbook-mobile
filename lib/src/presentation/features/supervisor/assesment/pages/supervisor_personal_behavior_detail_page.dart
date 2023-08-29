@@ -425,6 +425,7 @@ class PersonalBehaviorCard extends StatelessWidget {
             ]
           ],
         ),
+      
       ),
     );
   }

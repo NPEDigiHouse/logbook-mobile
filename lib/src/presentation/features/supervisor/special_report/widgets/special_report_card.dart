@@ -1,14 +1,21 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/special_reports/special_report_response.dart';
+import 'package:elogbook/src/presentation/features/supervisor/special_report/verify_special_report_page.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 
-class SpecialReportCard extends StatelessWidget {
+class SupervisorSpecialReportCard extends StatelessWidget {
+  final String studentId;
   final int index;
   final ListProblemConsultation data;
-  const SpecialReportCard({super.key, required this.index, required this.data});
+  const SupervisorSpecialReportCard(
+      {super.key,
+      required this.index,
+      required this.data,
+      required this.studentId});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +23,10 @@ class SpecialReportCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       radius: 12,
       onTap: () {
-        
+        context.navigateTo(VerifySpecialReportPage(
+          problemConsultation: data,
+          studentId: studentId,
+        ));
       },
       color: Colors.white,
       boxShadow: [

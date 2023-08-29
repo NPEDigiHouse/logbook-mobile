@@ -15,7 +15,7 @@ import 'package:elogbook/src/presentation/features/supervisor/daily_activity/sup
 import 'package:elogbook/src/presentation/features/supervisor/scientific_session/list_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/list_self_reflection_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/supervisor_sgl_cst_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/special_report/supervisor_special_report_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/special_report/list_report_student_page.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -186,7 +186,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
               () => context.navigateTo(SupervisorAssesmentStudentPage(
                     credential: widget.credential,
                   )),
-              () => context.navigateTo(SupervisorSpecialReportPage()),
+              () => context.navigateTo(SupervisorListSpecialReportPage()),
             ]),
       ],
     );
@@ -222,7 +222,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
             () => context.navigateTo(SupervisorAssesmentStudentPage(
                   credential: widget.credential,
                 )),
-            () => context.navigateTo(SupervisorSpecialReportPage()),
+            () => context.navigateTo(SupervisorListSpecialReportPage()),
           ],
         ),
       ],
