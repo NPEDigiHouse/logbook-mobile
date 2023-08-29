@@ -20,4 +20,16 @@ class ReusableFunctionHelper {
         ? DateFormat('HH:MM, dd MMMM yyyy', "id_ID").parse(date)
         : DateFormat("EEEE, dd MMMM yyyy", "id_ID").parse(date);
   }
+
+  static String epochToStringTime({required int startTime, int? endTime}) {
+    String time = '';
+    DateTime startDate = DateTime.fromMillisecondsSinceEpoch(startTime * 1000);
+    time += datetimeToStringTime(startDate);
+    if (endTime != null) {
+      DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endTime * 1000);
+      time += ' - ';
+      time += datetimeToStringTime(endDate);
+    }
+    return time;
+  }
 }

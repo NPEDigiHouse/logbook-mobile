@@ -1,14 +1,17 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/create_sgl_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/add_topic_dialog.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/sgl_cst_app_bar.dart';
-import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/sgl_cst_data.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -20,7 +23,11 @@ class ListSglPage extends StatefulWidget {
 }
 
 class _ListSglPageState extends State<ListSglPage> {
-  final ValueNotifier<List<SglModel>> listSglData = ValueNotifier([]);
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<SglCstCubit>(context)..getStudentSglDetail();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,165 +37,199 @@ class _ListSglPageState extends State<ListSglPage> {
           SglCstAppBar(
             title: 'Small Group Learning (SGL)',
             onBtnPressed: () {
-              Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => CreateSglPage()))
-                  .then((value) {
-                listSglData.value = List.from(listSglData.value)
-                  ..add(SglModel(date: 'Monday. Feb 26 2023', items: [
-                    SglItemModel(
-                      activity:
-                          'Kelainan payudara (mastitis, cracked, inverted nipple) (4A), Fluor Albus, Vaginosis bakterialis (4A)',
-                      time: '08.00 - 09.00 WITA',
-                    )
-                  ]));
-              });
+              context.navigateTo(CreateSglPage());
             },
           ),
-          ValueListenableBuilder(
-              valueListenable: listSglData,
-              builder: (context, val, _) {
-                return SliverToBoxAdapter(
-                  child: SpacingColumn(
-                    spacing: 16,
-                    horizontalPadding: 16,
-                    children: [
-                      SizedBox(
-                        height: 16,
-                      ),
-                      _buildAttendanceOverview(context),
-                      for (SglModel sglModel in val)
-                        Container(
-                          width: AppSize.getAppWidth(context),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 20),
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(.12),
-                                offset: Offset(0, 2),
-                                blurRadius: 20,
-                              )
-                            ],
-                            borderRadius: BorderRadius.circular(12),
-                            color: scaffoldBackgroundColor,
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.event_rounded,
-                                    color: primaryColor,
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      sglModel.date,
-                                      style: textTheme.titleSmall?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+          SliverToBoxAdapter(
+            child: SpacingColumn(
+              horizontalPadding: 16,
+              children: [
+                SizedBox(
+                  height: 16,
+                ),
+                _buildAttendanceOverview(context),
+                BlocBuilder<SglCstCubit, SglCstState>(
+                  builder: (context, state) {
+                    if (state.sglDetail != null)
+                      return ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final data = state.sglDetail!.sgls![index];
+                            return Container(
+                              width: AppSize.getAppWidth(context),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 16, horizontal: 20),
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(.12),
+                                    offset: Offset(0, 2),
+                                    blurRadius: 20,
                                   )
                                 ],
+                                borderRadius: BorderRadius.circular(12),
+                                color: scaffoldBackgroundColor,
                               ),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              for (int i = 0; i < sglModel.items.length; i++)
-                                TimelineTile(
-                                  indicatorStyle: IndicatorStyle(
-                                    width: 12,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.event_rounded,
+                                        color: primaryColor,
+                                      ),
+                                      SizedBox(
+                                        width: 12,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          ReusableFunctionHelper
+                                              .datetimeToString(
+                                                  data.createdAt!),
+                                          style: textTheme.titleSmall?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
                                     height: 12,
-                                    color: primaryColor,
-                                    indicatorXY: 0.15,
                                   ),
-                                  afterLineStyle: LineStyle(
-                                    thickness: 1,
-                                    color: secondaryTextColor,
-                                  ),
-                                  beforeLineStyle: LineStyle(
-                                    thickness: 1,
-                                    color: secondaryTextColor,
-                                  ),
-                                  alignment: TimelineAlign.start,
-                                  isFirst: i == 0,
-                                  isLast: i == sglModel.items.length - 1,
-                                  endChild: Container(
-                                    margin:
-                                        EdgeInsets.only(left: 16, bottom: 12),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          sglModel.items[i].activity,
-                                        ),
-                                        SizedBox(
-                                          height: 4,
-                                        ),
-                                        Row(
+                                  for (int i = 0; i < data.topic!.length; i++)
+                                    TimelineTile(
+                                      indicatorStyle: IndicatorStyle(
+                                        width: 12,
+                                        height: 12,
+                                        color: primaryColor,
+                                        indicatorXY: 0.15,
+                                      ),
+                                      afterLineStyle: LineStyle(
+                                        thickness: 1,
+                                        color: secondaryTextColor,
+                                      ),
+                                      beforeLineStyle: LineStyle(
+                                        thickness: 1,
+                                        color: secondaryTextColor,
+                                      ),
+                                      alignment: TimelineAlign.start,
+                                      isFirst: i == 0,
+                                      isLast: i == data.topic!.length - 1,
+                                      endChild: Container(
+                                        margin: EdgeInsets.only(
+                                            left: 16, bottom: 12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Icon(
-                                              Icons.av_timer_rounded,
-                                              color: onFormDisableColor,
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  data.topic![i].topicName!
+                                                      .join(', '),
+                                                  style: textTheme.bodyMedium
+                                                      ?.copyWith(
+                                                    height: 1.1,
+                                                  ),
+                                                ),
+                                                if (data.topic![i]
+                                                        .verificationStatus ==
+                                                    'VERIFIED') ...[
+                                                  SizedBox(
+                                                    width: 4,
+                                                  ),
+                                                  Icon(
+                                                    Icons.verified,
+                                                    color: successColor,
+                                                    size: 16,
+                                                  )
+                                                ]
+                                              ],
                                             ),
                                             SizedBox(
-                                              width: 4,
+                                              height: 4,
                                             ),
-                                            Text(
-                                              sglModel.items[i].time,
-                                              style: textTheme.bodyMedium
-                                                  ?.copyWith(
-                                                      color:
-                                                          onFormDisableColor),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.av_timer_rounded,
+                                                  color: onFormDisableColor,
+                                                ),
+                                                SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Text(
+                                                  ReusableFunctionHelper
+                                                      .epochToStringTime(
+                                                          startTime: data
+                                                              .topic![i]
+                                                              .startTime!,
+                                                          endTime: data
+                                                              .topic![i]
+                                                              .endTime),
+                                                  style: textTheme.bodyMedium
+                                                      ?.copyWith(
+                                                          color:
+                                                              onFormDisableColor),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
-                                      ],
+                                      ),
+                                    ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  ItemDivider(),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        barrierLabel: '',
+                                        barrierDismissible: false,
+                                        builder: (_) => AddTopicDialog(
+                                          type: TopicDialogType.sgl,
+                                          date: data.createdAt!,
+                                          id: data.sglId!,
+                                          supervisorId: '',
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(Icons.add_rounded),
+                                    label: Text(
+                                      'Add Topic',
+                                      style: textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: primaryColor,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              SizedBox(
-                                height: 12,
+                                ],
                               ),
-                              ItemDivider(),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              TextButton.icon(
-                                onPressed: () => showDialog(
-                                    context: context,
-                                    barrierLabel: '',
-                                    barrierDismissible: false,
-                                    builder: (_) => const AddTopicDialog(
-                                          type: TopicDialogType.sgl,
-                                        )).then((value) {
-                                  sglModel.items = List.from(sglModel.items)
-                                    ..add(
-                                      SglItemModel(
-                                        activity:
-                                            'Partus lama (3B), Hipoksia Janin (3B), Distosia (3B)',
-                                        time: '09.00 - 09.30 WITA',
-                                      ),
-                                    );
-                                  listSglData.notifyListeners();
-                                }),
-                                icon: Icon(Icons.add_rounded),
-                                label: Text(
-                                  'Add Topic',
-                                  style: textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: primaryColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                );
-              }),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(
+                              height: 16,
+                            );
+                          },
+                          itemCount: state.sglDetail!.sgls!.length);
+
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
           SliverToBoxAdapter(
             child: SizedBox(
               height: 16,

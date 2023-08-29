@@ -6,7 +6,7 @@ ThemeData get lightTheme {
   return ThemeData.from(
     colorScheme: colorScheme,
     textTheme: textTheme,
-    useMaterial3: true,
+    // useMaterial3: true,
   ).copyWith(
     dividerColor: dividerColor,
     scaffoldBackgroundColor: scaffoldBackgroundColor,

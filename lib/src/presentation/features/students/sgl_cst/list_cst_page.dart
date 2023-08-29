@@ -156,23 +156,7 @@ class _ListCstPageState extends State<ListCstPage> {
                                 height: 12,
                               ),
                               TextButton.icon(
-                                onPressed: () => showDialog(
-                                    context: context,
-                                    barrierLabel: '',
-                                    barrierDismissible: false,
-                                    builder: (_) => const AddTopicDialog(
-                                          type: TopicDialogType.cst,
-                                        )).then((value) {
-                                  sglModel.items = List.from(sglModel.items)
-                                    ..add(
-                                      SglItemModel(
-                                        activity:
-                                            'Partus lama (3B), Hipoksia Janin (3B), Distosia (3B)',
-                                        time: '09.00 - 09.30 WITA',
-                                      ),
-                                    );
-                                  listSglData.notifyListeners();
-                                }),
+                                onPressed: () {},
                                 icon: Icon(Icons.add_rounded),
                                 label: Text(
                                   'Add Topic',

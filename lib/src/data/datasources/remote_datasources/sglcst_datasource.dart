@@ -17,9 +17,9 @@ abstract class SglCstDataSource {
     required SglCstPostModel postModel,
   });
   Future<void> addNewSglTopic(
-      {required TopicModel topic, required String sglId});
+      {required SglCstPostModel topic, required String sglId});
   Future<void> addNewCstTopic(
-      {required TopicModel topic, required String cstId});
+      {required SglCstPostModel topic, required String cstId});
   Future<List<TopicModel>> getTopics();
   Future<List<SglCstOnList>> getSglBySupervisor();
   Future<List<SglCstOnList>> getCstBySupervisor();
@@ -326,7 +326,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
 
   @override
   Future<void> addNewCstTopic(
-      {required TopicModel topic, required String cstId}) async {
+      {required SglCstPostModel topic, required String cstId}) async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.put(
@@ -351,7 +351,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
 
   @override
   Future<void> addNewSglTopic(
-      {required TopicModel topic, required String sglId}) async {
+      {required SglCstPostModel topic, required String sglId}) async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.put(

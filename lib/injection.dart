@@ -390,6 +390,7 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => SglCstCubit(
       dataSource: locator(),
+      studentDataSource: locator(),
     ),
   );
   locator.registerFactory(

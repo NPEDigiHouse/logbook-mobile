@@ -1,9 +1,15 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/widgets/inputs/build_text_field.dart';
+import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
+import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
+import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
+import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/input_date_time_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum TopicDialogType {
   sgl,
@@ -12,9 +18,15 @@ enum TopicDialogType {
 
 class AddTopicDialog extends StatefulWidget {
   final TopicDialogType type;
+  final String id;
+  final DateTime date;
+  final String supervisorId;
   const AddTopicDialog({
     super.key,
     required this.type,
+    required this.id,
+    required this.date,
+    required this.supervisorId,
   });
 
   @override
@@ -23,11 +35,15 @@ class AddTopicDialog extends StatefulWidget {
 
 class _AddTopicDialogState extends State<AddTopicDialog> {
   late final TextEditingController _controller;
+  final TextEditingController startTimeController = TextEditingController();
+  final TextEditingController endTimeController = TextEditingController();
 
   @override
   void initState() {
     _controller = TextEditingController();
-
+    BlocProvider.of<SglCstCubit>(context, listen: false)..getTopics();
+    BlocProvider.of<SupervisorsCubit>(context, listen: false)
+      ..getAllSupervisors();
     super.initState();
   }
 
@@ -38,117 +54,198 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
     super.dispose();
   }
 
+  List<int> topicId = [];
+  String? supervisorId;
+
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      elevation: 0,
-      insetPadding: const EdgeInsets.symmetric(
-        horizontal: 36.0,
-        vertical: 24.0,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 8, left: 4),
-                  child: IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(
-                      Icons.close_rounded,
-                      color: onFormDisableColor,
+    return BlocListener<SglCstCubit, SglCstState>(
+      listener: (context, state) {
+        if (state.isNewTopicAddSuccess) {
+          BlocProvider.of<SglCstCubit>(context)..getStudentSglDetail();
+          context.back();
+        }
+      },
+      child: Dialog(
+        elevation: 0,
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: 36.0,
+          vertical: 24.0,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 4),
+                    child: IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: onFormDisableColor,
+                      ),
+                      tooltip: 'Close',
                     ),
-                    tooltip: 'Close',
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          widget.type == TopicDialogType.sgl
-                              ? 'Add SGL Topic'
-                              : 'Add CST Topic',
-                          textAlign: TextAlign.center,
-                          style: textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: primaryColor,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            widget.type == TopicDialogType.sgl
+                                ? 'Add SGL Topic'
+                                : 'Add CST Topic',
+                            textAlign: TextAlign.center,
+                            style: textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: primaryColor,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 44,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            SpacingColumn(
-              horizontalPadding: 16,
-              spacing: 12,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: BuildTextField(
-                          onChanged: (v) {}, label: 'Start Time'),
-                    ),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Expanded(
-                      child:
-                          BuildTextField(onChanged: (v) {}, label: 'End Time'),
-                    ),
-                  ],
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search_rounded),
-                    label: Text('Supervisor'),
-                    suffixIcon: IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.close_rounded),
+                  SizedBox(
+                    width: 44,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              SpacingColumn(
+                horizontalPadding: 16,
+                spacing: 12,
+                children: [
+                  BlocBuilder<SglCstCubit, SglCstState>(
+                      builder: (context, state) {
+                    List<TopicModel> _topics = [];
+                    if (state.topics != null) {
+                      _topics.clear();
+                      _topics.addAll(state.topics!);
+                    }
+                    return DropdownButtonFormField(
+                      hint: Text(
+                        'Topic',
+                      ),
+                      items: _topics
+                          .map(
+                            (e) => DropdownMenuItem(
+                              child: Text(e.name!),
+                              value: e,
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (v) {
+                        topicId.clear();
+                        if (v != null) topicId.add(v.id!);
+                      },
+                      value: null,
+                    );
+                  }),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InputDateTimeField(
+                            action: (d) {},
+                            initialDate: widget.date,
+                            controller: startTimeController,
+                            hintText: 'Start Time'),
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Expanded(
+                        child: InputDateTimeField(
+                            action: (d) {},
+                            initialDate: widget.date,
+                            controller: endTimeController,
+                            hintText: 'End Time'),
+                      ),
+                    ],
+                  ),
+                  BlocBuilder<SupervisorsCubit, SupervisorsState>(
+                      builder: (context, state) {
+                    List<SupervisorModel> _supervisors = [];
+                    if (state is FetchSuccess) {
+                      _supervisors.clear();
+                      _supervisors.addAll(state.supervisors);
+                    }
+                    return DropdownButtonFormField(
+                      hint: Text('Supervisor'),
+                      items: _supervisors
+                          .map(
+                            (e) => DropdownMenuItem(
+                              child: Text(e.fullName!),
+                              value: e,
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (v) {
+                        if (v != null) supervisorId = v.id!;
+                      },
+                      value: null,
+                    );
+                  }),
+                  TextFormField(
+                    maxLines: 4,
+                    minLines: 4,
+                    decoration: InputDecoration(
+                      label: Text(
+                        'Additional notes',
+                      ),
                     ),
                   ),
-                ),
-                TextFormField(
-                  maxLines: 4,
-                  minLines: 4,
-                  decoration: InputDecoration(
-                    label: Text(
-                      'Additional notes',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: FilledButton(
-                onPressed: () => context.back(),
-                child: Text('Submit'),
-              ).fullWidth(),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-          ],
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: FilledButton(
+                  onPressed: () {
+                    if (supervisorId != null &&
+                        topicId.isNotEmpty &&
+                        startTimeController.text.isNotEmpty &&
+                        endTimeController.text.isNotEmpty) {
+                      final date = widget.date;
+                      final start = startTimeController.text.split(':');
+                      final end = endTimeController.text.split(':');
+                      final startTime = DateTime(date.year, date.month,
+                          date.day, int.parse(start[0]), int.parse(start[1]));
+                      final endTime = DateTime(date.year, date.month, date.day,
+                          int.parse(end[0]), int.parse(end[1]));
+                      if (widget.type == TopicDialogType.sgl) {
+                        BlocProvider.of<SglCstCubit>(context)
+                          ..addNewSglTopic(
+                            sglId: widget.id,
+                            topicModel: SglCstPostModel(
+                              supervisorId: supervisorId,
+                              topicId: topicId,
+                              startTime: startTime.millisecondsSinceEpoch,
+                              endTime: endTime.millisecondsSinceEpoch,
+                            ),
+                          );
+                      }
+                    }
+                  },
+                  child: Text('Submit'),
+                ).fullWidth(),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+            ],
+          ),
         ),
       ),
     );
