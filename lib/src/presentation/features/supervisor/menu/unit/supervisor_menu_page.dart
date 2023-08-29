@@ -8,7 +8,6 @@ import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart
 import 'package:elogbook/src/presentation/features/students/menu/widgets/grid_menu_row.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/list_menu_column.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/menu_switch.dart';
-import 'package:elogbook/src/presentation/features/supervisor/assesment/assesment_student_home_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/assesment_list_student_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/clinical_record/list_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/competence/supervisor_competence_page.dart';
@@ -170,7 +169,9 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
             itemColor: primaryColor,
             menus: listSupervisorMenu.sublist(0, 4),
             onTaps: [
-              () => context.navigateTo(SupervisorSglCstPage()),
+              () => context.navigateTo(SupervisorSglCstHomePage(
+                    credential: widget.credential,
+                  )),
               () => context.navigateTo(SupervisorDailyActivityHomePage()),
               () => context.navigateTo(SupervisorListClinicalRecord()),
               () => context.navigateTo(SupervisorListScientificSessionPage()),
@@ -199,7 +200,9 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
           itemColor: primaryColor,
           menus: listSupervisorMenu.sublist(0, 4),
           onTaps: [
-            () => context.navigateTo(SupervisorSglCstPage()),
+            () => context.navigateTo(SupervisorSglCstHomePage(
+                  credential: widget.credential,
+                )),
             () => context.navigateTo(SupervisorDailyActivityHomePage()),
             () => context.navigateTo(SupervisorListClinicalRecord()),
             () => context.navigateTo(SupervisorListScientificSessionPage()),

@@ -21,7 +21,6 @@ class SglCstHomePage extends StatefulWidget {
 }
 
 class _SglCstHomePageState extends State<SglCstHomePage> {
-  final ValueNotifier<bool> isSaveAsDraft = ValueNotifier(false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

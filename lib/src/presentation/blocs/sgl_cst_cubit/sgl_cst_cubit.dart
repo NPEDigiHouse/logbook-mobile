@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/sglcst_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/student_datasource.dart';
 import 'package:elogbook/src/data/models/sglcst/cst_model.dart';
+import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
@@ -165,6 +166,184 @@ class SglCstCubit extends Cubit<SglCstState> {
       await dataSource.addNewCstTopic(cstId: cstId, topic: topicModel);
       try {
         emit(state.copyWith(isNewTopicAddSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getListSglStudents() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getSglBySupervisor();
+      try {
+        emit(state.copyWith(sglStudents: result));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getListCstStudents() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getCstBySupervisor();
+      try {
+        emit(state.copyWith(cstStudents: result));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> verifySglTopic(
+      {required String topicId, required bool status}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.verifySglBySupervisor(id: topicId, status: status);
+      try {
+        emit(state.copyWith(isVerifyTopicSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> verifyCstTopic(
+      {required String topicId, required bool status}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.verifyCstBySupervisor(id: topicId, status: status);
+      try {
+        emit(state.copyWith(isVerifyTopicSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> verifyCst({required String cstId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.verifyCstByCeu(id: cstId, status: true);
+      try {
+        emit(state.copyWith(isVerifyTopicSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> verifySgl({required String sglId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.verifySglByCeu(id: sglId, status: true);
+      try {
+        emit(state.copyWith(isVerifyTopicSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getStudentCstDetailById({required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getCstByStudentId(studentId: studentId);
+      try {
+        emit(state.copyWith(cstDetail: result));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getStudentSglDetailById({required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getSglByStudentId(studentId: studentId);
+      try {
+        emit(state.copyWith(sglDetail: result));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }
