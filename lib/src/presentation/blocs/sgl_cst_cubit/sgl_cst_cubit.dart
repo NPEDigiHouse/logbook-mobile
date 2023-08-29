@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/sglcst_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/student_datasource.dart';
+import 'package:elogbook/src/data/models/sglcst/cst_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
@@ -119,7 +120,51 @@ class SglCstCubit extends Cubit<SglCstState> {
       ));
       await dataSource.addNewSglTopic(sglId: sglId, topic: topicModel);
       try {
-        emit(state.copyWith(isNewSglTopicAddSuccess: true));
+        emit(state.copyWith(isNewTopicAddSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getStudentCstDetail() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await studentDataSource.getStudentCst();
+      try {
+        emit(state.copyWith(cstDetail: result));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> addNewCstTopic(
+      {required String cstId, required SglCstPostModel topicModel}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+      await dataSource.addNewCstTopic(cstId: cstId, topic: topicModel);
+      try {
+        emit(state.copyWith(isNewTopicAddSuccess: true));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

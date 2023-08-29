@@ -6,38 +6,45 @@ ThemeData get lightTheme {
   return ThemeData.from(
     colorScheme: colorScheme,
     textTheme: textTheme,
-    // useMaterial3: true,
+    useMaterial3: true,
   ).copyWith(
-    dividerColor: dividerColor,
-    scaffoldBackgroundColor: scaffoldBackgroundColor,
-    filledButtonTheme: filledButtonTheme,
-    outlinedButtonTheme: outlinedButtonTheme,
-    textButtonTheme: textButtonTheme,
-    inputDecorationTheme: inputDecorationTheme,
-    pageTransitionsTheme: const PageTransitionsTheme(
-      builders: {
-        TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-      },
-    ),
-    appBarTheme: appBarTheme,
-    visualDensity: VisualDensity.adaptivePlatformDensity,
-  );
+      dividerColor: dividerColor,
+      scaffoldBackgroundColor: scaffoldBackgroundColor,
+      filledButtonTheme: filledButtonTheme,
+      outlinedButtonTheme: outlinedButtonTheme,
+      textButtonTheme: textButtonTheme,
+      inputDecorationTheme: inputDecorationTheme,
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+        },
+      ),
+      appBarTheme: appBarTheme,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      timePickerTheme: TimePickerThemeData(
+        hourMinuteTextStyle: textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: secondaryColor,
+        ),
+      ));
 }
 
 final appBarTheme = AppBarTheme(
-    titleTextStyle: textTheme.titleMedium?.copyWith(
-      color: primaryColor,
-      fontWeight: FontWeight.bold,
-    ),
-    elevation: 2,
-    shadowColor: Colors.black38,
-    iconTheme: const IconThemeData(
-      color: primaryColor,
-    ),
-    centerTitle: true,
-    actionsIconTheme: const IconThemeData(
-      color: primaryColor,
-    ));
+  titleTextStyle: textTheme.titleMedium?.copyWith(
+    color: primaryColor,
+    fontWeight: FontWeight.bold,
+  ),
+  backgroundColor: Colors.white,
+  elevation: 2,
+  shadowColor: Colors.black38,
+  iconTheme: const IconThemeData(
+    color: primaryColor,
+  ),
+  centerTitle: true,
+  actionsIconTheme: const IconThemeData(
+    color: primaryColor,
+  ),
+);
 
 final filledButtonTheme = FilledButtonThemeData(
   style: FilledButton.styleFrom(

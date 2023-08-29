@@ -62,7 +62,11 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
     return BlocListener<SglCstCubit, SglCstState>(
       listener: (context, state) {
         if (state.isNewTopicAddSuccess) {
-          BlocProvider.of<SglCstCubit>(context)..getStudentSglDetail();
+          if (widget.type == TopicDialogType.cst) {
+            BlocProvider.of<SglCstCubit>(context)..getStudentCstDetail();
+          } else {
+            BlocProvider.of<SglCstCubit>(context)..getStudentSglDetail();
+          }
           context.back();
         }
       },
@@ -228,6 +232,17 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                         BlocProvider.of<SglCstCubit>(context)
                           ..addNewSglTopic(
                             sglId: widget.id,
+                            topicModel: SglCstPostModel(
+                              supervisorId: supervisorId,
+                              topicId: topicId,
+                              startTime: startTime.millisecondsSinceEpoch,
+                              endTime: endTime.millisecondsSinceEpoch,
+                            ),
+                          );
+                      } else {
+                        BlocProvider.of<SglCstCubit>(context)
+                          ..addNewCstTopic(
+                            cstId: widget.id,
                             topicModel: SglCstPostModel(
                               supervisorId: supervisorId,
                               topicId: topicId,

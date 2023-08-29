@@ -83,13 +83,29 @@ class _ListSglPageState extends State<ListSglPage> {
                                         width: 12,
                                       ),
                                       Expanded(
-                                        child: Text(
-                                          ReusableFunctionHelper
-                                              .datetimeToString(
-                                                  data.createdAt!),
-                                          style: textTheme.titleSmall?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              ReusableFunctionHelper
+                                                  .datetimeToString(
+                                                      data.createdAt!),
+                                              style: textTheme.titleSmall
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            if (data.verificationStatus ==
+                                                'VERIFIED') ...[
+                                              SizedBox(
+                                                width: 4,
+                                              ),
+                                              Icon(
+                                                Icons.verified,
+                                                color: successColor,
+                                                size: 16,
+                                              )
+                                            ]
+                                          ],
                                         ),
                                       )
                                     ],
@@ -100,10 +116,32 @@ class _ListSglPageState extends State<ListSglPage> {
                                   for (int i = 0; i < data.topic!.length; i++)
                                     TimelineTile(
                                       indicatorStyle: IndicatorStyle(
-                                        width: 12,
-                                        height: 12,
-                                        color: primaryColor,
+                                        width: 14,
+                                        height: 14,
                                         indicatorXY: 0.15,
+                                        indicator: Container(
+                                          width: 14,
+                                          height: 14,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: data.topic![i]
+                                                        .verificationStatus ==
+                                                    'VERIFIED'
+                                                ? successColor
+                                                : secondaryTextColor,
+                                          ),
+                                          child: Center(
+                                            child: data.topic![i]
+                                                        .verificationStatus ==
+                                                    'VERIFIED'
+                                                ? Icon(
+                                                    Icons.check,
+                                                    size: 14,
+                                                    color: Colors.white,
+                                                  )
+                                                : null,
+                                          ),
+                                        ),
                                       ),
                                       afterLineStyle: LineStyle(
                                         thickness: 1,
@@ -123,31 +161,13 @@ class _ListSglPageState extends State<ListSglPage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  data.topic![i].topicName!
-                                                      .join(', '),
-                                                  style: textTheme.bodyMedium
-                                                      ?.copyWith(
-                                                    height: 1.1,
-                                                  ),
-                                                ),
-                                                if (data.topic![i]
-                                                        .verificationStatus ==
-                                                    'VERIFIED') ...[
-                                                  SizedBox(
-                                                    width: 4,
-                                                  ),
-                                                  Icon(
-                                                    Icons.verified,
-                                                    color: successColor,
-                                                    size: 16,
-                                                  )
-                                                ]
-                                              ],
+                                            Text(
+                                              data.topic![i].topicName!
+                                                  .join(', '),
+                                              style: textTheme.bodyMedium
+                                                  ?.copyWith(
+                                                height: 1.1,
+                                              ),
                                             ),
                                             SizedBox(
                                               height: 4,
