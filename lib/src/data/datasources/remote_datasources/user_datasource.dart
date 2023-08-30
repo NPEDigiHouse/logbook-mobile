@@ -9,6 +9,7 @@ import 'package:path/path.dart';
 abstract class UserDataSource {
   Future<UserCredential> getUserCredential();
   Future<String> uploadProfilePicture(String path);
+  Future<void> updateFullName({required String fullname});
 }
 
 class UserDataSourceImpl implements UserDataSource {
@@ -85,6 +86,36 @@ class UserDataSourceImpl implements UserDataSource {
       return await response.data['data'];
     } catch (e) {
       print("ini" + e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> updateFullName({required String fullname}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.put(
+        ApiService.baseUrl + '/users',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+        data: {
+          'fullname': fullname,
+        },
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

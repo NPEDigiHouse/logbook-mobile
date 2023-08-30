@@ -6,6 +6,7 @@ class ProfileState {
   final bool successUploadProfilePic;
   final RequestState stateProfilePic;
   final RequestState requestState;
+  final bool successUpdateProfile;
 
   ProfileState({
     this.profilePic,
@@ -13,12 +14,14 @@ class ProfileState {
     this.stateProfilePic = RequestState.init,
     this.requestState = RequestState.init,
     this.successUploadProfilePic = false,
+    this.successUpdateProfile = false,
   });
 
   ProfileState copyWith(
       {RequestState stateProfilePic = RequestState.init,
       Uint8List? profilePic,
       bool successUploadProfilePic = false,
+      bool successUpdateProfile = false,
       RequestState requestState = RequestState.init,
       UserCredential? userCredential}) {
     return ProfileState(
@@ -26,6 +29,7 @@ class ProfileState {
         stateProfilePic: stateProfilePic,
         requestState: requestState,
         successUploadProfilePic: successUploadProfilePic,
+        successUpdateProfile: successUpdateProfile,
         userCredential: userCredential ?? this.userCredential);
   }
 }

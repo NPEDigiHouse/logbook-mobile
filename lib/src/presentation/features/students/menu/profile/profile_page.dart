@@ -93,27 +93,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                 }
                               },
                             ),
-                            Positioned(
-                              right: (AppSize.getAppWidth(context) / 2) - 54,
-                              bottom: 5,
-                              child: Container(
-                                width: 32,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  color: primaryColor,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: scaffoldBackgroundColor,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    AssetPath.getIcon('camera_filled.svg'),
-                                    width: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // Positioned(
+                            //   right: (AppSize.getAppWidth(context) / 2) - 54,
+                            //   bottom: 5,
+                            //   child: Container(
+                            //     width: 32,
+                            //     height: 32,
+                            //     decoration: BoxDecoration(
+                            //       color: primaryColor,
+                            //       shape: BoxShape.circle,
+                            //       border: Border.all(
+                            //         color: scaffoldBackgroundColor,
+                            //       ),
+                            //     ),
+                            //     child: Center(
+                            //       child: SvgPicture.asset(
+                            //         AssetPath.getIcon('camera_filled.svg'),
+                            //         width: 16,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

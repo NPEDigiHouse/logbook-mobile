@@ -13,7 +13,6 @@ abstract class SupervisorsDataSource {
   Future<List<SupervisorModel>> getAllSupervisors();
   Future<List<SupervisorStudent>> getAllStudents();
   Future<List<StudentUnitModel>> getAllStudentsByCeu();
-
 }
 
 class SupervisorsDataSourceImpl implements SupervisorsDataSource {
@@ -110,11 +109,5 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
       print(e.toString());
       throw ClientFailure(e.toString());
     }
-  }
-  
-  @override
-  Future<FinalScoreResponse> getFinalScore({required String unitId, required String studentId}) {
-    // TODO: implement getFinalScore
-    throw UnimplementedError();
   }
 }

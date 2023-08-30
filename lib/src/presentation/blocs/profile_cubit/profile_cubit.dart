@@ -86,4 +86,26 @@ class ProfileCubit extends Cubit<ProfileState> {
       );
     }
   }
+
+  Future<void> updateFullName({required String fullname}) async {
+    try {
+      emit(state.copyWith(
+        stateProfilePic: RequestState.loading,
+      ));
+
+      await userDataSource.updateFullName(fullname: fullname);
+      try {
+        emit(state.copyWith(successUpdateProfile: true));
+      } catch (e) {
+        emit(state.copyWith(stateProfilePic: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          stateProfilePic: RequestState.error,
+        ),
+      );
+    }
+  }
 }

@@ -1,17 +1,36 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/features/coordinator/profile/personal_data_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/profile_item_menu_card.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   final UserCredential credential;
 
   const ProfilePage({super.key, required this.credential});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      BlocProvider.of<ProfileCubit>(context)
+        ..getUserCredential()
+        ..getProfilePic();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,52 +72,49 @@ class ProfilePage extends StatelessWidget {
                         right: 0,
                         left: 0,
                         bottom: -40,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: 52,
-                              backgroundColor: scaffoldBackgroundColor,
-                              child: CircleAvatar(
+                        child: BlocBuilder<ProfileCubit, ProfileState>(
+                          builder: (context, state) {
+                            if (state.profilePic != null) {
+                              return Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: MemoryImage(
+                                      state.profilePic!,
+                                    ),
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return CircleAvatar(
                                 radius: 50,
                                 foregroundImage: AssetImage(
                                   AssetPath.getImage('profile_default.png'),
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              right: (AppSize.getAppWidth(context) / 2) - 54,
-                              bottom: 5,
-                              child: Container(
-                                width: 32,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  color: primaryColor,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: scaffoldBackgroundColor,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    AssetPath.getIcon('camera_filled.svg'),
-                                    width: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                              );
+                            }
+                          },
                         ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 56),
-                Text(
-                  credential.fullname!,
-                  style: textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                BlocBuilder<ProfileCubit, ProfileState>(
+                  builder: (context, state) {
+                    return Text(
+                      state.userCredential != null
+                          ? state.userCredential!.fullname!
+                          : '...',
+                      style: textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  },
                 ),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Chip(
@@ -115,7 +131,7 @@ class ProfilePage extends StatelessWidget {
                   SizedBox(
                     width: 4,
                   ),
-                  ...credential.badges!
+                  ...widget.credential.badges!
                       .map(
                         (e) => Row(
                           children: [
@@ -141,7 +157,15 @@ class ProfilePage extends StatelessWidget {
                 const SizedBox(height: 12),
                 ProfileItemMenuCard(
                   iconPath: 'person_filled.svg',
-                  title: 'Personal & Statistic',
+                  title: 'Personal Data',
+                  onTap: () {
+                    context.navigateTo(LecturerPersonalDataPage());
+                  },
+                ),
+                const SizedBox(height: 14),
+                ProfileItemMenuCard(
+                  iconPath: 'person_filled.svg',
+                  title: 'Statistic Data',
                   onTap: () {},
                 ),
                 const SizedBox(height: 14),

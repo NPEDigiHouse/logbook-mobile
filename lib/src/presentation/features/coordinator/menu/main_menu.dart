@@ -35,7 +35,6 @@ class _MainMenuCoordinatorState extends State<MainMenuCoordinator> {
       ),
       const CoordinatorHistoryPage(),
       CoordinatorProfilePage(
-        credential: widget.credential,
       ),
     ];
 
