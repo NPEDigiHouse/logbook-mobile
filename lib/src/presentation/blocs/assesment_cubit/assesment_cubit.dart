@@ -457,4 +457,32 @@ class AssesmentCubit extends Cubit<AssesmentState> {
       );
     }
   }
+
+  Future<void> getWeeklyAssesment(
+      {required String studentId, required String unitId}) async {
+    try {
+      emit(state.copyWith(
+        stateSa: RequestState.loading,
+      ));
+
+      final data = await dataSource.getWeeklyAssesment(
+          unitId: unitId, studentId: studentId);
+      try {
+        emit(
+          state.copyWith(
+            weeklyAssesment: data,
+          ),
+        );
+      } catch (e) {
+        emit(state.copyWith(stateSa: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          stateSa: RequestState.error,
+        ),
+      );
+    }
+  }
 }

@@ -1,5 +1,8 @@
+import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
@@ -22,6 +25,7 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
 
   @override
   void initState() {
+    BlocProvider.of<SupervisorsCubit>(context)..getAllStudentUnit();
     _menuList = [
       'All',
       'Inputed',
@@ -76,43 +80,54 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
             ),
           ];
         },
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              sliver: SliverList.separated(
-                itemCount: students.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      radius: 32,
-                      foregroundImage: AssetImage(
-                        AssetPath.getImage('profile_default.png'),
-                      ),
+        body: BlocBuilder<SupervisorsCubit, SupervisorsState>(
+          builder: (context, state) {
+            if (state is Loading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (state is FetchStudentUnitSuccess)
+              return CustomScrollView(
+                slivers: <Widget>[
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    sliver: SliverList.separated(
+                      itemCount: state.students.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                            radius: 32,
+                            foregroundImage: AssetImage(
+                              AssetPath.getImage('profile_default.png'),
+                            ),
+                          ),
+                          title: Text(
+                            state.students[index].studentName ?? '',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: Text(
+                            state.students[index].studentId ?? '',
+                            style: textTheme.bodySmall?.copyWith(
+                              color: borderColor,
+                            ),
+                          ),
+                          onTap: () => context.navigateTo(
+                            WeeklyGradeDetailPage(student: state.students[index]),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(height: 8);
+                      },
                     ),
-                    title: Text(
-                      students[index].name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(
-                      students[index].id,
-                      style: textTheme.bodySmall?.copyWith(
-                        color: borderColor,
-                      ),
-                    ),
-                    onTap: () => context.navigateTo(
-                      WeeklyGradeDetailPage(student: students[index]),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: 8);
-                },
-              ),
-            ),
-          ],
+                  ),
+                ],
+              );
+            return SizedBox.shrink();
+          },
         ),
       ),
     );

@@ -10,46 +10,25 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_data.dart';
-import 'package:elogbook/src/presentation/features/students/menu/history/history_filter_bottom_sheet.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/detail_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 
-class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+class CoordinatorHistoryPage extends StatefulWidget {
+  const CoordinatorHistoryPage({super.key});
 
   @override
-  State<HistoryPage> createState() => _HistoryPageState();
+  State<CoordinatorHistoryPage> createState() => _CoordinatorHistoryPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
-  late final List<String> _menuList;
-
-  late final ValueNotifier<String> _query, _selectedMenu;
-  late final ValueNotifier<Map<String, String>?> _dataFilters;
-
+class _CoordinatorHistoryPageState extends State<CoordinatorHistoryPage> {
+  ValueNotifier<String> _query = ValueNotifier('');
   @override
   void initState() {
-    _menuList = [
-      'All',
-      'Clinical Record',
-      'Scientific Session',
-      'Self Reflection',
-      'Daily Activity',
-    ];
-
-    _query = ValueNotifier('');
-    _selectedMenu = ValueNotifier(_menuList[0]);
-    _dataFilters = ValueNotifier(null);
-
     super.initState();
   }
 
   @override
   void dispose() {
-    _query.dispose();
-    _selectedMenu.dispose();
-    _dataFilters.dispose();
-
     super.dispose();
   }
 
@@ -62,7 +41,7 @@ class _HistoryPageState extends State<HistoryPage> {
           SliverAppBar(
             floating: true,
             automaticallyImplyLeading: false,
-            toolbarHeight: kToolbarHeight + 140,
+            toolbarHeight: kToolbarHeight + 70,
             backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             systemOverlayStyle: const SystemUiOverlayStyle(
@@ -72,7 +51,21 @@ class _HistoryPageState extends State<HistoryPage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 buildTitleSection(),
-                buildSearchFilterSection(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 20,
+                  ),
+                  child: ValueListenableBuilder(
+                    valueListenable: _query,
+                    builder: (context, query, child) {
+                      return SearchField(
+                        text: query,
+                        onChanged: (value) => _query.value = value,
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),
@@ -274,7 +267,7 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 32, 8, 0),
+          padding: const EdgeInsets.fromLTRB(20, 32, 8, 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -285,176 +278,10 @@ class _HistoryPageState extends State<HistoryPage> {
                   color: primaryColor,
                 ),
               ),
-              IconButton(
-                onPressed: () async {
-                  final data = await showModalBottomSheet<Map<String, String>?>(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => const HistoryFilterBottomSheet(),
-                  );
-
-                  if (data != null) _dataFilters.value = data;
-                },
-                icon: const Icon(
-                  Icons.filter_list_rounded,
-                  color: primaryColor,
-                ),
-                tooltip: 'Filter',
-              ),
             ],
           ),
         ),
       ],
-    );
-  }
-
-  ValueListenableBuilder<Map<String, String>?> buildSearchFilterSection() {
-    return ValueListenableBuilder(
-      valueListenable: _dataFilters,
-      builder: (context, data, value) {
-        return Column(
-          children: <Widget>[
-            if (data != null) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.labelSmall,
-                        children: <TextSpan>[
-                          const TextSpan(text: 'From\t'),
-                          TextSpan(
-                            text: data['start_date'],
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: primaryColor,
-                            ),
-                          ),
-                          const TextSpan(text: '\tto\t'),
-                          TextSpan(
-                            text: data['end_date'],
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.labelSmall,
-                        children: <TextSpan>[
-                          const TextSpan(text: 'Activity\t'),
-                          TextSpan(
-                            text: data['activity']!.toCapitalize(),
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.labelSmall,
-                        children: <TextSpan>[
-                          const TextSpan(text: 'Status\t'),
-                          TextSpan(
-                            text: data['status']!.toCapitalize(),
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        onPressed: () => _dataFilters.value = null,
-                        child: const Text(
-                          'Reset filter',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ] else ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                child: ValueListenableBuilder(
-                  valueListenable: _query,
-                  builder: (context, query, child) {
-                    return SearchField(
-                      text: query,
-                      onChanged: (value) => _query.value = value,
-                    );
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 64,
-                child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _menuList.length,
-                  itemBuilder: (context, index) {
-                    return ValueListenableBuilder(
-                      valueListenable: _selectedMenu,
-                      builder: (context, value, child) {
-                        final selected = value == _menuList[index];
-
-                        return RawChip(
-                          pressElevation: 0,
-                          clipBehavior: Clip.antiAlias,
-                          label: Text(_menuList[index]),
-                          labelPadding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                          ),
-                          labelStyle: textTheme.bodyMedium?.copyWith(
-                            color: selected ? primaryColor : primaryTextColor,
-                          ),
-                          side: BorderSide(
-                            color: selected ? Colors.transparent : borderColor,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          checkmarkColor: primaryColor,
-                          selectedColor: primaryColor.withOpacity(.2),
-                          selected: selected,
-                          onSelected: (_) {
-                            _selectedMenu.value = _menuList[index];
-                          },
-                        );
-                      },
-                    );
-                  },
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
-                ),
-              ),
-            ],
-          ],
-        );
-      },
     );
   }
 }

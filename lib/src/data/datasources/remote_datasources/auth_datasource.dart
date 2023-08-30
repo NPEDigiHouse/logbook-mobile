@@ -84,9 +84,9 @@ class AuthDataSourceImpl implements AuthDataSource {
           },
         ),
       );
-    
       if (response.statusCode == 200) {
         final dataResponse = await DataResponse.fromJson(response.data);
+
         UserToken credential = await UserToken.fromJson(dataResponse.data);
         await preferenceHandler.setUserData(credential);
       }
@@ -224,6 +224,7 @@ class AuthDataSourceImpl implements AuthDataSource {
     try {
       final credential = await preferenceHandler.getCredential();
       // print(credential?.accessToken);
+
       print(credential?.accessToken);
       final response = await dio.get(
         ApiService.baseUrl + '/users',

@@ -10,6 +10,7 @@ import 'package:elogbook/src/data/models/assessment/mini_cex_post_model.dart';
 import 'package:elogbook/src/data/models/assessment/personal_behavior_detail.dart';
 import 'package:elogbook/src/data/models/assessment/student_mini_cex.dart';
 import 'package:elogbook/src/data/models/assessment/student_scientific_assignment.dart';
+import 'package:elogbook/src/data/models/assessment/weekly_assesment_response.dart';
 
 abstract class AssesmentDataSource {
   Future<void> addMiniCex({required MiniCexPostModel model});
@@ -33,6 +34,8 @@ abstract class AssesmentDataSource {
   Future<void> addScoreScientificAssignment(
       {required Map<String, dynamic> score, required String id});
   Future<FinalScoreResponse> getFinalScore(
+      {required String unitId, required String studentId});
+  Future<WeeklyAssesmentResponse> getWeeklyAssesment(
       {required String unitId, required String studentId});
   Future<void> scoreCbtOsce(
       {required String studentId,
@@ -397,6 +400,35 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
       if (response.statusCode != 200) {
         throw Exception();
       }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<WeeklyAssesmentResponse> getWeeklyAssesment(
+      {required String unitId, required String studentId}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl +
+            '/weekly-assesments/students/$studentId/units/$unitId',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+
+      final result = WeeklyAssesmentResponse.fromJson(dataResponse.data);
+      return result;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
