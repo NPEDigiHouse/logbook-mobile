@@ -84,44 +84,52 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
       appBar: AppBar(
         title: Text("Final Grade"),
       ).variant(),
-      body: BlocBuilder<AssesmentCubit, AssesmentState>(
-        builder: (context, state) {
-          if (state.finalScore != null)
-            return SingleChildScrollView(
-              child: SpacingColumn(
-                horizontalPadding: 16,
-                spacing: 12,
-                children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  FinalGradeTopStatCard(
-                    title: 'Final Grade Statistic',
-                    totalGrade:
-                        getTotalGrades(state.finalScore!.finalScore ?? 0),
-                  ),
-                  if (state.finalScore!.assesments != null) ...[
-                    for (int i = 0;
-                        i < state.finalScore!.assesments!.length;
-                        i++)
-                      FinalGradeScoreCard(
-                        type: mapTitle[state.finalScore!.assesments![i].type] ??
-                            '-',
-                        score: state.finalScore!.assesments![i].score ?? 0,
-                        proportion:
-                            state.finalScore!.assesments![i].weight ?? 0,
-                      ),
-                  ],
-                  SizedBox(
-                    height: 12,
-                  ),
-                ],
-              ),
-            );
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context).getStudentFinalScore(),
+          ]);
         },
+        child: BlocBuilder<AssesmentCubit, AssesmentState>(
+          builder: (context, state) {
+            if (state.finalScore != null)
+              return SingleChildScrollView(
+                child: SpacingColumn(
+                  horizontalPadding: 16,
+                  spacing: 12,
+                  children: [
+                    SizedBox(
+                      height: 16,
+                    ),
+                    FinalGradeTopStatCard(
+                      title: 'Final Grade Statistic',
+                      totalGrade:
+                          getTotalGrades(state.finalScore!.finalScore ?? 0),
+                    ),
+                    if (state.finalScore!.assesments != null) ...[
+                      for (int i = 0;
+                          i < state.finalScore!.assesments!.length;
+                          i++)
+                        FinalGradeScoreCard(
+                          type:
+                              mapTitle[state.finalScore!.assesments![i].type] ??
+                                  '-',
+                          score: state.finalScore!.assesments![i].score ?? 0,
+                          proportion:
+                              state.finalScore!.assesments![i].weight ?? 0,
+                        ),
+                    ],
+                    SizedBox(
+                      height: 12,
+                    ),
+                  ],
+                ),
+              );
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
   }

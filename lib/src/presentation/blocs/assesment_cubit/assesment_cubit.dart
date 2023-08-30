@@ -65,7 +65,7 @@ class AssesmentCubit extends Cubit<AssesmentState> {
     }
   }
 
-  Future<void> studentMiniCexs() async {
+  Future<void> getStudentMiniCexs() async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,

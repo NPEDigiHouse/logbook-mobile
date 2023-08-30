@@ -78,166 +78,175 @@ class _StudentDailyActivityWeekStatusPageState
                         ),
                 )
               : SizedBox.shrink(),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Builder(
-              builder: (context) {
-                if (state.studentActivityPerweek != null) {
-                  return SpacingColumn(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    horizontalPadding: 16,
-                    spacing: 12,
-                    children: [
-                      Container(
-                        width: AppSize.getAppWidth(context),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(.12),
-                              offset: Offset(0, 2),
-                              blurRadius: 20,
-                            )
-                          ],
-                          borderRadius: BorderRadius.circular(12),
-                          color: scaffoldBackgroundColor,
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Week ${state.studentActivityPerweek!.weekName}',
-                                  style: textTheme.titleLarge,
-                                ),
-                                if (state.studentActivityPerweek!
-                                        .verificationStatus ==
-                                    'VERIFIED') ...[
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await Future.wait([
+                BlocProvider.of<DailyActivityCubit>(context)
+                    .getActivityPerweekBySupervisor(id: widget.dailyActivityId),
+              ]);
+            },
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Builder(
+                builder: (context) {
+                  if (state.studentActivityPerweek != null) {
+                    return SpacingColumn(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      horizontalPadding: 16,
+                      spacing: 12,
+                      children: [
+                        Container(
+                          width: AppSize.getAppWidth(context),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 20),
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(.12),
+                                offset: Offset(0, 2),
+                                blurRadius: 20,
+                              )
+                            ],
+                            borderRadius: BorderRadius.circular(12),
+                            color: scaffoldBackgroundColor,
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'Week ${state.studentActivityPerweek!.weekName}',
+                                    style: textTheme.titleLarge,
+                                  ),
+                                  if (state.studentActivityPerweek!
+                                          .verificationStatus ==
+                                      'VERIFIED') ...[
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Icon(
+                                      Icons.verified,
+                                      color: primaryColor,
+                                    )
+                                  ]
+                                ],
+                              ),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFFF6F7F8),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      height: 84,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                              width: 24,
+                                              height: 24,
+                                              decoration: BoxDecoration(
+                                                color: errorColor.withOpacity(
+                                                  .2,
+                                                ),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              padding: EdgeInsets.all(2),
+                                              child: SvgPicture.asset(
+                                                  AssetPath.getIcon(
+                                                      'emoji_alfa.svg'))),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Text(
+                                            '${state.studentActivityPerweek!.alpha}',
+                                            style:
+                                                textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              height: 1,
+                                            ),
+                                          ),
+                                          Text('Alpha'),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                   SizedBox(
-                                    width: 4,
+                                    width: 8,
                                   ),
-                                  Icon(
-                                    Icons.verified,
-                                    color: primaryColor,
-                                  )
-                                ]
-                              ],
-                            ),
-                            SizedBox(
-                              height: 12,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFF6F7F8),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    height: 84,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            width: 24,
-                                            height: 24,
-                                            decoration: BoxDecoration(
-                                              color: errorColor.withOpacity(
-                                                .2,
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFFF6F7F8),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      height: 84,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                              width: 24,
+                                              height: 24,
+                                              decoration: BoxDecoration(
+                                                color: primaryColor.withOpacity(
+                                                  .2,
+                                                ),
+                                                shape: BoxShape.circle,
                                               ),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            padding: EdgeInsets.all(2),
-                                            child: SvgPicture.asset(
-                                                AssetPath.getIcon(
-                                                    'emoji_alfa.svg'))),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          '${state.studentActivityPerweek!.alpha}',
-                                          style:
-                                              textTheme.titleMedium?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            height: 1,
+                                              padding: EdgeInsets.all(2),
+                                              child: SvgPicture.asset(
+                                                  AssetPath.getIcon(
+                                                      'emoji_hadir.svg'))),
+                                          SizedBox(
+                                            height: 8,
                                           ),
-                                        ),
-                                        Text('Alpha'),
-                                      ],
+                                          Text(
+                                            '${state.studentActivityPerweek!.attend}',
+                                            style:
+                                                textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              height: 1,
+                                            ),
+                                          ),
+                                          Text('Hadir'),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFF6F7F8),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    height: 84,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            width: 24,
-                                            height: 24,
-                                            decoration: BoxDecoration(
-                                              color: primaryColor.withOpacity(
-                                                .2,
-                                              ),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            padding: EdgeInsets.all(2),
-                                            child: SvgPicture.asset(
-                                                AssetPath.getIcon(
-                                                    'emoji_hadir.svg'))),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          '${state.studentActivityPerweek!.attend}',
-                                          style:
-                                              textTheme.titleMedium?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            height: 1,
-                                          ),
-                                        ),
-                                        Text('Hadir'),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      ...List.generate(
-                          state.studentActivityPerweek!.activities!.length,
-                          (index) {
-                        final data = state.studentActivityPerweek!.activities!;
-                        return DailyActivityStatusCard(
-                          verificationStatus: data[index].verificationStatus!,
-                          day: data[index].day!,
-                          status: data[index].activityStatus!,
-                          detail: data[index].detail,
-                        );
-                      }).toList(),
-                      SizedBox(
-                        height: 50,
-                      ),
-                    ],
+                        ...List.generate(
+                            state.studentActivityPerweek!.activities!.length,
+                            (index) {
+                          final data =
+                              state.studentActivityPerweek!.activities!;
+                          return DailyActivityStatusCard(
+                            verificationStatus: data[index].verificationStatus!,
+                            day: data[index].day!,
+                            status: data[index].activityStatus!,
+                            detail: data[index].detail,
+                          );
+                        }).toList(),
+                        SizedBox(
+                          height: 50,
+                        ),
+                      ],
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
+                },
+              ),
             ),
           ),
         );

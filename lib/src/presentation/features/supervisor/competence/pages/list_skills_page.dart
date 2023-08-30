@@ -80,57 +80,73 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
                   )
                 : null,
           ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: SpacingColumn(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                onlyPading: true,
-                horizontalPadding: 16,
-                children: [
-                  UnitHeader(unitName: widget.unitName),
-                  SizedBox(
-                    height: 12,
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await Future.wait([
+                BlocProvider.of<CompetenceCubit>(context).getSkillsByStudentId(
+                  studentId: widget.studentId,
+                ),
+              ]);
+            },
+            child: SafeArea(
+              child: CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    sliver: SliverToBoxAdapter(
+                      child: SpacingColumn(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        onlyPading: true,
+                        horizontalPadding: 16,
+                        children: [
+                          UnitHeader(unitName: widget.unitName),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          Builder(
+                            builder: (context) {
+                              if (state.listSkillsModel != null) {
+                                final data = state.listSkillsModel!.listSkills!;
+                                if (data.isEmpty) {
+                                  return EmptyData(
+                                    subtitle: 'Please add skill data first!',
+                                    title: 'Data Still Empty',
+                                  );
+                                }
+                                return Column(
+                                  children: [
+                                    buildSearchFilterSection(),
+                                    SizedBox(
+                                      height: 24,
+                                    ),
+                                    ListView.separated(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) =>
+                                          TestGradeScoreCard(
+                                        id: data[index].skillId!,
+                                        studentId: widget.studentId,
+                                        skillName: data[index].skillName!,
+                                        skillType: data[index].skillType!,
+                                        isVerified:
+                                            data[index].verificationStatus ==
+                                                'VERIFIED',
+                                      ),
+                                      separatorBuilder: (context, index) =>
+                                          SizedBox(height: 12),
+                                      itemCount: data.length,
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return SizedBox.shrink();
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                  Builder(
-                    builder: (context) {
-                      if (state.listSkillsModel != null) {
-                        final data = state.listSkillsModel!.listSkills!;
-                        if (data.isEmpty) {
-                          return EmptyData(
-                            subtitle: 'Please add skill data first!',
-                            title: 'Data Still Empty',
-                          );
-                        }
-                        return Column(
-                          children: [
-                            buildSearchFilterSection(),
-                            SizedBox(
-                              height: 24,
-                            ),
-                            ListView.separated(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) =>
-                                  TestGradeScoreCard(
-                                id: data[index].skillId!,
-                                studentId: widget.studentId,
-                                skillName: data[index].skillName!,
-                                skillType: data[index].skillType!,
-                                isVerified: data[index].verificationStatus ==
-                                    'VERIFIED',
-                              ),
-                              separatorBuilder: (context, index) =>
-                                  SizedBox(height: 12),
-                              itemCount: data.length,
-                            ),
-                          ],
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
-                    },
-                  )
                 ],
               ),
             ),

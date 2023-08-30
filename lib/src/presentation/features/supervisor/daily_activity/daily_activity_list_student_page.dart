@@ -10,7 +10,6 @@ import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class DailyActivityListStudentPage extends StatefulWidget {
   const DailyActivityListStudentPage({super.key});
 
@@ -36,57 +35,64 @@ class _DailyActivityListStudentPageState
         title: Text('Daily Activity'),
       ).variant(),
       body: SafeArea(
-        child: BlocBuilder<SupervisorsCubit, SupervisorsState>(
-          builder: (context, state) {
-            if (state is Loading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (state is Error) {
-              return Center(
-                child: Text('Error'),
-              );
-            }
-            if (state is FetchStudentSuccess)
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 16,
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SearchField(
-                        onChanged: (value) {},
-                        text: '',
-                        hint: 'Search student',
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 16,
-                      ),
-                    ),
-                    SliverList.separated(
-                      itemCount: state.students.length,
-                      itemBuilder: (context, index) {
-                        return _buildStudentCard(
-                            context, state.students[index]);
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 12,
-                        );
-                      },
-                    )
-                  ],
-                ),
-              );
-            return SizedBox();
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<SupervisorsCubit>(context).getAllStudents(),
+            ]);
           },
+          child: BlocBuilder<SupervisorsCubit, SupervisorsState>(
+            builder: (context, state) {
+              if (state is Loading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state is Error) {
+                return Center(
+                  child: Text('Error'),
+                );
+              }
+              if (state is FetchStudentSuccess)
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 16,
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SearchField(
+                          onChanged: (value) {},
+                          text: '',
+                          hint: 'Search student',
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 16,
+                        ),
+                      ),
+                      SliverList.separated(
+                        itemCount: state.students.length,
+                        itemBuilder: (context, index) {
+                          return _buildStudentCard(
+                              context, state.students[index]);
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(
+                            height: 12,
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                );
+              return SizedBox();
+            },
+          ),
         ),
       ),
     );

@@ -28,52 +28,59 @@ class _SupervisorListSglPageState extends State<SupervisorListSglPage> {
         title: Text('Small Group Learing'),
       ).variant(),
       body: SafeArea(
-        child: BlocBuilder<SglCstCubit, SglCstState>(
-          builder: (context, state) {
-            if (state.sglStudents == null) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 16,
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: SearchField(
-                      onChanged: (value) {},
-                      text: '',
-                      hint: 'Search for student',
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 12,
-                    ),
-                  ),
-                  SliverList.separated(
-                    itemCount: state.sglStudents!.length,
-                    itemBuilder: (context, index) {
-                      return SglOnListCard(
-                        sglCst: state.sglStudents![index],
-                        isCeu: widget.isCeu,
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: 12,
-                      );
-                    },
-                  )
-                ],
-              ),
-            );
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<SglCstCubit>(context).getListSglStudents(),
+            ]);
           },
+          child: BlocBuilder<SglCstCubit, SglCstState>(
+            builder: (context, state) {
+              if (state.sglStudents == null) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 16,
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: SearchField(
+                        onChanged: (value) {},
+                        text: '',
+                        hint: 'Search for student',
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 12,
+                      ),
+                    ),
+                    SliverList.separated(
+                      itemCount: state.sglStudents!.length,
+                      itemBuilder: (context, index) {
+                        return SglOnListCard(
+                          sglCst: state.sglStudents![index],
+                          isCeu: widget.isCeu,
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          height: 12,
+                        );
+                      },
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

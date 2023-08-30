@@ -31,26 +31,34 @@ class _ListMiniCexPageState extends State<ListMiniCexPage> {
       appBar: AppBar(
         title: Text("Mini Cex"),
       ).variant(),
-      body: BlocConsumer<AssesmentCubit, AssesmentState>(
-        listener: (context, state) {
-          if (state.studentMiniCex != null &&
-              state.studentMiniCex!.id != null) {
-            context.replace(SupervisorMiniCexDetailPage(
-                unitName: '', id: state.studentMiniCex!.id!));
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context)
+                .studentMiniCex(studentId: widget.studentId),
+          ]);
         },
-        builder: (context, state) {
-          if (state.studentMiniCex != null &&
-              state.studentMiniCex!.id == null) {
-            return EmptyData(
-              title: 'Mini Cex Data Still Empty',
-              subtitle: 'student have not yet upload mini cex data',
+        child: BlocConsumer<AssesmentCubit, AssesmentState>(
+          listener: (context, state) {
+            if (state.studentMiniCex != null &&
+                state.studentMiniCex!.id != null) {
+              context.replace(SupervisorMiniCexDetailPage(
+                  unitName: '', id: state.studentMiniCex!.id!));
+            }
+          },
+          builder: (context, state) {
+            if (state.studentMiniCex != null &&
+                state.studentMiniCex!.id == null) {
+              return EmptyData(
+                title: 'Mini Cex Data Still Empty',
+                subtitle: 'student have not yet upload mini cex data',
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
             );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }

@@ -14,6 +14,7 @@ import 'package:elogbook/src/data/models/sglcst/cst_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_model.dart';
 import 'package:elogbook/src/data/models/special_reports/special_report_response.dart';
 import 'package:elogbook/src/data/models/students/student_check_in_model.dart';
+import 'package:elogbook/src/data/models/students/student_check_out_model.dart';
 import 'package:elogbook/src/data/models/students/student_profile_post.dart';
 
 abstract class StudentDataSource {
@@ -32,6 +33,8 @@ abstract class StudentDataSource {
   Future<void> updateStudentProfile(StudentProfile model);
   Future<List<StudentCheckInModel>> getStudentCheckIn();
   Future<void> verifyCheckIn({required String studentId});
+  Future<List<StudentCheckOutModel>> getStudentCheckOut();
+  Future<void> verifyCheckOut({required String studentId});
 }
 
 class StudentDataSourceImpl implements StudentDataSource {
@@ -471,6 +474,69 @@ class StudentDataSourceImpl implements StudentDataSource {
 
       final result = WeeklyAssesmentResponse.fromJson(dataResponse.data);
       return result;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<StudentCheckOutModel>> getStudentCheckOut() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/checkouts',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<StudentCheckOutModel> listData = dataResponse.data
+          .map((e) => StudentCheckOutModel.fromJson(e))
+          .toList();
+
+      return listData;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> verifyCheckOut({required String studentId}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.put(
+        ApiService.baseUrl + '/students/checkouts/$studentId',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+        data: {'verified': true},
+      );
+      print(response);
+      // print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

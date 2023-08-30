@@ -31,26 +31,34 @@ class _ListPersonalBehaviorPageState extends State<ListPersonalBehaviorPage> {
       appBar: AppBar(
         title: Text("Personal Behavior Grade"),
       ).variant(),
-      body: BlocConsumer<AssesmentCubit, AssesmentState>(
-        listener: (context, state) {
-          if (state.personalBehaviorStudent != null &&
-              state.personalBehaviorStudent!.isNotEmpty) {
-            context.replace(SupervisorPersonalBehaviorDetailPage(
-                unitName: '', id: state.personalBehaviorStudent!.first.id!));
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context)
+                .getPersonalBehaviorByStudentId(studentId: widget.studentId),
+          ]);
         },
-        builder: (context, state) {
-          if (state.personalBehaviorStudent != null &&
-              state.personalBehaviorStudent!.isEmpty) {
-            return EmptyData(
-              title: 'No Data',
-              subtitle: 'no personal behavior data',
+        child: BlocConsumer<AssesmentCubit, AssesmentState>(
+          listener: (context, state) {
+            if (state.personalBehaviorStudent != null &&
+                state.personalBehaviorStudent!.isNotEmpty) {
+              context.replace(SupervisorPersonalBehaviorDetailPage(
+                  unitName: '', id: state.personalBehaviorStudent!.first.id!));
+            }
+          },
+          builder: (context, state) {
+            if (state.personalBehaviorStudent != null &&
+                state.personalBehaviorStudent!.isEmpty) {
+              return EmptyData(
+                title: 'No Data',
+                subtitle: 'no personal behavior data',
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
             );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }

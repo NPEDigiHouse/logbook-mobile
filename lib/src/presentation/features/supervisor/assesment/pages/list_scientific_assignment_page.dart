@@ -31,27 +31,35 @@ class _ListScientificAssignmentPageState
       appBar: AppBar(
         title: Text("Scientific Assignments"),
       ).variant(),
-      body: BlocConsumer<AssesmentCubit, AssesmentState>(
-        listener: (context, state) {
-          if (state.scientificAssignmentStudents != null &&
-              state.scientificAssignmentStudents!.isNotEmpty) {
-            context.replace(SupervisorScientificAssignmentDetailPage(
-                unitName: '',
-                id: state.scientificAssignmentStudents!.first.id!));
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context)
+                .studentScientificAssignment(studentId: widget.studentId),
+          ]);
         },
-        builder: (context, state) {
-          if (state.scientificAssignmentStudents != null &&
-              state.scientificAssignmentStudents!.isEmpty) {
-            return EmptyData(
-              title: 'No Data',
-              subtitle: 'student have not yet upload scientific assignment',
+        child: BlocConsumer<AssesmentCubit, AssesmentState>(
+          listener: (context, state) {
+            if (state.scientificAssignmentStudents != null &&
+                state.scientificAssignmentStudents!.isNotEmpty) {
+              context.replace(SupervisorScientificAssignmentDetailPage(
+                  unitName: '',
+                  id: state.scientificAssignmentStudents!.first.id!));
+            }
+          },
+          builder: (context, state) {
+            if (state.scientificAssignmentStudents != null &&
+                state.scientificAssignmentStudents!.isEmpty) {
+              return EmptyData(
+                title: 'No Data',
+                subtitle: 'student have not yet upload scientific assignment',
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
             );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/list_cst_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/list_sgl_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/supervisor_list_cst_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/supervisor_list_sgl_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _SupervisorSglCstHomePageState extends State<SupervisorSglCstHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SglCstCard(
-                    onTap: () => context.navigateTo(SupervisorListCstPage(
+                    onTap: () => context.navigateTo(SupervisorListSglPage(
                       isCeu: widget.credential.badges!
                               .indexWhere((element) => element.name == 'CEU') !=
                           -1,

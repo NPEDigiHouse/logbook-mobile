@@ -10,12 +10,15 @@ class ActiveUnitModel {
   final String? unitName;
   final int? checkInTime;
   final int? checkOutTime;
+  @JsonKey(name: 'countCheckIn')
+  final int? countCheckIn;
 
   ActiveUnitModel({
     this.checkInStatus,
     this.checkOutStatus,
     this.unitId,
     this.unitName,
+    this.countCheckIn,
     this.checkInTime,
     this.checkOutTime,
   });

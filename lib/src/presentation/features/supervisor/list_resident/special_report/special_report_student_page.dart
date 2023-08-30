@@ -47,56 +47,65 @@ class _SpecialReportStudentPageState extends State<SpecialReportStudentPage> {
         title: Text("Special Reports"),
       ),
       body: SafeArea(
-          child: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          ...getHeadSection(
-              title: title,
-              subtitle: 'Special Reports',
-              student: widget.student),
-          SliverToBoxAdapter(
-            child: BlocBuilder<SpecialReportCubit, SpecialReportState>(
-              builder: (context, state) {
-                if (state.specialReport != null)
-                  return Column(
-                    children: [
-                      SizedBox(
-                        height: 12,
-                      ),
-                      ListView.separated(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        itemBuilder: (context, index) {
-                          return SupervisorSpecialReportCard(
-                            data: state.specialReport!
-                                .listProblemConsultations![index],
-                            studentId: widget.student.studentId!,
-                            index: index + 1,
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return SizedBox(
-                            height: 12,
-                          );
-                        },
-                        itemCount: state
-                            .specialReport!.listProblemConsultations!.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                      ),
-                    ],
+          child: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<SpecialReportCubit>(context)
+                .getSpecialReportByStudentId(
+                    studentId: widget.student.studentId!),
+          ]);
+        },
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            ...getHeadSection(
+                title: title,
+                subtitle: 'Special Reports',
+                student: widget.student),
+            SliverToBoxAdapter(
+              child: BlocBuilder<SpecialReportCubit, SpecialReportState>(
+                builder: (context, state) {
+                  if (state.specialReport != null)
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 12,
+                        ),
+                        ListView.separated(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          itemBuilder: (context, index) {
+                            return SupervisorSpecialReportCard(
+                              data: state.specialReport!
+                                  .listProblemConsultations![index],
+                              studentId: widget.student.studentId!,
+                              index: index + 1,
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(
+                              height: 12,
+                            );
+                          },
+                          itemCount: state
+                              .specialReport!.listProblemConsultations!.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                        ),
+                      ],
+                    );
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
+                },
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 16,
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 16,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       )),
     );
   }

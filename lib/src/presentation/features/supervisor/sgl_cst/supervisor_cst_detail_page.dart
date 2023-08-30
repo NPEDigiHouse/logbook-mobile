@@ -33,251 +33,260 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: Text('Clinical Skill Training (CST)'),
-          ),
-          SliverToBoxAdapter(
-            child: SpacingColumn(
-              horizontalPadding: 16,
-              children: [
-                SizedBox(
-                  height: 16,
-                ),
-                _buildAttendanceOverview(context),
-                BlocConsumer<SglCstCubit, SglCstState>(
-                  listener: (context, state) {
-                    if (state.isVerifyTopicSuccess ||
-                        state.isVerifySglCstSuccess) {
-                      BlocProvider.of<SglCstCubit>(context)
-                        ..getStudentCstDetailById(studentId: widget.studentId);
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state.cstDetail != null)
-                      return ListView.separated(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            final data = state.cstDetail!.csts![index];
-                            return Container(
-                              width: AppSize.getAppWidth(context),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 20),
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(.12),
-                                    offset: Offset(0, 2),
-                                    blurRadius: 20,
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(12),
-                                color: scaffoldBackgroundColor,
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.event_rounded,
-                                        color: primaryColor,
-                                      ),
-                                      SizedBox(
-                                        width: 12,
-                                      ),
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              ReusableFunctionHelper
-                                                  .datetimeToString(
-                                                      data.createdAt!),
-                                              style: textTheme.titleSmall
-                                                  ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            if (data.verificationStatus ==
-                                                'VERIFIED') ...[
-                                              SizedBox(
-                                                width: 4,
-                                              ),
-                                              Icon(
-                                                Icons.verified,
-                                                color: successColor,
-                                                size: 16,
-                                              )
-                                            ]
-                                          ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<SglCstCubit>(context)
+                .getStudentCstDetailById(studentId: widget.studentId),
+          ]);
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              title: Text('Clinical Skill Training (CST)'),
+            ),
+            SliverToBoxAdapter(
+              child: SpacingColumn(
+                horizontalPadding: 16,
+                children: [
+                  SizedBox(
+                    height: 16,
+                  ),
+                  _buildAttendanceOverview(context),
+                  BlocConsumer<SglCstCubit, SglCstState>(
+                    listener: (context, state) {
+                      if (state.isVerifyTopicSuccess ||
+                          state.isVerifySglCstSuccess) {
+                        BlocProvider.of<SglCstCubit>(context)
+                          ..getStudentCstDetailById(
+                              studentId: widget.studentId);
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state.cstDetail != null)
+                        return ListView.separated(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              final data = state.cstDetail!.csts![index];
+                              return Container(
+                                width: AppSize.getAppWidth(context),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 20),
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(.12),
+                                      offset: Offset(0, 2),
+                                      blurRadius: 20,
+                                    )
+                                  ],
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: scaffoldBackgroundColor,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.event_rounded,
+                                          color: primaryColor,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
-                                  for (int i = 0; i < data.topic!.length; i++)
-                                    TimelineTile(
-                                      indicatorStyle: IndicatorStyle(
-                                        width: 14,
-                                        height: 14,
-                                        indicatorXY: 0.15,
-                                        indicator: Container(
-                                          width: 14,
-                                          height: 14,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: data.topic![i]
-                                                        .verificationStatus ==
-                                                    'VERIFIED'
-                                                ? successColor
-                                                : secondaryTextColor,
-                                          ),
-                                          child: Center(
-                                            child: data.topic![i]
-                                                        .verificationStatus ==
-                                                    'VERIFIED'
-                                                ? Icon(
-                                                    Icons.check,
-                                                    size: 14,
-                                                    color: Colors.white,
-                                                  )
-                                                : null,
-                                          ),
+                                        SizedBox(
+                                          width: 12,
                                         ),
-                                      ),
-                                      afterLineStyle: LineStyle(
-                                        thickness: 1,
-                                        color: secondaryTextColor,
-                                      ),
-                                      beforeLineStyle: LineStyle(
-                                        thickness: 1,
-                                        color: secondaryTextColor,
-                                      ),
-                                      alignment: TimelineAlign.start,
-                                      isFirst: i == 0,
-                                      isLast: i == data.topic!.length - 1,
-                                      endChild: Container(
-                                        margin: EdgeInsets.only(
-                                            left: 16, bottom: 12),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              data.topic![i].topicName!
-                                                  .join(', '),
-                                              style: textTheme.bodyMedium
-                                                  ?.copyWith(
-                                                height: 1.1,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.av_timer_rounded,
-                                                  color: onFormDisableColor,
+                                        Expanded(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                ReusableFunctionHelper
+                                                    .datetimeToString(
+                                                        data.createdAt!),
+                                                style: textTheme.titleSmall
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
                                                 ),
+                                              ),
+                                              if (data.verificationStatus ==
+                                                  'VERIFIED') ...[
                                                 SizedBox(
                                                   width: 4,
                                                 ),
-                                                Text(
-                                                  ReusableFunctionHelper
-                                                      .epochToStringTime(
-                                                          startTime: data
-                                                              .topic![i]
-                                                              .startTime!,
-                                                          endTime: data
-                                                              .topic![i]
-                                                              .endTime),
-                                                  style: textTheme.bodyMedium
-                                                      ?.copyWith(
-                                                          color:
-                                                              onFormDisableColor),
+                                                Icon(
+                                                  Icons.verified,
+                                                  color: successColor,
+                                                  size: 16,
+                                                )
+                                              ]
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    for (int i = 0; i < data.topic!.length; i++)
+                                      TimelineTile(
+                                        indicatorStyle: IndicatorStyle(
+                                          width: 14,
+                                          height: 14,
+                                          indicatorXY: 0.15,
+                                          indicator: Container(
+                                            width: 14,
+                                            height: 14,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: data.topic![i]
+                                                          .verificationStatus ==
+                                                      'VERIFIED'
+                                                  ? successColor
+                                                  : secondaryTextColor,
+                                            ),
+                                            child: Center(
+                                              child: data.topic![i]
+                                                          .verificationStatus ==
+                                                      'VERIFIED'
+                                                  ? Icon(
+                                                      Icons.check,
+                                                      size: 14,
+                                                      color: Colors.white,
+                                                    )
+                                                  : null,
+                                            ),
+                                          ),
+                                        ),
+                                        afterLineStyle: LineStyle(
+                                          thickness: 1,
+                                          color: secondaryTextColor,
+                                        ),
+                                        beforeLineStyle: LineStyle(
+                                          thickness: 1,
+                                          color: secondaryTextColor,
+                                        ),
+                                        alignment: TimelineAlign.start,
+                                        isFirst: i == 0,
+                                        isLast: i == data.topic!.length - 1,
+                                        endChild: Container(
+                                          margin: EdgeInsets.only(
+                                              left: 16, bottom: 12),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                data.topic![i].topicName!
+                                                    .join(', '),
+                                                style: textTheme.bodyMedium
+                                                    ?.copyWith(
+                                                  height: 1.1,
                                                 ),
-                                              ],
-                                            ),
-                                            if (data.topic![i]
-                                                    .verificationStatus !=
-                                                'VERIFIED')
-                                              FilledButton(
-                                                onPressed: () {
-                                                  BlocProvider.of<SglCstCubit>(
-                                                      context)
-                                                    ..verifyCstTopic(
-                                                        topicId:
-                                                            data.topic![i].id!,
-                                                        status: true);
-                                                },
-                                                child: Text('Verify'),
-                                              )
-                                            else
-                                              OutlinedButton(
-                                                onPressed: () {
-                                                  BlocProvider.of<SglCstCubit>(
-                                                      context)
-                                                    ..verifyCstTopic(
-                                                        topicId:
-                                                            data.topic![i].id!,
-                                                        status: false);
-                                                },
-                                                child: Text('Cancel'),
                                               ),
-                                            SizedBox(
-                                              height: 12,
-                                            ),
-                                            ItemDivider(),
-                                          ],
+                                              SizedBox(
+                                                height: 4,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.av_timer_rounded,
+                                                    color: onFormDisableColor,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 4,
+                                                  ),
+                                                  Text(
+                                                    ReusableFunctionHelper
+                                                        .epochToStringTime(
+                                                            startTime: data
+                                                                .topic![i]
+                                                                .startTime!,
+                                                            endTime: data
+                                                                .topic![i]
+                                                                .endTime),
+                                                    style: textTheme.bodyMedium
+                                                        ?.copyWith(
+                                                            color:
+                                                                onFormDisableColor),
+                                                  ),
+                                                ],
+                                              ),
+                                              if (data.topic![i]
+                                                      .verificationStatus !=
+                                                  'VERIFIED')
+                                                FilledButton(
+                                                  onPressed: () {
+                                                    BlocProvider.of<
+                                                        SglCstCubit>(context)
+                                                      ..verifyCstTopic(
+                                                          topicId: data
+                                                              .topic![i].id!,
+                                                          status: true);
+                                                  },
+                                                  child: Text('Verify'),
+                                                )
+                                              else
+                                                OutlinedButton(
+                                                  onPressed: () {
+                                                    BlocProvider.of<
+                                                        SglCstCubit>(context)
+                                                      ..verifyCstTopic(
+                                                          topicId: data
+                                                              .topic![i].id!,
+                                                          status: false);
+                                                  },
+                                                  child: Text('Cancel'),
+                                                ),
+                                              SizedBox(
+                                                height: 12,
+                                              ),
+                                              ItemDivider(),
+                                            ],
+                                          ),
                                         ),
                                       ),
+                                    SizedBox(
+                                      height: 12,
                                     ),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
-                                  if (data.verificationStatus != 'VERIFIED' &&
-                                      widget.isCeu)
-                                    FilledButton(
-                                      onPressed: () {
-                                        BlocProvider.of<SglCstCubit>(context)
-                                          ..verifyCst(
-                                            cstId: data.cstId!,
-                                          );
-                                      },
-                                      child: Text('Verify All Topics'),
+                                    if (data.verificationStatus != 'VERIFIED' &&
+                                        widget.isCeu)
+                                      FilledButton(
+                                        onPressed: () {
+                                          BlocProvider.of<SglCstCubit>(context)
+                                            ..verifyCst(
+                                              cstId: data.cstId!,
+                                            );
+                                        },
+                                        child: Text('Verify All Topics'),
+                                      ),
+                                    SizedBox(
+                                      height: 12,
                                     ),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return SizedBox(
-                              height: 16,
-                            );
-                          },
-                          itemCount: state.cstDetail!.csts!.length);
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                height: 16,
+                              );
+                            },
+                            itemCount: state.cstDetail!.csts!.length);
 
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                ),
-              ],
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 16,
-            ),
-          )
-        ],
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 16,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

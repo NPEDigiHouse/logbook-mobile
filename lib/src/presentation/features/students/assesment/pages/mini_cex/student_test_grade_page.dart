@@ -20,7 +20,7 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<AssesmentCubit>(context)..studentMiniCexs();
+    BlocProvider.of<AssesmentCubit>(context)..getStudentMiniCexs();
   }
 
   @override
@@ -29,63 +29,75 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
       appBar: AppBar(
         title: Text("Mini Cex"),
       ).variant(),
-      body: SingleChildScrollView(
-        child: SpacingColumn(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            horizontalPadding: 16,
-            spacing: 12,
-            children: [
-              SizedBox(
-                height: 16,
-              ),
-              // UnitHeader(unitName: widget.unitName),
-              BlocBuilder<AssesmentCubit, AssesmentState>(
-                builder: (context, state) {
-                  if (state.studentMiniCexs != null) {
-                    if (state.studentMiniCexs!.isEmpty) {
-                      return SpacingColumn(
-                        onlyPading: true,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 16,
-                          ),
-                          EmptyData(
-                              title: 'Empty Data',
-                              subtitle: 'Please upload mini cex data before!'),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          Center(
-                            child: FilledButton(
-                              onPressed: () =>
-                                  context.navigateTo(AddMiniCexPage(
-                                unitName: widget.unitName,
-                              )),
-                              child: Text('Add Mini Cex'),
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                    final miniCex = state.studentMiniCexs!.first;
-                    return Column(
-                      children: [
-                        TitleAssesmentCard(
-                          title: miniCex.miniCexListModelCase ?? '',
-                          subtitle: miniCex.location ?? '',
-                        ),
-                        StudentMiniCexDetail(id: miniCex.id!),
-                      ],
-                    );
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
-            ]),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context).getStudentMiniCexs(),
+          ]);
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: SpacingColumn(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  horizontalPadding: 16,
+                  spacing: 12,
+                  children: [
+                    SizedBox(
+                      height: 16,
+                    ),
+                    // UnitHeader(unitName: widget.unitName),
+                    BlocBuilder<AssesmentCubit, AssesmentState>(
+                      builder: (context, state) {
+                        if (state.studentMiniCexs != null) {
+                          if (state.studentMiniCexs!.isEmpty) {
+                            return SpacingColumn(
+                              onlyPading: true,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 16,
+                                ),
+                                EmptyData(
+                                    title: 'Empty Data',
+                                    subtitle:
+                                        'Please upload mini cex data before!'),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                Center(
+                                  child: FilledButton(
+                                    onPressed: () =>
+                                        context.navigateTo(AddMiniCexPage(
+                                      unitName: widget.unitName,
+                                    )),
+                                    child: Text('Add Mini Cex'),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          final miniCex = state.studentMiniCexs!.first;
+                          return Column(
+                            children: [
+                              TitleAssesmentCard(
+                                title: miniCex.miniCexListModelCase ?? '',
+                                subtitle: miniCex.location ?? '',
+                              ),
+                              StudentMiniCexDetail(id: miniCex.id!),
+                            ],
+                          );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
+                  ]),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -86,98 +86,108 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
       appBar: AppBar(
         title: Text("Final Grade"),
       ).variant(),
-      body: BlocBuilder<AssesmentCubit, AssesmentState>(
-        builder: (context, state) {
-          if (state.finalScore != null)
-            return SingleChildScrollView(
-              child: SpacingColumn(
-                horizontalPadding: 16,
-                spacing: 12,
-                children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  FinalGradeTopStatCard(
-                    title: 'Final Grade Statistic',
-                    totalGrade:
-                        getTotalGrades(state.finalScore!.finalScore ?? 0),
-                  ),
-                  if (state.finalScore!.assesments != null) ...[
-                    for (int i = 0;
-                        i < state.finalScore!.assesments!.length;
-                        i++)
-                      FinalGradeScoreCard(
-                        type: mapTitle[state.finalScore!.assesments![i].type] ??
-                            '-',
-                        score: state.finalScore!.assesments![i].score ?? 0,
-                        proportion:
-                            state.finalScore!.assesments![i].weight ?? 0,
-                      ),
-                  ],
-                  SizedBox(
-                    height: 12,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                        style: FilledButton.styleFrom(
-                            backgroundColor: primaryColor),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            barrierLabel: '',
-                            barrierDismissible: false,
-                            builder: (_) => InputFinalScoreDialog(
-                              studentId: widget.finalGrade.studentId!,
-                              unitId: widget.finalGrade.activeUnitId!,
-                              type: FinalScoreType.cbt,
-                              initScore: state.finalScore!.assesments!
-                                      .firstWhere(
-                                          (element) => element.type == 'CBT')
-                                      .score ??
-                                  0,
-                            ),
-                          );
-                        },
-                        child: Text('Update CBT Score')),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                        style: FilledButton.styleFrom(
-                            backgroundColor: secondaryColor),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            barrierLabel: '',
-                            barrierDismissible: false,
-                            builder: (_) => InputFinalScoreDialog(
-                              studentId: widget.finalGrade.studentId!,
-                              unitId: widget.finalGrade.activeUnitId!,
-                              type: FinalScoreType.osce,
-                              initScore: state.finalScore!.assesments!
-                                      .firstWhere(
-                                          (element) => element.type == 'OSCE')
-                                      .score ??
-                                  0,
-                            ),
-                          );
-                        },
-                        child: Text('Update OSCE Score')),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                ],
-              ),
-            );
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context).getFinalScore(
+                unitId: widget.finalGrade.activeUnitId!,
+                studentId: widget.finalGrade.studentId!)
+          ]);
         },
+        child: BlocBuilder<AssesmentCubit, AssesmentState>(
+          builder: (context, state) {
+            if (state.finalScore != null)
+              return SingleChildScrollView(
+                child: SpacingColumn(
+                  horizontalPadding: 16,
+                  spacing: 12,
+                  children: [
+                    SizedBox(
+                      height: 16,
+                    ),
+                    FinalGradeTopStatCard(
+                      title: 'Final Grade Statistic',
+                      totalGrade:
+                          getTotalGrades(state.finalScore!.finalScore ?? 0),
+                    ),
+                    if (state.finalScore!.assesments != null) ...[
+                      for (int i = 0;
+                          i < state.finalScore!.assesments!.length;
+                          i++)
+                        FinalGradeScoreCard(
+                          type:
+                              mapTitle[state.finalScore!.assesments![i].type] ??
+                                  '-',
+                          score: state.finalScore!.assesments![i].score ?? 0,
+                          proportion:
+                              state.finalScore!.assesments![i].weight ?? 0,
+                        ),
+                    ],
+                    SizedBox(
+                      height: 12,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                          style: FilledButton.styleFrom(
+                              backgroundColor: primaryColor),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              barrierLabel: '',
+                              barrierDismissible: false,
+                              builder: (_) => InputFinalScoreDialog(
+                                studentId: widget.finalGrade.studentId!,
+                                unitId: widget.finalGrade.activeUnitId!,
+                                type: FinalScoreType.cbt,
+                                initScore: state.finalScore!.assesments!
+                                        .firstWhere(
+                                            (element) => element.type == 'CBT')
+                                        .score ??
+                                    0,
+                              ),
+                            );
+                          },
+                          child: Text('Update CBT Score')),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                          style: FilledButton.styleFrom(
+                              backgroundColor: secondaryColor),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              barrierLabel: '',
+                              barrierDismissible: false,
+                              builder: (_) => InputFinalScoreDialog(
+                                studentId: widget.finalGrade.studentId!,
+                                unitId: widget.finalGrade.activeUnitId!,
+                                type: FinalScoreType.osce,
+                                initScore: state.finalScore!.assesments!
+                                        .firstWhere(
+                                            (element) => element.type == 'OSCE')
+                                        .score ??
+                                    0,
+                              ),
+                            );
+                          },
+                          child: Text('Update OSCE Score')),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                  ],
+                ),
+              );
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
   }

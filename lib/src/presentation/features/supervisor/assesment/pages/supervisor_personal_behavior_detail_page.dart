@@ -46,88 +46,99 @@ class _SupervisorPersonalBehaviorDetailPageState
       appBar: AppBar(
         title: Text("Personal Behavior"),
       ).variant(),
-      body: SingleChildScrollView(
-        child: SpacingColumn(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            horizontalPadding: 16,
-            spacing: 12,
-            children: [
-              SizedBox(
-                height: 16,
-              ),
-              UnitHeader(unitName: 'Unit Name'),
-              BlocConsumer<AssesmentCubit, AssesmentState>(
-                listener: (context, state) {
-                  if (state.isPersonalBehaviorVerify) {
-                    BlocProvider.of<AssesmentCubit>(context)
-                      ..getPersonalBehaviorDetail(
-                        id: widget.id,
-                      );
-                  }
-                },
-                builder: (context, state) {
-                  if (state.personalBehaviorDetail != null) {
-                    if (state.personalBehaviorDetail!.scores!.isNotEmpty)
-                      return SpacingColumn(
-                        spacing: 12,
-                        children: [
-                          TopStatCard(
-                            title: 'Overview',
-                            achivied: state.personalBehaviorDetail!.scores!
-                                .where(
-                                  (element) =>
-                                      element.verificationStatus == 'VERIFIED',
-                                )
-                                .toList(),
-                            notAchivied: state.personalBehaviorDetail!.scores!
-                                .where(
-                                  (element) =>
-                                      element.verificationStatus ==
-                                      'UNVERIFIED',
-                                )
-                                .toList(),
-                            process: state.personalBehaviorDetail!.scores!
-                                .where(
-                                  (element) =>
-                                      element.verificationStatus == 'INPROCESS',
-                                )
-                                .toList(),
-                          ),
-                          ListView.separated(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return PersonalBehaviorCard(
-                                  pbId: widget.id,
-                                  scoreData: state
-                                      .personalBehaviorDetail!.scores![index],
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  height: 12,
-                                );
-                              },
-                              itemCount:
-                                  state.personalBehaviorDetail!.scores!.length),
-                          SizedBox(
-                            height: 16,
-                          ),
-                        ],
-                      );
-                    else {
-                      return EmptyData(
-                          title: 'Empty Data',
-                          subtitle: 'No Personal Bahavior Dat');
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context).getPersonalBehaviorDetail(
+              id: widget.id,
+            ),
+          ]);
+        },
+        child: SingleChildScrollView(
+          child: SpacingColumn(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              horizontalPadding: 16,
+              spacing: 12,
+              children: [
+                SizedBox(
+                  height: 16,
+                ),
+                UnitHeader(unitName: 'Unit Name'),
+                BlocConsumer<AssesmentCubit, AssesmentState>(
+                  listener: (context, state) {
+                    if (state.isPersonalBehaviorVerify) {
+                      BlocProvider.of<AssesmentCubit>(context)
+                        ..getPersonalBehaviorDetail(
+                          id: widget.id,
+                        );
                     }
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
-            ]),
+                  },
+                  builder: (context, state) {
+                    if (state.personalBehaviorDetail != null) {
+                      if (state.personalBehaviorDetail!.scores!.isNotEmpty)
+                        return SpacingColumn(
+                          spacing: 12,
+                          children: [
+                            TopStatCard(
+                              title: 'Overview',
+                              achivied: state.personalBehaviorDetail!.scores!
+                                  .where(
+                                    (element) =>
+                                        element.verificationStatus ==
+                                        'VERIFIED',
+                                  )
+                                  .toList(),
+                              notAchivied: state.personalBehaviorDetail!.scores!
+                                  .where(
+                                    (element) =>
+                                        element.verificationStatus ==
+                                        'UNVERIFIED',
+                                  )
+                                  .toList(),
+                              process: state.personalBehaviorDetail!.scores!
+                                  .where(
+                                    (element) =>
+                                        element.verificationStatus ==
+                                        'INPROCESS',
+                                  )
+                                  .toList(),
+                            ),
+                            ListView.separated(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return PersonalBehaviorCard(
+                                    pbId: widget.id,
+                                    scoreData: state
+                                        .personalBehaviorDetail!.scores![index],
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    height: 12,
+                                  );
+                                },
+                                itemCount: state
+                                    .personalBehaviorDetail!.scores!.length),
+                            SizedBox(
+                              height: 16,
+                            ),
+                          ],
+                        );
+                      else {
+                        return EmptyData(
+                            title: 'Empty Data',
+                            subtitle: 'No Personal Bahavior Dat');
+                      }
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ]),
+        ),
       ),
     );
   }
@@ -425,7 +436,6 @@ class PersonalBehaviorCard extends StatelessWidget {
             ]
           ],
         ),
-      
       ),
     );
   }

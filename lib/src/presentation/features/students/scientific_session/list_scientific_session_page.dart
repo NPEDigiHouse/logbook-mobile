@@ -53,82 +53,93 @@ class _StudentListScientificSessionPageState
       appBar: AppBar(
         title: Text("Scientific Session"),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.navigateTo(
-            AddScientificSessionPage(activeUnitModel: widget.activeUnitModel)),
-        child: Icon(
-          Icons.add_rounded,
-        ),
-      ),
+      floatingActionButton: widget.activeUnitModel.countCheckIn! > 0
+          ? FloatingActionButton(
+              onPressed: () => context.navigateTo(AddScientificSessionPage(
+                  activeUnitModel: widget.activeUnitModel)),
+              child: Icon(
+                Icons.add_rounded,
+              ),
+            )
+          : null,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: BlocBuilder<StudentCubit, StudentState>(
-            builder: (context, state) {
-              if (state.scientificSessionResponse != null) {
-                return SpacingColumn(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  onlyPading: true,
-                  horizontalPadding: 16,
-                  children: [
-                    UnitHeader(unitName: widget.activeUnitModel.unitName!),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    SectionDivider(),
-                    Builder(
-                      builder: (context) {
-                        if (state.scientificSessionResponse != null) {
-                          final data = state.scientificSessionResponse!
-                              .listScientificSessions!;
-                          if (data.isEmpty) {
-                            return EmptyData(
-                              subtitle:
-                                  'Please upload scientific session data first!',
-                              title: 'Data Still Empty',
-                            );
-                          }
-                          return Column(
-                            children: [
-                              SizedBox(
-                                height: 16,
-                              ),
-                              buildSearchFilterSection(
-                                verifiedCount: state
-                                    .scientificSessionResponse!.verifiedCounts!,
-                                unverifiedCount: state
-                                    .scientificSessionResponse!
-                                    .unverifiedCounts!,
-                              ),
-                              SizedBox(
-                                height: 24,
-                              ),
-                              ListView.separated(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) =>
-                                    StudentScientificSessionCard(
-                                  model: state.scientificSessionResponse!
-                                      .listScientificSessions![index],
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<StudentCubit>(context)
+                  .getStudentScientificSessionOfActiveUnit(),
+            ]);
+          },
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: BlocBuilder<StudentCubit, StudentState>(
+              builder: (context, state) {
+                if (state.scientificSessionResponse != null) {
+                  return SpacingColumn(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    onlyPading: true,
+                    horizontalPadding: 16,
+                    children: [
+                      UnitHeader(unitName: widget.activeUnitModel.unitName!),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      SectionDivider(),
+                      Builder(
+                        builder: (context) {
+                          if (state.scientificSessionResponse != null) {
+                            final data = state.scientificSessionResponse!
+                                .listScientificSessions!;
+                            if (data.isEmpty) {
+                              return EmptyData(
+                                subtitle:
+                                    'Please upload scientific session data first!',
+                                title: 'Data Still Empty',
+                              );
+                            }
+                            return Column(
+                              children: [
+                                SizedBox(
+                                  height: 16,
                                 ),
-                                separatorBuilder: (context, index) =>
-                                    SizedBox(height: 12),
-                                itemCount: data.length,
-                              ),
-                            ],
-                          );
-                        } else {
-                          return SizedBox.shrink();
-                        }
-                      },
-                    )
-                  ],
+                                buildSearchFilterSection(
+                                  verifiedCount: state
+                                      .scientificSessionResponse!
+                                      .verifiedCounts!,
+                                  unverifiedCount: state
+                                      .scientificSessionResponse!
+                                      .unverifiedCounts!,
+                                ),
+                                SizedBox(
+                                  height: 24,
+                                ),
+                                ListView.separated(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) =>
+                                      StudentScientificSessionCard(
+                                    model: state.scientificSessionResponse!
+                                        .listScientificSessions![index],
+                                  ),
+                                  separatorBuilder: (context, index) =>
+                                      SizedBox(height: 12),
+                                  itemCount: data.length,
+                                ),
+                              ],
+                            );
+                          } else {
+                            return SizedBox.shrink();
+                          }
+                        },
+                      )
+                    ],
+                  );
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
-              }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            },
+              },
+            ),
           ),
         ),
       ),

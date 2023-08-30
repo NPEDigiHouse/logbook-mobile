@@ -61,7 +61,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
       appBar: AppBar(
         title: Text("List Cases"),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: widget.model.countCheckIn! > 0?FloatingActionButton(
         onPressed: () => showDialog(
             context: context,
             barrierLabel: '',
@@ -73,56 +73,63 @@ class _ListCasesPageState extends State<ListCasesPage> {
         child: Icon(
           Icons.add_rounded,
         ),
-      ),
+      ) : null,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: SpacingColumn(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            onlyPading: true,
-            horizontalPadding: 16,
-            children: [
-              UnitHeader(unitName: widget.model.unitName!),
-              SizedBox(
-                height: 12,
-              ),
-              BlocBuilder<CompetenceCubit, CompetenceState>(
-                builder: (context, state) {
-                  if (state.listCasesModel != null) {
-                    final data = state.listCasesModel!.listCases!;
-                    if (data.isEmpty) {
-                      return EmptyData(
-                        subtitle: 'Please add case data first!',
-                        title: 'Data Still Empty',
-                      );
-                    }
-                    return Column(
-                      children: [
-                        buildSearchFilterSection(),
-                        SizedBox(
-                          height: 24,
-                        ),
-                        ListView.separated(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) => TestGradeScoreCard(
-                            caseName: data[index].caseName!,
-                            caseType: data[index].caseType!,
-                            isVerified:
-                                data[index].verificationStatus == 'VERIFIED',
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<CompetenceCubit>(context).getListCases(),
+            ]);
+          },
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: SpacingColumn(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              onlyPading: true,
+              horizontalPadding: 16,
+              children: [
+                UnitHeader(unitName: widget.model.unitName!),
+                SizedBox(
+                  height: 12,
+                ),
+                BlocBuilder<CompetenceCubit, CompetenceState>(
+                  builder: (context, state) {
+                    if (state.listCasesModel != null) {
+                      final data = state.listCasesModel!.listCases!;
+                      if (data.isEmpty) {
+                        return EmptyData(
+                          subtitle: 'Please add case data first!',
+                          title: 'Data Still Empty',
+                        );
+                      }
+                      return Column(
+                        children: [
+                          buildSearchFilterSection(),
+                          SizedBox(
+                            height: 24,
                           ),
-                          separatorBuilder: (context, index) =>
-                              SizedBox(height: 12),
-                          itemCount: data.length,
-                        ),
-                      ],
-                    );
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                },
-              )
-            ],
+                          ListView.separated(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) => TestGradeScoreCard(
+                              caseName: data[index].caseName!,
+                              caseType: data[index].caseType!,
+                              isVerified:
+                                  data[index].verificationStatus == 'VERIFIED',
+                            ),
+                            separatorBuilder: (context, index) =>
+                                SizedBox(height: 12),
+                            itemCount: data.length,
+                          ),
+                        ],
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),

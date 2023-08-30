@@ -38,65 +38,72 @@ class _ListStudentTasksPageState extends State<ListStudentTasksPage> {
         title: Text('Submitted Skills'),
       ).variant(),
       body: SafeArea(
-        child: BlocBuilder<CompetenceCubit, CompetenceState>(
-          builder: (context, state) {
-            if (state.requestState is Loading &&
-                state.skillListStudent == null) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (state.requestState == RequestState.error) {
-              return Center(
-                child: Text('Error'),
-              );
-            }
-            if (state.skillListStudent != null) {
-              if (state.skillListStudent!.isEmpty) {
-                return EmptyData(
-                    title: 'No Skills',
-                    subtitle: 'nothing student upload cases');
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 16,
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SearchField(
-                        onChanged: (value) {},
-                        text: '',
-                        hint: 'Search student',
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 16,
-                      ),
-                    ),
-                    SliverList.separated(
-                      itemCount: state.skillListStudent!.length,
-                      itemBuilder: (context, index) {
-                        return _buildStudentCard(
-                            context, state.skillListStudent![index]);
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 12,
-                        );
-                      },
-                    )
-                  ],
-                ),
-              );
-            }
-
-            return SizedBox();
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<CompetenceCubit>(context).getSkillStudents(),
+            ]);
           },
+          child: BlocBuilder<CompetenceCubit, CompetenceState>(
+            builder: (context, state) {
+              if (state.requestState is Loading &&
+                  state.skillListStudent == null) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state.requestState == RequestState.error) {
+                return Center(
+                  child: Text('Error'),
+                );
+              }
+              if (state.skillListStudent != null) {
+                if (state.skillListStudent!.isEmpty) {
+                  return EmptyData(
+                      title: 'No Skills',
+                      subtitle: 'nothing student upload cases');
+                }
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 16,
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SearchField(
+                          onChanged: (value) {},
+                          text: '',
+                          hint: 'Search student',
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 16,
+                        ),
+                      ),
+                      SliverList.separated(
+                        itemCount: state.skillListStudent!.length,
+                        itemBuilder: (context, index) {
+                          return _buildStudentCard(
+                              context, state.skillListStudent![index]);
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(
+                            height: 12,
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                );
+              }
+
+              return SizedBox();
+            },
+          ),
         ),
       ),
     );

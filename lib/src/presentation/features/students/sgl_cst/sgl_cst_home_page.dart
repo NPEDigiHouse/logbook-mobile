@@ -44,7 +44,9 @@ class _SglCstHomePageState extends State<SglCstHomePage> {
                     height: 32,
                   ),
                   SglCstCard(
-                    onTap: () => context.navigateTo(ListSglPage()),
+                    onTap: () => context.navigateTo(ListSglPage(
+                      activeUnitModel: widget.activeUnitModel,
+                    )),
                     title: 'Small Group Learning',
                     desc:
                         'Lorem ipsum dolor sit amet consectetur. Sagitti viverra risus quis arcu siholmet.',
@@ -53,7 +55,9 @@ class _SglCstHomePageState extends State<SglCstHomePage> {
                     height: 16,
                   ),
                   SglCstCard(
-                    onTap: () => context.navigateTo(ListCstPage()),
+                    onTap: () => context.navigateTo(ListCstPage(
+                      activeUnitModel: widget.activeUnitModel,
+                    )),
                     title: 'Clinical Skill Training',
                     desc:
                         'Lorem ipsum dolor sit amet consectetur. Sagitti viverra risus quis arcu siholmet.',

@@ -1,9 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
-import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/clinical_record_card.dart';
@@ -52,64 +50,75 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
       appBar: AppBar(
         title: Text("Clinical Records"),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.navigateTo(CreateClinicalRecordFirstPage(
-            activeUnitModel: widget.activeUnitModel)),
-        child: Icon(
-          Icons.add_rounded,
-        ),
-      ),
+      floatingActionButton: widget.activeUnitModel.countCheckIn! > 0
+          ? FloatingActionButton(
+              onPressed: () => context.navigateTo(CreateClinicalRecordFirstPage(
+                  activeUnitModel: widget.activeUnitModel)),
+              child: Icon(
+                Icons.add_rounded,
+              ),
+            )
+          : null,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: BlocBuilder<StudentCubit, StudentState>(
-            builder: (context, state) {
-              if (state.clinicalRecordResponse != null) {
-                return SpacingColumn(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  onlyPading: true,
-                  horizontalPadding: 16,
-                  children: [
-                    UnitHeader(unitName: widget.activeUnitModel.unitName!),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    SectionDivider(),
-                    Builder(
-                      builder: (context) {
-                        if (state.clinicalRecordResponse != null) {
-                          final data = state
-                              .clinicalRecordResponse!.listClinicalRecords!;
-                          if (data.isEmpty) {
-                            return EmptyData(
-                              subtitle:
-                                  'Please upload clinical record data first!',
-                              title: 'Data Still Empty',
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<StudentCubit>(context)
+                  .getStudentClinicalRecordOfActiveUnit(),
+            ]);
+          },
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: BlocBuilder<StudentCubit, StudentState>(
+              builder: (context, state) {
+                if (state.clinicalRecordResponse != null) {
+                  return SpacingColumn(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    onlyPading: true,
+                    horizontalPadding: 16,
+                    children: [
+                      UnitHeader(unitName: widget.activeUnitModel.unitName!),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      SectionDivider(),
+                      Builder(
+                        builder: (context) {
+                          if (state.clinicalRecordResponse != null) {
+                            final data = state
+                                .clinicalRecordResponse!.listClinicalRecords!;
+                            if (data.isEmpty) {
+                              return EmptyData(
+                                subtitle:
+                                    'Please upload clinical record data first!',
+                                title: 'Data Still Empty',
+                              );
+                            }
+                            return ListView.separated(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) =>
+                                  ClinicalRecordCard(
+                                model: state.clinicalRecordResponse!
+                                    .listClinicalRecords![index],
+                              ),
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(height: 12),
+                              itemCount: data.length,
                             );
+                          } else {
+                            return SizedBox.shrink();
                           }
-                          return ListView.separated(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) => ClinicalRecordCard(
-                              model: state.clinicalRecordResponse!
-                                  .listClinicalRecords![index],
-                            ),
-                            separatorBuilder: (context, index) =>
-                                SizedBox(height: 12),
-                            itemCount: data.length,
-                          );
-                        } else {
-                          return SizedBox.shrink();
-                        }
-                      },
-                    )
-                  ],
+                        },
+                      )
+                    ],
+                  );
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
-              }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            },
+              },
+            ),
           ),
         ),
       ),

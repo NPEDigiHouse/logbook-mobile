@@ -29,32 +29,40 @@ class _StudentPersonalBehaviorPageState
       appBar: AppBar(
         title: Text("Persoanl Behavior"),
       ).variant(),
-      body: SingleChildScrollView(
-        child: SpacingColumn(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            horizontalPadding: 16,
-            spacing: 12,
-            children: [
-              SizedBox(
-                height: 16,
-              ),
-              UnitHeader(unitName: widget.unitName),
-              BlocBuilder<AssesmentCubit, AssesmentState>(
-                builder: (context, state) {
-                  if (state.personalBehaviorStudent != null) {
-                    if (state.personalBehaviorStudent!.isEmpty) {
-                      return SizedBox();
+      body: RefreshIndicator(
+         onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context)
+                .getStudentScientificAssignment(),
+          ]);
+        },
+        child: SingleChildScrollView(
+          child: SpacingColumn(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              horizontalPadding: 16,
+              spacing: 12,
+              children: [
+                SizedBox(
+                  height: 16,
+                ),
+                UnitHeader(unitName: widget.unitName),
+                BlocBuilder<AssesmentCubit, AssesmentState>(
+                  builder: (context, state) {
+                    if (state.personalBehaviorStudent != null) {
+                      if (state.personalBehaviorStudent!.isEmpty) {
+                        return SizedBox();
+                      }
+                      final sa = state.personalBehaviorStudent!.first;
+                      return WrapperScientificAssignment(id: sa.id!);
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
                     }
-                    final sa = state.personalBehaviorStudent!.first;
-                    return WrapperScientificAssignment(id: sa.id!);
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
-            ]),
+                  },
+                ),
+              ]),
+        ),
       ),
     );
   }

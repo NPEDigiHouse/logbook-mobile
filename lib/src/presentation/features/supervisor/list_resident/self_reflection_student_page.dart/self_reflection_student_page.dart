@@ -42,52 +42,61 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            ...getHeadSection(
-                title: title,
-                subtitle: 'Self Reflections',
-                student: widget.student),
-            BlocBuilder<SelfReflectionSupervisorCubit,
-                SelfReflectionSupervisorState>(
-              builder: (context, state) {
-                if (state.data != null) {
-                  if (state.data!.listSelfReflections!.isNotEmpty) {
-                    return SliverList.separated(
-                      itemCount: state.data!.listSelfReflections?.length,
-                      itemBuilder: (context, index) {
-                        return SupervisorSelfReflectionCard(
-                          data: state.data!.listSelfReflections![index],
-                          index: index,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 12,
-                        );
-                      },
-                    );
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<SelfReflectionSupervisorCubit>(context,
+                      listen: false)
+                  .getDetailSelfReflections(id: widget.student.studentId!)
+            ]);
+          },
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              ...getHeadSection(
+                  title: title,
+                  subtitle: 'Self Reflections',
+                  student: widget.student),
+              BlocBuilder<SelfReflectionSupervisorCubit,
+                  SelfReflectionSupervisorState>(
+                builder: (context, state) {
+                  if (state.data != null) {
+                    if (state.data!.listSelfReflections!.isNotEmpty) {
+                      return SliverList.separated(
+                        itemCount: state.data!.listSelfReflections?.length,
+                        itemBuilder: (context, index) {
+                          return SupervisorSelfReflectionCard(
+                            data: state.data!.listSelfReflections![index],
+                            index: index,
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(
+                            height: 12,
+                          );
+                        },
+                      );
+                    } else {
+                      return SliverToBoxAdapter(
+                        child: EmptyData(title: '', subtitle: 'subtitle'),
+                      );
+                    }
                   } else {
                     return SliverToBoxAdapter(
-                      child: EmptyData(title: '', subtitle: 'subtitle'),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
                     );
                   }
-                } else {
-                  return SliverToBoxAdapter(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
-              },
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 16,
+                },
               ),
-            ),
-          ],
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 16,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -68,41 +68,50 @@ class _SupervisorMiniCexDetailPageState
           label: Text('Update Changed'),
         ),
       ),
-      body: SingleChildScrollView(
-        child: SpacingColumn(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            horizontalPadding: 16,
-            spacing: 12,
-            children: [
-              SizedBox(
-                height: 16,
-              ),
-              UnitHeader(unitName: 'Unit Name'),
-              BlocConsumer<AssesmentCubit, AssesmentState>(
-                listener: (context, state) {
-                  if (state.isAssesmentMiniCexSuccess) {
-                    BlocProvider.of<AssesmentCubit>(context)
-                      ..getMiniCexStudentDetail(
-                        id: widget.id,
-                      );
-                    context.read<MiniCexProvider>()..reset();
-                  }
-                },
-                builder: (context, state) {
-                  if (state.miniCexStudentDetail != null) {
-                    final miniCex = state.miniCexStudentDetail!;
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context).getMiniCexStudentDetail(
+              id: widget.id,
+            ),
+          ]);
+        },
+        child: SingleChildScrollView(
+          child: SpacingColumn(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              horizontalPadding: 16,
+              spacing: 12,
+              children: [
+                SizedBox(
+                  height: 16,
+                ),
+                UnitHeader(unitName: 'Unit Name'),
+                BlocConsumer<AssesmentCubit, AssesmentState>(
+                  listener: (context, state) {
+                    if (state.isAssesmentMiniCexSuccess) {
+                      BlocProvider.of<AssesmentCubit>(context)
+                        ..getMiniCexStudentDetail(
+                          id: widget.id,
+                        );
+                      context.read<MiniCexProvider>()..reset();
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state.miniCexStudentDetail != null) {
+                      final miniCex = state.miniCexStudentDetail!;
 
-                    return BuildScoreSection(
-                      miniCex: miniCex,
-                    );
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
-            ]),
+                      return BuildScoreSection(
+                        miniCex: miniCex,
+                      );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ]),
+        ),
       ),
     );
   }

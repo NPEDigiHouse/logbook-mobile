@@ -3,7 +3,6 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/competences/student_competence_model.dart';
-import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
@@ -38,65 +37,72 @@ class _ListStudentCasesPageState extends State<ListStudentCasesPage> {
         title: Text('Submitted Case'),
       ).variant(),
       body: SafeArea(
-        child: BlocBuilder<CompetenceCubit, CompetenceState>(
-          builder: (context, state) {
-            if (state.requestState is Loading &&
-                state.caseListStudent == null) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (state.requestState == RequestState.error) {
-              return Center(
-                child: Text('Error'),
-              );
-            }
-            if (state.caseListStudent != null) {
-              if (state.caseListStudent!.isEmpty) {
-                return EmptyData(
-                    title: 'No Cases',
-                    subtitle: 'nothing student upload cases');
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 16,
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SearchField(
-                        onChanged: (value) {},
-                        text: '',
-                        hint: 'Search student',
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 16,
-                      ),
-                    ),
-                    SliverList.separated(
-                      itemCount: state.caseListStudent!.length,
-                      itemBuilder: (context, index) {
-                        return _buildStudentCard(
-                            context, state.caseListStudent![index]);
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 12,
-                        );
-                      },
-                    )
-                  ],
-                ),
-              );
-            }
-
-            return SizedBox();
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<CompetenceCubit>(context).getCaseStudents(),
+            ]);
           },
+          child: BlocBuilder<CompetenceCubit, CompetenceState>(
+            builder: (context, state) {
+              if (state.requestState is Loading &&
+                  state.caseListStudent == null) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state.requestState == RequestState.error) {
+                return Center(
+                  child: Text('Error'),
+                );
+              }
+              if (state.caseListStudent != null) {
+                if (state.caseListStudent!.isEmpty) {
+                  return EmptyData(
+                      title: 'No Cases',
+                      subtitle: 'nothing student upload cases');
+                }
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 16,
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SearchField(
+                          onChanged: (value) {},
+                          text: '',
+                          hint: 'Search student',
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 16,
+                        ),
+                      ),
+                      SliverList.separated(
+                        itemCount: state.caseListStudent!.length,
+                        itemBuilder: (context, index) {
+                          return _buildStudentCard(
+                              context, state.caseListStudent![index]);
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(
+                            height: 12,
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                );
+              }
+
+              return SizedBox();
+            },
+          ),
         ),
       ),
     );

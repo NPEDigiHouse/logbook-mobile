@@ -1,4 +1,5 @@
 import 'package:elogbook/src/presentation/features/supervisor/in_out_reporting/check_in_students_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/in_out_reporting/check_out_student_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -29,12 +30,10 @@ class _InOutReportingPageState extends State<InOutReportingPage>
       CheckInReportPage(
         title: 'Check In Reporting',
         iconQuarterTurns: 3,
-        
       ),
-      const CheckReportPage(
+      CheckOutReportPage(
         title: 'Check Out Reporting',
         iconQuarterTurns: 1,
-        students: [],
       ),
     ];
 

@@ -38,40 +38,48 @@ class _SupervisorDailyActivityPageState
       appBar: AppBar(
         title: Text('Daily Activity'),
       ),
-      body: BlocConsumer<DailyActivityCubit, DailyActivityState>(
-        listener: (context, state) {
-          if (state.stateVerifyDailyActivity == RequestState.data) {
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
             BlocProvider.of<DailyActivityCubit>(context)
-              ..getDailyActivitiesBySupervisor(studentId: widget.studentId)
-              ..reset();
-          }
+                .getDailyActivitiesBySupervisor(studentId: widget.studentId),
+          ]);
         },
-        builder: (context, state) {
-          if (state.studentDailyActivity != null)
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: SpacingColumn(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                horizontalPadding: 16,
-                spacing: 20,
-                children: [
-                  UnitHeader(
-                    unitName: 'Nama Unit',
-                  ),
-                  ...List.generate(
-                    state.studentDailyActivity!.dailyActivities!.length,
-                    (index) => DailyActivityHomeCard(
-                      dailyActivity:
-                          state.studentDailyActivity!.dailyActivities![index],
+        child: BlocConsumer<DailyActivityCubit, DailyActivityState>(
+          listener: (context, state) {
+            if (state.stateVerifyDailyActivity == RequestState.data) {
+              BlocProvider.of<DailyActivityCubit>(context)
+                ..getDailyActivitiesBySupervisor(studentId: widget.studentId)
+                ..reset();
+            }
+          },
+          builder: (context, state) {
+            if (state.studentDailyActivity != null)
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: SpacingColumn(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  horizontalPadding: 16,
+                  spacing: 20,
+                  children: [
+                    UnitHeader(
+                      unitName: 'Nama Unit',
                     ),
-                  )
-                ],
-              ),
+                    ...List.generate(
+                      state.studentDailyActivity!.dailyActivities!.length,
+                      (index) => DailyActivityHomeCard(
+                        dailyActivity:
+                            state.studentDailyActivity!.dailyActivities![index],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            return Center(
+              child: CircularProgressIndicator(),
             );
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }

@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/data/models/reference/reference_on_list_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
@@ -13,9 +10,6 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart' as p;
-import 'package:document_file_save_plus/document_file_save_plus.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class ReferencePage extends StatefulWidget {
   final ActiveUnitModel activeUnitModel;
@@ -42,74 +36,92 @@ class _ReferencePageState extends State<ReferencePage> {
         title: Text("References"),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: SpacingColumn(
-            onlyPading: true,
-            horizontalPadding: 16,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  UnitHeader(
-                    unitName: widget.activeUnitModel.unitName!,
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  SearchField(
-                    onChanged: (String value) {},
-                    text: 'Search',
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  BlocConsumer<ReferenceCubit, ReferenceState>(
-                    listener: (context, state) {
-                      if (state.isSuccessDownload) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Success download data')),
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      if (state.references != null) {
-                        if (state.references!.isNotEmpty)
-                          return ListView.separated(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (contex, index) {
-                              return ReferenceCard(
-                                reference: state.references![index],
-                                onTap: () {
-                                  BlocProvider.of<ReferenceCubit>(context)
-                                    ..getReferenceById(
-                                        id: state.references![index].id!,
-                                        fileName:
-                                            state.references![index].file ??
-                                                '');
-                                },
-                              );
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<ReferenceCubit>(context)
+                  .getListReference(unitId: widget.activeUnitModel.unitId!),
+            ]);
+          },
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                sliver: SliverToBoxAdapter(
+                  child: SpacingColumn(
+                    onlyPading: true,
+                    horizontalPadding: 16,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UnitHeader(
+                            unitName: widget.activeUnitModel.unitName!,
+                          ),
+                          SizedBox(
+                            height: 24,
+                          ),
+                          SearchField(
+                            onChanged: (String value) {},
+                            text: 'Search',
+                          ),
+                          SizedBox(
+                            height: 24,
+                          ),
+                          BlocConsumer<ReferenceCubit, ReferenceState>(
+                            listener: (context, state) {
+                              if (state.isSuccessDownload) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Success download data')),
+                                );
+                              }
                             },
-                            separatorBuilder: (context, index) {
-                              return SizedBox(
-                                height: 12,
-                              );
+                            builder: (context, state) {
+                              if (state.references != null) {
+                                if (state.references!.isNotEmpty)
+                                  return ListView.separated(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (contex, index) {
+                                      return ReferenceCard(
+                                        reference: state.references![index],
+                                        onTap: () {
+                                          BlocProvider.of<ReferenceCubit>(
+                                              context)
+                                            ..getReferenceById(
+                                                id: state
+                                                    .references![index].id!,
+                                                fileName: state
+                                                        .references![index]
+                                                        .file ??
+                                                    '');
+                                        },
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return SizedBox(
+                                        height: 12,
+                                      );
+                                    },
+                                    itemCount: state.references!.length,
+                                  );
+                                else
+                                  return EmptyData(
+                                      title: 'No Reference Found',
+                                      subtitle:
+                                          'no reference data has uploaded');
+                              } else
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
                             },
-                            itemCount: state.references!.length,
-                          );
-                        else
-                          return EmptyData(
-                              title: 'No Reference Found',
-                              subtitle: 'no reference data has uploaded');
-                      } else
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                    },
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ],
           ),

@@ -36,68 +36,77 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
         title: Text("Special Reports"),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: SpacingColumn(
-            onlyPading: true,
-            horizontalPadding: 16,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  UnitHeader(
-                    unitName: widget.activeUnitModel.unitName!,
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  AddNewConsultionCard(),
-                  BlocBuilder<SpecialReportCubit, SpecialReportState>(
-                    builder: (context, state) {
-                      if (state.specialReport != null)
-                        return Column(
-                          children: [
-                            SizedBox(
-                              height: 12,
-                            ),
-                            Text(
-                              'List of Consultation on Encountered Issues',
-                              style: textTheme.titleMedium?.copyWith(
-                                height: 1.1,
-                                color: secondaryColor,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<SpecialReportCubit>(context)
+                  .getStudentSpecialReport(),
+            ]);
+          },
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: SpacingColumn(
+              onlyPading: true,
+              horizontalPadding: 16,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    UnitHeader(
+                      unitName: widget.activeUnitModel.unitName!,
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    if (widget.activeUnitModel.countCheckIn! > 0)
+                      AddNewConsultionCard(),
+                    BlocBuilder<SpecialReportCubit, SpecialReportState>(
+                      builder: (context, state) {
+                        if (state.specialReport != null)
+                          return Column(
+                            children: [
+                              SizedBox(
+                                height: 12,
                               ),
-                            ),
-                            SizedBox(
-                              height: 12,
-                            ),
-                            ListView.separated(
-                              itemBuilder: (context, index) {
-                                return SpecialReportCard(
-                                  data: state.specialReport!
-                                      .listProblemConsultations![index],
-                                  index: index + 1,
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  height: 12,
-                                );
-                              },
-                              itemCount: state.specialReport!
-                                  .listProblemConsultations!.length,
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                            ),
-                          ],
+                              Text(
+                                'List of Consultation on Encountered Issues',
+                                style: textTheme.titleMedium?.copyWith(
+                                  height: 1.1,
+                                  color: secondaryColor,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              ListView.separated(
+                                itemBuilder: (context, index) {
+                                  return SpecialReportCard(
+                                    data: state.specialReport!
+                                        .listProblemConsultations![index],
+                                    index: index + 1,
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    height: 12,
+                                  );
+                                },
+                                itemCount: state.specialReport!
+                                    .listProblemConsultations!.length,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                              ),
+                            ],
+                          );
+                        return Center(
+                          child: CircularProgressIndicator(),
                         );
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  )
-                ],
-              ),
-            ],
+                      },
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

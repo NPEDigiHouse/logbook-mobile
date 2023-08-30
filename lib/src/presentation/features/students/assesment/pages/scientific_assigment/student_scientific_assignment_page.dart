@@ -3,7 +3,6 @@ import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/add_scientific_assignment_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/student_scientific_assignment_detail.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
-import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,55 +30,64 @@ class _StudentScientificAssignmentPageState
       appBar: AppBar(
         title: Text("Scientific Assignment"),
       ).variant(),
-      body: SingleChildScrollView(
-        child: SpacingColumn(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            horizontalPadding: 16,
-            spacing: 12,
-            children: [
-              SizedBox(
-                height: 16,
-              ),
-              // UnitHeader(unitName: widget.unitName),
-              BlocBuilder<AssesmentCubit, AssesmentState>(
-                builder: (context, state) {
-                  if (state.scientificAssignmentStudents != null) {
-                    if (state.scientificAssignmentStudents!.isEmpty) {
-                      return SpacingColumn(
-                        onlyPading: true,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 16,
-                          ),
-                          EmptyData(
-                              title: 'Empty Data',
-                              subtitle: 'Please upload mini cex data before!'),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          Center(
-                            child: FilledButton(
-                              onPressed: () => context
-                                  .navigateTo(AddScientificAssignmentPage(
-                                unitName: widget.unitName,
-                              )),
-                              child: Text('Add Scientific Assignment'),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context)
+                .getStudentScientificAssignment(),
+          ]);
+        },
+        child: SingleChildScrollView(
+          child: SpacingColumn(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              horizontalPadding: 16,
+              spacing: 12,
+              children: [
+                SizedBox(
+                  height: 16,
+                ),
+                // UnitHeader(unitName: widget.unitName),
+                BlocBuilder<AssesmentCubit, AssesmentState>(
+                  builder: (context, state) {
+                    if (state.scientificAssignmentStudents != null) {
+                      if (state.scientificAssignmentStudents!.isEmpty) {
+                        return SpacingColumn(
+                          onlyPading: true,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 16,
                             ),
-                          ),
-                        ],
+                            EmptyData(
+                                title: 'Empty Data',
+                                subtitle:
+                                    'Please upload mini cex data before!'),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            Center(
+                              child: FilledButton(
+                                onPressed: () => context
+                                    .navigateTo(AddScientificAssignmentPage(
+                                  unitName: widget.unitName,
+                                )),
+                                child: Text('Add Scientific Assignment'),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      final sa = state.scientificAssignmentStudents!.first;
+                      return WrapperScientificAssignment(id: sa.id!);
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
                       );
                     }
-                    final sa = state.scientificAssignmentStudents!.first;
-                    return WrapperScientificAssignment(id: sa.id!);
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
-            ]),
+                  },
+                ),
+              ]),
+        ),
       ),
     );
   }

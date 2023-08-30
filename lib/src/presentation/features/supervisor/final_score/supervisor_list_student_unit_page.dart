@@ -29,53 +29,60 @@ class _SupervisorListStudentUnitPageState
         title: Text('Final Score'),
       ).variant(),
       body: SafeArea(
-        child: BlocBuilder<SupervisorsCubit, SupervisorsState>(
-          builder: (context, state) {
-            if (state is Loading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (state is FetchStudentUnitSuccess)
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 16,
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SearchField(
-                        onChanged: (value) {},
-                        text: '',
-                        hint: 'Search for student',
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 12,
-                      ),
-                    ),
-                    SliverList.separated(
-                      itemCount: state.students.length,
-                      itemBuilder: (context, index) {
-                        return StudentUnitCard(
-                          data: state.students[index],
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 12,
-                        );
-                      },
-                    )
-                  ],
-                ),
-              );
-            return SizedBox.shrink();
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<SupervisorsCubit>(context).getAllStudentUnit(),
+            ]);
           },
+          child: BlocBuilder<SupervisorsCubit, SupervisorsState>(
+            builder: (context, state) {
+              if (state is Loading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state is FetchStudentUnitSuccess)
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 16,
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SearchField(
+                          onChanged: (value) {},
+                          text: '',
+                          hint: 'Search for student',
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 12,
+                        ),
+                      ),
+                      SliverList.separated(
+                        itemCount: state.students.length,
+                        itemBuilder: (context, index) {
+                          return StudentUnitCard(
+                            data: state.students[index],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(
+                            height: 12,
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                );
+              return SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );

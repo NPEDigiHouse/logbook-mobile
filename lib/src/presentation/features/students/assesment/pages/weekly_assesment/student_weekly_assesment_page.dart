@@ -88,46 +88,59 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
         appBar: AppBar(
           title: Text("Weekly Assignments"),
         ).variant(),
-        body: BlocBuilder<AssesmentCubit, AssesmentState>(
-          builder: (context, state) {
-            if (state.weeklyAssesment != null) {
-              double avg = 0;
-              state.weeklyAssesment!.assesments!
-                  .forEach((e) => avg += e.score!);
-              avg /= state.weeklyAssesment!.assesments!.length;
-              return SingleChildScrollView(
-                child: SpacingColumn(
-                  horizontalPadding: 16,
-                  spacing: 12,
-                  children: [
-                    SizedBox(
-                      height: 16,
-                    ),
-                    _buildAttendanceOverview(context),
-                    TopStatCard(
-                      title: 'Total Grades',
-                      totalGrade: getTotalGrades(avg / 100),
-                    ),
-                    ...state.weeklyAssesment!.assesments!.map((element) {
-                      return WeeklyGradeCard(
-                        week: element.weekNum ?? 0,
-                        // date: 'Senin, 27 Mar 2023',
-                        // place: 'RS Unhas',
-                        status: element.verificationStatus!,
-                        score: element.score!.toDouble(),
-                      );
-                    }).toList(),
-                    SizedBox(
-                      height: 16,
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<AssesmentCubit>(context)
+                  .getStudentWeeklyAssesment(),
+            ]);
+          },
+          child: BlocBuilder<AssesmentCubit, AssesmentState>(
+            builder: (context, state) {
+              if (state.weeklyAssesment != null) {
+                double avg = 0;
+                state.weeklyAssesment!.assesments!
+                    .forEach((e) => avg += e.score!);
+                avg /= state.weeklyAssesment!.assesments!.length;
+                return CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: SpacingColumn(
+                        horizontalPadding: 16,
+                        spacing: 12,
+                        children: [
+                          SizedBox(
+                            height: 16,
+                          ),
+                          _buildAttendanceOverview(context),
+                          if (state.weeklyAssesment!.assesments!.isNotEmpty)
+                            TopStatCard(
+                              title: 'Total Grades',
+                              totalGrade: getTotalGrades(avg / 100),
+                            ),
+                          ...state.weeklyAssesment!.assesments!.map((element) {
+                            return WeeklyGradeCard(
+                              week: element.weekNum ?? 0,
+                              // date: 'Senin, 27 Mar 2023',
+                              // place: 'RS Unhas',
+                              status: element.verificationStatus!,
+                              score: element.score!.toDouble(),
+                            );
+                          }).toList(),
+                          SizedBox(
+                            height: 16,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
-                ),
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(),
               );
-            }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+            },
+          ),
         ));
   }
 }
@@ -194,37 +207,42 @@ class TopStatCard extends StatelessWidget {
                 SizedBox(
                   height: 12,
                 ),
-                SemicircularIndicator(
-                  contain: true,
-                  radius: 100,
-                  progress: totalGrade != null ? totalGrade!.value : 0,
-                  strokeCap: StrokeCap.round,
-                  color: totalGrade != null
-                      ? totalGrade!.gradientScore.color
-                      : onDisableColor,
-                  bottomPadding: 0,
-                  backgroundColor: Color(0xFFB0EAFC),
-                  child: Column(
-                    children: [
-                      Text(
-                        totalGrade != null
-                            ? totalGrade!.gradientScore.title
-                            : 'Unknown',
-                        style: textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                Builder(builder: (context) {
+                  return SemicircularIndicator(
+                    contain: true,
+                    radius: 100,
+                    progress: totalGrade != null ? totalGrade!.value : 0,
+                    strokeCap: StrokeCap.round,
+                    color: totalGrade != null
+                        ? totalGrade!.gradientScore.color
+                        : onDisableColor,
+                    bottomPadding: 0,
+                    backgroundColor: Color(0xFFB0EAFC),
+                    child: Column(
+                      children: [
+                        Text(
+                          totalGrade != null
+                              ? totalGrade!.gradientScore.title
+                              : 'Unknown',
+                          style: textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        totalGrade != null
-                            ? 'Avg : ${(totalGrade!.value * 100).toInt().toString()}'
-                            : '-',
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: secondaryColor,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                        Builder(builder: (context) {
+                          print(totalGrade?.value);
+                          return Text(
+                            totalGrade != null
+                                ? 'Avg : ${(totalGrade!.value * 100).toInt().toString()}'
+                                : '-',
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: secondaryColor,
+                            ),
+                          );
+                        })
+                      ],
+                    ),
+                  );
+                }),
                 SizedBox(
                   height: 16,
                 ),

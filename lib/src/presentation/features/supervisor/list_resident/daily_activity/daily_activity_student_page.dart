@@ -39,46 +39,55 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            ...getHeadSection(
-                title: title,
-                subtitle: 'Daily Activity',
-                student: widget.student),
-            BlocBuilder<DailyActivityCubit, DailyActivityState>(
-              builder: (context, state) {
-                if (state.studentDailyActivity != null)
-                  return SliverPadding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverList.separated(
-                      itemCount:
-                          state.studentDailyActivity!.dailyActivities!.length,
-                      itemBuilder: (context, index) {
-                        return DailyActivityHomeCard(
-                          dailyActivity: state
-                              .studentDailyActivity!.dailyActivities![index],
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 12,
-                        );
-                      },
-                    ),
-                  );
-                else
-                  return SliverToBoxAdapter(
-                    child: SizedBox(),
-                  );
-              },
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 16,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<DailyActivityCubit>(context)
+                  .getDailyActivitiesBySupervisor(
+                      studentId: widget.student.studentId!),
+            ]);
+          },
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              ...getHeadSection(
+                  title: title,
+                  subtitle: 'Daily Activity',
+                  student: widget.student),
+              BlocBuilder<DailyActivityCubit, DailyActivityState>(
+                builder: (context, state) {
+                  if (state.studentDailyActivity != null)
+                    return SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverList.separated(
+                        itemCount:
+                            state.studentDailyActivity!.dailyActivities!.length,
+                        itemBuilder: (context, index) {
+                          return DailyActivityHomeCard(
+                            dailyActivity: state
+                                .studentDailyActivity!.dailyActivities![index],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(
+                            height: 12,
+                          );
+                        },
+                      ),
+                    );
+                  else
+                    return SliverToBoxAdapter(
+                      child: SizedBox(),
+                    );
+                },
               ),
-            ),
-          ],
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 16,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -66,82 +66,93 @@ class _SupervisorScientificAssignmentDetailPageState
           label: Text('Update Changed'),
         ),
       ),
-      body: SingleChildScrollView(
-        child: SpacingColumn(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            horizontalPadding: 16,
-            spacing: 12,
-            children: [
-              SizedBox(
-                height: 16,
-              ),
-              UnitHeader(unitName: 'Unit Name'),
-              BlocConsumer<AssesmentCubit, AssesmentState>(
-                listener: (context, state) {
-                  if (state.isAssementScientificAssignmentSuccess) {
-                    provider.reset();
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            BlocProvider.of<AssesmentCubit>(context)
+                .getScientiicAssignmentDetail(
+              id: widget.id,
+            ),
+          ]);
+        },
+        child: SingleChildScrollView(
+          child: SpacingColumn(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              horizontalPadding: 16,
+              spacing: 12,
+              children: [
+                SizedBox(
+                  height: 16,
+                ),
+                UnitHeader(unitName: 'Unit Name'),
+                BlocConsumer<AssesmentCubit, AssesmentState>(
+                  listener: (context, state) {
+                    if (state.isAssementScientificAssignmentSuccess) {
+                      provider.reset();
 
-                    BlocProvider.of<AssesmentCubit>(context)
-                      ..getScientiicAssignmentDetail(
-                        id: widget.id,
-                      );
-                    setState(() {});
-                  }
-                  if (state.scientificAssignmentDetail != null &&
-                      state.stateSa == RequestState.data) {
-                    if (!provider.isAlreadyInit) {
-                      provider.init(state.scientificAssignmentDetail!.scores!);
+                      BlocProvider.of<AssesmentCubit>(context)
+                        ..getScientiicAssignmentDetail(
+                          id: widget.id,
+                        );
+                      setState(() {});
                     }
-                  }
-                },
-                builder: (context, state) {
-                  if (state.scientificAssignmentDetail != null &&
-                      state.stateSa == RequestState.data) {
-                    if (provider.discussionList.isNotEmpty)
-                      return SpacingColumn(
-                        spacing: 12,
-                        children: [
-                          ScientificAssignmentHeadCard(
-                              scientificAssignment:
-                                  state.scientificAssignmentDetail!),
-                          TopStatCard(
-                              totalGrade: provider.getTotalGrades(),
-                              title: 'Total Grades'),
-                          ScientificGradeCard(
-                            title: 'Presentation',
-                            iconPath: 'assets/icons/presentation_icon.svg',
-                            saScores: provider.presentationList,
-                            type: ScientificType.presentation,
-                          ),
-                          ScientificGradeCard(
-                            title: 'Presentation Style',
-                            iconPath:
-                                'assets/icons/presentation_style_icon.svg',
-                            saScores: provider.presentationStyleList,
-                            type: ScientificType.presentation_style,
-                          ),
-                          ScientificGradeCard(
-                            title: 'Discussion',
-                            iconPath: 'assets/icons/discussion_icon.svg',
-                            saScores: provider.discussionList,
-                            type: ScientificType.discussion,
-                          ),
-                          SizedBox(
-                            height: 60,
-                          ),
-                        ],
+                    if (state.scientificAssignmentDetail != null &&
+                        state.stateSa == RequestState.data) {
+                      if (!provider.isAlreadyInit) {
+                        provider
+                            .init(state.scientificAssignmentDetail!.scores!);
+                      }
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state.scientificAssignmentDetail != null &&
+                        state.stateSa == RequestState.data) {
+                      if (provider.discussionList.isNotEmpty)
+                        return SpacingColumn(
+                          spacing: 12,
+                          children: [
+                            ScientificAssignmentHeadCard(
+                                scientificAssignment:
+                                    state.scientificAssignmentDetail!),
+                            TopStatCard(
+                                totalGrade: provider.getTotalGrades(),
+                                title: 'Total Grades'),
+                            ScientificGradeCard(
+                              title: 'Presentation',
+                              iconPath: 'assets/icons/presentation_icon.svg',
+                              saScores: provider.presentationList,
+                              type: ScientificType.presentation,
+                            ),
+                            ScientificGradeCard(
+                              title: 'Presentation Style',
+                              iconPath:
+                                  'assets/icons/presentation_style_icon.svg',
+                              saScores: provider.presentationStyleList,
+                              type: ScientificType.presentation_style,
+                            ),
+                            ScientificGradeCard(
+                              title: 'Discussion',
+                              iconPath: 'assets/icons/discussion_icon.svg',
+                              saScores: provider.discussionList,
+                              type: ScientificType.discussion,
+                            ),
+                            SizedBox(
+                              height: 60,
+                            ),
+                          ],
+                        );
+                      return Center(
+                        child: CircularProgressIndicator(),
                       );
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
-            ]),
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ]),
+        ),
       ),
     );
   }
