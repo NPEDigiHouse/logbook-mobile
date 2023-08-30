@@ -1,36 +1,9 @@
-include: package:flutter_lints/flutter.yaml
+include: package:lint/analysis_options.yaml
+
 
 analyzer:
   exclude:
-    - lib/**.g.dart
-    - bin/**
 
 linter:
   rules:
-    public_member_api_docs: true
-    avoid_unnecessary_containers: true
-    prefer_const_constructors: true
-    prefer_const_constructors_in_immutables: true
-    always_put_required_named_parameters_first: true
-    sort_child_properties_last: true
-    prefer_single_quotes: true
-    unused_imports: true
-    container_to_sizedbox: # aturan custom
-      enabled: true
-      severity: warning
-      description: "Prefer using SizedBox instead of Container when having width and height only."
-      include: "**/*.dart"
-      exclude: []
-      patterns:
-        - type: InstanceCreationExpression
-          of: Container
-          where:
-            - arguments:
-                - type: NamedExpression
-                  name: width
-                  value: Any
-                - type: NamedExpression
-                  name: height
-                  value: Any
-          apply_fix: true
-          replacement: "SizedBox(width: {{width}}, height: {{height}})"
+    - use_super_parameters

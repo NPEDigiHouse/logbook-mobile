@@ -1,3 +1,3 @@
 class AppSettings {
-  static String title = "e-logbook";
+  static String title = "E-Logbook";
 }

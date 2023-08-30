@@ -16,6 +16,7 @@ import 'package:elogbook/src/presentation/blocs/special_report/special_report_cu
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
+import 'package:elogbook/src/presentation/features/common/splash/splash_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
@@ -80,7 +81,7 @@ class App extends StatelessWidget {
         navigatorKey: navigatorKey,
         title: AppSettings.title,
         theme: lightTheme,
-        home: Wrapper(),
+        home: const SplashPage(),
       ),
     );
   }
