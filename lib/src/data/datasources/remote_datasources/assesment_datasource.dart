@@ -22,7 +22,6 @@ abstract class AssesmentDataSource {
       {required String studentId});
   Future<List<StudentScientificAssignment>> getStudentPersonalBehavior(
       {required String studentId});
-
   Future<ListScientificAssignment> getScientificAssignmentDetail(
       {required String id});
   Future<StudentMiniCex> getStudetnMiniCex({required String studentId});
@@ -42,6 +41,7 @@ abstract class AssesmentDataSource {
       required String type,
       required String unitId,
       required double score});
+  Future<void> scoreWeeklyAssesment({required String id, required int score});
 }
 
 class AssesmentDataSourceImpl implements AssesmentDataSource {
@@ -429,6 +429,34 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
 
       final result = WeeklyAssesmentResponse.fromJson(dataResponse.data);
       return result;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> scoreWeeklyAssesment(
+      {required String id, required int score}) async {
+    try {
+      final credential = await preferenceHandler.getCredential();
+
+      final response = await dio.put(
+        ApiService.baseUrl + '/weekly-assesments/$id',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+        data: {
+          'score': score,
+        },
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

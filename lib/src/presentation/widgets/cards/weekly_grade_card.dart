@@ -59,12 +59,16 @@ class WeeklyGradeCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      if (status == 'VERIFIED')
+                      if (status == 'VERIFIED') ...[
+                        SizedBox(
+                          width: 8,
+                        ),
                         const Icon(
                           Icons.verified_rounded,
                           size: 16,
                           color: primaryColor,
                         ),
+                      ]
                     ],
                   ),
 

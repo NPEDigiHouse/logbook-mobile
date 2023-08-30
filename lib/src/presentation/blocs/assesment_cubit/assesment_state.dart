@@ -12,6 +12,7 @@ class AssesmentState {
   final bool isPersonalBehaviorVerify;
   final FinalScoreResponse? finalScore;
   final bool isFinalScoreUpdate;
+  final bool isScoreWeeklyAssessment;
   final WeeklyAssesmentResponse? weeklyAssesment;
   final bool isAssementScientificAssignmentSuccess;
   final StudentMiniCex? studentMiniCex;
@@ -20,6 +21,7 @@ class AssesmentState {
   RequestState requestState;
 
   AssesmentState({
+    this.isScoreWeeklyAssessment = false,
     this.isUploadMiniCexSuccess = false,
     this.studentMiniCexs,
     this.miniCexStudentDetail,
@@ -47,6 +49,7 @@ class AssesmentState {
     StudentMiniCex? studentMiniCex,
     bool isUploadAssignmentSuccess = false,
     bool isFinalScoreUpdate = false,
+    bool isScoreWeeklyAssessment = false,
     WeeklyAssesmentResponse? weeklyAssesment,
     List<MiniCexListModel>? studentMiniCexs,
     ListScientificAssignment? scientificAssignmentDetail,
@@ -81,6 +84,7 @@ class AssesmentState {
       personalBehaviorStudent:
           personalBehaviorStudent ?? this.personalBehaviorStudent,
       weeklyAssesment: weeklyAssesment ?? this.weeklyAssesment,
+      isScoreWeeklyAssessment: isScoreWeeklyAssessment,
     );
   }
 }

@@ -485,4 +485,31 @@ class AssesmentCubit extends Cubit<AssesmentState> {
       );
     }
   }
+
+  Future<void> addScoreWeeklyAssesment(
+      {required String id, required int score}) async {
+    try {
+      emit(state.copyWith(
+        stateSa: RequestState.loading,
+      ));
+
+      await dataSource.scoreWeeklyAssesment(id: id, score: score);
+      try {
+        emit(
+          state.copyWith(
+            isScoreWeeklyAssessment: true,
+          ),
+        );
+      } catch (e) {
+        emit(state.copyWith(stateSa: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          stateSa: RequestState.error,
+        ),
+      );
+    }
+  }
 }

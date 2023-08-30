@@ -1,4 +1,3 @@
-import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +7,6 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/coordinator/weekly_grade/dummy_models.dart';
 import 'package:elogbook/src/presentation/features/coordinator/weekly_grade/weekly_grade_detail_page.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 
@@ -49,85 +47,90 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              floating: true,
-              automaticallyImplyLeading: false,
-              toolbarHeight: kToolbarHeight + 190,
-              backgroundColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarIconBrightness: Brightness.dark,
-              ),
-              flexibleSpace: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  buildTitleSection(),
-                  buildFilterSection(),
-                ],
-              ),
-              bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(6),
-                child: Divider(
-                  height: 6,
-                  thickness: 6,
-                  color: onDisableColor,
+      body: RefreshIndicator(
+        onRefresh: () => Future.wait(
+            [BlocProvider.of<SupervisorsCubit>(context).getAllStudentUnit()]),
+        child: NestedScrollView(
+          floatHeaderSlivers: true,
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                floating: true,
+                automaticallyImplyLeading: false,
+                toolbarHeight: kToolbarHeight + 190,
+                backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarIconBrightness: Brightness.dark,
+                ),
+                flexibleSpace: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    buildTitleSection(),
+                    buildFilterSection(),
+                  ],
+                ),
+                bottom: const PreferredSize(
+                  preferredSize: Size.fromHeight(6),
+                  child: Divider(
+                    height: 6,
+                    thickness: 6,
+                    color: onDisableColor,
+                  ),
                 ),
               ),
-            ),
-          ];
-        },
-        body: BlocBuilder<SupervisorsCubit, SupervisorsState>(
-          builder: (context, state) {
-            if (state is Loading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (state is FetchStudentUnitSuccess)
-              return CustomScrollView(
-                slivers: <Widget>[
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    sliver: SliverList.separated(
-                      itemCount: state.students.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            radius: 32,
-                            foregroundImage: AssetImage(
-                              AssetPath.getImage('profile_default.png'),
-                            ),
-                          ),
-                          title: Text(
-                            state.students[index].studentName ?? '',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          subtitle: Text(
-                            state.students[index].studentId ?? '',
-                            style: textTheme.bodySmall?.copyWith(
-                              color: borderColor,
-                            ),
-                          ),
-                          onTap: () => context.navigateTo(
-                            WeeklyGradeDetailPage(student: state.students[index]),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(height: 8);
-                      },
-                    ),
-                  ),
-                ],
-              );
-            return SizedBox.shrink();
+            ];
           },
+          body: BlocBuilder<SupervisorsCubit, SupervisorsState>(
+            builder: (context, state) {
+              if (state is Loading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state is FetchStudentUnitSuccess)
+                return CustomScrollView(
+                  slivers: <Widget>[
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      sliver: SliverList.separated(
+                        itemCount: state.students.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: CircleAvatar(
+                              radius: 32,
+                              foregroundImage: AssetImage(
+                                AssetPath.getImage('profile_default.png'),
+                              ),
+                            ),
+                            title: Text(
+                              state.students[index].studentName ?? '',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              state.students[index].studentId ?? '',
+                              style: textTheme.bodySmall?.copyWith(
+                                color: borderColor,
+                              ),
+                            ),
+                            onTap: () => context.navigateTo(
+                              WeeklyGradeDetailPage(
+                                  student: state.students[index]),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(height: 8);
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              return SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );
