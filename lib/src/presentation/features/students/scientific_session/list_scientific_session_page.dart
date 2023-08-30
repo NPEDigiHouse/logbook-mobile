@@ -53,7 +53,7 @@ class _StudentListScientificSessionPageState
       appBar: AppBar(
         title: Text("Scientific Session"),
       ),
-      floatingActionButton: widget.activeUnitModel.countCheckIn! > 0
+      floatingActionButton: widget.activeUnitModel.countCheckIn == 0
           ? FloatingActionButton(
               onPressed: () => context.navigateTo(AddScientificSessionPage(
                   activeUnitModel: widget.activeUnitModel)),

@@ -60,7 +60,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
         SliverFillRemaining(
           child: BlocListener<UnitCubit, UnitState>(
             listener: (context, state) {
-              if (state is CheckInActiveUnitSuccess) {
+              if (state is CheckInActiveUnitSuccess ||
+                  state is CheckOutActiveUnitSuccess) {
                 Future.microtask(
                   () => BlocProvider.of<UnitCubit>(context, listen: false)
                     ..getActiveUnit(),
@@ -194,7 +195,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                           ],
                         ),
                       ),
-                      
+
                       const SizedBox(height: 32),
                       if (activeUnitModel.unitName != null)
                         ReportExpansionTile(
@@ -307,7 +308,11 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                 ? SizedBox(
                                     width: double.infinity,
                                     child: FilledButton.icon(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        BlocProvider.of<UnitCubit>(context,
+                                            listen: false)
+                                          ..checkOutActiveUnit();
+                                      },
                                       icon: SvgPicture.asset(
                                         AssetPath.getIcon(
                                             'send_alt_filled.svg'),

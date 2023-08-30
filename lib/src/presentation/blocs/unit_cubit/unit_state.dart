@@ -21,6 +21,7 @@ class ChangeActiveSuccess extends UnitState {}
 class ChangeActiveFailed extends UnitState {}
 
 class CheckInActiveUnitSuccess extends UnitState {}
+class CheckOutActiveUnitSuccess extends UnitState {}
 
 class GetActiveUnitSuccess extends UnitState {
   final ActiveUnitModel activeUnit;

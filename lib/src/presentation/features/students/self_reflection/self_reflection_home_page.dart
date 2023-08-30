@@ -53,7 +53,7 @@ class _StudentSelfReflectionHomePageState
       appBar: AppBar(
         title: Text("Self Reflections"),
       ),
-      floatingActionButton: widget.activeUnitModel.countCheckIn! > 0
+      floatingActionButton: widget.activeUnitModel.countCheckIn! == 0
           ? FloatingActionButton(
               onPressed: () => context.navigateTo(CreateSelfReflectionPage()),
               child: Icon(

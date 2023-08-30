@@ -360,6 +360,7 @@ void _injectStateManagement() {
       changeActiveUnitUsecase: locator(),
       getActiveUnitUsecase: locator(),
       checkInActiveUnitUsecase: locator(),
+      datasource: locator(),
     ),
   );
   locator.registerFactory(

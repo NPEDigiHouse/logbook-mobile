@@ -46,11 +46,12 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.activeUnitModel.countCheckIn);
     return Scaffold(
       appBar: AppBar(
         title: Text("Clinical Records"),
       ),
-      floatingActionButton: widget.activeUnitModel.countCheckIn! > 0
+      floatingActionButton: widget.activeUnitModel.countCheckIn! == 0
           ? FloatingActionButton(
               onPressed: () => context.navigateTo(CreateClinicalRecordFirstPage(
                   activeUnitModel: widget.activeUnitModel)),

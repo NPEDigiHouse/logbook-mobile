@@ -59,7 +59,7 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
       appBar: AppBar(
         title: Text("List Skills"),
       ),
-      floatingActionButton: widget.model.countCheckIn! > 0
+      floatingActionButton: widget.model.countCheckIn! == 0
           ? FloatingActionButton(
               onPressed: () => showDialog(
                   context: context,

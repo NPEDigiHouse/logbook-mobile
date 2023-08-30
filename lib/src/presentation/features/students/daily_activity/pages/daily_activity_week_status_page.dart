@@ -264,7 +264,7 @@ class DailyActivityStatusCard extends StatelessWidget {
     return InkWellContainer(
       padding: EdgeInsets.all(16),
       radius: 12,
-      onTap: checkInCount > 0
+      onTap: checkInCount == 0
           ? () => context.navigateTo(CreateDailyActivityPage(
                 modelId: id,
                 id: dailyActivityId!,

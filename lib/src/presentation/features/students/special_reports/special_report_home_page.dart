@@ -58,7 +58,7 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                     SizedBox(
                       height: 12,
                     ),
-                    if (widget.activeUnitModel.countCheckIn! > 0)
+                    if (widget.activeUnitModel.countCheckIn! == 0)
                       AddNewConsultionCard(),
                     BlocBuilder<SpecialReportCubit, SpecialReportState>(
                       builder: (context, state) {

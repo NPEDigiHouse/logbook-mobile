@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/unit_datasource.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/units/unit_model.dart';
 import 'package:elogbook/src/domain/usecases/unit_usecases/change_unit_active_usecase.dart';
@@ -14,11 +15,13 @@ class UnitCubit extends Cubit<UnitState> {
   final ChangeActiveUnitUsecase changeActiveUnitUsecase;
   final GetActiveUnitUsecase getActiveUnitUsecase;
   final CheckInActiveUnitUsecase checkInActiveUnitUsecase;
+  final UnitDatasource datasource;
   UnitCubit({
     required this.fetchUnitsUsecase,
     required this.changeActiveUnitUsecase,
     required this.getActiveUnitUsecase,
     required this.checkInActiveUnitUsecase,
+    required this.datasource,
   }) : super(Initial());
 
   Future<void> fetchUnits() async {
@@ -88,6 +91,22 @@ class UnitCubit extends Cubit<UnitState> {
         (l) => emit(Failed(message: l.message)),
         (r) => emit(CheckInActiveUnitSuccess()),
       );
+    } catch (e) {
+      emit(
+        Failed(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<void> checkOutActiveUnit() async {
+    try {
+      emit(Loading());
+
+      await datasource.checkOutActiveUnit();
+
+      emit(CheckOutActiveUnitSuccess());
     } catch (e) {
       emit(
         Failed(

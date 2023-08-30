@@ -61,7 +61,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
       appBar: AppBar(
         title: Text("List Cases"),
       ),
-      floatingActionButton: widget.model.countCheckIn! > 0?FloatingActionButton(
+      floatingActionButton: widget.model.countCheckIn! == 0?FloatingActionButton(
         onPressed: () => showDialog(
             context: context,
             barrierLabel: '',

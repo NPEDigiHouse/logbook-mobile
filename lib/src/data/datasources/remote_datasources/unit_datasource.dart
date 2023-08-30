@@ -16,6 +16,7 @@ abstract class UnitDatasource {
   Future<void> changeUnitActive({required String unitId});
   Future<ActiveUnitModel> getActiveUnit();
   Future<void> checkInActiveUnit();
+  Future<void> checkOutActiveUnit();
 }
 
 class UnitDatasourceImpl implements UnitDatasource {
@@ -117,7 +118,7 @@ class UnitDatasourceImpl implements UnitDatasource {
       );
 
       print('Bearer ${credential?.accessToken}');
-
+      print(response.data);
       if (response.statusCode != 200) {
         print(response.statusCode);
         await authDataSource.refreshToken();
@@ -141,6 +142,34 @@ class UnitDatasourceImpl implements UnitDatasource {
       // print(credential?.accessToken);
       final response = await dio.post(
         ApiService.baseUrl + '/students/units/check-in',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+      print(response.statusCode);
+      if (response.statusCode != 201) {
+        throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> checkOutActiveUnit() async {
+    try {
+      final credential = await preferenceHandler.getCredential();
+      // print(credential?.accessToken);
+      final response = await dio.post(
+        ApiService.baseUrl + '/students/units/check-out',
         options: Options(
           headers: {
             "content-type": 'application/json',

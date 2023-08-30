@@ -12,6 +12,7 @@ ActiveUnitModel _$ActiveUnitModelFromJson(Map<String, dynamic> json) =>
       checkOutStatus: json['checkOutStatus'] as String?,
       unitId: json['unitId'] as String?,
       unitName: json['unitName'] as String?,
+      countCheckIn: json['countCheckIn'] as int?,
       checkInTime: json['checkInTime'] as int?,
       checkOutTime: json['checkOutTime'] as int?,
     );
@@ -24,4 +25,5 @@ Map<String, dynamic> _$ActiveUnitModelToJson(ActiveUnitModel instance) =>
       'unitName': instance.unitName,
       'checkInTime': instance.checkInTime,
       'checkOutTime': instance.checkOutTime,
+      'countCheckIn': instance.countCheckIn,
     };

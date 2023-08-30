@@ -42,7 +42,7 @@ class _ListCstPageState extends State<ListCstPage> {
         },
         child: CustomScrollView(
           slivers: [
-            if (widget.activeUnitModel.countCheckIn! > 0)
+            if (widget.activeUnitModel.countCheckIn! == 0)
               SglCstAppBar(
                 title: 'Clinical Skill Training (CST)',
                 onBtnPressed: () {

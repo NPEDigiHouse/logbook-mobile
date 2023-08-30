@@ -42,7 +42,7 @@ class _ListSglPageState extends State<ListSglPage> {
         },
         child: CustomScrollView(
           slivers: [
-            if (widget.activeUnitModel.countCheckIn! > 0)
+            if (widget.activeUnitModel.countCheckIn! == 0)
               SglCstAppBar(
                 title: 'Small Group Learning (SGL)',
                 onBtnPressed: () {
