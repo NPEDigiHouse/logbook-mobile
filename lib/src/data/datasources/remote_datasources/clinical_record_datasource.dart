@@ -61,7 +61,22 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
             return status! < 500;
           },
         ),
-        data: clinicalRecordPostModel.toJson(),
+        data: {
+          'patientName': clinicalRecordPostModel.patientName,
+          'patientAge': clinicalRecordPostModel.patientAge,
+          'gender': clinicalRecordPostModel.gender,
+          'recordId': clinicalRecordPostModel.recordId,
+          if (clinicalRecordPostModel.notes != null)
+            'notes': clinicalRecordPostModel.notes,
+          if (clinicalRecordPostModel.studentFeedback != null)
+            'studentFeedback': clinicalRecordPostModel.studentFeedback,
+          'supervisorId': clinicalRecordPostModel.supervisorId,
+          if (clinicalRecordPostModel.attachment != null)
+            'attachment': clinicalRecordPostModel.attachment,
+          'examinations': clinicalRecordPostModel.examinations,
+          'diagnosiss': clinicalRecordPostModel.diagnosiss,
+          'managements': clinicalRecordPostModel.managements,
+        },
       );
       print(response);
       print(response.data);
@@ -78,7 +93,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   @override
   Future<String> uploadClinicalRecordAttachment(
       {required String filePath}) async {
-   
     final credential = await preferenceHandler.getCredential();
 
     try {

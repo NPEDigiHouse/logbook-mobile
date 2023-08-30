@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
@@ -8,7 +9,8 @@ import 'package:elogbook/src/presentation/features/students/menu/profile/widgets
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/unit_statistics_section.dart';
 
 class UnitStatisticsPage extends StatelessWidget {
-  const UnitStatisticsPage({super.key});
+  final UserCredential credential;
+  const UnitStatisticsPage({super.key, required this.credential});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class UnitStatisticsPage extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                    'Khairun Nisa',
+                    credential.fullname ?? '',
                     style: textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -63,7 +65,7 @@ class UnitStatisticsPage extends StatelessWidget {
                     'Student',
                     style: TextStyle(color: primaryColor),
                   ),
-                  children: const <Widget>[
+                  children: <Widget>[
                     Divider(
                       height: 1,
                       thickness: 1,
@@ -72,19 +74,19 @@ class UnitStatisticsPage extends StatelessWidget {
                     SizedBox(height: 8),
                     UnitStatisticsField(
                       label: 'Student Id',
-                      value: '1903102849319041',
+                      value: credential.student!.studentId,
                     ),
                     UnitStatisticsField(
                       label: 'Email',
-                      value: '1903102849319041',
+                      value: credential.email,
                     ),
                     UnitStatisticsField(
                       label: 'Phone',
-                      value: '+6282198246668',
+                      value: credential.student!.phoneNumber,
                     ),
                     UnitStatisticsField(
                       label: 'Address',
-                      value: 'Jln Kebangsaan no.7 Makassar',
+                      value: credential.student!.address,
                     ),
                   ],
                 ),
@@ -116,7 +118,7 @@ class UnitStatisticsPage extends StatelessWidget {
                     titleIconPath: 'skill_outlined.svg',
                     percentage: 73.0,
                     statistics: {
-                      'Total Diagnosis Skill': 169,
+                      'Total Diagnosis Skill': 159,
                       'Performed': 108,
                       'Not Performed': 51,
                     },
@@ -148,7 +150,7 @@ class UnitStatisticsPage extends StatelessWidget {
                     titleIconPath: 'attach_resume_male_outlined.svg',
                     percentage: 45.0,
                     statistics: {
-                      'Total Acquired Case': 169,
+                      'Total Acquired Case': 136,
                       'Identified Case': 96,
                       'Unidentified Case': 40,
                     },
@@ -164,7 +166,6 @@ class UnitStatisticsPage extends StatelessWidget {
                 ],
               ),
             ),
-          
           ],
         ),
       ),

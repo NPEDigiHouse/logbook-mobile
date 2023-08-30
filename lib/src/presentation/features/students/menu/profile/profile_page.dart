@@ -143,7 +143,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 ProfileItemMenuCard(
                   iconPath: 'stats_chart_filled.svg',
                   title: 'Unit Statisics',
-                  onTap: () => context.navigateTo(const UnitStatisticsPage()),
+                  onTap: () => context.navigateTo(UnitStatisticsPage(
+                    credential: widget.credential,
+                  )),
                 ),
                 const SizedBox(height: 14),
                 ProfileItemMenuCard(

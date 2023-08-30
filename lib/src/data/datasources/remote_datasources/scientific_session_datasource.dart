@@ -54,7 +54,19 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
                   return status! < 500;
                 },
               ),
-              data: scientificSessionPostModel.toJson());
+              data: {
+            'supervisorId': scientificSessionPostModel.supervisorId,
+            'sessionType': scientificSessionPostModel.sessionType,
+            if (scientificSessionPostModel.reference != null)
+              'reference': scientificSessionPostModel.reference,
+            'topic': scientificSessionPostModel.topic,
+            'title': scientificSessionPostModel.title,
+            'role': scientificSessionPostModel.role,
+            if (scientificSessionPostModel.notes != null)
+              'notes': scientificSessionPostModel.notes,
+            if (scientificSessionPostModel.attachment != null)
+              'attachment': scientificSessionPostModel.attachment,
+          });
       print(response.data);
       if (response.statusCode != 201) {
         throw Exception();
