@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource
 import 'package:elogbook/src/data/datasources/remote_datasources/clinical_record_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/competence_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/daily_activity_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/history_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/profile_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/reference_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/scientific_session_datasource.dart';
@@ -58,6 +59,7 @@ import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_r
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/history_cubit/history_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/reference/reference_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
@@ -133,6 +135,12 @@ void _injectDatasource() {
   );
   locator.registerLazySingleton<SupervisorsDataSource>(
     () => SupervisorsDataSourceImpl(
+      dio: locator(),
+      preferenceHandler: locator(),
+    ),
+  );
+  locator.registerLazySingleton<HistoryDataSource>(
+    () => HistoryDataSourceImpl(
       dio: locator(),
       preferenceHandler: locator(),
     ),
@@ -443,6 +451,11 @@ void _injectStateManagement() {
   );
   locator.registerFactory(
     () => StudentCubit(
+      dataSource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => HistoryCubit(
       dataSource: locator(),
     ),
   );

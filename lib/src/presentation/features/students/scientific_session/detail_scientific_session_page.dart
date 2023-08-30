@@ -67,7 +67,7 @@ class _DetailScientificSessionPageState
                             color: primaryColor.withOpacity(.2),
                           ),
                           child: SvgPicture.asset(
-                              'assets/icons/biotech_rounded.svg.svg'),
+                              'assets/icons/biotech_rounded.svg'),
                         ),
                         SizedBox(
                           width: 8,

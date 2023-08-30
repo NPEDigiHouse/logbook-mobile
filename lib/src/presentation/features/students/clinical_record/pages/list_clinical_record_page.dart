@@ -68,58 +68,65 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                   .getStudentClinicalRecordOfActiveUnit(),
             ]);
           },
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: BlocBuilder<StudentCubit, StudentState>(
-              builder: (context, state) {
-                if (state.clinicalRecordResponse != null) {
-                  return SpacingColumn(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    onlyPading: true,
-                    horizontalPadding: 16,
-                    children: [
-                      UnitHeader(unitName: widget.activeUnitModel.unitName!),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      SectionDivider(),
-                      Builder(
-                        builder: (context) {
-                          if (state.clinicalRecordResponse != null) {
-                            final data = state
-                                .clinicalRecordResponse!.listClinicalRecords!;
-                            if (data.isEmpty) {
-                              return EmptyData(
-                                subtitle:
-                                    'Please upload clinical record data first!',
-                                title: 'Data Still Empty',
-                              );
-                            }
-                            return ListView.separated(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) =>
-                                  ClinicalRecordCard(
-                                model: state.clinicalRecordResponse!
-                                    .listClinicalRecords![index],
-                              ),
-                              separatorBuilder: (context, index) =>
-                                  SizedBox(height: 12),
-                              itemCount: data.length,
-                            );
-                          } else {
-                            return SizedBox.shrink();
-                          }
-                        },
-                      )
-                    ],
-                  );
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                sliver: SliverToBoxAdapter(
+                  child: BlocBuilder<StudentCubit, StudentState>(
+                    builder: (context, state) {
+                      if (state.clinicalRecordResponse != null) {
+                        return SpacingColumn(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          onlyPading: true,
+                          horizontalPadding: 16,
+                          children: [
+                            UnitHeader(
+                                unitName: widget.activeUnitModel.unitName!),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            SectionDivider(),
+                            Builder(
+                              builder: (context) {
+                                if (state.clinicalRecordResponse != null) {
+                                  final data = state.clinicalRecordResponse!
+                                      .listClinicalRecords!;
+                                  if (data.isEmpty) {
+                                    return EmptyData(
+                                      subtitle:
+                                          'Please upload clinical record data first!',
+                                      title: 'Data Still Empty',
+                                    );
+                                  }
+                                  return ListView.separated(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) =>
+                                        ClinicalRecordCard(
+                                      model: state.clinicalRecordResponse!
+                                          .listClinicalRecords![index],
+                                    ),
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(height: 12),
+                                    itemCount: data.length,
+                                  );
+                                } else {
+                                  return SizedBox.shrink();
+                                }
+                              },
+                            )
+                          ],
+                        );
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

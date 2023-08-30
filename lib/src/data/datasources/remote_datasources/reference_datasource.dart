@@ -4,7 +4,6 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/reference/reference_on_list_model.dart';
-import 'package:uuid/uuid.dart';
 
 abstract class ReferenceDataSource {
   Future<List<ReferenceOnListModel>> getReferenceByUnitId(

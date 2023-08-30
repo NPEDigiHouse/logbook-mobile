@@ -1,4 +1,6 @@
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
@@ -12,7 +14,10 @@ import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_
 
 class MainMenu extends StatefulWidget {
   final UserCredential credential;
-  const MainMenu({super.key, required this.credential});
+  const MainMenu({
+    super.key,
+    required this.credential,
+  });
 
   @override
   State<MainMenu> createState() => _MainMenuState();
@@ -33,7 +38,7 @@ class _MainMenuState extends State<MainMenu> {
     final _listPage = [
       const UnitActivityPage(),
       const GlobalActivityPage(),
-      const HistoryPage(),
+      HistoryPage(),
       ProfilePage(credential: widget.credential),
     ];
     return BlocConsumer<AuthCubit, AuthState>(

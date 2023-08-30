@@ -40,7 +40,11 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
           -1)
         InOutReportingPage(),
       ListResidentPage(),
-      const HistoryPage(),
+      SupervisorHistoryPage(
+          isKabag: widget.credential.badges!
+                  .indexWhere((e) => e.name == 'HEAD_DIV') !=
+              -1),
+      // SizedBox(),
       ProfilePage(
         credential: widget.credential,
       ),

@@ -5,10 +5,18 @@ import 'package:elogbook/src/data/models/self_reflection/student_self_reflection
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:flutter/material.dart';
 
-class DetailSelfReflectionPage extends StatelessWidget {
+class DetailSelfReflectionPage extends StatefulWidget {
   final SelfReflectionData model;
 
-  const DetailSelfReflectionPage({super.key, required this.model});
+  const DetailSelfReflectionPage({super.key, required this.model,});
+
+  @override
+  State<DetailSelfReflectionPage> createState() =>
+      _DetailSelfReflectionPageState();
+}
+
+class _DetailSelfReflectionPageState extends State<DetailSelfReflectionPage> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +77,7 @@ class DetailSelfReflectionPage extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
-                            color: model.verificationStatus == 'VERIFIED'
+                            color: widget.model.verificationStatus == 'VERIFIED'
                                 ? successColor
                                 : errorColor,
                           ),
@@ -77,7 +85,7 @@ class DetailSelfReflectionPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
-                                model.verificationStatus == 'VERIFIED'
+                                widget.model.verificationStatus == 'VERIFIED'
                                     ? Icons.verified_rounded
                                     : Icons.hourglass_bottom_rounded,
                                 color: Colors.white,
@@ -87,7 +95,7 @@ class DetailSelfReflectionPage extends StatelessWidget {
                                 width: 4,
                               ),
                               Text(
-                                model.verificationStatus ?? '',
+                                widget.model.verificationStatus ?? '',
                                 style: textTheme.bodySmall?.copyWith(
                                   color: Colors.white,
                                 ),
@@ -104,7 +112,7 @@ class DetailSelfReflectionPage extends StatelessWidget {
                     SizedBox(
                       height: 8,
                     ),
-                    Text(model.content ?? ''),
+                    Text(widget.model.content ?? ''),
                   ],
                 ),
               ),

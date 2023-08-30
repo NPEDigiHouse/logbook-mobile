@@ -5,6 +5,7 @@ import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_r
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/history_cubit/history_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/reference/reference_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
@@ -69,6 +70,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => di.locator<AssesmentCubit>()),
         BlocProvider(create: (_) => di.locator<ReferenceCubit>()),
         BlocProvider(create: (_) => di.locator<SpecialReportCubit>()),
+        BlocProvider(create: (_) => di.locator<HistoryCubit>()),
         ChangeNotifierProvider(create: (_) => di.locator<MiniCexProvider>()),
         ChangeNotifierProvider(
             create: (_) => di.locator<ClinicalRecordDataNotifier>()),
