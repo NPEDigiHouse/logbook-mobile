@@ -39,7 +39,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
   final List<String> titleList = [
     'Detail Profile',
     'Special Report',
-    'History',
+    // 'History',
     'Self Reflection',
     'Daily Activity'
   ];
@@ -47,7 +47,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
   final List<String> iconPath = [
     'icon_detail_profile.svg',
     'icon_special_report.svg',
-    'icon_history.svg',
+    // 'icon_history.svg',
     'icon_self_reflection.svg',
     'icon_daily_activity.svg',
   ];
@@ -59,7 +59,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
         () => context.navigateTo(SpecialReportStudentPage(
               student: widget.student,
             )),
-        () {},
+        // () {},
         () => context.navigateTo(SelfReflectionStudentPage(
               student: widget.student,
             )),

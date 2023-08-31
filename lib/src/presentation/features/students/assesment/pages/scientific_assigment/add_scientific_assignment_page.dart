@@ -35,7 +35,8 @@ class _AddScientificAssignmentPageState
     return BlocListener<AssesmentCubit, AssesmentState>(
       listener: (context, state) {
         if (state.isUploadAssignmentSuccess) {
-          // BlocProvider.of<AssesmentCubit>(context)..();
+          BlocProvider.of<AssesmentCubit>(context)
+              .getStudentScientificAssignment();
           Navigator.pop(context);
         }
       },

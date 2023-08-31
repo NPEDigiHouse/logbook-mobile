@@ -5,6 +5,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/daily_activity/supervisor_daily_activity_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +45,7 @@ class _DailyActivityListStudentPageState
           child: BlocBuilder<SupervisorsCubit, SupervisorsState>(
             builder: (context, state) {
               if (state is Loading) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return CustomLoading();
               }
               if (state is Error) {
                 return Center(

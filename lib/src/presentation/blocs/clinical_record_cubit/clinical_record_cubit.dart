@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/clinical_record_datasource.dart';
 import 'package:elogbook/src/data/models/clinical_records/affected_part_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/clinical_record_post_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/diagnosis_types_model.dart';
@@ -24,6 +25,7 @@ class ClinicalRecordCubit extends Cubit<ClinicalRecordState> {
   final UploadClinicalRecordAttachmentUsecase
       uploadClinicalRecordAttachmentUsecase;
   final UploadClinicalRecordUsecase uploadClinicalRecordUsecase;
+  final ClinicalRecordsDatasource clinicalRecordsDatasource;
 
   ClinicalRecordCubit({
     required this.getAffectedPartsUsecase,
@@ -33,6 +35,7 @@ class ClinicalRecordCubit extends Cubit<ClinicalRecordState> {
     required this.getManagementTypesUsecase,
     required this.uploadClinicalRecordAttachmentUsecase,
     required this.uploadClinicalRecordUsecase,
+    required this.clinicalRecordsDatasource,
   }) : super(ClinicalRecordState());
 
   Future<void> getAffectedParts({required String unitId}) async {
@@ -168,6 +171,28 @@ class ClinicalRecordCubit extends Cubit<ClinicalRecordState> {
         print("disiini");
         return emit(state.copyWith(clinicalRecordPostSuccess: true));
       });
+    } catch (e) {
+      print("iniasd");
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> addFeedback(
+      {required String id, required String feedback}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await clinicalRecordsDatasource.makeFeedback(
+          feedback: feedback, crId: id);
+
+      emit(state.copyWith(isPostFeedbackSuccess: true));
     } catch (e) {
       print("iniasd");
       print(e.toString());

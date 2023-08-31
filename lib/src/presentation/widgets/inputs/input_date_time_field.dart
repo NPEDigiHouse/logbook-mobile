@@ -40,6 +40,7 @@ class _InputDateTimeFieldState extends State<InputDateTimeField> {
         if (time == null) return;
 
         setState(() {
+          print(time.minute);
           final dateTime = DateTime(
               widget.initialDate!.year,
               widget.initialDate!.month,

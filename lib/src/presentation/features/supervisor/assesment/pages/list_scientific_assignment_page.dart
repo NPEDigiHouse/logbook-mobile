@@ -1,6 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/supervisor_scientific_assignment_detail_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,9 +56,7 @@ class _ListScientificAssignmentPageState
                 subtitle: 'student have not yet upload scientific assignment',
               );
             }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return CustomLoading();
           },
         ),
       ),

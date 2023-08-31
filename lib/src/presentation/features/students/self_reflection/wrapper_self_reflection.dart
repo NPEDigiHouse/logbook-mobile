@@ -1,6 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/self_reflection/self_reflection_detail_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,9 +47,7 @@ class _WrapperSelfReflectionState extends State<WrapperSelfReflection> {
               ),
             );
         },
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: CustomLoading(),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/supervisor_self_reflection_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,9 +54,7 @@ class _SupervisorSelfReflectionStudentPageState
             },
             builder: (context, state) {
               if (state.data == null) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return CustomLoading();
               }
               return CustomScrollView(
                 slivers: [

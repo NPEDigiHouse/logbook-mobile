@@ -10,6 +10,7 @@ import 'package:elogbook/src/presentation/features/students/scientific_session/l
 import 'package:elogbook/src/presentation/features/students/self_reflection/self_reflection_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/sgl_cst_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/special_report_home_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -422,14 +423,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                   ),
                 );
               }
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              );
+              return CustomLoading();
             }),
           ),
         ),

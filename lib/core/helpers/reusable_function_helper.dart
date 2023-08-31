@@ -6,18 +6,18 @@ class ReusableFunctionHelper {
   static String datetimeToString(DateTime date,
       {bool isShowTime = false, String? format}) {
     return isShowTime
-        ? DateFormat(format ?? 'dd MMMM yyyy, HH:MM', "id_ID").format(date)
+        ? DateFormat(format ?? 'dd MMMM yyyy, HH:mm', "id_ID").format(date)
         : DateFormat(format ?? 'EEEE, dd MMMM yyyy', "id_ID").format(date);
   }
 
   static String datetimeToStringTime(DateTime date, {String? format}) {
-    return DateFormat(format ?? 'HH:MM', "id_ID").format(date);
+    return DateFormat(format ?? 'HH:mm', "id_ID").format(date);
   }
 
   /// Convert String to DateTime
   static DateTime stringToDateTime(String date, {bool isShowTime = false}) {
     return isShowTime
-        ? DateFormat('HH:MM, dd MMMM yyyy', "id_ID").parse(date)
+        ? DateFormat('HH:mm, dd MMMM yyyy', "id_ID").parse(date)
         : DateFormat("EEEE, dd MMMM yyyy", "id_ID").parse(date);
   }
 
@@ -31,5 +31,16 @@ class ReusableFunctionHelper {
       time += datetimeToStringTime(endDate);
     }
     return time;
+  }
+
+  static String rateToText(int i) {
+    final ratingMap = {
+      1: '\"Bad\"',
+      2: '\"Average\"',
+      3: '\"Good\"',
+      4: '\"Very Good\"',
+      5: '\"Perfect\"',
+    };
+    return ratingMap[i] ?? 'Unknown';
   }
 }

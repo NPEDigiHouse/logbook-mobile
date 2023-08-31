@@ -4,6 +4,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/assessment/personal_behavior_detail.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/clip_donut_painter.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
@@ -131,9 +132,7 @@ class _SupervisorPersonalBehaviorDetailPageState
                             subtitle: 'No Personal Bahavior Dat');
                       }
                     } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return CustomLoading();
                     }
                   },
                 ),

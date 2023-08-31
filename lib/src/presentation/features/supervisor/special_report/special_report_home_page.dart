@@ -2,6 +2,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/special_report/widgets/special_report_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -91,9 +92,7 @@ class _SpecialReportDetailPageState extends State<SpecialReportDetailPage> {
                               ),
                             ],
                           );
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return CustomLoading();
                       },
                     )
                   ],

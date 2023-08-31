@@ -2,6 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/add_scientific_assignment_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/student_scientific_assignment_detail.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -37,22 +38,19 @@ class _StudentScientificAssignmentPageState
                 .getStudentScientificAssignment(),
           ]);
         },
-        child: SingleChildScrollView(
-          child: SpacingColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              horizontalPadding: 16,
-              spacing: 12,
-              children: [
-                SizedBox(
-                  height: 16,
-                ),
-                // UnitHeader(unitName: widget.unitName),
-                BlocBuilder<AssesmentCubit, AssesmentState>(
-                  builder: (context, state) {
-                    if (state.scientificAssignmentStudents != null) {
-                      if (state.scientificAssignmentStudents!.isEmpty) {
-                        return SpacingColumn(
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              child: BlocBuilder<AssesmentCubit, AssesmentState>(
+                builder: (context, state) {
+                  if (state.scientificAssignmentStudents != null) {
+                    if (state.scientificAssignmentStudents!.isEmpty) {
+                      return SingleChildScrollView(
+                        child: SpacingColumn(
                           onlyPading: true,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          horizontalPadding: 16,
+                          spacing: 12,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
@@ -75,18 +73,18 @@ class _StudentScientificAssignmentPageState
                               ),
                             ),
                           ],
-                        );
-                      }
-                      final sa = state.scientificAssignmentStudents!.first;
-                      return WrapperScientificAssignment(id: sa.id!);
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
+                        ),
                       );
                     }
-                  },
-                ),
-              ]),
+                    final sa = state.scientificAssignmentStudents!.first;
+                    return WrapperScientificAssignment(id: sa.id!);
+                  } else {
+                    return CustomLoading();
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -120,9 +118,7 @@ class _WrapperScientificAssignmentState
             ss: state.scientificAssignmentDetail!,
           ));
       },
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: CustomLoading(),
     );
   }
 }

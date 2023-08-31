@@ -7,6 +7,7 @@ import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/input_score_modal.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/top_stat_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -183,9 +184,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                   ],
                 ),
               );
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return CustomLoading();
           },
         ),
       ),

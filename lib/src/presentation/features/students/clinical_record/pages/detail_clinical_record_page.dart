@@ -1,7 +1,10 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
@@ -20,6 +23,7 @@ class DetailClinicalRecordPage extends StatefulWidget {
 }
 
 class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
+  final TextEditingController fController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -47,9 +51,7 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
             ClinicalRecordSupervisorState>(
           builder: (context, state) {
             if (state.detailClinicalRecordModel == null) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return CustomLoading();
             }
             return SingleChildScrollView(
               child: Column(
@@ -753,10 +755,11 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                             height: 8,
                           ),
                           RatingBar.builder(
-                            initialRating: 2,
+                            initialRating: 3,
                             minRating: 1,
                             direction: Axis.horizontal,
-                            allowHalfRating: true,
+                            allowHalfRating: false,
+                            ignoreGestures: true,
                             itemCount: 5,
                             unratedColor: Color(0xFFCED8EE),
                             itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
@@ -769,50 +772,127 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                             },
                           ),
                           Text(
-                            '\"Good\"',
+                            ReusableFunctionHelper.rateToText(3),
                             style: textTheme.bodyLarge
                                 ?.copyWith(color: primaryColor),
                           ),
                           SizedBox(
                             height: 16,
                           ),
+                          ItemDivider(),
                           SizedBox(
-                            height: 24,
+                            height: 16,
                           ),
-                          Container(
-                            height: 56,
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: dividerColor,
+                          Text(
+                            'Feedback',
+                            style: textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
                             ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      hintText: 'Reply',
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          if (state.detailClinicalRecordModel!
+                                  .supervisorFeedback !=
+                              null)
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: primaryTextColor,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                          '${state.detailClinicalRecordModel?.supervisorName} :\t',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                        text: state.detailClinicalRecordModel!
+                                            .supervisorFeedback),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          if (state
+                                  .detailClinicalRecordModel!.studentFeedback ==
+                              null)
+                            Container(
+                              height: 56,
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: dividerColor,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: fController,
+                                      decoration: InputDecoration(
+                                        hintText: 'Reply',
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.grey,
-                                  ),
-                                  child: Icon(
-                                    Icons.arrow_upward_rounded,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              ],
+                                  InkWell(
+                                    onTap: () {
+                                      BlocProvider.of<ClinicalRecordCubit>(
+                                          context)
+                                        ..addFeedback(
+                                            id: widget.id,
+                                            feedback: fController.text);
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.grey,
+                                      ),
+                                      child: Icon(
+                                        Icons.arrow_upward_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
+                          if (state
+                                  .detailClinicalRecordModel!.studentFeedback !=
+                              null)
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: primaryTextColor,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                          '${state.detailClinicalRecordModel?.studentName} :\t',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                        text: state.detailClinicalRecordModel!
+                                            .studentFeedback),
+                                  ],
+                                ),
+                              ),
+                            ),
                         ],
                       ],
                     ),

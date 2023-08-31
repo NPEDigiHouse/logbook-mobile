@@ -1,6 +1,8 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/personal_behavior/student_personal_behavior_detail.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -30,38 +32,33 @@ class _StudentPersonalBehaviorPageState
         title: Text("Persoanl Behavior"),
       ).variant(),
       body: RefreshIndicator(
-         onRefresh: () async {
+        onRefresh: () async {
           await Future.wait([
             BlocProvider.of<AssesmentCubit>(context)
                 .getStudentScientificAssignment(),
           ]);
         },
-        child: SingleChildScrollView(
-          child: SpacingColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              horizontalPadding: 16,
-              spacing: 12,
-              children: [
-                SizedBox(
-                  height: 16,
-                ),
-                UnitHeader(unitName: widget.unitName),
-                BlocBuilder<AssesmentCubit, AssesmentState>(
-                  builder: (context, state) {
-                    if (state.personalBehaviorStudent != null) {
-                      if (state.personalBehaviorStudent!.isEmpty) {
-                        return SizedBox();
-                      }
-                      final sa = state.personalBehaviorStudent!.first;
-                      return WrapperScientificAssignment(id: sa.id!);
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              child: BlocBuilder<AssesmentCubit, AssesmentState>(
+                builder: (context, state) {
+                  if (state.personalBehaviorStudent != null) {
+                    if (state.personalBehaviorStudent!.isEmpty) {
+                      return EmptyData(
+                        subtitle: 'personal behavior empty',
+                        title: 'No Personal Behavior',
                       );
                     }
-                  },
-                ),
-              ]),
+                    final sa = state.personalBehaviorStudent!.first;
+                    return WrapperScientificAssignment(id: sa.id!);
+                  } else {
+                    return CustomLoading();
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -95,9 +92,7 @@ class _WrapperScientificAssignmentState
             pb: state.personalBehaviorDetail!,
           ));
       },
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: CustomLoading(),
     );
   }
 }

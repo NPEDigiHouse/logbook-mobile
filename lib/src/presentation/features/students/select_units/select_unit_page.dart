@@ -3,6 +3,7 @@ import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/units/unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/select_units/widgets/custom_bottom_alert.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/students/select_units/widgets/select_unit_card.dart';
@@ -116,9 +117,7 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
                   itemCount: state.units.length,
                 );
               } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return CustomLoading();
               }
             },
           ),

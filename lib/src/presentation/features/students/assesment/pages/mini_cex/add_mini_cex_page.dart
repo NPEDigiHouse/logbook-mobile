@@ -33,7 +33,7 @@ class _AddMiniCexPageState extends State<AddMiniCexPage> {
     return BlocListener<AssesmentCubit, AssesmentState>(
       listener: (context, state) {
         if (state.isUploadMiniCexSuccess) {
-          // BlocProvider.of<AssesmentCubit>(context)..();
+          BlocProvider.of<AssesmentCubit>(context).getStudentMiniCexs();
           Navigator.pop(context);
         }
       },
@@ -75,6 +75,7 @@ class _AddMiniCexPageState extends State<AddMiniCexPage> {
                     }
                     return DropdownButtonFormField(
                       hint: Text('Location'),
+                      isExpanded: true,
                       items: _activityLocations
                           .map(
                             (e) => DropdownMenuItem(

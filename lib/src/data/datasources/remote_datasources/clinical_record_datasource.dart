@@ -34,6 +34,7 @@ abstract class ClinicalRecordsDatasource {
   Future<void> verifiyClinicalRecord(
       {required String clinicalRecordId,
       required VerifyClinicalRecordModel model});
+  Future<void> makeFeedback({required String feedback, required crId});
 }
 
 class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
@@ -380,6 +381,38 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           },
         ),
         data: model.toJson(),
+      );
+      print(response);
+      // print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> makeFeedback({required String feedback, required crId}) async {
+    final credential = await preferenceHandler.getCredential();
+
+    try {
+      final response = await dio.put(
+        ApiService.baseUrl + '/clinical-records/${crId}/feedback',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+        data: {
+          'feedback': feedback,
+        },
       );
       print(response);
       // print(response.statusCode);

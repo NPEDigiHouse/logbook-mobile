@@ -4,7 +4,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/competences/widgets/add_competence_dialog.dart';
-import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
@@ -61,19 +61,21 @@ class _ListCasesPageState extends State<ListCasesPage> {
       appBar: AppBar(
         title: Text("List Cases"),
       ),
-      floatingActionButton: widget.model.countCheckIn! == 0?FloatingActionButton(
-        onPressed: () => showDialog(
-            context: context,
-            barrierLabel: '',
-            barrierDismissible: false,
-            builder: (_) => AddCompetenceDialog(
-                  type: CompetenceType.caseType,
-                  unitId: widget.unitId,
-                )).then((value) {}),
-        child: Icon(
-          Icons.add_rounded,
-        ),
-      ) : null,
+      floatingActionButton: widget.model.countCheckIn! == 0
+          ? FloatingActionButton(
+              onPressed: () => showDialog(
+                  context: context,
+                  barrierLabel: '',
+                  barrierDismissible: false,
+                  builder: (_) => AddCompetenceDialog(
+                        type: CompetenceType.caseType,
+                        unitId: widget.unitId,
+                      )).then((value) {}),
+              child: Icon(
+                Icons.add_rounded,
+              ),
+            )
+          : null,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
@@ -81,55 +83,64 @@ class _ListCasesPageState extends State<ListCasesPage> {
               BlocProvider.of<CompetenceCubit>(context).getListCases(),
             ]);
           },
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: SpacingColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              onlyPading: true,
-              horizontalPadding: 16,
-              children: [
-                UnitHeader(unitName: widget.model.unitName!),
-                SizedBox(
-                  height: 12,
-                ),
-                BlocBuilder<CompetenceCubit, CompetenceState>(
-                  builder: (context, state) {
-                    if (state.listCasesModel != null) {
-                      final data = state.listCasesModel!.listCases!;
-                      if (data.isEmpty) {
-                        return EmptyData(
-                          subtitle: 'Please add case data first!',
-                          title: 'Data Still Empty',
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                sliver: SliverFillRemaining(
+                  child: BlocBuilder<CompetenceCubit, CompetenceState>(
+                    builder: (context, state) {
+                      if (state.listCasesModel != null) {
+                        final data = state.listCasesModel!.listCases!;
+                        if (data.isEmpty) {
+                          return EmptyData(
+                            subtitle: 'Please add case data first!',
+                            title: 'Data Still Empty',
+                          );
+                        }
+                        return SingleChildScrollView(
+                          child: SpacingColumn(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            onlyPading: true,
+                            horizontalPadding: 16,
+                            children: [
+                              UnitHeader(unitName: widget.model.unitName!),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              buildSearchFilterSection(),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              ListView.separated(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) =>
+                                    TestGradeScoreCard(
+                                  caseName: data[index].caseName!,
+                                  caseType: data[index].caseType!,
+                                  isVerified: data[index].verificationStatus ==
+                                      'VERIFIED',
+                                ),
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: 12),
+                                itemCount: data.length,
+                              ),
+                              SizedBox(
+                                height: 12,
+                              ),
+                            ],
+                          ),
                         );
+                      } else {
+                        return CustomLoading();
                       }
-                      return Column(
-                        children: [
-                          buildSearchFilterSection(),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          ListView.separated(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) => TestGradeScoreCard(
-                              caseName: data[index].caseName!,
-                              caseType: data[index].caseType!,
-                              isVerified:
-                                  data[index].verificationStatus == 'VERIFIED',
-                            ),
-                            separatorBuilder: (context, index) =>
-                                SizedBox(height: 12),
-                            itemCount: data.length,
-                          ),
-                        ],
-                      );
-                    } else {
-                      return SizedBox.shrink();
-                    }
-                  },
-                )
-              ],
-            ),
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

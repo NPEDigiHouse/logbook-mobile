@@ -1,6 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/student_unit_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,9 +39,7 @@ class _SupervisorListStudentUnitPageState
           child: BlocBuilder<SupervisorsCubit, SupervisorsState>(
             builder: (context, state) {
               if (state is Loading) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return CustomLoading();
               }
               if (state is FetchStudentUnitSuccess)
                 return Padding(

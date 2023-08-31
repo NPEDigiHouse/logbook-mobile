@@ -5,6 +5,7 @@ import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/self_reflection/create_self_reflection_page.dart';
 import 'package:elogbook/src/presentation/features/students/self_reflection/widgets/self_reflection_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
@@ -69,66 +70,75 @@ class _StudentSelfReflectionHomePageState
                   .getStudentSelfReflections(),
             ]);
           },
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: BlocBuilder<StudentCubit, StudentState>(
-              builder: (context, state) {
-                if (state.selfReflectionResponse != null) {
-                  return SpacingColumn(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    onlyPading: true,
-                    horizontalPadding: 16,
-                    children: [
-                      UnitHeader(unitName: widget.activeUnitModel.unitName!),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      SectionDivider(),
-                      Builder(
-                        builder: (context) {
-                          if (state.selfReflectionResponse != null) {
-                            final data = state
-                                .selfReflectionResponse!.listSelfReflections!;
-                            if (data.isEmpty) {
-                              return EmptyData(
-                                subtitle: 'Please add self reflection first!',
-                                title: 'Data Still Empty',
-                              );
-                            }
-                            return Column(
-                              children: [
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                ListView.separated(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) =>
-                                      StudentSelfReflectionCard(
-                                    model: state.selfReflectionResponse!
-                                        .listSelfReflections![index],
-                                  ),
-                                  separatorBuilder: (context, index) =>
-                                      SizedBox(
-                                    child: ItemDivider(),
-                                  ),
-                                  itemCount: data.length,
-                                ),
-                              ],
-                            );
-                          } else {
-                            return SizedBox.shrink();
-                          }
-                        },
-                      )
-                    ],
-                  );
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                sliver: SliverFillRemaining(
+                  child: BlocBuilder<StudentCubit, StudentState>(
+                    builder: (context, state) {
+                      if (state.selfReflectionResponse != null) {
+                        return SingleChildScrollView(
+                          child: SpacingColumn(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            onlyPading: true,
+                            horizontalPadding: 16,
+                            children: [
+                              UnitHeader(
+                                  unitName: widget.activeUnitModel.unitName!),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              ItemDivider(),
+                              Builder(
+                                builder: (context) {
+                                  if (state.selfReflectionResponse != null) {
+                                    final data = state.selfReflectionResponse!
+                                        .listSelfReflections!;
+                                    if (data.isEmpty) {
+                                      return EmptyData(
+                                        subtitle:
+                                            'Please add self reflection first!',
+                                        title: 'Data Still Empty',
+                                      );
+                                    }
+                                    return Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 16,
+                                        ),
+                                        ListView.separated(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) =>
+                                              StudentSelfReflectionCard(
+                                            model: state.selfReflectionResponse!
+                                                .listSelfReflections![index],
+                                          ),
+                                          separatorBuilder: (context, index) =>
+                                              SizedBox(
+                                            child: ItemDivider(),
+                                          ),
+                                          itemCount: data.length,
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    return SizedBox.shrink();
+                                  }
+                                },
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                      return CustomLoading();
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

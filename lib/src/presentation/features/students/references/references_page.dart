@@ -2,6 +2,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/data/models/reference/reference_on_list_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/reference/reference_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
@@ -112,9 +113,7 @@ class _ReferencePageState extends State<ReferencePage> {
                                       subtitle:
                                           'no reference data has uploaded');
                               } else
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
+                                return Expanded(child: CustomLoading());
                             },
                           ),
                         ],

@@ -294,7 +294,9 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                                 reference: referenceController.text,
                                 sessionType: sesionType,
                                 supervisorId: supervisorId,
-                                notes: additionalNotesController.text,
+                                notes: additionalNotesController.text.isEmpty
+                                    ? null
+                                    : additionalNotesController.text,
                               ),
                             );
                         },

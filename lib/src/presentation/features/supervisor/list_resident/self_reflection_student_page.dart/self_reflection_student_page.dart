@@ -3,6 +3,7 @@ import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.da
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/widgets/head_resident_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/supervisor_self_reflection_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,9 +84,7 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
                     }
                   } else {
                     return SliverToBoxAdapter(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      child: CustomLoading(),
                     );
                   }
                 },

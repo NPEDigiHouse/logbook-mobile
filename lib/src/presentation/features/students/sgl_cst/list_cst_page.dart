@@ -9,7 +9,9 @@ import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart
 import 'package:elogbook/src/presentation/features/students/sgl_cst/create_cst_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/add_topic_dialog.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/sgl_cst_app_bar.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +37,11 @@ class _ListCstPageState extends State<ListCstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: (widget.activeUnitModel.countCheckIn! > 0)
+          ? AppBar(
+              title: Text('Clinical Skill Training (CST)'),
+            )
+          : null,
       body: RefreshIndicator(
         onRefresh: () async {
           await Future.wait(
@@ -49,17 +56,19 @@ class _ListCstPageState extends State<ListCstPage> {
                   context.navigateTo(CreateCstPage());
                 },
               ),
-            SliverToBoxAdapter(
+            SliverFillRemaining(
               child: SpacingColumn(
                 horizontalPadding: 16,
                 children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  _buildAttendanceOverview(context),
+                  // _buildAttendanceOverview(context),
                   BlocBuilder<SglCstCubit, SglCstState>(
                     builder: (context, state) {
-                      if (state.cstDetail != null)
+                      if (state.cstDetail != null) {
+                        if (state.cstDetail!.csts!.isEmpty) {
+                          return EmptyData(
+                              title: 'No CST Found',
+                              subtitle: 'There is no cst data added yet');
+                        }
                         return ListView.separated(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
@@ -250,20 +259,17 @@ class _ListCstPageState extends State<ListCstPage> {
                               );
                             },
                             itemCount: state.cstDetail!.csts!.length);
+                      }
 
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return Expanded(child: CustomLoading());
                     },
+                  ),
+                  SizedBox(
+                    height: 16,
                   ),
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 16,
-              ),
-            )
           ],
         ),
       ),

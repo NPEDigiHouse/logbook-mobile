@@ -6,8 +6,8 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
-import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/pages/daily_activity_week_status_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -283,9 +283,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                   ],
                 ),
               );
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return CustomLoading();
           },
         ),
       ),
@@ -296,7 +294,8 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
 class DailyActivityHomeCard extends StatelessWidget {
   final int checkInCount;
   final StudentDailyActivityModel dailyActivity;
-  const DailyActivityHomeCard({super.key, required this.dailyActivity, required this.checkInCount});
+  const DailyActivityHomeCard(
+      {super.key, required this.dailyActivity, required this.checkInCount});
 
   @override
   Widget build(BuildContext context) {
@@ -335,7 +334,9 @@ class DailyActivityHomeCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                   color: dailyActivity.verificationStatus == 'VERIFIED'
                       ? successColor
-                      : errorColor,
+                      : dailyActivity.verificationStatus == 'UNVERIFIED'
+                          ? errorColor
+                          : onFormDisableColor,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -343,7 +344,9 @@ class DailyActivityHomeCard extends StatelessWidget {
                     Icon(
                       dailyActivity.verificationStatus == 'VERIFIED'
                           ? Icons.verified_rounded
-                          : Icons.hourglass_bottom_rounded,
+                          : dailyActivity.verificationStatus == 'UNVERIFIED'
+                              ? Icons.close_rounded
+                              : Icons.hourglass_bottom_rounded,
                       color: Colors.white,
                       size: 16,
                     ),
@@ -389,6 +392,23 @@ class DailyActivityHomeCard extends StatelessWidget {
               'SICK': 'sakit_emoji.svg',
               'NOT_ATTEND': 'emoji_alfa.svg',
             };
+            dailyActivity.activitiesStatus!.sort(
+              (a, b) {
+                // Urutkan berdasarkan urutan hari dalam seminggu
+                final daysOfWeek = [
+                  'SUNDAY',
+                  'MONDAY',
+                  'TUESDAY',
+                  'WEDNESDAY',
+                  'THURSDAY',
+                  'FRIDAY',
+                  'SATURDAY'
+                ];
+                return daysOfWeek
+                    .indexOf(a.day!)
+                    .compareTo(daysOfWeek.indexOf(b.day!));
+              },
+            );
             return SpacingRow(
               onlyPading: true,
               spacing: 0,

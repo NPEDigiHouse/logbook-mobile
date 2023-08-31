@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,7 +98,9 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
                                   width: 100,
                                   height: 100,
                                   child: Center(
-                                      child: CircularProgressIndicator()),
+                                      child: CircularProgressIndicator(
+                                    color: primaryColor,
+                                  )),
                                 );
                               }
                               if (state.profilePic != null) {
@@ -218,9 +221,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
               ),
             );
           }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return CustomLoading();
         },
       ),
     );

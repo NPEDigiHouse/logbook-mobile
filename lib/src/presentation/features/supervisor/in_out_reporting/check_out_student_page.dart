@@ -6,6 +6,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/students/student_check_in_model.dart';
 import 'package:elogbook/src/data/models/students/student_check_out_model.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
@@ -83,9 +84,7 @@ class _CheckOutReportPageState extends State<CheckOutReportPage> {
             ],
           );
         }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+        return CustomLoading();
       },
     );
   }

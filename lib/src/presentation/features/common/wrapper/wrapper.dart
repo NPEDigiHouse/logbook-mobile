@@ -4,6 +4,7 @@ import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
 import 'package:elogbook/src/presentation/features/coordinator/menu/main_menu.dart';
 import 'package:elogbook/src/presentation/features/students/menu/main_menu.dart';
 import 'package:elogbook/src/presentation/features/supervisor/menu/main_menu.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,9 +36,7 @@ class _WrapperState extends State<Wrapper> {
       builder: (context, state) {
         if (state is Loading) {
           return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: CustomLoading(),
           );
         }
         print(state);

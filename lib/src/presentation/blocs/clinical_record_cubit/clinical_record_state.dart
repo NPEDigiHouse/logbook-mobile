@@ -10,6 +10,7 @@ class ClinicalRecordState {
   final List<ManagementTypesModel>? managementTypes;
   final RequestState requestState;
   final String? pathAttachment;
+  final bool isPostFeedbackSuccess;
   final bool clinicalRecordPostSuccess;
 
   ClinicalRecordState(
@@ -19,6 +20,7 @@ class ClinicalRecordState {
       this.managementRoles,
       this.managementTypes,
       this.pathAttachment,
+      this.isPostFeedbackSuccess = false,
       this.clinicalRecordPostSuccess = false,
       this.requestState = RequestState.init});
 
@@ -29,6 +31,7 @@ class ClinicalRecordState {
     List<ManagementRoleModel>? managementRoles,
     List<ManagementTypesModel>? managementTypes,
     RequestState? requestState,
+    bool isPostFeedbackSuccess = false,
     bool clinicalRecordPostSuccess = false,
     String? pathAttachment,
   }) {
@@ -39,6 +42,7 @@ class ClinicalRecordState {
         managementRoles: managementRoles ?? this.managementRoles,
         managementTypes: managementTypes ?? this.managementTypes,
         requestState: requestState ?? RequestState.init,
+        isPostFeedbackSuccess: isPostFeedbackSuccess,
         pathAttachment: pathAttachment ?? this.pathAttachment,
         clinicalRecordPostSuccess: clinicalRecordPostSuccess);
   }

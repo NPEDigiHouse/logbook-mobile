@@ -9,7 +9,9 @@ import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart
 import 'package:elogbook/src/presentation/features/students/sgl_cst/create_sgl_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/add_topic_dialog.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/sgl_cst_app_bar.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +37,11 @@ class _ListSglPageState extends State<ListSglPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: (widget.activeUnitModel.countCheckIn! > 0)
+          ? AppBar(
+              title: Text('Small Group Learning (SGL)'),
+            )
+          : null,
       body: RefreshIndicator(
         onRefresh: () async {
           await Future.wait(
@@ -49,17 +56,19 @@ class _ListSglPageState extends State<ListSglPage> {
                   context.navigateTo(CreateSglPage());
                 },
               ),
-            SliverToBoxAdapter(
+            SliverFillRemaining(
               child: SpacingColumn(
                 horizontalPadding: 16,
                 children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  _buildAttendanceOverview(context),
+                  // _buildAttendanceOverview(context),
                   BlocBuilder<SglCstCubit, SglCstState>(
                     builder: (context, state) {
-                      if (state.sglDetail != null)
+                      if (state.sglDetail != null) {
+                        if (state.sglDetail!.sgls!.isEmpty) {
+                          return EmptyData(
+                              title: 'No SGL Found',
+                              subtitle: 'There is no sgl data added yet');
+                        }
                         return ListView.separated(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
@@ -250,20 +259,16 @@ class _ListSglPageState extends State<ListSglPage> {
                               );
                             },
                             itemCount: state.sglDetail!.sgls!.length);
-
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      }
+                      return Expanded(child: CustomLoading());
                     },
+                  ),
+                  SizedBox(
+                    height: 16,
                   ),
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 16,
-              ),
-            )
           ],
         ),
       ),

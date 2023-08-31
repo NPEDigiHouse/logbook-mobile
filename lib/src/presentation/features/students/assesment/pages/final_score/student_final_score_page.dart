@@ -7,6 +7,7 @@ import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/input_score_modal.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/top_stat_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -90,45 +91,48 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
             BlocProvider.of<AssesmentCubit>(context).getStudentFinalScore(),
           ]);
         },
-        child: BlocBuilder<AssesmentCubit, AssesmentState>(
-          builder: (context, state) {
-            if (state.finalScore != null)
-              return SingleChildScrollView(
-                child: SpacingColumn(
-                  horizontalPadding: 16,
-                  spacing: 12,
-                  children: [
-                    SizedBox(
-                      height: 16,
-                    ),
-                    FinalGradeTopStatCard(
-                      title: 'Final Grade Statistic',
-                      totalGrade:
-                          getTotalGrades(state.finalScore!.finalScore ?? 0),
-                    ),
-                    if (state.finalScore!.assesments != null) ...[
-                      for (int i = 0;
-                          i < state.finalScore!.assesments!.length;
-                          i++)
-                        FinalGradeScoreCard(
-                          type:
-                              mapTitle[state.finalScore!.assesments![i].type] ??
-                                  '-',
-                          score: state.finalScore!.assesments![i].score ?? 0,
-                          proportion:
-                              state.finalScore!.assesments![i].weight ?? 0,
+        child: CustomScrollView(
+          slivers: [
+            BlocBuilder<AssesmentCubit, AssesmentState>(
+              builder: (context, state) {
+                if (state.finalScore != null)
+                  return SliverToBoxAdapter(
+                    child: SpacingColumn(
+                      horizontalPadding: 16,
+                      spacing: 12,
+                      children: [
+                        SizedBox(
+                          height: 16,
                         ),
-                    ],
-                    SizedBox(
-                      height: 12,
+                        FinalGradeTopStatCard(
+                          title: 'Final Grade Statistic',
+                          totalGrade:
+                              getTotalGrades(state.finalScore!.finalScore ?? 0),
+                        ),
+                        if (state.finalScore!.assesments != null) ...[
+                          for (int i = 0;
+                              i < state.finalScore!.assesments!.length;
+                              i++)
+                            FinalGradeScoreCard(
+                              type: mapTitle[
+                                      state.finalScore!.assesments![i].type] ??
+                                  '-',
+                              score:
+                                  state.finalScore!.assesments![i].score ?? 0,
+                              proportion:
+                                  state.finalScore!.assesments![i].weight ?? 0,
+                            ),
+                        ],
+                        SizedBox(
+                          height: 12,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              );
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+                  );
+                return CustomLoading();
+              },
+            ),
+          ],
         ),
       ),
     );

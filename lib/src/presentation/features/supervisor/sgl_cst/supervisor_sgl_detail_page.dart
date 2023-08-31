@@ -4,6 +4,7 @@ import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -43,28 +44,24 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
+              floating: true,
+              snap: true,
               title: Text('Small Group Learning (SGL)'),
             ),
-            SliverToBoxAdapter(
-              child: SpacingColumn(
-                horizontalPadding: 16,
-                children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  _buildAttendanceOverview(context),
-                  BlocConsumer<SglCstCubit, SglCstState>(
-                    listener: (context, state) {
-                      if (state.isVerifyTopicSuccess ||
-                          state.isVerifySglCstSuccess) {
-                        BlocProvider.of<SglCstCubit>(context)
-                          ..getStudentSglDetailById(
-                              studentId: widget.studentId);
-                      }
-                    },
-                    builder: (context, state) {
-                      if (state.sglDetail != null)
-                        return ListView.separated(
+            BlocConsumer<SglCstCubit, SglCstState>(
+              listener: (context, state) {
+                if (state.isVerifyTopicSuccess || state.isVerifySglCstSuccess) {
+                  BlocProvider.of<SglCstCubit>(context)
+                    ..getStudentSglDetailById(studentId: widget.studentId);
+                }
+              },
+              builder: (context, state) {
+                if (state.sglDetail != null)
+                  return SliverToBoxAdapter(
+                    child: SpacingColumn(
+                      horizontalPadding: 16,
+                      children: [
+                        ListView.separated(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
@@ -270,15 +267,13 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                 height: 16,
                               );
                             },
-                            itemCount: state.sglDetail!.sgls!.length);
+                            itemCount: state.sglDetail!.sgls!.length),
+                      ],
+                    ),
+                  );
 
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  ),
-                ],
-              ),
+                return SliverFillRemaining(child: CustomLoading());
+              },
             ),
             SliverToBoxAdapter(
               child: SizedBox(

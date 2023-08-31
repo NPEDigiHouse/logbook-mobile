@@ -7,6 +7,7 @@ import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/clip_donut_painter.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -141,13 +142,9 @@ class _SupervisorScientificAssignmentDetailPageState
                             ),
                           ],
                         );
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return CustomLoading();
                     } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return CustomLoading();
                     }
                   },
                 ),

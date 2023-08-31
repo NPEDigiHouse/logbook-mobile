@@ -1,6 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/self_reflection_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
@@ -42,9 +43,7 @@ class _SupervisorListSelfReflectionsPageState
               SelfReflectionSupervisorState>(
             builder: (context, state) {
               if (state.listData == null) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return CustomLoading();
               }
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),

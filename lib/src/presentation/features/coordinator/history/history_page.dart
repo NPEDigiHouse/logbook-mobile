@@ -1,5 +1,6 @@
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/history_cubit/history_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -327,7 +328,7 @@ class _CoordinatorHistoryPageState extends State<CoordinatorHistoryPage> {
                 ],
               );
             }
-            return Center(child: CircularProgressIndicator());
+            return CustomLoading();
           },
         ),
       ),

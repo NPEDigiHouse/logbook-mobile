@@ -3,8 +3,6 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
-import 'package:elogbook/src/presentation/features/students/sgl_cst/list_cst_page.dart';
-import 'package:elogbook/src/presentation/features/students/sgl_cst/list_sgl_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/supervisor_list_cst_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/supervisor_list_sgl_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';

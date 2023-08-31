@@ -2,10 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/personal_behavior/student_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/student_scientific_assignment_page.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/student_personal_behavior_page.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/student_scientific_assesment_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_test_grade_page.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/student_weekly_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/weekly_assesment/student_weekly_assesment_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/assesment_menu_card.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/widgets/final_grade_card.dart';
@@ -54,6 +51,7 @@ class AssesmentHomePage extends StatelessWidget {
                   onTap: () =>
                       context.navigateTo(StudentScientificAssignmentPage(
                     unitName: activeUnitModel.unitName!,
+                  
                   )),
                 ),
               ],

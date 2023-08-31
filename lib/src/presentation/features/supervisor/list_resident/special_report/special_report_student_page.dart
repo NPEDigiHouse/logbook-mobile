@@ -4,6 +4,7 @@ import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.da
 import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/widgets/head_resident_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/special_report/widgets/special_report_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -93,9 +94,7 @@ class _SpecialReportStudentPageState extends State<SpecialReportStudentPage> {
                         ),
                       ],
                     );
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return CustomLoading();
                 },
               ),
             ),

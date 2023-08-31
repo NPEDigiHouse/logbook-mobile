@@ -5,6 +5,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/pages/create_daily_activity_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,10 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
   final int checkInCount;
 
   const DailyActivityWeekStatusPage(
-      {super.key, required this.dailyActivityId, required this.weekName, required this.checkInCount});
+      {super.key,
+      required this.dailyActivityId,
+      required this.weekName,
+      required this.checkInCount});
 
   @override
   State<DailyActivityWeekStatusPage> createState() =>
@@ -48,189 +52,233 @@ class _DailyActivityWeekStatusPageState
                 .getStudentActivityPerweek(id: widget.dailyActivityId),
           ]);
         },
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
-            builder: (context, state) {
-              if (state.studentActivityPerweek != null) {
-                return SpacingColumn(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  horizontalPadding: 16,
-                  spacing: 20,
-                  children: [
-                    Container(
-                      width: AppSize.getAppWidth(context),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(.12),
-                            offset: Offset(0, 2),
-                            blurRadius: 20,
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                        color: scaffoldBackgroundColor,
-                      ),
-                      child: Column(
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
+                builder: (context, state) {
+                  if (state.studentActivityPerweek != null) {
+                    return SingleChildScrollView(
+                      child: SpacingColumn(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        horizontalPadding: 16,
+                        spacing: 20,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Week ${state.studentActivityPerweek!.weekName}',
-                                style: textTheme.titleLarge,
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: state.studentActivityPerweek!
-                                              .verificationStatus ==
-                                          'VERIFIED'
-                                      ? successColor
-                                      : errorColor,
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Container(
+                            width: AppSize.getAppWidth(context),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 20),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(.12),
+                                  offset: Offset(0, 2),
+                                  blurRadius: 20,
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(12),
+                              color: scaffoldBackgroundColor,
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Icon(
-                                      state.studentActivityPerweek!
-                                                  .verificationStatus ==
-                                              'VERIFIED'
-                                          ? Icons.verified_rounded
-                                          : Icons.hourglass_bottom_rounded,
-                                      color: Colors.white,
-                                      size: 16,
-                                    ),
-                                    SizedBox(
-                                      width: 4,
-                                    ),
                                     Text(
-                                      '${state.studentActivityPerweek?.verificationStatus}',
-                                      style: textTheme.bodySmall?.copyWith(
-                                        color: Colors.white,
+                                      'Week ${state.studentActivityPerweek!.weekName}',
+                                      style: textTheme.titleLarge,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: state.studentActivityPerweek!
+                                                    .verificationStatus ==
+                                                'VERIFIED'
+                                            ? successColor
+                                            : state.studentActivityPerweek!
+                                                        .verificationStatus ==
+                                                    'UNVERIFIED'
+                                                ? errorColor
+                                                : onFormDisableColor,
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            state.studentActivityPerweek!
+                                                        .verificationStatus ==
+                                                    'VERIFIED'
+                                                ? Icons.verified_rounded
+                                                : state.studentActivityPerweek!
+                                                            .verificationStatus ==
+                                                        'UNVERIFIED'
+                                                    ? Icons.close_rounded
+                                                    : Icons
+                                                        .hourglass_bottom_rounded,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Text(
+                                            '${state.studentActivityPerweek?.verificationStatus}',
+                                            style:
+                                                textTheme.bodySmall?.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF6F7F8),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  height: 84,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          width: 24,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                            color: errorColor.withOpacity(
-                                              .2,
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFF6F7F8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        height: 84,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                                width: 24,
+                                                height: 24,
+                                                decoration: BoxDecoration(
+                                                  color: errorColor.withOpacity(
+                                                    .2,
+                                                  ),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                padding: EdgeInsets.all(2),
+                                                child: SvgPicture.asset(
+                                                    AssetPath.getIcon(
+                                                        'emoji_alfa.svg'))),
+                                            SizedBox(
+                                              height: 8,
                                             ),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          padding: EdgeInsets.all(2),
-                                          child: SvgPicture.asset(
-                                              AssetPath.getIcon(
-                                                  'emoji_alfa.svg'))),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        '${state.studentActivityPerweek!.alpha}',
-                                        style: textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          height: 1,
+                                            Text(
+                                              '${state.studentActivityPerweek!.alpha}',
+                                              style: textTheme.titleMedium
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                height: 1,
+                                              ),
+                                            ),
+                                            Text('Alpha'),
+                                          ],
                                         ),
                                       ),
-                                      Text('Alpha'),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF6F7F8),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  height: 84,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          width: 24,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                            color: primaryColor.withOpacity(
-                                              .2,
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFF6F7F8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        height: 84,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                                width: 24,
+                                                height: 24,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      primaryColor.withOpacity(
+                                                    .2,
+                                                  ),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                padding: EdgeInsets.all(2),
+                                                child: SvgPicture.asset(
+                                                    AssetPath.getIcon(
+                                                        'emoji_hadir.svg'))),
+                                            SizedBox(
+                                              height: 8,
                                             ),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          padding: EdgeInsets.all(2),
-                                          child: SvgPicture.asset(
-                                              AssetPath.getIcon(
-                                                  'emoji_hadir.svg'))),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        '${state.studentActivityPerweek!.attend}',
-                                        style: textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          height: 1,
+                                            Text(
+                                              '${state.studentActivityPerweek!.attend}',
+                                              style: textTheme.titleMedium
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                height: 1,
+                                              ),
+                                            ),
+                                            Text('Hadir'),
+                                          ],
                                         ),
                                       ),
-                                      Text('Hadir'),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
+                          ...List.generate(
+                              state.studentActivityPerweek!.activities!.length,
+                              (index) {
+                            final data =
+                                state.studentActivityPerweek!.activities!;
+                            data.sort(
+                              (a, b) {
+                                // Urutkan berdasarkan urutan hari dalam seminggu
+                                final daysOfWeek = [
+                                  'SUNDAY',
+                                  'MONDAY',
+                                  'TUESDAY',
+                                  'WEDNESDAY',
+                                  'THURSDAY',
+                                  'FRIDAY',
+                                  'SATURDAY'
+                                ];
+                                return daysOfWeek
+                                    .indexOf(a.day!)
+                                    .compareTo(daysOfWeek.indexOf(b.day!));
+                              },
+                            );
+                            return DailyActivityStatusCard(
+                              id: data[index].id!,
+                              verificationStatus:
+                                  data[index].verificationStatus!,
+                              day: data[index].day!,
+                              dailyActivityId: widget.dailyActivityId,
+                              status: data[index].activityStatus!,
+                              checkInCount: widget.checkInCount,
+                            );
+                          }).toList(),
                         ],
                       ),
-                    ),
-                    ...List.generate(
-                        state.studentActivityPerweek!.activities!.length,
-                        (index) {
-                      final data = state.studentActivityPerweek!.activities!;
-                      return DailyActivityStatusCard(
-                        id: data[index].id!,
-                        verificationStatus: data[index].verificationStatus!,
-                        day: data[index].day!,
-                        dailyActivityId: widget.dailyActivityId,
-                        status: data[index].activityStatus!,
-                        checkInCount: widget.checkInCount,
-                      );
-                    }).toList(),
-                  ],
-                );
-              }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          ),
+                    );
+                  }
+                  return CustomLoading();
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -244,15 +292,15 @@ class DailyActivityStatusCard extends StatelessWidget {
   final String verificationStatus;
   final String status;
   final int checkInCount;
-  const DailyActivityStatusCard(
-      {super.key,
-      required this.dailyActivityId,
-      required this.id,
-      required this.verificationStatus,
-      required this.day,
-      required this.checkInCount,
-      required this.status,
-      });
+  const DailyActivityStatusCard({
+    super.key,
+    required this.dailyActivityId,
+    required this.id,
+    required this.verificationStatus,
+    required this.day,
+    required this.checkInCount,
+    required this.status,
+  });
 
   @override
   Widget build(BuildContext context) {

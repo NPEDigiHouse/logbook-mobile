@@ -386,6 +386,7 @@ void _injectStateManagement() {
       getManagementTypesUsecase: locator(),
       uploadClinicalRecordAttachmentUsecase: locator(),
       uploadClinicalRecordUsecase: locator(),
+      clinicalRecordsDatasource: locator(),
     ),
   );
   locator.registerFactory(

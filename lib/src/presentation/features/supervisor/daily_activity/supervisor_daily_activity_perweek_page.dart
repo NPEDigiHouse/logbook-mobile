@@ -4,6 +4,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -229,6 +230,23 @@ class _StudentDailyActivityWeekStatusPageState
                             (index) {
                           final data =
                               state.studentActivityPerweek!.activities!;
+                          data.sort(
+                            (a, b) {
+                              // Urutkan berdasarkan urutan hari dalam seminggu
+                              final daysOfWeek = [
+                                'SUNDAY',
+                                'MONDAY',
+                                'TUESDAY',
+                                'WEDNESDAY',
+                                'THURSDAY',
+                                'FRIDAY',
+                                'SATURDAY'
+                              ];
+                              return daysOfWeek
+                                  .indexOf(a.day!)
+                                  .compareTo(daysOfWeek.indexOf(b.day!));
+                            },
+                          );
                           return DailyActivityStatusCard(
                             verificationStatus: data[index].verificationStatus!,
                             day: data[index].day!,
@@ -242,9 +260,7 @@ class _StudentDailyActivityWeekStatusPageState
                       ],
                     );
                   }
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return CustomLoading();
                 },
               ),
             ),

@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_m
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/daily_activity/supervisor_daily_activity_perweek_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -75,9 +76,7 @@ class _SupervisorDailyActivityPageState
                   ],
                 ),
               );
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return CustomLoading();
           },
         ),
       ),
@@ -146,6 +145,23 @@ class DailyActivityHomeCard extends StatelessWidget {
               'SICK': 'sakit_emoji.svg',
               'NOT_ATTEND': 'emoji_alfa.svg',
             };
+            dailyActivity.activitiesStatus!.sort(
+              (a, b) {
+                // Urutkan berdasarkan urutan hari dalam seminggu
+                final daysOfWeek = [
+                  'SUNDAY',
+                  'MONDAY',
+                  'TUESDAY',
+                  'WEDNESDAY',
+                  'THURSDAY',
+                  'FRIDAY',
+                  'SATURDAY'
+                ];
+                return daysOfWeek
+                    .indexOf(a.day!)
+                    .compareTo(daysOfWeek.indexOf(b.day!));
+              },
+            );
             return SpacingRow(
               onlyPading: true,
               spacing: 0,

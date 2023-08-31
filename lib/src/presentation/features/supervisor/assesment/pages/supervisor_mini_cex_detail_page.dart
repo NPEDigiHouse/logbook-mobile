@@ -5,6 +5,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/clip_donut_painter.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -104,9 +105,7 @@ class _SupervisorMiniCexDetailPageState
                         miniCex: miniCex,
                       );
                     } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return CustomLoading();
                     }
                   },
                 ),

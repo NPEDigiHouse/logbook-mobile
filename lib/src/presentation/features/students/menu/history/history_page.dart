@@ -7,6 +7,7 @@ import 'package:elogbook/src/presentation/features/students/scientific_session/d
 import 'package:elogbook/src/presentation/features/students/self_reflection/wrapper_self_reflection.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/list_cst_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/list_sgl_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -338,7 +339,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 ],
               );
             }
-            return Center(child: CircularProgressIndicator());
+            return CustomLoading();
           },
         ),
       ),

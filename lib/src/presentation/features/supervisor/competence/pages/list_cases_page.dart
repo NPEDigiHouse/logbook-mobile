@@ -3,6 +3,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/competence/pages/widgets/verify_case_dialog.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
@@ -93,58 +94,56 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
                 slivers: [
                   SliverPadding(
                     padding: EdgeInsets.symmetric(vertical: 16),
-                    sliver: SliverToBoxAdapter(
-                      child: SpacingColumn(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        onlyPading: true,
-                        horizontalPadding: 16,
-                        children: [
-                          UnitHeader(unitName: widget.unitName),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          Builder(
-                            builder: (context) {
-                              if (state.listCasesModel != null) {
-                                final data = state.listCasesModel!.listCases!;
-                                if (data.isEmpty) {
-                                  return EmptyData(
-                                    subtitle: 'Please add case data first!',
-                                    title: 'Data Still Empty',
-                                  );
-                                }
-                                return Column(
-                                  children: [
-                                    buildSearchFilterSection(),
-                                    SizedBox(
-                                      height: 24,
-                                    ),
-                                    ListView.separated(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) =>
-                                          TestGradeScoreCard(
-                                        id: data[index].caseId!,
-                                        studentId: widget.studentId,
-                                        caseName: data[index].caseName!,
-                                        caseType: data[index].caseType!,
-                                        isVerified:
-                                            data[index].verificationStatus ==
-                                                'VERIFIED',
-                                      ),
-                                      separatorBuilder: (context, index) =>
-                                          SizedBox(height: 12),
-                                      itemCount: data.length,
-                                    ),
-                                  ],
-                                );
-                              } else {
-                                return SizedBox.shrink();
-                              }
-                            },
-                          )
-                        ],
-                      ),
+                    sliver: Builder(
+                      builder: (context) {
+                        if (state.listCasesModel != null) {
+                          final data = state.listCasesModel!.listCases!;
+                          if (data.isEmpty) {
+                            return SliverFillRemaining(
+                              child: EmptyData(
+                                subtitle: 'Please add case data first!',
+                                title: 'Data Still Empty',
+                              ),
+                            );
+                          }
+                          return SliverToBoxAdapter(
+                            child: SpacingColumn(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              onlyPading: true,
+                              horizontalPadding: 16,
+                              children: [
+                                UnitHeader(unitName: widget.unitName),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                buildSearchFilterSection(),
+                                SizedBox(
+                                  height: 24,
+                                ),
+                                ListView.separated(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) =>
+                                      TestGradeScoreCard(
+                                    id: data[index].caseId!,
+                                    studentId: widget.studentId,
+                                    caseName: data[index].caseName!,
+                                    caseType: data[index].caseType!,
+                                    isVerified:
+                                        data[index].verificationStatus ==
+                                            'VERIFIED',
+                                  ),
+                                  separatorBuilder: (context, index) =>
+                                      SizedBox(height: 12),
+                                  itemCount: data.length,
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          return SliverFillRemaining(child: CustomLoading());
+                        }
+                      },
                     ),
                   ),
                 ],

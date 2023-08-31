@@ -1,6 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/special_report/widgets/special_report_student_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
@@ -40,9 +41,7 @@ class _SupervisorListSpecialReportPageState
           child: BlocBuilder<SpecialReportCubit, SpecialReportState>(
             builder: (context, state) {
               if (state.specialReportStudents == null) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return CustomLoading();
               }
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -2,6 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:flutter/material.dart';
@@ -48,9 +49,7 @@ class _DetailScientificSessionPageState
             ScientificSessionSupervisorState>(
           builder: (context, state) {
             if (state.detail == null) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return CustomLoading();
             }
             return SingleChildScrollView(
               child: Column(

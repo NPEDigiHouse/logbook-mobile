@@ -2,6 +2,7 @@ import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/coordinator/weekly_grade/weekly_grade_score_dialog.dart';
 import 'package:elogbook/src/presentation/widgets/cards/weekly_grade_card.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
@@ -233,9 +234,7 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                     ],
                   ),
                 );
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return CustomLoading();
             },
           ),
         ),

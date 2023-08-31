@@ -4,6 +4,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/assessment/personal_behavior_detail.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/clip_donut_painter.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -41,43 +42,40 @@ class _PersonalBehaviorDetailPageState
                 .getStudentPersonalBehavior(),
           ]);
         },
-        child: SingleChildScrollView(
-          child: SpacingColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              horizontalPadding: 16,
-              spacing: 12,
-              children: [
-                SizedBox(
-                  height: 16,
-                ),
-                BlocBuilder<AssesmentCubit, AssesmentState>(
-                  builder: (context, state) {
-                    if (state.personalBehaviorDetail != null) {
-                      if (state.personalBehaviorDetail!.scores!.isNotEmpty)
-                        return SpacingColumn(
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              child: BlocBuilder<AssesmentCubit, AssesmentState>(
+                builder: (context, state) {
+                  if (state.personalBehaviorDetail != null) {
+                    if (state.personalBehaviorDetail!.scores!.isNotEmpty)
+                      return SingleChildScrollView(
+                        child: SpacingColumn(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          horizontalPadding: 16,
                           spacing: 12,
                           children: [
+                            SizedBox(
+                              height: 16,
+                            ),
                             TopStatCard(
                               title: 'Overview',
                               achivied: state.personalBehaviorDetail!.scores!
                                   .where(
                                     (element) =>
-                                        element.verificationStatus ==
-                                        'VERIFIED',
+                                        element.verificationStatus == 'VERIFIED',
                                   )
                                   .toList(),
                               notAchivied: state.personalBehaviorDetail!.scores!
                                   .where(
                                     (element) =>
-                                        element.verificationStatus ==
-                                        'UNVERIFIED',
+                                        element.verificationStatus == 'UNVERIFIED',
                                   )
                                   .toList(),
                               process: state.personalBehaviorDetail!.scores!
                                   .where(
                                     (element) =>
-                                        element.verificationStatus ==
-                                        'INPROCESS',
+                                        element.verificationStatus == 'INPROCESS',
                                   )
                                   .toList(),
                             ),
@@ -95,26 +93,26 @@ class _PersonalBehaviorDetailPageState
                                     height: 12,
                                   );
                                 },
-                                itemCount: state
-                                    .personalBehaviorDetail!.scores!.length),
+                                itemCount:
+                                    state.personalBehaviorDetail!.scores!.length),
                             SizedBox(
                               height: 16,
                             ),
                           ],
-                        );
-                      else {
-                        return EmptyData(
-                            title: 'Empty Data',
-                            subtitle: 'No Personal Bahavior Dat');
-                      }
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
+                        ),
                       );
+                    else {
+                      return EmptyData(
+                          title: 'Empty Data',
+                          subtitle: 'No Personal Bahavior Dat');
                     }
-                  },
-                ),
-              ]),
+                  } else {
+                    return CustomLoading();
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
