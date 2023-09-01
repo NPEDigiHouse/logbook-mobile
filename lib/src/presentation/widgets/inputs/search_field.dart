@@ -7,12 +7,14 @@ import 'package:elogbook/core/styles/text_style.dart';
 class SearchField extends StatefulWidget {
   final String text;
   final String hint;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmited;
 
   const SearchField({
     super.key,
     required this.text,
     this.hint = 'Search',
+    this.onSubmited,
     required this.onChanged,
   });
 
@@ -46,6 +48,7 @@ class _SearchFieldState extends State<SearchField> {
       ),
       child: TextField(
         controller: _controller,
+        onSubmitted: widget.onSubmited,
         onChanged: widget.onChanged,
         textInputAction: TextInputAction.search,
         textAlignVertical: TextAlignVertical.center,
@@ -81,7 +84,7 @@ class _SearchFieldState extends State<SearchField> {
                   ),
                   onPressed: () {
                     _controller.clear();
-                    widget.onChanged('');
+                    // widget.onChanged('');
                   },
                 ),
         ),

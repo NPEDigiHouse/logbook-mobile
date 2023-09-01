@@ -1,6 +1,8 @@
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/competences/list_cases_model.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/competence/pages/widgets/verify_case_dialog.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -23,6 +25,8 @@ class SupervisorListCasesPage extends StatefulWidget {
 }
 
 class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
+  ValueNotifier<List<CaseModel>> listData = ValueNotifier([]);
+  bool isMounted = false;
   late final List<String> _menuList;
 
   late final ValueNotifier<String> _query, _selectedMenu;
@@ -60,7 +64,24 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CompetenceCubit, CompetenceState>(
+    return BlocConsumer<CompetenceCubit, CompetenceState>(
+      listener: (context, state) {
+        if (state.isCaseSuccessVerify || state.isAllCasesSuccessVerify) {
+          BlocProvider.of<CompetenceCubit>(context)
+            ..getCasesByStudentId(
+              studentId: widget.studentId,
+            );
+          isMounted = false;
+        }
+        if (state.listCasesModel != null &&
+            state.requestState == RequestState.data &&
+            !isMounted) {
+          _menuList[1] =
+              '${state.listCasesModel!.listCases!.where((e) => e.verificationStatus == 'VERIFIED').toList().length} ${_menuList[1]}';
+          _menuList[2] =
+              '${state.listCasesModel!.listCases!.where((e) => e.verificationStatus == 'INPROCESS').toList().length} ${_menuList[2]}';
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
@@ -70,14 +91,14 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
             width: AppSize.getAppWidth(context) - 32,
             child: state.listCasesModel != null &&
                     state.listCasesModel!.listCases!.indexWhere((element) =>
-                            element.verificationStatus == 'VERIFIED') ==
+                            element.verificationStatus == 'INPROCESS') !=
                         -1
                 ? FilledButton(
                     onPressed: () {
                       BlocProvider.of<CompetenceCubit>(context)
                         ..verifyAllCaseOfStudent(studentId: widget.studentId);
                     },
-                    child: Text('Verify All Case'),
+                    child: Text('Verify All Cases'),
                   )
                 : null,
           ),
@@ -94,17 +115,18 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
                 slivers: [
                   SliverPadding(
                     padding: EdgeInsets.symmetric(vertical: 16),
-                    sliver: Builder(
-                      builder: (context) {
-                        if (state.listCasesModel != null) {
-                          final data = state.listCasesModel!.listCases!;
-                          if (data.isEmpty) {
-                            return SliverFillRemaining(
-                              child: EmptyData(
-                                subtitle: 'Please add case data first!',
-                                title: 'Data Still Empty',
-                              ),
-                            );
+                    sliver: ValueListenableBuilder(
+                      valueListenable: listData,
+                      builder: (context, s, _) {
+                        if (state.listCasesModel != null &&
+                            state.requestState == RequestState.data) {
+                          if (!isMounted) {
+                            Future.microtask(() {
+                              listData.value = [
+                                ...state.listCasesModel!.listCases!
+                              ];
+                            });
+                            isMounted = true;
                           }
                           return SliverToBoxAdapter(
                             child: SpacingColumn(
@@ -120,23 +142,28 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
                                 SizedBox(
                                   height: 24,
                                 ),
-                                ListView.separated(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) =>
-                                      TestGradeScoreCard(
-                                    id: data[index].caseId!,
-                                    studentId: widget.studentId,
-                                    caseName: data[index].caseName!,
-                                    caseType: data[index].caseType!,
-                                    isVerified:
-                                        data[index].verificationStatus ==
-                                            'VERIFIED',
+                                if (s.isEmpty)
+                                  EmptyData(
+                                    subtitle: 'Please add case data first!',
+                                    title: 'Data Still Empty',
                                   ),
-                                  separatorBuilder: (context, index) =>
-                                      SizedBox(height: 12),
-                                  itemCount: data.length,
-                                ),
+                                if (s.isNotEmpty)
+                                  ListView.separated(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) =>
+                                        TestGradeScoreCard(
+                                      id: s[index].caseId!,
+                                      studentId: widget.studentId,
+                                      caseName: s[index].caseName!,
+                                      caseType: s[index].caseType!,
+                                      isVerified: s[index].verificationStatus ==
+                                          'VERIFIED',
+                                    ),
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(height: 12),
+                                    itemCount: s.length,
+                                  ),
                               ],
                             ),
                           );
@@ -156,58 +183,106 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
   }
 
   ValueListenableBuilder<Map<String, String>?> buildSearchFilterSection() {
+    // final _menuList = [
+    //   'All',
+    //   '${verifiedCount} Verified',
+    //   '${unverifiedCount} Unverified',
+    // ];
     return ValueListenableBuilder(
       valueListenable: _dataFilters,
       builder: (context, data, value) {
-        return Column(
-          children: [
-            ValueListenableBuilder(
-              valueListenable: _query,
-              builder: (context, query, child) {
-                return SearchField(
-                  text: query,
-                  onChanged: (value) => _query.value = value,
-                );
-              },
-            ),
-            SizedBox(
-              height: 64,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: _menuList.length,
-                itemBuilder: (context, index) {
-                  return ValueListenableBuilder(
-                    valueListenable: _selectedMenu,
-                    builder: (context, value, child) {
-                      final selected = value == _menuList[index];
+        return BlocBuilder<CompetenceCubit, CompetenceState>(
+          builder: (context, state) {
+            return Column(
+              children: [
+                SearchField(
+                  text: '',
+                  hint: 'Search Case',
+                  onChanged: (value) {
+                    final data = state.listCasesModel!.listCases!
+                        .where((element) => element.caseName!
+                            .toLowerCase()
+                            .contains(value.toLowerCase()))
+                        .toList();
+                    if (value.isEmpty) {
+                      listData.value.clear();
+                      listData.value = [...state.listCasesModel!.listCases!];
+                    } else {
+                      listData.value = [...data];
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: 64,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _menuList.length,
+                    itemBuilder: (context, index) {
+                      return ValueListenableBuilder(
+                        valueListenable: _selectedMenu,
+                        builder: (context, value, child) {
+                          final selected = value == _menuList[index];
 
-                      return RawChip(
-                        pressElevation: 0,
-                        clipBehavior: Clip.antiAlias,
-                        label: Text(_menuList[index]),
-                        labelPadding: const EdgeInsets.symmetric(horizontal: 6),
-                        labelStyle: textTheme.bodyMedium?.copyWith(
-                          color: selected ? primaryColor : primaryTextColor,
-                        ),
-                        side: BorderSide(
-                          color: selected ? Colors.transparent : borderColor,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        checkmarkColor: primaryColor,
-                        selectedColor: primaryColor.withOpacity(.2),
-                        selected: selected,
-                        onSelected: (_) =>
-                            _selectedMenu.value = _menuList[index],
+                          return RawChip(
+                            pressElevation: 0,
+                            clipBehavior: Clip.antiAlias,
+                            label: Text(_menuList[index]),
+                            labelPadding:
+                                const EdgeInsets.symmetric(horizontal: 6),
+                            labelStyle: textTheme.bodyMedium?.copyWith(
+                              color: selected ? primaryColor : primaryTextColor,
+                            ),
+                            side: BorderSide(
+                              color:
+                                  selected ? Colors.transparent : borderColor,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            checkmarkColor: primaryColor,
+                            selectedColor: primaryColor.withOpacity(.2),
+                            selected: selected,
+                            onSelected: (_) {
+                              print('calll');
+                              _selectedMenu.value = _menuList[index];
+                              switch (index) {
+                                case 1:
+                                  final data = state.listCasesModel!.listCases!
+                                      .where((element) =>
+                                          element.verificationStatus!
+                                              .toUpperCase() ==
+                                          'VERIFIED')
+                                      .toList();
+                                  listData.value = [...data];
+                                  break;
+                                case 2:
+                                  print('call');
+                                  final data = state.listCasesModel!.listCases!
+                                      .where((element) =>
+                                          element.verificationStatus!
+                                              .toUpperCase() ==
+                                          'Inprocess'.toUpperCase())
+                                      .toList();
+                                  listData.value = [...data];
+                                  break;
+                                case 0:
+                                  listData.value.clear();
+                                  listData.value = [
+                                    ...state.listCasesModel!.listCases!
+                                  ];
+                                default:
+                              }
+                            },
+                          );
+                        },
                       );
                     },
-                  );
-                },
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-              ),
-            ),
-          ],
+                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );

@@ -19,6 +19,8 @@ class ListResidentPage extends StatefulWidget {
 }
 
 class _ListResidentPageState extends State<ListResidentPage> {
+  ValueNotifier<List<SupervisorStudent>> listStudent = ValueNotifier([]);
+  bool isMounted = false;
   @override
   void initState() {
     super.initState();
@@ -35,70 +37,95 @@ class _ListResidentPageState extends State<ListResidentPage> {
             await Future.wait(
                 [BlocProvider.of<SupervisorsCubit>(context).getAllStudents()]);
           },
-          child: BlocBuilder<SupervisorsCubit, SupervisorsState>(
-            builder: (context, state) {
-              if (state is Loading) {
-                return CustomLoading();
-              }
-              if (state is Error) {
-                return Center(
-                  child: Text('Error'),
+          child: ValueListenableBuilder(
+              valueListenable: listStudent,
+              builder: (context, s, _) {
+                return BlocConsumer<SupervisorsCubit, SupervisorsState>(
+                  listener: (context, state) {
+                    if (state is FetchStudentSuccess) {
+                      if (!isMounted) {
+                        Future.microtask(() {
+                          listStudent.value = [...state.students];
+                        });
+                        isMounted = true;
+                      }
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is Loading) {
+                      return CustomLoading();
+                    }
+                    if (state is Error) {
+                      return Center(
+                        child: Text('Error'),
+                      );
+                    }
+                    if (state is FetchStudentSuccess)
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: CustomScrollView(
+                          slivers: [
+                            SliverToBoxAdapter(
+                              child: SizedBox(
+                                height: 16,
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: Text(
+                                'Students',
+                                style: textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: SizedBox(
+                                height: 16,
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: SearchField(
+                                onChanged: (value) {
+                                  final data = state.students!
+                                      .where((element) => element.studentName!
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase()))
+                                      .toList();
+                                  if (value.isEmpty) {
+                                    listStudent.value.clear();
+                                    listStudent.value = [...state.students];
+                                  } else {
+                                    listStudent.value = [...data];
+                                  }
+                                },
+                                text: '',
+                                hint: 'Search student',
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: SizedBox(
+                                height: 16,
+                              ),
+                            ),
+                            SliverList.separated(
+                              itemCount: s.length,
+                              itemBuilder: (context, index) {
+                                return _buildStudentCard(context, s[index]);
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  height: 12,
+                                );
+                              },
+                            )
+                          ],
+                        ),
+                      );
+                    return SizedBox();
+                  },
                 );
-              }
-              if (state is FetchStudentSuccess)
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 16,
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: Text(
-                          'Students',
-                          style: textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor,
-                          ),
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 16,
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: SearchField(
-                          onChanged: (value) {},
-                          text: '',
-                          hint: 'Search student',
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 16,
-                        ),
-                      ),
-                      SliverList.separated(
-                        itemCount: state.students.length,
-                        itemBuilder: (context, index) {
-                          return _buildStudentCard(
-                              context, state.students[index]);
-                        },
-                        separatorBuilder: (context, index) {
-                          return SizedBox(
-                            height: 12,
-                          );
-                        },
-                      )
-                    ],
-                  ),
-                );
-              return SizedBox();
-            },
-          ),
+              }),
         ),
       ),
     );

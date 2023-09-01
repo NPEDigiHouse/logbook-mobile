@@ -53,6 +53,7 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                 if (state.isVerifyTopicSuccess || state.isVerifySglCstSuccess) {
                   BlocProvider.of<SglCstCubit>(context)
                     ..getStudentSglDetailById(studentId: widget.studentId);
+                  
                 }
               },
               builder: (context, state) {

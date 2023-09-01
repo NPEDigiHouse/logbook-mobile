@@ -24,6 +24,8 @@ class ListStudentCasesPage extends StatefulWidget {
 }
 
 class _ListStudentCasesPageState extends State<ListStudentCasesPage> {
+  ValueNotifier<List<StudentCompetenceModel>> listStudent = ValueNotifier([]);
+  bool isMounted = false;
   @override
   void initState() {
     super.initState();
@@ -44,64 +46,87 @@ class _ListStudentCasesPageState extends State<ListStudentCasesPage> {
               BlocProvider.of<CompetenceCubit>(context).getCaseStudents(),
             ]);
           },
-          child: BlocBuilder<CompetenceCubit, CompetenceState>(
-            builder: (context, state) {
-              if (state.requestState == RequestState.loading &&
-                  state.caseListStudent == null) {
-                return CustomLoading();
-              }
-              if (state.requestState == RequestState.error) {
-                return Center(
-                  child: Text('Error'),
-                );
-              }
-              if (state.caseListStudent != null) {
-                if (state.caseListStudent!.isEmpty) {
-                  return EmptyData(
-                      title: 'No Cases',
-                      subtitle: 'nothing student upload cases');
-                }
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 16,
+          child: ValueListenableBuilder(
+              valueListenable: listStudent,
+              builder: (context, s, _) {
+                return BlocBuilder<CompetenceCubit, CompetenceState>(
+                  builder: (context, state) {
+                    if (state.requestState == RequestState.loading &&
+                        state.caseListStudent == null) {
+                      return CustomLoading();
+                    }
+                    if (state.requestState == RequestState.error) {
+                      return Center(
+                        child: Text('Error'),
+                      );
+                    }
+                    if (state.caseListStudent != null) {
+                      if (!isMounted) {
+                        Future.microtask(() {
+                          listStudent.value = [...state.caseListStudent!];
+                        });
+                        isMounted = true;
+                      }
+                      if (state.caseListStudent!.isEmpty) {
+                        return EmptyData(
+                            title: 'No Cases',
+                            subtitle: 'nothing student upload cases');
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: CustomScrollView(
+                          slivers: [
+                            SliverToBoxAdapter(
+                              child: SizedBox(
+                                height: 16,
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: SearchField(
+                                onChanged: (value) {
+                                  final data = state.caseListStudent!
+                                      .where((element) => element.studentName!
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase()))
+                                      .toList();
+                                  if (value.isEmpty) {
+                                    listStudent.value.clear();
+                                    listStudent.value = [
+                                      ...state.caseListStudent!
+                                    ];
+                                  } else {
+                                    listStudent.value = [...data];
+                                  }
+                                },
+                                text: '',
+                                hint: 'Search student',
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: SizedBox(
+                                height: 16,
+                              ),
+                            ),
+                            SliverList.separated(
+                              itemCount: s.length,
+                              itemBuilder: (context, index) {
+                                return _buildStudentCard(context, s[index]);
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  height: 12,
+                                );
+                              },
+                            )
+                          ],
                         ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: SearchField(
-                          onChanged: (value) {},
-                          text: '',
-                          hint: 'Search student',
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 16,
-                        ),
-                      ),
-                      SliverList.separated(
-                        itemCount: state.caseListStudent!.length,
-                        itemBuilder: (context, index) {
-                          return _buildStudentCard(
-                              context, state.caseListStudent![index]);
-                        },
-                        separatorBuilder: (context, index) {
-                          return SizedBox(
-                            height: 12,
-                          );
-                        },
-                      )
-                    ],
-                  ),
-                );
-              }
+                      );
+                    }
 
-              return SizedBox();
-            },
-          ),
+                    return SizedBox();
+                  },
+                );
+              }),
         ),
       ),
     );

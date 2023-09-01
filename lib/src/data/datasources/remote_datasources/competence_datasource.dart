@@ -241,7 +241,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
           },
         ),
       );
-      // print(response.statusCode);
+      print(response);
       if (response.statusCode != 200) {
         throw Exception();
       }
@@ -319,7 +319,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
 
     try {
       final response = await dio.put(
-        ApiService.baseUrl + 'competencies/cases/students/$studentId',
+        ApiService.baseUrl + '/competencies/cases/students/$studentId',
         options: Options(
           headers: {
             "content-type": 'application/json',
@@ -327,7 +327,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
           },
         ),
       );
-      if (response.statusCode != 201) {
+      if (response.statusCode != 200) {
         throw Exception();
       }
     } catch (e) {
@@ -342,7 +342,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
 
     try {
       final response = await dio.put(
-        ApiService.baseUrl + 'competencies/skills/students/$studentId',
+        ApiService.baseUrl + '/competencies/skills/students/$studentId',
         options: Options(
           headers: {
             "content-type": 'application/json',
@@ -350,7 +350,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
           },
         ),
       );
-      if (response.statusCode != 201) {
+      if (response.statusCode != 200) {
         throw Exception();
       }
     } catch (e) {

@@ -1,4 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/widgets/sgl_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -15,6 +16,8 @@ class SupervisorListSglPage extends StatefulWidget {
 }
 
 class _SupervisorListSglPageState extends State<SupervisorListSglPage> {
+  ValueNotifier<List<SglCstOnList>> listSglCstStudents = ValueNotifier([]);
+  bool isMounted = false;
   @override
   void initState() {
     super.initState();
@@ -35,51 +38,75 @@ class _SupervisorListSglPageState extends State<SupervisorListSglPage> {
               BlocProvider.of<SglCstCubit>(context).getListSglStudents(),
             ]);
           },
-          child: BlocBuilder<SglCstCubit, SglCstState>(
-            builder: (context, state) {
-              if (state.sglStudents == null) {
-                return CustomLoading();
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 16,
+          child: ValueListenableBuilder(
+              valueListenable: listSglCstStudents,
+              builder: (context, s, _) {
+                return BlocBuilder<SglCstCubit, SglCstState>(
+                  builder: (context, state) {
+                    if (state.sglStudents == null) {
+                      return CustomLoading();
+                    }
+                    if (!isMounted) {
+                      Future.microtask(() {
+                        listSglCstStudents.value = [...state.sglStudents!];
+                      });
+                      isMounted = true;
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: SizedBox(
+                              height: 16,
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: SearchField(
+                              onChanged: (value) {
+                                final data = state.sglStudents!
+                                    .where((element) => element.studentName!
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase()))
+                                    .toList();
+                                if (value.isEmpty) {
+                                  listSglCstStudents.value.clear();
+                                  listSglCstStudents.value = [
+                                    ...state.sglStudents!
+                                  ];
+                                } else {
+                                  listSglCstStudents.value = [...data];
+                                }
+                              },
+                              text: '',
+                              hint: 'Search for student',
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: SizedBox(
+                              height: 12,
+                            ),
+                          ),
+                          SliverList.separated(
+                            itemCount: s.length,
+                            itemBuilder: (context, index) {
+                              return SglOnListCard(
+                                sglCst: s[index],
+                                isCeu: widget.isCeu,
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                height: 12,
+                              );
+                            },
+                          )
+                        ],
                       ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SearchField(
-                        onChanged: (value) {},
-                        text: '',
-                        hint: 'Search for student',
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 12,
-                      ),
-                    ),
-                    SliverList.separated(
-                      itemCount: state.sglStudents!.length,
-                      itemBuilder: (context, index) {
-                        return SglOnListCard(
-                          sglCst: state.sglStudents![index],
-                          isCeu: widget.isCeu,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 12,
-                        );
-                      },
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
+                    );
+                  },
+                );
+              }),
         ),
       ),
     );

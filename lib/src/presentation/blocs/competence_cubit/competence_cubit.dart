@@ -224,6 +224,7 @@ class CompetenceCubit extends Cubit<CompetenceState> {
 
   Future<void> getCasesByStudentId({required String studentId}) async {
     try {
+      emit(state.copyWith(listCasesModel: null));
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
@@ -234,6 +235,7 @@ class CompetenceCubit extends Cubit<CompetenceState> {
       try {
         emit(state.copyWith(
           listCasesModel: result,
+          requestState: RequestState.data,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
@@ -259,8 +261,7 @@ class CompetenceCubit extends Cubit<CompetenceState> {
 
       try {
         emit(state.copyWith(
-          listSkillsModel: result,
-        ));
+            listSkillsModel: result, requestState: RequestState.data));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

@@ -1,4 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/src/data/models/special_reports/special_report_on_list.dart';
 import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/special_report/widgets/special_report_student_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -17,6 +18,9 @@ class SupervisorListSpecialReportPage extends StatefulWidget {
 
 class _SupervisorListSpecialReportPageState
     extends State<SupervisorListSpecialReportPage> {
+  ValueNotifier<List<SpecialReportOnList>> listStudent = ValueNotifier([]);
+  bool isMounted = false;
+
   @override
   void initState() {
     super.initState();
@@ -38,60 +42,78 @@ class _SupervisorListSpecialReportPageState
                   .getSpecialReportStudents(),
             ]);
           },
-          child: BlocBuilder<SpecialReportCubit, SpecialReportState>(
-            builder: (context, state) {
-              if (state.specialReportStudents == null) {
-                return CustomLoading();
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 16,
+          child: ValueListenableBuilder(
+              valueListenable: listStudent,
+              builder: (context, s, _) {
+                return BlocConsumer<SpecialReportCubit, SpecialReportState>(
+                  listener: (context, state) {
+                    if (state.specialReportStudents != null) {
+                      if (!isMounted) {
+                        Future.microtask(() {
+                          listStudent.value = [...state.specialReportStudents!];
+                        });
+                        isMounted = true;
+                      }
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state.specialReportStudents == null) {
+                      return CustomLoading();
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: SizedBox(
+                              height: 16,
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: SearchField(
+                              onChanged: (value) {
+                                final data = state.specialReportStudents!
+                                    .where((element) => element.studentName!
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase()))
+                                    .toList();
+                                if (value.isEmpty) {
+                                  listStudent.value.clear();
+                                  listStudent.value = [
+                                    ...state.specialReportStudents!
+                                  ];
+                                } else {
+                                  listStudent.value = [...data];
+                                }
+                              },
+                              text: '',
+                              hint: 'Search for student',
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: SizedBox(
+                              height: 12,
+                            ),
+                          ),
+                          SliverList.separated(
+                            itemCount: s.length,
+                            itemBuilder: (context, index) {
+                              return SpecialReportStudentCard(
+                                sr: s[index],
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                height: 12,
+                              );
+                            },
+                          )
+                        ],
                       ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: UnitHeader(
-                        unitName: 'Nama Unit',
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 12,
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SearchField(
-                        onChanged: (value) {},
-                        text: '',
-                        hint: 'Search for student',
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 12,
-                      ),
-                    ),
-                    SliverList.separated(
-                      itemCount: state.specialReportStudents!.length,
-                      itemBuilder: (context, index) {
-                        return SpecialReportStudentCard(
-                          sr: state.specialReportStudents![index],
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: 12,
-                        );
-                      },
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
+                    );
+                  },
+                );
+              }),
         ),
       ),
     );
