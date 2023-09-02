@@ -46,7 +46,7 @@ class _MainMenuState extends State<MainMenu> {
     ];
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is LogoutSuccess) {
+        if (state is LogoutSuccess || state is SuccessDeleteAccount) {
           context.replace(const LoginPage());
         }
       },

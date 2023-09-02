@@ -41,7 +41,12 @@ class ProfileItemMenuCard extends StatelessWidget {
               color: Color(0xFFE1F8FF),
             ),
             child: SvgPicture.asset(
-              AssetPath.getIcon(iconPath),
+              AssetPath.getIcon(
+                iconPath,
+              ),
+              color: secondaryColor,
+              width: 20,
+              height: 20,
             ),
           ),
           const SizedBox(width: 16),

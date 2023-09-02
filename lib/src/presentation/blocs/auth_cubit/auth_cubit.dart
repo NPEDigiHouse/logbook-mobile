@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/user_datasource.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/generate_token_reset_password_usecase.dart';
 import 'package:elogbook/src/domain/usecases/auth_usecases/get_credential_usecase.dart';
@@ -19,15 +20,18 @@ class AuthCubit extends Cubit<AuthState> {
   final GenerateTokenResetPasswordUsecase generateTokenResetPasswordUsecase;
   final ResetPasswordUsecase resetPasswordUsecase;
   final GetCredentialUsecase getCredentialUsecase;
-  AuthCubit({
-    required this.registerUsecase,
-    required this.loginUsecase,
-    required this.isSignInUsecase,
-    required this.logoutUsecase,
-    required this.generateTokenResetPasswordUsecase,
-    required this.resetPasswordUsecase,
-    required this.getCredentialUsecase,
-  }) : super(Initial());
+  final UserDataSource userDataSource;
+
+  AuthCubit(
+      {required this.registerUsecase,
+      required this.loginUsecase,
+      required this.isSignInUsecase,
+      required this.logoutUsecase,
+      required this.generateTokenResetPasswordUsecase,
+      required this.resetPasswordUsecase,
+      required this.getCredentialUsecase,
+      required this.userDataSource})
+      : super(Initial());
 
   Future<void> register(
       {required String username,
@@ -154,5 +158,22 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(Failed(message: e.toString()));
     }
+  }
+
+  Future<void> deleteAccount() async {
+    // emit(Loading());
+    try {
+      await userDataSource.deleteUser();
+      // await logoutUsecase.execute();
+      emit(SuccessDeleteAccount());
+      emit(CredentialNotExist());
+    } catch (e) {
+      print(e.toString());
+      emit(Failed(message: e.toString()));
+    }
+  }
+
+  void reset() {
+    emit(Initial());
   }
 }

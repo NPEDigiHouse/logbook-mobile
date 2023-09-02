@@ -359,6 +359,7 @@ void _injectStateManagement() {
       generateTokenResetPasswordUsecase: locator(),
       resetPasswordUsecase: locator(),
       getCredentialUsecase: locator(),
+      userDataSource: locator(),
     ),
   );
 

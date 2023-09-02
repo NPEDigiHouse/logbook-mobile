@@ -11,6 +11,7 @@ part 'profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileDataSource dataSource;
   final UserDataSource userDataSource;
+
   ProfileCubit({
     required this.dataSource,
     required this.userDataSource,
@@ -111,6 +112,8 @@ class ProfileCubit extends Cubit<ProfileState> {
       );
     }
   }
+
+
 
   Future<void> updateFullName({required String fullname}) async {
     try {

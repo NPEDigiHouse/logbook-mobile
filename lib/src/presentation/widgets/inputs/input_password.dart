@@ -4,10 +4,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 class InputPassword extends StatefulWidget {
   final String name;
   final String label;
+  final ValueChanged<String?>? onChange;
   final String? Function(String?)? validator;
 
   const InputPassword({
     super.key,
+    this.onChange,
     required this.name,
     required this.label,
     this.validator,
@@ -34,6 +36,7 @@ class _InputPasswordState extends State<InputPassword> {
       builder: (context, value, child) {
         return FormBuilderTextField(
           name: widget.name,
+          onChanged: widget.onChange,
           keyboardType: TextInputType.visiblePassword,
           decoration: InputDecoration(
             label: Text(widget.label),

@@ -132,6 +132,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             InputPassword(
                               name: 'password',
                               label: 'Password',
+                              onChange: (value) {
+                                _passwordNotifier.value = value ?? '';
+                              },
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(
                                   errorText: 'This field is required',

@@ -36,3 +36,5 @@ class GenerateTokenResetPassword extends AuthState {
 }
 
 class ResetPasswordSuccess extends AuthState {}
+
+class SuccessDeleteAccount extends AuthState {}
