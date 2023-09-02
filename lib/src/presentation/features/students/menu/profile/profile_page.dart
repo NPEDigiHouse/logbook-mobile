@@ -1,5 +1,7 @@
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,9 +29,14 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProfileCubit>(context)
-      ..getProfilePic()
-      ..getUserCredential();
+    Future.microtask(() {
+      BlocProvider.of<ProfileCubit>(context)
+        ..getProfilePic()
+        ..getUserCredential();
+      BlocProvider.of<UnitCubit>(
+        context,
+      )..getActiveUnit();
+    });
   }
 
   @override
@@ -140,12 +147,25 @@ class _ProfilePageState extends State<ProfilePage> {
                   )),
                 ),
                 const SizedBox(height: 14),
-                ProfileItemMenuCard(
-                  iconPath: 'stats_chart_filled.svg',
-                  title: 'Unit Statisics',
-                  onTap: () => context.navigateTo(UnitStatisticsPage(
-                    credential: widget.credential,
-                  )),
+                BlocBuilder<UnitCubit, UnitState>(
+                  builder: (context, state1) {
+                    if (state1 is GetActiveUnitSuccess)
+                      return BlocBuilder<ProfileCubit, ProfileState>(
+                        builder: (context, state) {
+                          return ProfileItemMenuCard(
+                            iconPath: 'stats_chart_filled.svg',
+                            title: 'Unit Statisics',
+                            onTap: () => context.navigateTo(UnitStatisticsPage(
+                              credential: widget.credential,
+                              profilePic: state.profilePic,
+                              activeUnitModel: state1.activeUnit,
+                            )),
+                          );
+                        },
+                      );
+                    else
+                      return SizedBox.shrink();
+                  },
                 ),
                 const SizedBox(height: 14),
                 ProfileItemMenuCard(

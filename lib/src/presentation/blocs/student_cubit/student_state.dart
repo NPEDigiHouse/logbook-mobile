@@ -4,6 +4,7 @@ class StudentState {
   final RequestState? requestState;
   final StudentClinicalRecordResponse? clinicalRecordResponse;
   final StudentScientificSessionResponse? scientificSessionResponse;
+  final StudentStatistic? studentStatistic;
   final StudentSelfReflectionModel? selfReflectionResponse;
   final List<StudentCheckInModel>? studentsCheckIn;
   final List<StudentCheckOutModel>? studentsCheckOut;
@@ -16,6 +17,7 @@ class StudentState {
     this.scientificSessionResponse,
     this.selfReflectionResponse,
     this.requestState,
+    this.studentStatistic,
     this.successUpdateStudentProfile = false,
     this.studentsCheckIn,
     this.studentsCheckOut,
@@ -32,6 +34,7 @@ class StudentState {
     bool successUpdateStudentProfile = false,
     List<StudentCheckInModel>? studentsCheckIn,
     List<StudentCheckOutModel>? studentsCheckOut,
+    StudentStatistic? studentStatistic,
     bool successVerifyCheckIn = false,
     bool successVerifyCheckOut = false,
   }) {

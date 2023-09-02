@@ -11,6 +11,7 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart' as p;
+import 'package:permission_handler/permission_handler.dart';
 
 class ReferencePage extends StatefulWidget {
   final ActiveUnitModel activeUnitModel;
@@ -22,6 +23,14 @@ class ReferencePage extends StatefulWidget {
 }
 
 class _ReferencePageState extends State<ReferencePage> {
+  Future<bool> checkAndRequestPermission() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+    }
+    return status.isGranted;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -71,10 +80,11 @@ class _ReferencePageState extends State<ReferencePage> {
                           ),
                           BlocConsumer<ReferenceCubit, ReferenceState>(
                             listener: (context, state) {
-                              if (state.isSuccessDownload) {
+                              if (state.rData != null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Success download data')),
+                                  SnackBar(
+                                      content: Text(
+                                          'Success download data ${state.rData}')),
                                 );
                               }
                             },
@@ -87,16 +97,20 @@ class _ReferencePageState extends State<ReferencePage> {
                                     itemBuilder: (contex, index) {
                                       return ReferenceCard(
                                         reference: state.references![index],
-                                        onTap: () {
-                                          BlocProvider.of<ReferenceCubit>(
-                                              context)
-                                            ..getReferenceById(
-                                                id: state
-                                                    .references![index].id!,
-                                                fileName: state
-                                                        .references![index]
-                                                        .file ??
-                                                    '');
+                                        onTap: () async {
+                                          final hasPermission =
+                                              await checkAndRequestPermission();
+                                          if (hasPermission) {
+                                            BlocProvider.of<ReferenceCubit>(
+                                                context)
+                                              ..getReferenceById(
+                                                  id: state
+                                                      .references![index].id!,
+                                                  fileName: state
+                                                          .references![index]
+                                                          .file ??
+                                                      '');
+                                          }
                                         },
                                       );
                                     },
@@ -113,7 +127,14 @@ class _ReferencePageState extends State<ReferencePage> {
                                       subtitle:
                                           'no reference data has uploaded');
                               } else
-                                return Expanded(child: CustomLoading());
+                                return Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 24,
+                                    ),
+                                    CustomLoading(),
+                                  ],
+                                );
                             },
                           ),
                         ],

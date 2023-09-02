@@ -1,5 +1,8 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/core/styles/color_palette.dart';
+import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/self_reflection/self_reflection_post_model.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -7,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateSelfReflectionPage extends StatefulWidget {
-  const CreateSelfReflectionPage({super.key});
+  final UserCredential credential;
+  const CreateSelfReflectionPage({super.key, required this.credential});
 
   @override
   State<CreateSelfReflectionPage> createState() =>
@@ -41,29 +45,41 @@ class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
                   SizedBox(
                     height: 16,
                   ),
-                  TextFormField(
-                    minLines: 7,
-                    maxLines: 7,
-                    controller: fieldController,
-                    decoration: InputDecoration(
-                      label: Text('Self-reflection Content'),
+                  if (widget.credential.student?.supervisingDPKId == null)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Please select a supervisor first in the profile menu before creating a self reflection',
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: errorColor,
+                        ),
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  FilledButton(
-                    onPressed: () {
-                      if (fieldController.text.isNotEmpty) {
-                        BlocProvider.of<SelfReflectionCubit>(context)
-                          ..uploadSelfReflection(
-                              model: SelfReflectionPostModel(
-                                  content: fieldController.text));
-                      }
-                    },
-                    child: Text('Submit'),
-                  ).fullWidth(),
-                  SizedBox(
-                    height: 16,
-                  ),
+                  if (widget.credential.student?.supervisingDPKId != null) ...[
+                    TextFormField(
+                      minLines: 7,
+                      maxLines: 7,
+                      controller: fieldController,
+                      decoration: InputDecoration(
+                        label: Text('Self-reflection Content'),
+                      ),
+                    ),
+                    Spacer(),
+                    FilledButton(
+                      onPressed: () {
+                        if (fieldController.text.isNotEmpty) {
+                          BlocProvider.of<SelfReflectionCubit>(context)
+                            ..uploadSelfReflection(
+                                model: SelfReflectionPostModel(
+                                    content: fieldController.text));
+                        }
+                      },
+                      child: Text('Submit'),
+                    ).fullWidth(),
+                    SizedBox(
+                      height: 16,
+                    ),
+                  ]
                 ],
               ),
             ),

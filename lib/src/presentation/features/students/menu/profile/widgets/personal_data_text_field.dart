@@ -26,8 +26,7 @@ class PersonalDataTextField extends StatefulWidget {
 class _PersonalDataTextFieldState extends State<PersonalDataTextField> {
   @override
   void initState() {
-    widget.controller.text = widget.value!;
-
+    widget.controller.text = widget.value ?? '';
     super.initState();
   }
 

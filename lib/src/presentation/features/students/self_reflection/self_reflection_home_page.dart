@@ -2,6 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/self_reflection/create_self_reflection_page.dart';
 import 'package:elogbook/src/presentation/features/students/self_reflection/widgets/self_reflection_card.dart';
@@ -17,9 +18,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StudentSelfReflectionHomePage extends StatefulWidget {
   final ActiveUnitModel activeUnitModel;
+  final UserCredential credential;
 
   const StudentSelfReflectionHomePage(
-      {super.key, required this.activeUnitModel});
+      {super.key, required this.activeUnitModel, required this.credential});
 
   @override
   State<StudentSelfReflectionHomePage> createState() =>
@@ -56,7 +58,9 @@ class _StudentSelfReflectionHomePageState
       ),
       floatingActionButton: widget.activeUnitModel.countCheckIn! == 0
           ? FloatingActionButton(
-              onPressed: () => context.navigateTo(CreateSelfReflectionPage()),
+              onPressed: () => context.navigateTo(CreateSelfReflectionPage(
+                credential: widget.credential,
+              )),
               child: Icon(
                 Icons.add_rounded,
               ),

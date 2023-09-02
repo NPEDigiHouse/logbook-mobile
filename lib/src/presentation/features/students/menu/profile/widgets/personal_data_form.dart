@@ -64,6 +64,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
   Widget build(BuildContext context) {
     final labels = widget.dataMap.keys.toList();
     final values = widget.dataMap.values.toList();
+    print(values.toString());
 
     return ValueListenableBuilder(
       valueListenable: isEditNotifier,
@@ -191,14 +192,15 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                       if (state is FetchSuccess) {
                                         _supervisors.clear();
                                         _supervisors.addAll(state.supervisors);
-
-                                        editingControllers[i].text =
-                                            _supervisors
-                                                .where((element) =>
-                                                    element.fullName ==
-                                                    values[i])
-                                                .first
-                                                .id!;
+                                        print(values[i]);
+                                        if (values[i] != null)
+                                          editingControllers[i].text =
+                                              _supervisors
+                                                  .where((element) =>
+                                                      element.fullName ==
+                                                      values[i])
+                                                  .first
+                                                  .id!;
                                       }
                                       return DropdownButtonFormField(
                                         hint: Text(labels[i]),
@@ -237,16 +239,17 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                         _locations.clear();
                                         _locations
                                             .addAll(state.activityLocations!);
-
-                                        editingControllers[i].text =
-                                            _locations.indexWhere((element) =>
-                                                        element.name ==
-                                                        values[i]) !=
-                                                    -1
-                                                ? values[i]!
-                                                : '';
+                                        if (values[i] != null)
+                                          editingControllers[i].text =
+                                              _locations.indexWhere((element) =>
+                                                          element.name ==
+                                                          values[i]) !=
+                                                      -1
+                                                  ? values[i]!
+                                                  : '';
                                       }
                                       return DropdownButtonFormField(
+                                        isExpanded: true,
                                         hint: Text(labels[i]),
                                         items: _locations
                                             .map(

@@ -60,6 +60,9 @@ class _ListSglPageState extends State<ListSglPage> {
               child: SpacingColumn(
                 horizontalPadding: 16,
                 children: [
+                  SizedBox(
+                    height: 16,
+                  ),
                   // _buildAttendanceOverview(context),
                   BlocBuilder<SglCstCubit, SglCstState>(
                     builder: (context, state) {

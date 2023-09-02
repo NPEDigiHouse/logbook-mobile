@@ -3,6 +3,7 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/add_special_report_page.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/widgets/special_report_card.dart';
@@ -17,8 +18,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SpecialReportHomePage extends StatefulWidget {
   final ActiveUnitModel activeUnitModel;
+  final UserCredential credential;
 
-  const SpecialReportHomePage({super.key, required this.activeUnitModel});
+  const SpecialReportHomePage(
+      {super.key, required this.activeUnitModel, required this.credential});
 
   @override
   State<SpecialReportHomePage> createState() => _SpecialReportHomePageState();
@@ -61,8 +64,19 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                       SizedBox(
                         height: 12,
                       ),
-                      if (widget.activeUnitModel.countCheckIn! == 0)
-                        AddNewConsultionCard(),
+                      if (widget.credential.student?.supervisingDPKId == null)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Please select a supervisor first in the profile menu before creating a self reflection',
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: errorColor,
+                            ),
+                          ),
+                        ),
+                      if (widget.credential.student?.supervisingDPKId != null)
+                        if (widget.activeUnitModel.countCheckIn! == 0)
+                          AddNewConsultionCard(),
                       BlocBuilder<SpecialReportCubit, SpecialReportState>(
                         builder: (context, state) {
                           if (state.specialReport != null) {

@@ -203,4 +203,26 @@ class ClinicalRecordCubit extends Cubit<ClinicalRecordState> {
       );
     }
   }
+
+  Future<void> crDownloadPath(
+      {required String id, required String filaname}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final data = await clinicalRecordsDatasource.downloadFile(
+          filename: filaname, crId: id);
+
+      emit(state.copyWith(crDownloadPath: data));
+    } catch (e) {
+      print("iniasd");
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
 }

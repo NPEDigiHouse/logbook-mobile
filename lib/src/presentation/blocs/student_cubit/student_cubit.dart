@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/models/self_reflection/student_self_reflection
 import 'package:elogbook/src/data/models/students/student_check_in_model.dart';
 import 'package:elogbook/src/data/models/students/student_check_out_model.dart';
 import 'package:elogbook/src/data/models/students/student_profile_post.dart';
+import 'package:elogbook/src/data/models/students/student_statistic.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
 part 'student_state.dart';
@@ -176,6 +177,28 @@ class StudentCubit extends Cubit<StudentState> {
     }
   }
 
+  Future<void> getStudentStatistic() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getStudentStatistic();
+      try {
+        emit(state.copyWith(studentStatistic: result));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> verifyCheckOut({required String studentId}) async {
     try {
       emit(state.copyWith(
@@ -196,6 +219,4 @@ class StudentCubit extends Cubit<StudentState> {
       );
     }
   }
-
-  
 }

@@ -43,7 +43,7 @@ class ReferenceCubit extends Cubit<ReferenceState> {
       final result =
           await dataSource.downloadDataReference(id: id, filename: fileName);
       try {
-        emit(state.copyWith(isSuccessDownload: result));
+        emit(state.copyWith(rData: result));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

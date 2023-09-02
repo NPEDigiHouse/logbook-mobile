@@ -16,6 +16,7 @@ import 'package:elogbook/src/data/models/special_reports/special_report_response
 import 'package:elogbook/src/data/models/students/student_check_in_model.dart';
 import 'package:elogbook/src/data/models/students/student_check_out_model.dart';
 import 'package:elogbook/src/data/models/students/student_profile_post.dart';
+import 'package:elogbook/src/data/models/students/student_statistic.dart';
 
 abstract class StudentDataSource {
   Future<StudentClinicalRecordResponse> getStudentClinicalRecordOfActiveUnit();
@@ -35,6 +36,7 @@ abstract class StudentDataSource {
   Future<void> verifyCheckIn({required String studentId});
   Future<List<StudentCheckOutModel>> getStudentCheckOut();
   Future<void> verifyCheckOut({required String studentId});
+  Future<StudentStatistic> getStudentStatistic();
 }
 
 class StudentDataSourceImpl implements StudentDataSource {
@@ -155,7 +157,23 @@ class StudentDataSourceImpl implements StudentDataSource {
             return status! < 500;
           },
         ),
-        data: model.toJson(),
+        data: {
+          if (model.clinicId != null) 'clinicId': model.clinicId,
+          if (model.preclinicId != null) 'preclinicId': model.preclinicId,
+          if (model.phoneNumber != null) 'phoneNumber': model.phoneNumber,
+          if (model.address != null) 'address': model.address,
+          if (model.graduationDate != null)
+            'graduationDate': model.graduationDate,
+          if (model.academicSupervisor != null)
+            'academicSupervisor': model.academicSupervisor,
+          if (model.examinerDpk != null) 'examinerDPK': model.examinerDpk,
+          if (model.supervisingDpk != null)
+            'supervisingDPK': model.supervisingDpk,
+          if (model.rsStation != null) 'rsStation': model.rsStation,
+          if (model.pkmStation != null) 'pkmStation': model.pkmStation,
+          if (model.periodLengthStation != null)
+            'periodLengthStation': model.periodLengthStation,
+        },
       );
       print(model.graduationDate);
       print(response);
@@ -537,6 +555,33 @@ class StudentDataSourceImpl implements StudentDataSource {
       if (response.statusCode != 200) {
         throw Exception();
       }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<StudentStatistic> getStudentStatistic() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/statistic',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      // print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+
+      final result = StudentStatistic.fromJson(dataResponse.data);
+      return result;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

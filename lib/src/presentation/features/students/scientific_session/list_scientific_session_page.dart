@@ -107,9 +107,9 @@ class _StudentListScientificSessionPageState
                                     }
                                     return Column(
                                       children: [
-                                        SizedBox(
-                                          height: 16,
-                                        ),
+                                        // SizedBox(
+                                        //   height: 16,
+                                        // ),
                                         buildSearchFilterSection(
                                           verifiedCount: state
                                               .scientificSessionResponse!
@@ -117,9 +117,6 @@ class _StudentListScientificSessionPageState
                                           unverifiedCount: state
                                               .scientificSessionResponse!
                                               .unverifiedCounts!,
-                                        ),
-                                        SizedBox(
-                                          height: 24,
                                         ),
                                         ListView.separated(
                                           physics:
@@ -170,15 +167,15 @@ class _StudentListScientificSessionPageState
       builder: (context, data, value) {
         return Column(
           children: [
-            ValueListenableBuilder(
-              valueListenable: _query,
-              builder: (context, query, child) {
-                return SearchField(
-                  text: query,
-                  onChanged: (value) => _query.value = value,
-                );
-              },
-            ),
+            // ValueListenableBuilder(
+            //   valueListenable: _query,
+            //   builder: (context, query, child) {
+            //     return SearchField(
+            //       text: query,
+            //       onChanged: (value) => _query.value = value,
+            //     );
+            //   },
+            // ),
             SizedBox(
               height: 64,
               child: ListView.separated(

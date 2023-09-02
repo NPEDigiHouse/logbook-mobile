@@ -14,6 +14,7 @@ import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_
 
 class MainMenu extends StatefulWidget {
   final UserCredential credential;
+
   const MainMenu({
     super.key,
     required this.credential,
@@ -36,10 +37,14 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     final _listPage = [
-      const UnitActivityPage(),
+      UnitActivityPage(
+        credential: widget.credential,
+      ),
       const GlobalActivityPage(),
       HistoryPage(),
-      ProfilePage(credential: widget.credential),
+      ProfilePage(
+        credential: widget.credential,
+      ),
     ];
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {

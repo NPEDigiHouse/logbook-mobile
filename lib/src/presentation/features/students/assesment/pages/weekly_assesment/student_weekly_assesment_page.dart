@@ -113,7 +113,7 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
                           SizedBox(
                             height: 16,
                           ),
-                          _buildAttendanceOverview(context),
+                          // _buildAttendanceOverview(context),
                           if (state.weeklyAssesment!.assesments!.isNotEmpty)
                             TopStatCard(
                               title: 'Total Grades',

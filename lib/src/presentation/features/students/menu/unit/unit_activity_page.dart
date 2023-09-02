@@ -1,5 +1,6 @@
 import 'package:elogbook/src/data/datasources/local_datasources/static_datasource.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/assesment_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/list_clinical_record_page.dart';
@@ -29,7 +30,8 @@ import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
 import 'package:intl/intl.dart';
 
 class UnitActivityPage extends StatefulWidget {
-  const UnitActivityPage({super.key});
+  final UserCredential credential;
+  const UnitActivityPage({super.key, required this.credential});
 
   @override
   State<UnitActivityPage> createState() => _UnitActivityPageState();
@@ -468,6 +470,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
             () => context.navigateTo(
                   StudentSelfReflectionHomePage(
                     activeUnitModel: activeUnitModel,
+                    credential: widget.credential,
                   ),
                 ),
             () => context.navigateTo(
@@ -484,6 +487,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
             () => context.navigateTo(
                   SpecialReportHomePage(
                     activeUnitModel: activeUnitModel,
+                    credential: widget.credential,
                   ),
                 ),
           ],
@@ -542,6 +546,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
             () => context.navigateTo(
                   StudentSelfReflectionHomePage(
                     activeUnitModel: activeUnitModel,
+                    credential: widget.credential,
                   ),
                 ),
             () => context.navigateTo(
@@ -558,6 +563,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
             () => context.navigateTo(
                   SpecialReportHomePage(
                     activeUnitModel: activeUnitModel,
+                    credential: widget.credential,
                   ),
                 ),
           ],

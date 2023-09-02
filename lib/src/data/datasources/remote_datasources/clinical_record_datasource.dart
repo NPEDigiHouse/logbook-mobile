@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/data_response.dart';
@@ -14,6 +16,7 @@ import 'package:elogbook/src/data/models/clinical_records/management_role_model.
 import 'package:elogbook/src/data/models/clinical_records/management_types_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/verify_clinical_record_model.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 abstract class ClinicalRecordsDatasource {
   Future<void> uploadClinicalRecord({
@@ -35,6 +38,7 @@ abstract class ClinicalRecordsDatasource {
       {required String clinicalRecordId,
       required VerifyClinicalRecordModel model});
   Future<void> makeFeedback({required String feedback, required crId});
+  Future<String> downloadFile({required String crId, required String filename});
 }
 
 class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
@@ -419,6 +423,41 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       if (response.statusCode != 200) {
         throw Exception();
       }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<String> downloadFile(
+      {required String crId, required String filename}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      Directory? directory = await getExternalStorageDirectory();
+      String newPath = '';
+      newPath = directory!.path + "$filename";
+      directory = Directory(newPath);
+      if (await directory.exists()) {
+        final file = File(directory.path + '/$filename');
+        await dio.download(
+          ApiService.baseUrl + '/references/$crId',
+          file.path,
+          onReceiveProgress: (received, total) {
+            if (total != -1) {
+              print((received / total * 100).toStringAsFixed(0) + "%");
+            }
+          },
+          options: Options(
+            headers: {
+              "content-type": 'application/json',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+          ),
+        );
+      }
+
+      return newPath;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

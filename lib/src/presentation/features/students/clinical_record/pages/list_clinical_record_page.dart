@@ -7,7 +7,6 @@ import 'package:elogbook/src/presentation/features/students/clinical_record/page
 import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/clinical_record_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
-import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
@@ -102,17 +101,30 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                         title: 'Data Still Empty',
                                       );
                                     }
-                                    return ListView.separated(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) =>
-                                          ClinicalRecordCard(
-                                        model: state.clinicalRecordResponse!
-                                            .listClinicalRecords![index],
-                                      ),
-                                      separatorBuilder: (context, index) =>
-                                          SizedBox(height: 12),
-                                      itemCount: data.length,
+                                    return Column(
+                                      children: [
+                                        buildSearchFilterSection(
+                                          verifiedCount: state
+                                              .scientificSessionResponse!
+                                              .verifiedCounts!,
+                                          unverifiedCount: state
+                                              .scientificSessionResponse!
+                                              .unverifiedCounts!,
+                                        ),
+                                        ListView.separated(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) =>
+                                              ClinicalRecordCard(
+                                            model: state.clinicalRecordResponse!
+                                                .listClinicalRecords![index],
+                                          ),
+                                          separatorBuilder: (context, index) =>
+                                              SizedBox(height: 12),
+                                          itemCount: data.length,
+                                        ),
+                                      ],
                                     );
                                   } else {
                                     return SizedBox.shrink();
@@ -147,15 +159,15 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
       builder: (context, data, value) {
         return Column(
           children: [
-            ValueListenableBuilder(
-              valueListenable: _query,
-              builder: (context, query, child) {
-                return SearchField(
-                  text: query,
-                  onChanged: (value) => _query.value = value,
-                );
-              },
-            ),
+            // ValueListenableBuilder(
+            //   valueListenable: _query,
+            //   builder: (context, query, child) {
+            //     return SearchField(
+            //       text: query,
+            //       onChanged: (value) => _query.value = value,
+            //     );
+            //   },
+            // ),
             SizedBox(
               height: 64,
               child: ListView.separated(

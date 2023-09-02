@@ -2,22 +2,22 @@ part of 'reference_cubit.dart';
 
 class ReferenceState {
   final List<ReferenceOnListModel>? references;
-  final bool isSuccessDownload;
+  final String? rData;
 
   ReferenceState({
     this.references,
-    this.isSuccessDownload = false,
+    this.rData,
   });
 
   ReferenceState copyWith({
     RequestState? requestState,
     List<ReferenceOnListModel>? references,
     bool successVerifyClinicalRecords = false,
-    bool isSuccessDownload = false,
+    String? rData,
   }) {
     return ReferenceState(
       references: references ?? this.references,
-      isSuccessDownload: isSuccessDownload,
+      rData: rData,
     );
   }
 }
