@@ -7,8 +7,6 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/check_report_page.dart';
-import 'package:elogbook/src/presentation/features/head_section/in_out_reporting/dummy_models.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 
 class InOutReportingPage extends StatefulWidget {
@@ -97,16 +95,16 @@ class _InOutReportingPageState extends State<InOutReportingPage>
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 14),
-                          ValueListenableBuilder(
-                            valueListenable: _query,
-                            builder: (context, query, child) {
-                              return SearchField(
-                                text: query,
-                                onChanged: (value) => _query.value = value,
-                              );
-                            },
-                          ),
+                          // const SizedBox(height: 14),
+                          // ValueListenableBuilder(
+                          //   valueListenable: _query,
+                          //   builder: (context, query, child) {
+                          //     return SearchField(
+                          //       text: query,
+                          //       onChanged: (value) => _query.value = value,
+                          //     );
+                          //   },
+                          // ),
                         ],
                       ),
                     ),

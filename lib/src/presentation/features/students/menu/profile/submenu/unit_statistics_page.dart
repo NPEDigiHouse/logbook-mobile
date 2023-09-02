@@ -144,10 +144,16 @@ class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
               builder: (context, state1) {
                 return BlocBuilder<StudentCubit, StudentState>(
                   builder: (context, state) {
+                    print(state1.listCasesModel != null);
+                    print(state1.listSkillsModel != null);
+                    print(state1.studentCasesModel != null);
+                    print(state1.studentSkillsModel != null);
+                    print(state.studentStatistic != null);
                     if (state1.listCasesModel != null &&
                         state1.listSkillsModel != null &&
                         state1.studentCasesModel != null &&
-                        state1.studentSkillsModel != null) {
+                        state1.studentSkillsModel != null &&
+                        state.studentStatistic != null) {
                       final stData = state.studentStatistic!;
                       return UnitStatisticsCard(
                         padding: const EdgeInsets.symmetric(vertical: 24),
@@ -172,7 +178,7 @@ class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
                             UnitStatisticsSection(
                               titleText: 'Diagnosis Skills',
                               titleIconPath: 'skill_outlined.svg',
-                              percentage: (stData.verifiedSkills! ~/
+                              percentage: (stData.verifiedSkills! /
                                       state1.studentSkillsModel!.length) *
                                   100,
                               statistics: {
@@ -205,7 +211,7 @@ class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
                             UnitStatisticsSection(
                               titleText: 'Acquired Cases',
                               titleIconPath: 'attach_resume_male_outlined.svg',
-                              percentage: (stData.verifiedCases! ~/
+                              percentage: (stData.verifiedCases! /
                                       state1.studentCasesModel!.length) *
                                   100,
                               statistics: {

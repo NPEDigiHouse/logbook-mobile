@@ -23,6 +23,9 @@ class ReferencePage extends StatefulWidget {
 }
 
 class _ReferencePageState extends State<ReferencePage> {
+  ValueNotifier<List<ReferenceOnListModel>> listData = ValueNotifier([]);
+  bool isMounted = false;
+
   Future<bool> checkAndRequestPermission() async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
@@ -33,7 +36,6 @@ class _ReferencePageState extends State<ReferencePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<ReferenceCubit>(context)
       ..getListReference(unitId: widget.activeUnitModel.unitId!);
@@ -53,98 +55,140 @@ class _ReferencePageState extends State<ReferencePage> {
                   .getListReference(unitId: widget.activeUnitModel.unitId!),
             ]);
           },
-          child: CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                sliver: SliverToBoxAdapter(
-                  child: SpacingColumn(
-                    onlyPading: true,
-                    horizontalPadding: 16,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UnitHeader(
-                            unitName: widget.activeUnitModel.unitName!,
-                          ),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          SearchField(
-                            onChanged: (String value) {},
-                            text: 'Search',
-                          ),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          BlocConsumer<ReferenceCubit, ReferenceState>(
-                            listener: (context, state) {
-                              if (state.rData != null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          'Success download data ${state.rData}')),
-                                );
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state.references != null) {
-                                if (state.references!.isNotEmpty)
-                                  return ListView.separated(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (contex, index) {
-                                      return ReferenceCard(
-                                        reference: state.references![index],
-                                        onTap: () async {
-                                          final hasPermission =
-                                              await checkAndRequestPermission();
-                                          if (hasPermission) {
-                                            BlocProvider.of<ReferenceCubit>(
-                                                context)
-                                              ..getReferenceById(
-                                                  id: state
-                                                      .references![index].id!,
-                                                  fileName: state
-                                                          .references![index]
-                                                          .file ??
-                                                      '');
-                                          }
-                                        },
+          child: ValueListenableBuilder(
+              valueListenable: listData,
+              builder: (context, s, _) {
+                return CustomScrollView(
+                  slivers: [
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      sliver: SliverToBoxAdapter(
+                        child: SpacingColumn(
+                          onlyPading: true,
+                          horizontalPadding: 16,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UnitHeader(
+                                  unitName: widget.activeUnitModel.unitName!,
+                                ),
+                                BlocConsumer<ReferenceCubit, ReferenceState>(
+                                  listener: (context, state) {
+                                    if (state.rData != null) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Success download data ${state.rData}')),
                                       );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return SizedBox(
-                                        height: 12,
+                                    }
+                                    if (state.references != null) {
+                                      if (!isMounted) {
+                                        Future.microtask(() {
+                                          listData.value = [
+                                            ...state.references!
+                                          ];
+                                          isMounted = true;
+                                        });
+                                      }
+                                    }
+                                  },
+                                  builder: (context, state) {
+                                    if (state.references != null) {
+                                      if (state.references!.isNotEmpty)
+                                        return Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 24,
+                                            ),
+                                            SearchField(
+                                              onChanged: (String value) {
+                                                final data = state.references!
+                                                    .where((element) => element
+                                                        .file!
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase()))
+                                                    .toList();
+                                                if (value.isEmpty) {
+                                                  listData.value.clear();
+                                                  listData.value = [
+                                                    ...state.references!
+                                                  ];
+                                                } else {
+                                                  listData.value = [...data];
+                                                }
+                                              },
+                                              text: 'Search',
+                                            ),
+                                            SizedBox(
+                                              height: 24,
+                                            ),
+                                            if (s.isNotEmpty)
+                                              ListView.separated(
+                                                shrinkWrap: true,
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                itemBuilder: (contex, index) {
+                                                  return ReferenceCard(
+                                                    reference: s[index],
+                                                    onTap: () async {
+                                                      final hasPermission =
+                                                          await checkAndRequestPermission();
+                                                      if (hasPermission) {
+                                                        BlocProvider.of<
+                                                                ReferenceCubit>(
+                                                            context)
+                                                          ..getReferenceById(
+                                                              id: state
+                                                                  .references![
+                                                                      index]
+                                                                  .id!,
+                                                              fileName: state
+                                                                      .references![
+                                                                          index]
+                                                                      .file ??
+                                                                  '');
+                                                      }
+                                                    },
+                                                  );
+                                                },
+                                                separatorBuilder:
+                                                    (context, index) {
+                                                  return SizedBox(
+                                                    height: 12,
+                                                  );
+                                                },
+                                                itemCount: s.length,
+                                              ),
+                                          ],
+                                        );
+                                      else
+                                        return EmptyData(
+                                            title: 'No Reference Found',
+                                            subtitle:
+                                                'no reference data has uploaded');
+                                    } else
+                                      return Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 24,
+                                          ),
+                                          CustomLoading(),
+                                        ],
                                       );
-                                    },
-                                    itemCount: state.references!.length,
-                                  );
-                                else
-                                  return EmptyData(
-                                      title: 'No Reference Found',
-                                      subtitle:
-                                          'no reference data has uploaded');
-                              } else
-                                return Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 24,
-                                    ),
-                                    CustomLoading(),
-                                  ],
-                                );
-                            },
-                          ),
-                        ],
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+                    ),
+                  ],
+                );
+              }),
         ),
       ),
     );

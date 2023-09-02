@@ -167,12 +167,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       return SizedBox.shrink();
                   },
                 ),
-                const SizedBox(height: 14),
-                ProfileItemMenuCard(
-                  iconPath: 'file_export_filled.svg',
-                  title: 'Export Data',
-                  onTap: () => context.navigateTo(const ExportDataPage()),
-                ),
+                // const SizedBox(height: 14),
+                // ProfileItemMenuCard(
+                //   iconPath: 'file_export_filled.svg',
+                //   title: 'Export Data',
+                //   onTap: () => context.navigateTo(const ExportDataPage()),
+                // ),
                 // const SizedBox(height: 14),
                 // ProfileItemMenuCard(
                 //   iconPath: 'lock_filled.svg',

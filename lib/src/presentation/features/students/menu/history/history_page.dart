@@ -1,10 +1,8 @@
-import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/history_cubit/history_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/detail_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/detail_scientific_session_page.dart';
-import 'package:elogbook/src/presentation/features/students/self_reflection/wrapper_self_reflection.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/list_cst_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/list_sgl_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -20,7 +18,6 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_data.dart';
-import 'package:elogbook/src/presentation/features/students/menu/history/history_filter_bottom_sheet.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -33,6 +30,8 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  ValueNotifier<List<Activity>> listData = ValueNotifier([]);
+  bool isMounted = false;
   late final List<String> _menuList;
 
   late final ValueNotifier<String> _query, _selectedMenu;
@@ -44,8 +43,6 @@ class _HistoryPageState extends State<HistoryPage> {
       'All',
       'Clinical Record',
       'Scientific Session',
-      'Self Reflection',
-      'Daily Activity',
       'SGL',
       'CST',
     ];
@@ -100,248 +97,279 @@ class _HistoryPageState extends State<HistoryPage> {
         onRefresh: () => Future.wait([
           BlocProvider.of<HistoryCubit>(context).getHistories(),
         ]),
-        child: BlocBuilder<HistoryCubit, HistoryState>(
-          builder: (context, state) {
-            if (state.histories != null &&
-                state.requestState == RequestState.data &&
-                activeUnit is GetActiveUnitSuccess) {
-              final data = HistoryHelper.convertHistoryToActivity(
-                  state.histories!, RoleHistory.student);
-              return CustomScrollView(
-                slivers: <Widget>[
-                  SliverGroupedListView<Activity, DateTime>(
-                    elements: data,
-                    groupBy: (activity) => activity.date!,
-                    groupComparator: (date1, date2) =>
-                        date1.compareTo(date2) * -1,
-                    itemBuilder: (context, activity) {
-                      return Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            switch (activity.title) {
-                              case 'SGL':
-                                context.navigateTo(
-                                  ListSglPage(
-                                      activeUnitModel: activeUnit.activeUnit),
-                                );
-                                break;
-                              case 'CST':
-                                context.navigateTo(
-                                  ListCstPage(
-                                      activeUnitModel: activeUnit.activeUnit),
-                                );
-                                break;
-                              case 'Scientific Session':
-                                context.navigateTo(
-                                  DetailScientificSessionPage(id: activity.id),
-                                );
-                                break;
-                              case 'Clinical Record':
-                                context.navigateTo(
-                                  DetailClinicalRecordPage(id: activity.id),
-                                );
-                                break;
-                              default:
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 20,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Container(
-                                    width: 68,
-                                    height: 68,
-                                    color: primaryColor.withOpacity(.1),
-                                    child: Center(
-                                      child: SvgPicture.asset(
-                                        activity.iconPath,
-                                        color: primaryColor,
-                                        width: 32,
-                                      ),
-                                    ),
+        child: ValueListenableBuilder(
+            valueListenable: listData,
+            builder: (context, s, _) {
+              return BlocConsumer<HistoryCubit, HistoryState>(
+                listener: (context, state) {
+                  if (state.histories != null &&
+                      state.requestState == RequestState.data) {
+                    if (!isMounted) {
+                      Future.microtask(() {
+                        listData.value = [
+                          ...HistoryHelper.convertHistoryToActivity(
+                              state.histories!, RoleHistory.student)
+                        ];
+                      });
+                      isMounted = true;
+                    }
+                  }
+                },
+                builder: (context, state) {
+                  if (state.histories != null &&
+                      state.requestState == RequestState.data &&
+                      activeUnit is GetActiveUnitSuccess) {
+                    return CustomScrollView(
+                      slivers: <Widget>[
+                        SliverGroupedListView<Activity, DateTime>(
+                          elements: s,
+                          groupBy: (activity) => activity.date!,
+                          groupComparator: (date1, date2) =>
+                              date1.compareTo(date2) * -1,
+                          itemBuilder: (context, activity) {
+                            return Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () {
+                                  switch (activity.title) {
+                                    case 'SGL':
+                                      context.navigateTo(
+                                        ListSglPage(
+                                            activeUnitModel:
+                                                activeUnit.activeUnit),
+                                      );
+                                      break;
+                                    case 'CST':
+                                      context.navigateTo(
+                                        ListCstPage(
+                                            activeUnitModel:
+                                                activeUnit.activeUnit),
+                                      );
+                                      break;
+                                    case 'Scientific Session':
+                                      context.navigateTo(
+                                        DetailScientificSessionPage(
+                                            id: activity.id),
+                                      );
+                                      break;
+                                    case 'Clinical Record':
+                                      context.navigateTo(
+                                        DetailClinicalRecordPage(
+                                            id: activity.id),
+                                      );
+                                      break;
+                                    default:
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                    horizontal: 20,
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            activity.title,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style:
-                                                textTheme.titleSmall?.copyWith(
-                                              fontWeight: FontWeight.bold,
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Container(
+                                          width: 68,
+                                          height: 68,
+                                          color: primaryColor.withOpacity(.1),
+                                          child: Center(
+                                            child: SvgPicture.asset(
+                                              activity.iconPath,
+                                              color: primaryColor,
+                                              width: 32,
                                             ),
                                           ),
-                                          const SizedBox(width: 4),
-                                          const Icon(
-                                            Icons.verified_rounded,
-                                            size: 16,
-                                            color: primaryColor,
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                      const SizedBox(height: 12),
-                                      RichText(
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        text: TextSpan(
-                                          style: textTheme.bodySmall?.copyWith(
-                                            color: secondaryTextColor,
-                                          ),
-                                          children: <TextSpan>[
-                                            const TextSpan(
-                                              text: 'Supervisor:\t',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w700,
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Row(
+                                              children: <Widget>[
+                                                Text(
+                                                  activity.title,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: textTheme.titleSmall
+                                                      ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 4),
+                                                const Icon(
+                                                  Icons.verified_rounded,
+                                                  size: 16,
+                                                  color: primaryColor,
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 12),
+                                            RichText(
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              text: TextSpan(
+                                                style: textTheme.bodySmall
+                                                    ?.copyWith(
+                                                  color: secondaryTextColor,
+                                                ),
+                                                children: <TextSpan>[
+                                                  const TextSpan(
+                                                    text: 'Supervisor:\t',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                      text:
+                                                          activity.supervisor ??
+                                                              '-'),
+                                                ],
                                               ),
                                             ),
-                                            TextSpan(
-                                                text:
-                                                    activity.supervisor ?? '-'),
+                                            if (activity.patientName !=
+                                                null) ...[
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                text: TextSpan(
+                                                  style: textTheme.bodySmall
+                                                      ?.copyWith(
+                                                    color: secondaryTextColor,
+                                                  ),
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                      text: 'Patient: ',
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                    TextSpan(
+                                                      text:
+                                                          activity.patientName,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                            ...[
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                text: TextSpan(
+                                                  style: textTheme.bodySmall
+                                                      ?.copyWith(
+                                                    color: secondaryTextColor,
+                                                  ),
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                      text: 'Latest: ',
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                    TextSpan(
+                                                      text: activity.dateTime,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                            const SizedBox(height: 8),
+                                            // if (activity is ClinicalRecord)
+                                            //   if (activity.hasAttachment)
+                                            //     Container(
+                                            //       padding: const EdgeInsets.symmetric(
+                                            //         vertical: 4,
+                                            //         horizontal: 12,
+                                            //       ),
+                                            //       decoration: BoxDecoration(
+                                            //         border:
+                                            //             Border.all(color: dividerColor),
+                                            //         borderRadius:
+                                            //             BorderRadius.circular(99),
+                                            //       ),
+                                            //       child: Row(
+                                            //         mainAxisSize: MainAxisSize.min,
+                                            //         children: <Widget>[
+                                            //           const Icon(
+                                            //             Icons.attachment_rounded,
+                                            //             size: 14,
+                                            //           ),
+                                            //           const SizedBox(width: 6),
+                                            //           Text(
+                                            //             'attachment_file.pdf',
+                                            //             style: textTheme.labelSmall
+                                            //                 ?.copyWith(
+                                            //               fontWeight: FontWeight.w500,
+                                            //               letterSpacing: 0,
+                                            //               height: 0,
+                                            //             ),
+                                            //           ),
+                                            //         ],
+                                            //       ),
+                                            //     ),
                                           ],
                                         ),
                                       ),
-                                      if (activity.patientName != null) ...[
-                                        const SizedBox(height: 4),
-                                        RichText(
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          text: TextSpan(
-                                            style:
-                                                textTheme.bodySmall?.copyWith(
-                                              color: secondaryTextColor,
-                                            ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: 'Patient: ',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: activity.patientName,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                      ...[
-                                        const SizedBox(height: 4),
-                                        RichText(
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          text: TextSpan(
-                                            style:
-                                                textTheme.bodySmall?.copyWith(
-                                              color: secondaryTextColor,
-                                            ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: 'Latest: ',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: activity.dateTime,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                      const SizedBox(height: 8),
-                                      // if (activity is ClinicalRecord)
-                                      //   if (activity.hasAttachment)
-                                      //     Container(
-                                      //       padding: const EdgeInsets.symmetric(
-                                      //         vertical: 4,
-                                      //         horizontal: 12,
-                                      //       ),
-                                      //       decoration: BoxDecoration(
-                                      //         border:
-                                      //             Border.all(color: dividerColor),
-                                      //         borderRadius:
-                                      //             BorderRadius.circular(99),
-                                      //       ),
-                                      //       child: Row(
-                                      //         mainAxisSize: MainAxisSize.min,
-                                      //         children: <Widget>[
-                                      //           const Icon(
-                                      //             Icons.attachment_rounded,
-                                      //             size: 14,
-                                      //           ),
-                                      //           const SizedBox(width: 6),
-                                      //           Text(
-                                      //             'attachment_file.pdf',
-                                      //             style: textTheme.labelSmall
-                                      //                 ?.copyWith(
-                                      //               fontWeight: FontWeight.w500,
-                                      //               letterSpacing: 0,
-                                      //               height: 0,
-                                      //             ),
-                                      //           ),
-                                      //         ],
-                                      //       ),
-                                      //     ),
                                     ],
                                   ),
                                 ),
+                              ),
+                            );
+                          },
+                          groupSeparatorBuilder: (date) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                const Divider(
+                                  height: 6,
+                                  thickness: 6,
+                                  color: onDisableColor,
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                                  child: Text(
+                                    timeago.format(date),
+                                    style: textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
                               ],
-                            ),
+                            );
+                          },
+                          separator: const Divider(
+                            height: 1,
+                            thickness: 1,
+                            indent: 20,
+                            endIndent: 20,
+                            color: Color(0xFFEFF0F9),
                           ),
                         ),
-                      );
-                    },
-                    groupSeparatorBuilder: (date) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const Divider(
-                            height: 6,
-                            thickness: 6,
-                            color: onDisableColor,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                            child: Text(
-                              timeago.format(date),
-                              style: textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                    separator: const Divider(
-                      height: 1,
-                      thickness: 1,
-                      indent: 20,
-                      endIndent: 20,
-                      color: Color(0xFFEFF0F9),
-                    ),
-                  ),
-                ],
+                      ],
+                    );
+                  }
+                  return CustomLoading();
+                },
               );
-            }
-            return CustomLoading();
-          },
-        ),
+            }),
       ),
     );
   }
@@ -370,13 +398,13 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
               IconButton(
                 onPressed: () async {
-                  final data = await showModalBottomSheet<Map<String, String>?>(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => const HistoryFilterBottomSheet(),
-                  );
+                  // final data = await showModalBottomSheet<Map<String, String>?>(
+                  //   context: context,
+                  //   isScrollControlled: true,
+                  //   builder: (context) => const HistoryFilterBottomSheet(),
+                  // );
 
-                  if (data != null) _dataFilters.value = data;
+                  // if (data != null) _dataFilters.value = data;
                 },
                 icon: const Icon(
                   Icons.filter_list_rounded,
@@ -395,147 +423,227 @@ class _HistoryPageState extends State<HistoryPage> {
     return ValueListenableBuilder(
       valueListenable: _dataFilters,
       builder: (context, data, value) {
-        return Column(
-          children: <Widget>[
-            if (data != null) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.labelSmall,
-                        children: <TextSpan>[
-                          const TextSpan(text: 'From\t'),
-                          TextSpan(
-                            text: data['start_date'],
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: primaryColor,
-                            ),
-                          ),
-                          const TextSpan(text: '\tto\t'),
-                          TextSpan(
-                            text: data['end_date'],
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
+        return BlocBuilder<HistoryCubit, HistoryState>(
+          builder: (context, state) {
+            return Column(
+              children: <Widget>[
+                if (data != null) ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 20,
                     ),
-                    const SizedBox(height: 4),
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.labelSmall,
-                        children: <TextSpan>[
-                          const TextSpan(text: 'Activity\t'),
-                          TextSpan(
-                            text: data['activity']!.toCapitalize(),
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: primaryColor,
-                            ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        RichText(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                            style: textTheme.labelSmall,
+                            children: <TextSpan>[
+                              const TextSpan(text: 'From\t'),
+                              TextSpan(
+                                text: data['start_date'],
+                                style: textTheme.bodyLarge?.copyWith(
+                                  color: primaryColor,
+                                ),
+                              ),
+                              const TextSpan(text: '\tto\t'),
+                              TextSpan(
+                                text: data['end_date'],
+                                style: textTheme.bodyLarge?.copyWith(
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.labelSmall,
-                        children: <TextSpan>[
-                          const TextSpan(text: 'Status\t'),
-                          TextSpan(
-                            text: data['status']!.toCapitalize(),
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        onPressed: () => _dataFilters.value = null,
-                        child: const Text(
-                          'Reset filter',
-                          style: TextStyle(fontWeight: FontWeight.w700),
                         ),
-                      ),
+                        const SizedBox(height: 4),
+                        RichText(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                            style: textTheme.labelSmall,
+                            children: <TextSpan>[
+                              const TextSpan(text: 'Activity\t'),
+                              TextSpan(
+                                text: data['activity']!.toCapitalize(),
+                                style: textTheme.bodyLarge?.copyWith(
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        RichText(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                            style: textTheme.labelSmall,
+                            children: <TextSpan>[
+                              const TextSpan(text: 'Status\t'),
+                              TextSpan(
+                                text: data['status']!.toCapitalize(),
+                                style: textTheme.bodyLarge?.copyWith(
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: () => _dataFilters.value = null,
+                            child: const Text(
+                              'Reset filter',
+                              style: TextStyle(fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ] else ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                child: ValueListenableBuilder(
-                  valueListenable: _query,
-                  builder: (context, query, child) {
-                    return SearchField(
-                      text: query,
-                      onChanged: (value) => _query.value = value,
-                    );
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 64,
-                child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _menuList.length,
-                  itemBuilder: (context, index) {
-                    return ValueListenableBuilder(
-                      valueListenable: _selectedMenu,
-                      builder: (context, value, child) {
-                        final selected = value == _menuList[index];
-
-                        return RawChip(
-                          pressElevation: 0,
-                          clipBehavior: Clip.antiAlias,
-                          label: Text(_menuList[index]),
-                          labelPadding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                          ),
-                          labelStyle: textTheme.bodyMedium?.copyWith(
-                            color: selected ? primaryColor : primaryTextColor,
-                          ),
-                          side: BorderSide(
-                            color: selected ? Colors.transparent : borderColor,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          checkmarkColor: primaryColor,
-                          selectedColor: primaryColor.withOpacity(.2),
-                          selected: selected,
-                          onSelected: (_) {
-                            _selectedMenu.value = _menuList[index];
+                  ),
+                ] else ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 20,
+                    ),
+                    child: ValueListenableBuilder(
+                      valueListenable: _query,
+                      builder: (context, query, child) {
+                        return SearchField(
+                          text: '',
+                          hint: 'Search Student',
+                          onChanged: (value) {
+                            final data = state.histories!
+                                .where((element) => element.studentName!
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()))
+                                .toList();
+                            if (value.isEmpty) {
+                              listData.value.clear();
+                              listData.value = [
+                                ...HistoryHelper.convertHistoryToActivity(
+                                    state.histories!, RoleHistory.student)
+                              ];
+                            } else {
+                              listData.value = [
+                                ...HistoryHelper.convertHistoryToActivity(
+                                    data, RoleHistory.student)
+                              ];
+                            }
                           },
                         );
                       },
-                    );
-                  },
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
-                ),
-              ),
-            ],
-          ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 64,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _menuList.length,
+                      itemBuilder: (context, index) {
+                        return ValueListenableBuilder(
+                          valueListenable: _selectedMenu,
+                          builder: (context, value, child) {
+                            final selected = value == _menuList[index];
+
+                            return RawChip(
+                              pressElevation: 0,
+                              clipBehavior: Clip.antiAlias,
+                              label: Text(_menuList[index]),
+                              labelPadding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                              ),
+                              labelStyle: textTheme.bodyMedium?.copyWith(
+                                color:
+                                    selected ? primaryColor : primaryTextColor,
+                              ),
+                              side: BorderSide(
+                                color:
+                                    selected ? Colors.transparent : borderColor,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              checkmarkColor: primaryColor,
+                              selectedColor: primaryColor.withOpacity(.2),
+                              selected: selected,
+                              onSelected: (_) {
+                                _selectedMenu.value = _menuList[index];
+                                switch (index) {
+                                  case 1:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'CLINICAL RECORD')
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data, RoleHistory.supervisor)
+                                    ];
+                                    break;
+                                  case 2:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'SCIENTIFIC SESSION'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data, RoleHistory.supervisor)
+                                    ];
+
+                                    break;
+                                  case 3:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'SGL'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data, RoleHistory.supervisor)
+                                    ];
+                                    break;
+                                  case 4:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'CST'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data, RoleHistory.supervisor)
+                                    ];
+                                    break;
+                                  case 0:
+                                    listData.value.clear();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          state.histories!,
+                                          RoleHistory.supervisor),
+                                    ];
+                                  default:
+                                }
+                              },
+                            );
+                          },
+                        );
+                      },
+                      separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    ),
+                  ),
+                ],
+              ],
+            );
+          },
         );
       },
     );

@@ -1,6 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
@@ -24,6 +25,8 @@ class ListClinicalRecordPage extends StatefulWidget {
 }
 
 class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
+  ValueNotifier<List<StudentClinicalRecordModel>> listData = ValueNotifier([]);
+  bool isMounted = false;
   late final ValueNotifier<String> _query, _selectedMenu;
   late final ValueNotifier<Map<String, String>?> _dataFilters;
 
@@ -69,79 +72,99 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                   .getStudentClinicalRecordOfActiveUnit(),
             ]);
           },
-          child: CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                sliver: SliverFillRemaining(
-                  child: BlocBuilder<StudentCubit, StudentState>(
-                    builder: (context, state) {
-                      if (state.clinicalRecordResponse != null) {
-                        return SingleChildScrollView(
-                          child: SpacingColumn(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            onlyPading: true,
-                            horizontalPadding: 16,
-                            children: [
-                              UnitHeader(
-                                  unitName: widget.activeUnitModel.unitName!),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              ItemDivider(),
-                              Builder(
-                                builder: (context) {
-                                  if (state.clinicalRecordResponse != null) {
-                                    final data = state.clinicalRecordResponse!
-                                        .listClinicalRecords!;
-                                    if (data.isEmpty) {
-                                      return EmptyData(
-                                        subtitle:
-                                            'Please upload clinical record data first!',
-                                        title: 'Data Still Empty',
-                                      );
-                                    }
-                                    return Column(
-                                      children: [
-                                        buildSearchFilterSection(
-                                          verifiedCount: state
-                                              .scientificSessionResponse!
-                                              .verifiedCounts!,
-                                          unverifiedCount: state
-                                              .scientificSessionResponse!
-                                              .unverifiedCounts!,
-                                        ),
-                                        ListView.separated(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemBuilder: (context, index) =>
-                                              ClinicalRecordCard(
-                                            model: state.clinicalRecordResponse!
-                                                .listClinicalRecords![index],
-                                          ),
-                                          separatorBuilder: (context, index) =>
-                                              SizedBox(height: 12),
-                                          itemCount: data.length,
-                                        ),
-                                      ],
-                                    );
-                                  } else {
-                                    return SizedBox.shrink();
-                                  }
-                                },
-                              )
-                            ],
-                          ),
-                        );
-                      }
-                      return CustomLoading();
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
+          child: ValueListenableBuilder(
+              valueListenable: listData,
+              builder: (context, s, _) {
+                return CustomScrollView(
+                  slivers: [
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      sliver: SliverFillRemaining(
+                        child: BlocConsumer<StudentCubit, StudentState>(
+                          listener: (context, state) {
+                            if (state.clinicalRecordResponse != null) {
+                              if (!isMounted) {
+                                Future.microtask(() {
+                                  listData.value = [
+                                    ...state.clinicalRecordResponse!
+                                        .listClinicalRecords!
+                                  ];
+                                  isMounted = true;
+                                });
+                              }
+                            }
+                          },
+                          builder: (context, state) {
+                            if (state.clinicalRecordResponse != null) {
+                              return SingleChildScrollView(
+                                child: SpacingColumn(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  onlyPading: true,
+                                  horizontalPadding: 16,
+                                  children: [
+                                    UnitHeader(
+                                        unitName:
+                                            widget.activeUnitModel.unitName!),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    ItemDivider(),
+                                    Builder(
+                                      builder: (context) {
+                                        if (state.clinicalRecordResponse !=
+                                            null) {
+                                          final data = state
+                                              .clinicalRecordResponse!
+                                              .listClinicalRecords!;
+                                          if (data.isEmpty) {
+                                            return EmptyData(
+                                              subtitle:
+                                                  'Please upload clinical record data first!',
+                                              title: 'Data Still Empty',
+                                            );
+                                          }
+                                          return Column(
+                                            children: [
+                                              buildSearchFilterSection(
+                                                verifiedCount: state
+                                                    .clinicalRecordResponse!
+                                                    .verifiedCounts!,
+                                                unverifiedCount: state
+                                                    .clinicalRecordResponse!
+                                                    .unverifiedCounts!,
+                                              ),
+                                              ListView.separated(
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemBuilder: (context, index) =>
+                                                    ClinicalRecordCard(
+                                                  model: s[index],
+                                                ),
+                                                separatorBuilder:
+                                                    (context, index) =>
+                                                        SizedBox(height: 12),
+                                                itemCount: s.length,
+                                              ),
+                                            ],
+                                          );
+                                        } else {
+                                          return SizedBox.shrink();
+                                        }
+                                      },
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+                            return CustomLoading();
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
         ),
       ),
     );
@@ -157,54 +180,90 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
     return ValueListenableBuilder(
       valueListenable: _dataFilters,
       builder: (context, data, value) {
-        return Column(
-          children: [
-            // ValueListenableBuilder(
-            //   valueListenable: _query,
-            //   builder: (context, query, child) {
-            //     return SearchField(
-            //       text: query,
-            //       onChanged: (value) => _query.value = value,
-            //     );
-            //   },
-            // ),
-            SizedBox(
-              height: 64,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: _menuList.length,
-                itemBuilder: (context, index) {
-                  return ValueListenableBuilder(
-                    valueListenable: _selectedMenu,
-                    builder: (context, value, child) {
-                      final selected = value == _menuList[index];
-                      return RawChip(
-                        pressElevation: 0,
-                        clipBehavior: Clip.antiAlias,
-                        label: Text(_menuList[index]),
-                        labelPadding: const EdgeInsets.symmetric(horizontal: 6),
-                        labelStyle: textTheme.bodyMedium?.copyWith(
-                          color: selected ? primaryColor : primaryTextColor,
-                        ),
-                        side: BorderSide(
-                          color: selected ? Colors.transparent : borderColor,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        checkmarkColor: primaryColor,
-                        selectedColor: primaryColor.withOpacity(.2),
-                        selected: selected,
-                        onSelected: (_) =>
-                            _selectedMenu.value = _menuList[index],
+        return BlocBuilder<StudentCubit, StudentState>(
+          builder: (context, state) {
+            return Column(
+              children: [
+                // ValueListenableBuilder(
+                //   valueListenable: _query,
+                //   builder: (context, query, child) {
+                //     return SearchField(
+                //       text: query,
+                //       onChanged: (value) => _query.value = value,
+                //     );
+                //   },
+                // ),
+                SizedBox(
+                  height: 64,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _menuList.length,
+                    itemBuilder: (context, index) {
+                      return ValueListenableBuilder(
+                        valueListenable: _selectedMenu,
+                        builder: (context, value, child) {
+                          final selected = value == _menuList[index];
+                          return RawChip(
+                            pressElevation: 0,
+                            clipBehavior: Clip.antiAlias,
+                            label: Text(_menuList[index]),
+                            labelPadding:
+                                const EdgeInsets.symmetric(horizontal: 6),
+                            labelStyle: textTheme.bodyMedium?.copyWith(
+                              color: selected ? primaryColor : primaryTextColor,
+                            ),
+                            side: BorderSide(
+                              color:
+                                  selected ? Colors.transparent : borderColor,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            checkmarkColor: primaryColor,
+                            selectedColor: primaryColor.withOpacity(.2),
+                            selected: selected,
+                            onSelected: (_) {
+                              _selectedMenu.value = _menuList[index];
+                              switch (index) {
+                                case 0:
+                                  listData.value = [
+                                    ...state.clinicalRecordResponse!
+                                        .listClinicalRecords!
+                                  ];
+                                  break;
+                                case 1:
+                                  listData.value = [
+                                    ...state.clinicalRecordResponse!
+                                        .listClinicalRecords!
+                                        .where((element) =>
+                                            element.verificationStatus ==
+                                            'VERIFIED')
+                                        .toList()
+                                  ];
+                                  break;
+                                case 2:
+                                  listData.value = [
+                                    ...state.clinicalRecordResponse!
+                                        .listClinicalRecords!
+                                        .where((element) =>
+                                            element.verificationStatus !=
+                                            'VERIFIED')
+                                        .toList()
+                                  ];
+                                  break;
+                                default:
+                              }
+                            },
+                          );
+                        },
                       );
                     },
-                  );
-                },
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-              ),
-            ),
-          ],
+                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );

@@ -1,6 +1,7 @@
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/competences/list_skills_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/competences/widgets/add_competence_dialog.dart';
@@ -23,21 +24,15 @@ class ListSkillsPage extends StatefulWidget {
 }
 
 class _ListSkillsPageState extends State<ListSkillsPage> {
-  late final List<String> _menuList;
-
+  ValueNotifier<List<SkillModel>> listData = ValueNotifier([]);
+  bool isMounted = false;
   late final ValueNotifier<String> _query, _selectedMenu;
   late final ValueNotifier<Map<String, String>?> _dataFilters;
 
   @override
   void initState() {
-    _menuList = [
-      'All',
-      'Verified',
-      'Unverified',
-    ];
-
     _query = ValueNotifier('');
-    _selectedMenu = ValueNotifier(_menuList[0]);
+    _selectedMenu = ValueNotifier('All');
     _dataFilters = ValueNotifier(null);
 
     super.initState();
@@ -82,122 +77,192 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
               BlocProvider.of<CompetenceCubit>(context).getListCases(),
             ]);
           },
-          child: CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                sliver: SliverFillRemaining(
-                  child: BlocBuilder<CompetenceCubit, CompetenceState>(
-                    builder: (context, state) {
-                      if (state.listSkillsModel != null) {
-                        final data = state.listSkillsModel!.listSkills!;
-                        if (data.isEmpty) {
-                          return EmptyData(
-                            subtitle: 'Please add skill data first!',
-                            title: 'Data Still Empty',
-                          );
-                        }
-                        return SingleChildScrollView(
-                          child: SpacingColumn(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            onlyPading: true,
-                            horizontalPadding: 16,
-                            children: [
-                              UnitHeader(unitName: widget.model.unitName!),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              buildSearchFilterSection(),
-                              SizedBox(
-                                height: 16,
-                              ),
-                              ListView.separated(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) =>
-                                    TestGradeScoreCard(
-                                  caseName: data[index].skillName!,
-                                  caseType: data[index].skillType!,
-                                  isVerified: data[index].verificationStatus ==
-                                      'VERIFIED',
+          child: ValueListenableBuilder(
+              valueListenable: listData,
+              builder: (context, s, _) {
+                return CustomScrollView(
+                  slivers: [
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      sliver: SliverFillRemaining(
+                        child: BlocConsumer<CompetenceCubit, CompetenceState>(
+                          listener: (context, state) {
+                            if (state.listSkillsModel != null) {
+                              if (!isMounted) {
+                                Future.microtask(() {
+                                  listData.value = [
+                                    ...state.listSkillsModel!.listSkills!
+                                  ];
+                                  isMounted = true;
+                                });
+                              }
+                            }
+                          },
+                          builder: (context, state) {
+                            if (state.listSkillsModel != null) {
+                              final data = state.listSkillsModel!.listSkills!;
+                              if (data.isEmpty) {
+                                return EmptyData(
+                                  subtitle: 'Please add skill data first!',
+                                  title: 'Data Still Empty',
+                                );
+                              }
+                              return SingleChildScrollView(
+                                child: SpacingColumn(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  onlyPading: true,
+                                  horizontalPadding: 16,
+                                  children: [
+                                    UnitHeader(
+                                        unitName: widget.model.unitName!),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    buildSearchFilterSection(
+                                      verifiedCount: state
+                                          .listSkillsModel!.listSkills!
+                                          .where((element) =>
+                                              element.verificationStatus ==
+                                              'VERIFIED')
+                                          .length,
+                                      unverifiedCount: state
+                                          .listSkillsModel!.listSkills!
+                                          .where((element) =>
+                                              element.verificationStatus !=
+                                              'VERIFIED')
+                                          .length,
+                                    ),
+                                    SizedBox(
+                                      height: 16,
+                                    ),
+                                    ListView.separated(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) =>
+                                          TestGradeScoreCard(
+                                        caseName: s[index].skillName!,
+                                        caseType: s[index].skillType!,
+                                        isVerified:
+                                            s[index].verificationStatus ==
+                                                'VERIFIED',
+                                      ),
+                                      separatorBuilder: (context, index) =>
+                                          SizedBox(height: 12),
+                                      itemCount: s.length,
+                                    ),
+                                    SizedBox(
+                                      height: 16,
+                                    ),
+                                  ],
                                 ),
-                                separatorBuilder: (context, index) =>
-                                    SizedBox(height: 12),
-                                itemCount: data.length,
-                              ),
-                              SizedBox(
-                                height: 16,
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return CustomLoading();
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
+                              );
+                            } else {
+                              return CustomLoading();
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
         ),
       ),
     );
   }
 
-  ValueListenableBuilder<Map<String, String>?> buildSearchFilterSection() {
+  ValueListenableBuilder<Map<String, String>?> buildSearchFilterSection(
+      {required int verifiedCount, required int unverifiedCount}) {
+    final _menuList = [
+      'All',
+      '${verifiedCount} Verified',
+      '${unverifiedCount} Unverified',
+    ];
     return ValueListenableBuilder(
       valueListenable: _dataFilters,
       builder: (context, data, value) {
-        return Column(
-          children: [
-            ValueListenableBuilder(
-              valueListenable: _query,
-              builder: (context, query, child) {
-                return SearchField(
-                  text: query,
-                  onChanged: (value) => _query.value = value,
-                );
-              },
-            ),
-            SizedBox(
-              height: 64,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: _menuList.length,
-                itemBuilder: (context, index) {
-                  return ValueListenableBuilder(
-                    valueListenable: _selectedMenu,
-                    builder: (context, value, child) {
-                      final selected = value == _menuList[index];
+        return BlocBuilder<CompetenceCubit, CompetenceState>(
+          builder: (context, state) {
+            return Column(
+              children: [
+                ValueListenableBuilder(
+                  valueListenable: _query,
+                  builder: (context, query, child) {
+                    return SearchField(
+                      text: query,
+                      onChanged: (value) => _query.value = value,
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 64,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _menuList.length,
+                    itemBuilder: (context, index) {
+                      return ValueListenableBuilder(
+                        valueListenable: _selectedMenu,
+                        builder: (context, value, child) {
+                          final selected = value == _menuList[index];
 
-                      return RawChip(
-                        pressElevation: 0,
-                        clipBehavior: Clip.antiAlias,
-                        label: Text(_menuList[index]),
-                        labelPadding: const EdgeInsets.symmetric(horizontal: 6),
-                        labelStyle: textTheme.bodyMedium?.copyWith(
-                          color: selected ? primaryColor : primaryTextColor,
-                        ),
-                        side: BorderSide(
-                          color: selected ? Colors.transparent : borderColor,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        checkmarkColor: primaryColor,
-                        selectedColor: primaryColor.withOpacity(.2),
-                        selected: selected,
-                        onSelected: (_) =>
-                            _selectedMenu.value = _menuList[index],
+                          return RawChip(
+                            pressElevation: 0,
+                            clipBehavior: Clip.antiAlias,
+                            label: Text(_menuList[index]),
+                            labelPadding:
+                                const EdgeInsets.symmetric(horizontal: 6),
+                            labelStyle: textTheme.bodyMedium?.copyWith(
+                              color: selected ? primaryColor : primaryTextColor,
+                            ),
+                            side: BorderSide(
+                              color:
+                                  selected ? Colors.transparent : borderColor,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            checkmarkColor: primaryColor,
+                            selectedColor: primaryColor.withOpacity(.2),
+                            selected: selected,
+                            onSelected: (_) {
+                              _selectedMenu.value = _menuList[index];
+                              switch (index) {
+                                case 0:
+                                  listData.value = [
+                                    ...state.listSkillsModel!.listSkills!
+                                  ];
+                                  break;
+                                case 1:
+                                  listData.value = [
+                                    ...state.listSkillsModel!.listSkills!
+                                        .where((element) =>
+                                            element.verificationStatus ==
+                                            'VERIFIED')
+                                        .toList()
+                                  ];
+                                  break;
+                                case 2:
+                                  listData.value = [
+                                    ...state.listSkillsModel!.listSkills!
+                                        .where((element) =>
+                                            element.verificationStatus !=
+                                            'VERIFIED')
+                                        .toList()
+                                  ];
+                                  break;
+                                default:
+                              }
+                            },
+                          );
+                        },
                       );
                     },
-                  );
-                },
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-              ),
-            ),
-          ],
+                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );
