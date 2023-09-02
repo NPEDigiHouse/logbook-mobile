@@ -4,10 +4,9 @@ import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/special_reports/special_report_on_list.dart';
-import 'package:elogbook/src/presentation/features/students/special_reports/special_report_home_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/special_report/special_report_home_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/special_report/verify_special_report_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SpecialReportStudentCard extends StatelessWidget {
   final SpecialReportOnList sr;
@@ -33,10 +32,19 @@ class SpecialReportStudentCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              CircleAvatar(
-                radius: 25,
-                foregroundImage: AssetImage(
-                  AssetPath.getImage('profile_default.png'),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  width: 68,
+                  height: 68,
+                  color: primaryColor.withOpacity(.1),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      AssetPath.getIcon('consultation_icon.svg'),
+                      color: primaryColor,
+                      width: 32,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
@@ -45,11 +46,19 @@ List<Widget> getHeadSection(
               height: 75,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: AssetImage(
-                    AssetPath.getImage('profile_default.png'),
-                  ),
-                ),
+                image: student.profileImage == null
+                    ? DecorationImage(
+                        image: AssetImage(
+                          AssetPath.getImage('profile_default.png'),
+                        ),
+                        fit: BoxFit.cover,
+                      )
+                    : DecorationImage(
+                        image: MemoryImage(
+                          student.profileImage!,
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                 border: Border.all(
                   width: 2,
                   color: scaffoldBackgroundColor,

@@ -4,6 +4,7 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 
 abstract class UserDataSource {
@@ -119,4 +120,5 @@ class UserDataSourceImpl implements UserDataSource {
       throw ClientFailure(e.toString());
     }
   }
+
 }

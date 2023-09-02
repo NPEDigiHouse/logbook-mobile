@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.da
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/resident_menu_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/custom_shimmer.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
@@ -139,12 +140,48 @@ class _ListResidentPageState extends State<ListResidentPage> {
       )),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 25,
-            foregroundImage: AssetImage(
-              AssetPath.getImage('profile_default.png'),
-            ),
+          Builder(
+            builder: (context) {
+              if (student.profileImage != null) {
+                return CircleAvatar(
+                  radius: 25,
+                  foregroundImage: MemoryImage(student.profileImage!),
+                );
+              } else {
+                return FutureBuilder(
+                  future: BlocProvider.of<SupervisorsCubit>(context)
+                      .getImageProfile(id: student.userId!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CustomShimmer(
+                          child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        width: 50,
+                        height: 50,
+                      ));
+                    } else if (snapshot.hasError) {
+                      return CircleAvatar(
+                        radius: 25,
+                        foregroundImage: AssetImage(
+                          AssetPath.getImage('profile_default.png'),
+                        ),
+                      );
+                    } else {
+                      student.profileImage = snapshot.data;
+                      return CircleAvatar(
+                        radius: 25,
+                        foregroundImage: MemoryImage(snapshot.data!),
+                      );
+                    }
+                  },
+                );
+              }
+            },
           ),
+         
           SizedBox(
             width: 12,
           ),

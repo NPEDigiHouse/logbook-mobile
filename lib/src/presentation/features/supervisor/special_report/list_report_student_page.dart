@@ -3,7 +3,6 @@ import 'package:elogbook/src/data/models/special_reports/special_report_on_list.
 import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/special_report/widgets/special_report_student_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
-import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

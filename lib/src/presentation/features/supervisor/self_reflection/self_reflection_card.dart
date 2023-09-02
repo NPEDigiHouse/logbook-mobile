@@ -29,10 +29,19 @@ class SelfReflectionCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              CircleAvatar(
-                radius: 25,
-                foregroundImage: AssetImage(
-                  AssetPath.getImage('profile_default.png'),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  width: 68,
+                  height: 68,
+                  color: primaryColor.withOpacity(.1),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      AssetPath.getIcon('emoji_objects_rounded.svg'),
+                      color: primaryColor,
+                      width: 32,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),

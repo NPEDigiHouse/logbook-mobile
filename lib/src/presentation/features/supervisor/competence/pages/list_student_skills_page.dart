@@ -5,7 +5,6 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/competences/student_competence_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
-import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/competence/pages/list_skills_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
@@ -141,10 +140,19 @@ class _ListStudentTasksPageState extends State<ListStudentTasksPage> {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 25,
-            foregroundImage: AssetImage(
-              AssetPath.getImage('profile_default.png'),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              width: 68,
+              height: 68,
+              color: primaryColor.withOpacity(.1),
+              child: Center(
+                child: Icon(
+                  Icons.back_hand_rounded,
+                  color: primaryColor,
+                  size: 28,
+                ),
+              ),
             ),
           ),
           SizedBox(

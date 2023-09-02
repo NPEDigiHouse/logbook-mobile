@@ -375,6 +375,7 @@ void _injectStateManagement() {
     () => SupervisorsCubit(
       getAllSupervisorsUsecase: locator(),
       dataSource: locator(),
+      profileDataSource: locator(),
     ),
   );
   locator.registerFactory(

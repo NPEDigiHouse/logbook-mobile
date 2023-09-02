@@ -41,6 +41,31 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<void> getProfilePicById({required String id}) async {
+    print("call");
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getProfilePic(userId: id);
+      try {
+        emit(state.copyWith(
+          profilePic: result,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getUserCredential() async {
     try {
       emit(state.copyWith(

@@ -67,16 +67,6 @@ class _SupervisorListSelfReflectionsPageState
                             ),
                           ),
                           SliverToBoxAdapter(
-                            child: UnitHeader(
-                              unitName: 'Nama Unit',
-                            ),
-                          ),
-                          SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: 12,
-                            ),
-                          ),
-                          SliverToBoxAdapter(
                             child: SearchField(
                               onChanged: (value) {
                                 final data = state.listData!

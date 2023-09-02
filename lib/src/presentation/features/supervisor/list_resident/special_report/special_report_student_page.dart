@@ -44,9 +44,6 @@ class _SpecialReportStudentPageState extends State<SpecialReportStudentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Special Reports"),
-      ),
       body: SafeArea(
           child: RefreshIndicator(
         onRefresh: () async {

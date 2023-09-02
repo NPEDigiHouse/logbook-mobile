@@ -14,6 +14,7 @@ abstract class ProfileDataSource {
       {required StudentPostModel studentDataPostModel});
   Future<void> updateUserProfilePicture({required String path});
   Future<Uint8List> getUserProfilePicture();
+  Future<Uint8List> getProfilePic({required String userId});
 }
 
 class ProfileDataSourceImpl extends ProfileDataSource {
@@ -118,6 +119,37 @@ class ProfileDataSourceImpl extends ProfileDataSource {
           data: studentDataPostModel.toJson());
       if (response != 200) {
         throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<Uint8List> getProfilePic({required String userId}) async {
+    try {
+      final credential = await preferenceHandler.getCredential();
+      final response = await dio.get(
+        ApiService.baseUrl + '/users/${userId}/pic',
+        options: Options(
+          headers: {
+            "content-type": 'multipart/form-data',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+          responseType: ResponseType.bytes,
+        ),
+      );
+      print(response.statusCode);
+      if (response.statusCode! >= 400) {
+        throw Exception();
+      } else {
+        final List<int> bytes = response.data;
+        return Uint8List.fromList(bytes);
       }
     } catch (e) {
       print(e.toString());

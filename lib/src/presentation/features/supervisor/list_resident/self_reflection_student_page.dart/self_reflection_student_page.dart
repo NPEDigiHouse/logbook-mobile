@@ -79,7 +79,9 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
                       );
                     } else {
                       return SliverToBoxAdapter(
-                        child: EmptyData(title: '', subtitle: 'subtitle'),
+                        child: EmptyData(
+                            title: 'No Self Reflections',
+                            subtitle: 'Empty data'),
                       );
                     }
                   } else {

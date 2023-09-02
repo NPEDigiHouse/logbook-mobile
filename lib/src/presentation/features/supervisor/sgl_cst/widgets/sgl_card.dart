@@ -7,6 +7,7 @@ import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/supervisor_cst_detail_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/supervisor_sgl_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SglOnListCard extends StatelessWidget {
   final SglCstOnList sglCst;
@@ -31,10 +32,19 @@ class SglOnListCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              CircleAvatar(
-                radius: 25,
-                foregroundImage: AssetImage(
-                  AssetPath.getImage('profile_default.png'),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  width: 68,
+                  height: 68,
+                  color: primaryColor.withOpacity(.1),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      AssetPath.getIcon('diversity_3_rounded.svg'),
+                      color: primaryColor,
+                      width: 32,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
