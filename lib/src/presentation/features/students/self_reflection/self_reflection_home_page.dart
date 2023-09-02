@@ -8,7 +8,6 @@ import 'package:elogbook/src/presentation/features/students/self_reflection/crea
 import 'package:elogbook/src/presentation/features/students/self_reflection/widgets/self_reflection_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
-import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';

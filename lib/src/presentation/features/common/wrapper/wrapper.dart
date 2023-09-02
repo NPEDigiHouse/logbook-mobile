@@ -59,6 +59,7 @@ class _WrapperState extends State<Wrapper> {
           }
         }
         if (state is CredentialNotExist) {
+          print("fa");
           return LoginPage();
         }
 

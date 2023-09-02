@@ -61,7 +61,7 @@ class ListMenuItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  menuModel.desc ?? 'lorem',
+                  menuModel.desc ?? '-',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: textTheme.bodySmall?.copyWith(

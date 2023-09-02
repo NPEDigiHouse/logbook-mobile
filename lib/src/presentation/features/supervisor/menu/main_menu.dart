@@ -61,7 +61,10 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
           valueListenable: _selectedIndex,
           builder: (context, value, _) {
             return Scaffold(
-              body: _listPage[value],
+              body: IndexedStack(
+                children: _listPage,
+                index: value,
+              ),
               bottomNavigationBar: CustomNavigationBar(
                 listIconPath: [
                   "home_icon.svg",

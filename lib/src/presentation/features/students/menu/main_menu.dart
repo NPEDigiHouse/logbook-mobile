@@ -1,6 +1,4 @@
-import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
-import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
@@ -57,7 +55,10 @@ class _MainMenuState extends State<MainMenu> {
           valueListenable: _selectedIndex,
           builder: (context, value, _) {
             return Scaffold(
-              body: _listPage[value],
+              body: IndexedStack(
+                index: value,
+                children: _listPage,
+              ),
               bottomNavigationBar: CustomNavigationBar(
                 listIconPath: const [
                   "icon_unit.svg",

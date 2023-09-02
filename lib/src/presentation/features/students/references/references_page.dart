@@ -82,6 +82,8 @@ class _ReferencePageState extends State<ReferencePage> {
                                             content: Text(
                                                 'Success download data ${state.rData}')),
                                       );
+                                      BlocProvider.of<ReferenceCubit>(context)
+                                          .reset();
                                     }
                                     if (state.references != null) {
                                       if (!isMounted) {

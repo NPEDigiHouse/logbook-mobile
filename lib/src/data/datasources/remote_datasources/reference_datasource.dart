@@ -7,6 +7,7 @@ import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/reference/reference_on_list_model.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 abstract class ReferenceDataSource {
   Future<List<ReferenceOnListModel>> getReferenceByUnitId(
@@ -55,30 +56,31 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
       {required int id, required String filename}) async {
     final credential = await preferenceHandler.getCredential();
     try {
-      Directory? directory = await getExternalStorageDirectory();
-      String newPath = '';
-      newPath = directory!.path + "$filename";
-      directory = Directory(newPath);
-      if (await directory.exists()) {
-        final file = File(directory.path + '/$filename');
-        await dio.download(
-          ApiService.baseUrl + '/references/$id',
-          file.path,
-          onReceiveProgress: (received, total) {
-            if (total != -1) {
-              print((received / total * 100).toStringAsFixed(0) + "%");
-            }
-          },
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-          ),
-        );
+      Directory _directory = Directory("");
+      if (Platform.isAndroid) {
+        // Redirects it to download folder in android
+        _directory = Directory("/storage/emulated/0/Download");
+      } else {
+        _directory = await getApplicationDocumentsDirectory();
       }
+      String savePath = '${_directory.path}/$filename.pdf';
+      await dio.download(
+        ApiService.baseUrl + '/references/$id',
+        savePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            print((received / total * 100).toStringAsFixed(0) + "%");
+          }
+        },
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
 
-      return newPath;
+      return savePath;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

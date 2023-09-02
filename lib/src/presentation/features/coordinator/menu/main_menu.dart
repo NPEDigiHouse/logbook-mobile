@@ -34,8 +34,7 @@ class _MainMenuCoordinatorState extends State<MainMenuCoordinator> {
         credential: widget.credential,
       ),
       const CoordinatorHistoryPage(),
-      CoordinatorProfilePage(
-      ),
+      CoordinatorProfilePage(),
     ];
 
     return BlocConsumer<AuthCubit, AuthState>(
@@ -49,7 +48,10 @@ class _MainMenuCoordinatorState extends State<MainMenuCoordinator> {
           valueListenable: _selectedIndex,
           builder: (context, value, _) {
             return Scaffold(
-              body: _listPage[value],
+              body: IndexedStack(
+                children: _listPage,
+                index: value,
+              ),
               bottomNavigationBar: CustomNavigationBar(
                 listIconPath: [
                   "icon_task.svg",

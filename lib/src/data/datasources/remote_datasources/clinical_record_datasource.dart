@@ -434,30 +434,31 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       {required String crId, required String filename}) async {
     final credential = await preferenceHandler.getCredential();
     try {
-      Directory? directory = await getExternalStorageDirectory();
-      String newPath = '';
-      newPath = directory!.path + "$filename";
-      directory = Directory(newPath);
-      if (await directory.exists()) {
-        final file = File(directory.path + '/$filename');
-        await dio.download(
-          ApiService.baseUrl + '/references/$crId',
-          file.path,
-          onReceiveProgress: (received, total) {
-            if (total != -1) {
-              print((received / total * 100).toStringAsFixed(0) + "%");
-            }
-          },
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-          ),
-        );
+      Directory _directory = Directory("");
+      if (Platform.isAndroid) {
+        // Redirects it to download folder in android
+        _directory = Directory("/storage/emulated/0/Download");
+      } else {
+        _directory = await getApplicationDocumentsDirectory();
       }
+      String savePath = '${_directory.path}/$filename.pdf';
+      await dio.download(
+        ApiService.baseUrl + '/clinical-records/$crId/attachments',
+        savePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            print((received / total * 100).toStringAsFixed(0) + "%");
+          }
+        },
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
 
-      return newPath;
+      return savePath;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

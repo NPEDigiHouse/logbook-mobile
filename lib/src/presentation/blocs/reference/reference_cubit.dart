@@ -9,6 +9,10 @@ class ReferenceCubit extends Cubit<ReferenceState> {
   final ReferenceDataSource dataSource;
   ReferenceCubit({required this.dataSource}) : super(ReferenceState());
 
+  void reset() {
+    emit(state.copyWith(rData: null));
+  }
+
   Future<void> getListReference({required String unitId}) async {
     try {
       emit(state.copyWith(

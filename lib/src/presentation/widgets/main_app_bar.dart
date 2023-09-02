@@ -1,3 +1,5 @@
+import 'package:cool_alert/cool_alert.dart';
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,7 +38,17 @@ class MainAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(right: 6),
           child: IconButton(
             onPressed: () async {
-              await BlocProvider.of<AuthCubit>(context).logout();
+              CoolAlert.show(
+                context: context,
+                type: CoolAlertType.confirm,
+                title: 'Confirm Logout',
+                confirmBtnText: 'Confirm',
+                text: "Are you sure to sign out?",
+                onConfirmBtnTap: () async {
+                  await BlocProvider.of<AuthCubit>(context).logout();
+                },
+                confirmBtnColor: primaryColor,
+              );
             },
             icon: const Icon(
               Icons.logout_rounded,
