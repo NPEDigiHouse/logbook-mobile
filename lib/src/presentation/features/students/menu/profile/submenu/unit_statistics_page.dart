@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +31,15 @@ class UnitStatisticsPage extends StatefulWidget {
 class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    BlocProvider.of<StudentCubit>(context)..getStudentStatistic();
+    Future.microtask(() {
+      BlocProvider.of<StudentCubit>(context)..getStudentStatistic();
+      BlocProvider.of<CompetenceCubit>(context)
+        ..getStudentCases(unitId: widget.activeUnitModel.unitId!)
+        ..getStudentSkills(unitId: widget.activeUnitModel.unitId!)
+        ..getListCases()
+        ..getListSkills();
+    });
   }
 
   @override
@@ -133,85 +140,100 @@ class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
               ),
             ),
             const SizedBox(height: 16),
-            BlocBuilder<StudentCubit, StudentState>(
-              builder: (context, state) {
-                if (state.studentStatistic != null) {
-                  final stData = state.studentStatistic;
-                  return UnitStatisticsCard(
-                    padding: const EdgeInsets.symmetric(vertical: 24),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          'Current Unit',
-                          style: textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: primaryColor,
-                          ),
+            BlocBuilder<CompetenceCubit, CompetenceState>(
+              builder: (context, state1) {
+                return BlocBuilder<StudentCubit, StudentState>(
+                  builder: (context, state) {
+                    if (state1.listCasesModel != null &&
+                        state1.listSkillsModel != null &&
+                        state1.studentCasesModel != null &&
+                        state1.studentSkillsModel != null) {
+                      final stData = state.studentStatistic!;
+                      return UnitStatisticsCard(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              'Current Unit',
+                              style: textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: primaryColor,
+                              ),
+                            ),
+                            Text(widget.activeUnitModel.unitName ?? ''),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: Divider(
+                                height: 6,
+                                thickness: 6,
+                                color: onDisableColor,
+                              ),
+                            ),
+                            UnitStatisticsSection(
+                              titleText: 'Diagnosis Skills',
+                              titleIconPath: 'skill_outlined.svg',
+                              percentage: (stData.verifiedSkills! ~/
+                                      state1.studentSkillsModel!.length) *
+                                  100,
+                              statistics: {
+                                'Total Diagnosis Skill':
+                                    state1.studentSkillsModel?.length,
+                                'Performed': stData.verifiedSkills,
+                                'Not Performed':
+                                    state1.studentSkillsModel!.length -
+                                        stData.verifiedSkills!,
+                              },
+                              detailStatistics: {
+                                1: [
+                                  ...state1.listSkillsModel!.listSkills!
+                                      .where((element) =>
+                                          element.verificationStatus ==
+                                          'VERIFIED')
+                                      .map((e) => e.skillName ?? '')
+                                      .toList(),
+                                ],
+                              },
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: Divider(
+                                height: 6,
+                                thickness: 6,
+                                color: onDisableColor,
+                              ),
+                            ),
+                            UnitStatisticsSection(
+                              titleText: 'Acquired Cases',
+                              titleIconPath: 'attach_resume_male_outlined.svg',
+                              percentage: (stData.verifiedCases! ~/
+                                      state1.studentCasesModel!.length) *
+                                  100,
+                              statistics: {
+                                'Total Acquired Case':
+                                    state1.studentCasesModel?.length,
+                                'Identified Case': stData.verifiedCases,
+                                'Unidentified Case':
+                                    state1.studentCasesModel!.length -
+                                        stData.verifiedCases!,
+                              },
+                              detailStatistics: {
+                                1: [
+                                  ...state1.listCasesModel!.listCases!
+                                      .where((element) =>
+                                          element.verificationStatus ==
+                                          'VERIFIED')
+                                      .map((e) => e.caseName ?? '')
+                                      .toList(),
+                                ],
+                              },
+                            ),
+                          ],
                         ),
-                        Text(widget.activeUnitModel.unitName ?? ''),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          child: Divider(
-                            height: 6,
-                            thickness: 6,
-                            color: onDisableColor,
-                          ),
-                        ),
-                        const UnitStatisticsSection(
-                          titleText: 'Diagnosis Skills',
-                          titleIconPath: 'skill_outlined.svg',
-                          percentage: 73.0,
-                          statistics: {
-                            'Total Diagnosis Skill': 169,
-                            'Performed': 108,
-                            'Not Performed': 61,
-                          },
-                          detailStatistics: {
-                            1: [
-                              'Corneal reflex (4A)',
-                              'Dolorit Sit Amet (4A)',
-                              'Assessment of Pain Sensation (4A)',
-                              'Lorem Ipsum (4A)',
-                            ],
-                            2: [
-                              'Corneal reflex (4A)',
-                              'Dolorit Sit Amet (4A)',
-                              'Assessment of Pain Sensation (4A)',
-                              'Lorem Ipsum (4A)',
-                            ],
-                          },
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          child: Divider(
-                            height: 6,
-                            thickness: 6,
-                            color: onDisableColor,
-                          ),
-                        ),
-                        const UnitStatisticsSection(
-                          titleText: 'Acquired Cases',
-                          titleIconPath: 'attach_resume_male_outlined.svg',
-                          percentage: 45.0,
-                          statistics: {
-                            'Total Acquired Case': 136,
-                            'Identified Case': 96,
-                            'Unidentified Case': 40,
-                          },
-                          detailStatistics: {
-                            3: [
-                              'Corneal reflex (4A)',
-                              'Dolorit Sit Amet (4A)',
-                              'Assessment of Pain Sensation (4A)',
-                              'Lorem Ipsum (4A)',
-                            ],
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return CustomLoading();
+                      );
+                    }
+                    return CustomLoading();
+                  },
+                );
               },
             ),
           ],

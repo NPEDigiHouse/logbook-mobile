@@ -39,18 +39,18 @@ class StudentState {
     bool successVerifyCheckOut = false,
   }) {
     return StudentState(
-      clinicalRecordResponse:
-          clinicalRecordResponse ?? this.clinicalRecordResponse,
-      requestState: requestState ?? RequestState.init,
-      selfReflectionResponse:
-          selfReflectionResponse ?? this.selfReflectionResponse,
-      scientificSessionResponse:
-          scientificSessionResponse ?? this.scientificSessionResponse,
-      successUpdateStudentProfile: successUpdateStudentProfile,
-      studentsCheckIn: studentsCheckIn ?? this.studentsCheckIn,
-      successVerifyCheckIn: successVerifyCheckIn,
-      studentsCheckOut: studentsCheckOut ?? this.studentsCheckOut,
-      successVerifyCheckOut: successVerifyCheckOut,
-    );
+        clinicalRecordResponse:
+            clinicalRecordResponse ?? this.clinicalRecordResponse,
+        requestState: requestState ?? RequestState.init,
+        selfReflectionResponse:
+            selfReflectionResponse ?? this.selfReflectionResponse,
+        scientificSessionResponse:
+            scientificSessionResponse ?? this.scientificSessionResponse,
+        successUpdateStudentProfile: successUpdateStudentProfile,
+        studentsCheckIn: studentsCheckIn ?? this.studentsCheckIn,
+        successVerifyCheckIn: successVerifyCheckIn,
+        studentsCheckOut: studentsCheckOut ?? this.studentsCheckOut,
+        successVerifyCheckOut: successVerifyCheckOut,
+        studentStatistic: studentStatistic ?? this.studentStatistic);
   }
 }

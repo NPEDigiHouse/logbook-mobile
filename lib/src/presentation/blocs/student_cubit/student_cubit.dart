@@ -184,11 +184,7 @@ class StudentCubit extends Cubit<StudentState> {
       ));
 
       final result = await dataSource.getStudentStatistic();
-      try {
-        emit(state.copyWith(studentStatistic: result));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(studentStatistic: result));
     } catch (e) {
       print(e.toString());
       emit(

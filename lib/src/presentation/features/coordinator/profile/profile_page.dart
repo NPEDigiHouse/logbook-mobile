@@ -165,12 +165,12 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                       title: 'Export Data',
                       onTap: () {},
                     ),
-                    const SizedBox(height: 14),
-                    ProfileItemMenuCard(
-                      iconPath: 'lock_filled.svg',
-                      title: 'Change Password',
-                      onTap: () {},
-                    ),
+                    // const SizedBox(height: 14),
+                    // ProfileItemMenuCard(
+                    //   iconPath: 'lock_filled.svg',
+                    //   title: 'Change Password',
+                    //   onTap: () {},
+                    // ),
                   ],
                 ),
               ),

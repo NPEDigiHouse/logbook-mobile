@@ -566,7 +566,7 @@ class StudentDataSourceImpl implements StudentDataSource {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
-        ApiService.baseUrl + '/students/statistic',
+        ApiService.baseUrl + '/students/statistics',
         options: Options(
           headers: {
             "content-type": 'application/json',
@@ -574,7 +574,7 @@ class StudentDataSourceImpl implements StudentDataSource {
           },
         ),
       );
-      // print(response);
+      print(response.statusCode);
       if (response.statusCode != 200) {
         throw Exception();
       }

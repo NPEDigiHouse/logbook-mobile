@@ -163,24 +163,24 @@ class _ProfilePageState extends State<ProfilePage> {
                     context.navigateTo(LecturerPersonalDataPage());
                   },
                 ),
-                const SizedBox(height: 14),
-                ProfileItemMenuCard(
-                  iconPath: 'person_filled.svg',
-                  title: 'Statistic Data',
-                  onTap: () {},
-                ),
-                const SizedBox(height: 14),
-                ProfileItemMenuCard(
-                  iconPath: 'file_export_filled.svg',
-                  title: 'Export Data',
-                  onTap: () {},
-                ),
-                const SizedBox(height: 14),
-                ProfileItemMenuCard(
-                  iconPath: 'lock_filled.svg',
-                  title: 'Change Password',
-                  onTap: () {},
-                ),
+                // const SizedBox(height: 14),
+                // ProfileItemMenuCard(
+                //   iconPath: 'person_filled.svg',
+                //   title: 'Statistic Data',
+                //   onTap: () {},
+                // ),
+                // const SizedBox(height: 14),
+                // ProfileItemMenuCard(
+                //   iconPath: 'file_export_filled.svg',
+                //   title: 'Export Data',
+                //   onTap: () {},
+                // ),
+                // const SizedBox(height: 14),
+                // ProfileItemMenuCard(
+                //   iconPath: 'lock_filled.svg',
+                //   title: 'Change Password',
+                //   onTap: () {},
+                // ),
               ],
             ),
           ),

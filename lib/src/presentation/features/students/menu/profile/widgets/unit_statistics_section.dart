@@ -151,13 +151,13 @@ class UnitStatisticsSection extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                'Level ${keys[i]}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: primaryColor,
-                ),
-              ),
+              // Text(
+              //   'Level ${keys[i]}',
+              //   style: const TextStyle(
+              //     fontWeight: FontWeight.w600,
+              //     color: primaryColor,
+              //   ),
+              // ),
               for (var j = 0; j < values[i].length; j++) ...[
                 Text(
                   '${j + 1}. ${values[i][j]}',

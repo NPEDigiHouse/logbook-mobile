@@ -173,12 +173,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: 'Export Data',
                   onTap: () => context.navigateTo(const ExportDataPage()),
                 ),
-                const SizedBox(height: 14),
-                ProfileItemMenuCard(
-                  iconPath: 'lock_filled.svg',
-                  title: 'Change Password',
-                  onTap: () => context.navigateTo(const ChangePasswordPage()),
-                ),
+                // const SizedBox(height: 14),
+                // ProfileItemMenuCard(
+                //   iconPath: 'lock_filled.svg',
+                //   title: 'Change Password',
+                //   onTap: () => context.navigateTo(const ChangePasswordPage()),
+                // ),
               ],
             ),
           ),
