@@ -40,6 +40,7 @@ class _SupervisorListCstPageState extends State<SupervisorListCstPage> {
       ).variant(),
       body: RefreshIndicator(
         onRefresh: () async {
+          isMounted = false;
           await Future.wait([
             BlocProvider.of<SglCstCubit>(context).getListCstStudents(),
           ]);

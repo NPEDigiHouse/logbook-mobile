@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/scientific_session_datasource.dart';
-import 'package:elogbook/src/data/models/scientific_session/list_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_roles.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_session_post_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/session_types_model.dart';
@@ -67,6 +66,26 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
     }
   }
 
+  Future<void> downloadAttachment(
+      {required String id, required String filename}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await ds.downloadFile(crId: id, filename: filename);
+
+      emit(state.copyWith(attachment: result));
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getScientificSessionRoles() async {
     try {
       emit(state.copyWith(
@@ -104,7 +123,11 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
                 state.copyWith(requestState: RequestState.error),
               ), (r) {
         print("disiini");
-        return emit(state.copyWith(postSuccess: true));
+        return emit(
+          state.copyWith(
+            postSuccess: true,
+          ),
+        );
       });
     } catch (e) {
       print("iniasd");

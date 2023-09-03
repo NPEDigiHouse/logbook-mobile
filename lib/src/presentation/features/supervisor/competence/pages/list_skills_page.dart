@@ -104,6 +104,7 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
           ),
           body: RefreshIndicator(
             onRefresh: () async {
+              isMounted = false;
               await Future.wait([
                 BlocProvider.of<CompetenceCubit>(context).getSkillsByStudentId(
                   studentId: widget.studentId,

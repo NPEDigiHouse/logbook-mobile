@@ -39,6 +39,13 @@ class ClinicalRecordDataNotifier extends ChangeNotifier {
   List<PartModel> diagnostics = [];
   List<PartManagementModel> managements = [];
 
+  void reset() {
+    examinations.clear();
+    diagnostics.cast();
+    managements.clear();
+    notifyListeners();
+  }
+
   List<ExaminationsPostModel> getExaminationPost() {
     final List<ExaminationsPostModel> examinationPost = [];
     examinations.forEach((element) {

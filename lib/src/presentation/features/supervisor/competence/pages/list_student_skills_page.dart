@@ -41,6 +41,7 @@ class _ListStudentTasksPageState extends State<ListStudentTasksPage> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            isMounted = false;
             await Future.wait([
               BlocProvider.of<CompetenceCubit>(context).getSkillStudents(),
             ]);

@@ -41,6 +41,7 @@ class _DailyActivityListStudentPageState
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            isMounted = false;
             await Future.wait([
               BlocProvider.of<SupervisorsCubit>(context).getAllStudents(),
             ]);

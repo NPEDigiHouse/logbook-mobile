@@ -21,6 +21,7 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       try {
         emit(state.copyWith(
           studentDailyActivity: result,
+          requestState: RequestState.data,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
@@ -47,6 +48,7 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       try {
         emit(state.copyWith(
           studentDailyActivity: result,
+          requestState: RequestState.data,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));

@@ -4,7 +4,6 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/detail_clinical_record_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/clinical_record/supervisor_detail_clinical_record_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

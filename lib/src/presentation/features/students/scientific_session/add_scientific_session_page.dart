@@ -36,7 +36,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
   int role = -1;
   int sesionType = -1;
   final topicController = TextEditingController();
-  final clinicalRotationController = TextEditingController();
+  // final clinicalRotationController = TextEditingController();
   final titleController = TextEditingController();
   final referenceController = TextEditingController();
   final additionalNotesController = TextEditingController();
@@ -195,11 +195,11 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                         label: 'Topics',
                         controller: topicController,
                       ),
-                      BuildTextField(
-                        onChanged: (v) {},
-                        label: 'Clinical rotation',
-                        controller: clinicalRotationController,
-                      ),
+                      // BuildTextField(
+                      //   onChanged: (v) {},
+                      //   label: 'Clinical rotation',
+                      //   controller: clinicalRotationController,
+                      // ),
                       BuildTextField(
                         onChanged: (v) {},
                         label: 'Title',

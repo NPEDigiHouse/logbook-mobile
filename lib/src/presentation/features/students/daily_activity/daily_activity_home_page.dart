@@ -5,6 +5,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/pages/daily_activity_week_status_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';

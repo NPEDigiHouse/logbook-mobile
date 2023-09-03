@@ -24,9 +24,7 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
     super.initState();
 
     Future.microtask(() {
-      BlocProvider.of<ProfileCubit>(context)
-        ..getUserCredential()
-        ..getProfilePic();
+      BlocProvider.of<ProfileCubit>(context)..getProfilePic();
     });
   }
 
@@ -75,19 +73,28 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                             child: BlocBuilder<ProfileCubit, ProfileState>(
                               builder: (context, state) {
                                 if (state.profilePic != null) {
-                                  return Container(
-                                    width: 100,
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: MemoryImage(
-                                          state.profilePic!,
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 5,
+                                              color: scaffoldBackgroundColor,
+                                              strokeAlign: BorderSide
+                                                  .strokeAlignOutside),
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: MemoryImage(
+                                              state.profilePic!,
+                                            ),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
-                                        fit: BoxFit.scaleDown,
                                       ),
-                                    ),
+                                    ],
                                   );
                                 } else {
                                   return CircleAvatar(

@@ -7,7 +7,6 @@ import 'package:elogbook/src/data/models/sglcst/sgl_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
-import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/sgl_cst_data.dart';
 
 part 'sgl_cst_state.dart';
 
@@ -99,7 +98,8 @@ class SglCstCubit extends Cubit<SglCstState> {
 
       final result = await studentDataSource.getStudentSgl();
       try {
-        emit(state.copyWith(sglDetail: result));
+        emit(
+            state.copyWith(sglDetail: result, requestState: RequestState.data));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }
@@ -143,7 +143,8 @@ class SglCstCubit extends Cubit<SglCstState> {
 
       final result = await studentDataSource.getStudentCst();
       try {
-        emit(state.copyWith(cstDetail: result));
+        emit(
+            state.copyWith(cstDetail: result, requestState: RequestState.data));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

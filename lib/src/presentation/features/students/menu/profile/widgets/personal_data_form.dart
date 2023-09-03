@@ -3,7 +3,6 @@ import 'package:elogbook/src/data/models/activity/activity_model.dart';
 import 'package:elogbook/src/data/models/students/student_profile_post.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/presentation/blocs/activity_cubit/activity_cubit.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
@@ -109,13 +108,16 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                     data = StudentProfile(
                                       clinicId: editingControllers[1].text,
                                       preclinicId: editingControllers[2].text,
-                                      graduationDate: ReusableFunctionHelper
+                                      graduationDate: (ReusableFunctionHelper
                                                   .stringToDateTime(
                                                       editingControllers[3]
                                                           .text)
-                                              .millisecondsSinceEpoch ~/
+                                              .millisecondsSinceEpoch) ~/
                                           1000,
                                     );
+                                    BlocProvider.of<ProfileCubit>(context)
+                                      ..updateFullName(
+                                          fullname: editingControllers[0].text);
                                     break;
                                   case 2:
                                     data = StudentProfile(

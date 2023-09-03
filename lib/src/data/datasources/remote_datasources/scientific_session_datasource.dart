@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/data_response.dart';
@@ -11,6 +13,7 @@ import 'package:elogbook/src/data/models/scientific_session/scientific_session_p
 import 'package:elogbook/src/data/models/scientific_session/session_types_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/verify_scientific_session_model.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 abstract class ScientificSessionDataSource {
   Future<void> uploadScientificSession({
@@ -27,6 +30,7 @@ abstract class ScientificSessionDataSource {
 
   Future<void> verifyScientificSession(
       {required String id, required VerifyScientificSessionModel model});
+  Future<String> downloadFile({required String crId, required String filename});
 }
 
 class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
@@ -133,6 +137,42 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
 
       final result = ScientificSessionDetailModel.fromJson(dataResponse.data);
       return result;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<String> downloadFile(
+      {required String crId, required String filename}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      Directory _directory = Directory("");
+      if (Platform.isAndroid) {
+        // Redirects it to download folder in android
+        _directory = Directory("/storage/emulated/0/Download");
+      } else {
+        _directory = await getApplicationDocumentsDirectory();
+      }
+      String savePath = '${_directory.path}/$filename.pdf';
+      await dio.download(
+        ApiService.baseUrl + '/scientific-sessions/$crId/attachments',
+        savePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            print((received / total * 100).toStringAsFixed(0) + "%");
+          }
+        },
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+
+      return savePath;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

@@ -1,14 +1,19 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
+import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:path/path.dart' as p;
+import 'package:permission_handler/permission_handler.dart';
 
 class DetailScientificSessionPage extends StatefulWidget {
   final String id;
@@ -21,6 +26,14 @@ class DetailScientificSessionPage extends StatefulWidget {
 
 class _DetailScientificSessionPageState
     extends State<DetailScientificSessionPage> {
+  Future<bool> checkAndRequestPermission() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+    }
+    return status.isGranted;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -34,15 +47,6 @@ class _DetailScientificSessionPageState
     return Scaffold(
       appBar: AppBar(
         title: Text("Entry Detail"),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.more_vert_rounded,
-              color: Colors.white,
-            ),
-          )
-        ],
       ).variant(),
       body: SafeArea(
         child: BlocBuilder<ScientificSessionSupervisorCubit,
@@ -88,15 +92,17 @@ class _DetailScientificSessionPageState
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
-                            // SizedBox(
-                            //   height: 4,
-                            // ),
-                            // Text(
-                            //   ReusableFunctionHelper.datetimeToString(state.detailClinicalRecordModel!.,),
-                            //   style: textTheme.bodyMedium?.copyWith(
-                            //     color: secondaryTextColor,
-                            //   ),
-                            // )
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              ReusableFunctionHelper.datetimeToString(
+                                state.detail!.updatedAt ?? DateTime.now(),
+                              ),
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: secondaryTextColor,
+                              ),
+                            )
                           ],
                         ),
                       ],
@@ -219,9 +225,164 @@ class _DetailScientificSessionPageState
                       ],
                     ),
                   ),
+
+                  if (state.detail!.attachment != null) ...[
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 24),
+                      padding: EdgeInsets.only(
+                        bottom: 20,
+                        left: 20,
+                        right: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: scaffoldBackgroundColor,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                              offset: Offset(0, 0),
+                              spreadRadius: 0,
+                              blurRadius: 6,
+                              color: Color(0xFFD4D4D4).withOpacity(.25)),
+                          BoxShadow(
+                              offset: Offset(0, 4),
+                              spreadRadius: 0,
+                              blurRadius: 24,
+                              color: Color(0xFFD4D4D4).withOpacity(.25)),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FormSectionHeader(
+                              label: 'Attachment',
+                              pathPrefix: 'icon_attachment.svg',
+                              padding: 0),
+                          ItemDivider(),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.file_present_outlined,
+                                color: secondaryTextColor,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'data.pdf',
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: secondaryTextColor,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              SizedBox(
+                                height: 24,
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                  ),
+                                  onPressed: () async {
+                                    final hasPermission =
+                                        await checkAndRequestPermission();
+                                    if (hasPermission) {
+                                      BlocProvider.of<ScientificSessionCubit>(
+                                          context)
+                                        ..downloadAttachment(
+                                            id: widget.id,
+                                            filename:
+                                                '${p.basename(state.detail!.attachment!)}.pdf');
+                                    }
+                                  },
+                                  child: Text(
+                                    'Download',
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                   SizedBox(
-                    height: 24,
+                    height: 16,
                   ),
+                  // Container(
+                  //   margin: EdgeInsets.symmetric(horizontal: 24),
+                  //   padding: EdgeInsets.only(
+                  //     bottom: 20,
+                  //     left: 20,
+                  //     right: 20,
+                  //   ),
+                  //   decoration: BoxDecoration(
+                  //     color: scaffoldBackgroundColor,
+                  //     borderRadius: BorderRadius.circular(12),
+                  //     boxShadow: [
+                  //       BoxShadow(
+                  //           offset: Offset(0, 0),
+                  //           spreadRadius: 0,
+                  //           blurRadius: 6,
+                  //           color: Color(0xFFD4D4D4).withOpacity(.25)),
+                  //       BoxShadow(
+                  //           offset: Offset(0, 4),
+                  //           spreadRadius: 0,
+                  //           blurRadius: 24,
+                  //           color: Color(0xFFD4D4D4).withOpacity(.25)),
+                  //     ],
+                  //   ),
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       FormSectionHeader(
+                  //           label: 'Notes',
+                  //           pathPrefix: 'icon_note.svg',
+                  //           padding: 0),
+                  //       ItemDivider(),
+                  //       SizedBox(
+                  //         height: 16,
+                  //       ),
+                  //       Text(
+                  //           state.detailClinicalRecordModel.su),
+                  //       SizedBox(
+                  //         height: 8,
+                  //       ),
+                  //       Row(
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         children: [
+                  //           SizedBox(
+                  //             height: 24,
+                  //             child: Text(
+                  //               'Show more',
+                  //               style: textTheme.bodyMedium?.copyWith(
+                  //                 color: primaryColor,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Icon(
+                  //             Icons.keyboard_arrow_down_rounded,
+                  //             color: primaryColor,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 24),
                     padding: EdgeInsets.only(

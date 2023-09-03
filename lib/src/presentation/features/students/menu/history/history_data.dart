@@ -89,7 +89,7 @@ class HistoryHelper {
                 isShowTime: true),
             date: DateTime(date.year, date.month, date.day, date.hour),
             title: 'CST',
-            iconPath: AssetPath.getIcon('medical_information_rounded.svg.svg'),
+            iconPath: AssetPath.getIcon('medical_information_rounded.svg'),
             supervisor: element.supervisorName,
             studentId: element.studentId!,
             studentName: element.studentName!,

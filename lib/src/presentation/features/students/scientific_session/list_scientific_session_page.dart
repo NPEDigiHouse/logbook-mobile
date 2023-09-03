@@ -3,6 +3,8 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/scientific_session/student_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/widgets/scientific_session_card.dart';
@@ -69,6 +71,7 @@ class _StudentListScientificSessionPageState
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            isMounted = false;
             await Future.wait([
               BlocProvider.of<StudentCubit>(context)
                   .getStudentScientificSessionOfActiveUnit(),
@@ -82,88 +85,100 @@ class _StudentListScientificSessionPageState
                     SliverPadding(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       sliver: SliverFillRemaining(
-                        child: BlocConsumer<StudentCubit, StudentState>(
+                        child: BlocListener<ScientificSessionCubit,
+                            ScientifcSessionState>(
                           listener: (context, state) {
-                            if (state.scientificSessionResponse != null) {
-                              if (!isMounted) {
-                                Future.microtask(() {
-                                  listData.value = [
-                                    ...state.scientificSessionResponse!
-                                        .listScientificSessions!
-                                  ];
-                                  isMounted = true;
-                                });
+                            if (state.postSuccess) {
+                              isMounted = false;
+                            }
+                          },
+                          child: BlocConsumer<StudentCubit, StudentState>(
+                            listener: (context, state) {
+                              if (state.scientificSessionResponse != null &&
+                                  state.requestState == RequestState.data) {
+                                if (!isMounted) {
+                                  Future.microtask(() {
+                                    listData.value = [
+                                      ...state.scientificSessionResponse!
+                                          .listScientificSessions!
+                                    ];
+                                    isMounted = true;
+                                  });
+                                }
                               }
-                            }
-                          },
-                          builder: (context, state) {
-                            if (state.scientificSessionResponse != null) {
-                              return SingleChildScrollView(
-                                child: SpacingColumn(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  onlyPading: true,
-                                  horizontalPadding: 16,
-                                  children: [
-                                    UnitHeader(
-                                        unitName:
-                                            widget.activeUnitModel.unitName!),
-                                    SizedBox(
-                                      height: 12,
-                                    ),
-                                    ItemDivider(),
-                                    Builder(
-                                      builder: (context) {
-                                        if (state.scientificSessionResponse !=
-                                            null) {
-                                          final data = state
-                                              .scientificSessionResponse!
-                                              .listScientificSessions!;
-                                          if (data.isEmpty) {
-                                            return EmptyData(
-                                              subtitle:
-                                                  'Please upload scientific session data first!',
-                                              title: 'Data Still Empty',
-                                            );
-                                          }
-                                          return Column(
-                                            children: [
-                                              // SizedBox(
-                                              //   height: 16,
-                                              // ),
-                                              buildSearchFilterSection(
-                                                verifiedCount: state
-                                                    .scientificSessionResponse!
-                                                    .verifiedCounts!,
-                                                unverifiedCount: state
-                                                    .scientificSessionResponse!
-                                                    .unverifiedCounts!,
-                                              ),
-                                              ListView.separated(
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                itemBuilder: (context, index) =>
-                                                    StudentScientificSessionCard(
-                                                  model: s[index],
+                            },
+                            builder: (context, state) {
+                              if (state.scientificSessionResponse != null &&
+                                  state.requestState == RequestState.data) {
+                                return SingleChildScrollView(
+                                  child: SpacingColumn(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    onlyPading: true,
+                                    horizontalPadding: 16,
+                                    children: [
+                                      UnitHeader(
+                                          unitName:
+                                              widget.activeUnitModel.unitName!),
+                                      SizedBox(
+                                        height: 12,
+                                      ),
+                                      ItemDivider(),
+                                      Builder(
+                                        builder: (context) {
+                                          if (state.scientificSessionResponse !=
+                                              null) {
+                                            final data = state
+                                                .scientificSessionResponse!
+                                                .listScientificSessions!;
+                                            if (data.isEmpty) {
+                                              return EmptyData(
+                                                subtitle:
+                                                    'Please upload scientific session data first!',
+                                                title: 'Data Still Empty',
+                                              );
+                                            }
+                                            return Column(
+                                              children: [
+                                                // SizedBox(
+                                                //   height: 16,
+                                                // ),
+                                                buildSearchFilterSection(
+                                                  verifiedCount: state
+                                                      .scientificSessionResponse!
+                                                      .verifiedCounts!,
+                                                  unverifiedCount: state
+                                                      .scientificSessionResponse!
+                                                      .unverifiedCounts!,
                                                 ),
-                                                separatorBuilder:
-                                                    (context, index) =>
-                                                        SizedBox(height: 12),
-                                                itemCount: s.length,
-                                              ),
-                                            ],
-                                          );
-                                        } else {
-                                          return SizedBox.shrink();
-                                        }
-                                      },
-                                    )
-                                  ],
-                                ),
-                              );
-                            }
-                            return CustomLoading();
-                          },
+                                                ListView.separated(
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  itemBuilder: (context,
+                                                          index) =>
+                                                      StudentScientificSessionCard(
+                                                    model: s[index],
+                                                  ),
+                                                  separatorBuilder:
+                                                      (context, index) =>
+                                                          SizedBox(height: 12),
+                                                  itemCount: s.length,
+                                                ),
+                                              ],
+                                            );
+                                          } else {
+                                            return SizedBox.shrink();
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                              return CustomLoading();
+                            },
+                          ),
                         ),
                       ),
                     ),

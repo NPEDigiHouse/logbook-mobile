@@ -3,6 +3,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_first_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/clinical_record_card.dart';
@@ -10,7 +11,6 @@ import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
-import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,8 +57,11 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
       ),
       floatingActionButton: widget.activeUnitModel.countCheckIn! == 0
           ? FloatingActionButton(
-              onPressed: () => context.navigateTo(CreateClinicalRecordFirstPage(
-                  activeUnitModel: widget.activeUnitModel)),
+              onPressed: () {
+                context.navigateTo(CreateClinicalRecordFirstPage(
+                    activeUnitModel: widget.activeUnitModel));
+                isMounted = false;
+              },
               child: Icon(
                 Icons.add_rounded,
               ),
@@ -67,6 +70,7 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            isMounted = false;
             await Future.wait([
               BlocProvider.of<StudentCubit>(context)
                   .getStudentClinicalRecordOfActiveUnit(),
@@ -80,85 +84,97 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                     SliverPadding(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       sliver: SliverFillRemaining(
-                        child: BlocConsumer<StudentCubit, StudentState>(
+                        child: BlocListener<ClinicalRecordCubit,
+                            ClinicalRecordState>(
                           listener: (context, state) {
-                            if (state.clinicalRecordResponse != null) {
-                              if (!isMounted) {
-                                Future.microtask(() {
-                                  listData.value = [
-                                    ...state.clinicalRecordResponse!
-                                        .listClinicalRecords!
-                                  ];
-                                  isMounted = true;
-                                });
+                            if (state.clinicalRecordPostSuccess) {
+                              isMounted = false;
+                            }
+                          },
+                          child: BlocConsumer<StudentCubit, StudentState>(
+                            listener: (context, state) {
+                              if (state.clinicalRecordResponse != null &&
+                                  state.requestState == RequestState.data) {
+                                if (!isMounted) {
+                                  Future.microtask(() {
+                                    listData.value = [
+                                      ...state.clinicalRecordResponse!
+                                          .listClinicalRecords!
+                                    ];
+                                    isMounted = true;
+                                  });
+                                }
                               }
-                            }
-                          },
-                          builder: (context, state) {
-                            if (state.clinicalRecordResponse != null) {
-                              return SingleChildScrollView(
-                                child: SpacingColumn(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  onlyPading: true,
-                                  horizontalPadding: 16,
-                                  children: [
-                                    UnitHeader(
-                                        unitName:
-                                            widget.activeUnitModel.unitName!),
-                                    SizedBox(
-                                      height: 12,
-                                    ),
-                                    ItemDivider(),
-                                    Builder(
-                                      builder: (context) {
-                                        if (state.clinicalRecordResponse !=
-                                            null) {
-                                          final data = state
-                                              .clinicalRecordResponse!
-                                              .listClinicalRecords!;
-                                          if (data.isEmpty) {
-                                            return EmptyData(
-                                              subtitle:
-                                                  'Please upload clinical record data first!',
-                                              title: 'Data Still Empty',
-                                            );
-                                          }
-                                          return Column(
-                                            children: [
-                                              buildSearchFilterSection(
-                                                verifiedCount: state
-                                                    .clinicalRecordResponse!
-                                                    .verifiedCounts!,
-                                                unverifiedCount: state
-                                                    .clinicalRecordResponse!
-                                                    .unverifiedCounts!,
-                                              ),
-                                              ListView.separated(
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                itemBuilder: (context, index) =>
-                                                    ClinicalRecordCard(
-                                                  model: s[index],
+                            },
+                            builder: (context, state) {
+                              if (state.clinicalRecordResponse != null &&
+                                  state.requestState == RequestState.data) {
+                                return SingleChildScrollView(
+                                  child: SpacingColumn(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    onlyPading: true,
+                                    horizontalPadding: 16,
+                                    children: [
+                                      UnitHeader(
+                                          unitName:
+                                              widget.activeUnitModel.unitName!),
+                                      SizedBox(
+                                        height: 12,
+                                      ),
+                                      ItemDivider(),
+                                      Builder(
+                                        builder: (context) {
+                                          if (state.clinicalRecordResponse !=
+                                              null) {
+                                            final data = state
+                                                .clinicalRecordResponse!
+                                                .listClinicalRecords!;
+                                            if (data.isEmpty) {
+                                              return EmptyData(
+                                                subtitle:
+                                                    'Please upload clinical record data first!',
+                                                title: 'Data Still Empty',
+                                              );
+                                            }
+                                            return Column(
+                                              children: [
+                                                buildSearchFilterSection(
+                                                  verifiedCount: state
+                                                      .clinicalRecordResponse!
+                                                      .verifiedCounts!,
+                                                  unverifiedCount: state
+                                                      .clinicalRecordResponse!
+                                                      .unverifiedCounts!,
                                                 ),
-                                                separatorBuilder:
-                                                    (context, index) =>
-                                                        SizedBox(height: 12),
-                                                itemCount: s.length,
-                                              ),
-                                            ],
-                                          );
-                                        } else {
-                                          return SizedBox.shrink();
-                                        }
-                                      },
-                                    )
-                                  ],
-                                ),
-                              );
-                            }
-                            return CustomLoading();
-                          },
+                                                ListView.separated(
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  itemBuilder:
+                                                      (context, index) =>
+                                                          ClinicalRecordCard(
+                                                    model: s[index],
+                                                  ),
+                                                  separatorBuilder:
+                                                      (context, index) =>
+                                                          SizedBox(height: 12),
+                                                  itemCount: s.length,
+                                                ),
+                                              ],
+                                            );
+                                          } else {
+                                            return SizedBox.shrink();
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                              return CustomLoading();
+                            },
+                          ),
                         ),
                       ),
                     ),

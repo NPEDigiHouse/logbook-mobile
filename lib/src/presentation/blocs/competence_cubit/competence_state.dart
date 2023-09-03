@@ -4,6 +4,8 @@ class CompetenceState {
   final bool isSkillSuccessAdded;
   final bool isCaseSuccessAdded;
   final RequestState requestState;
+  final RequestState skillState;
+  final RequestState caseState;
   final List<StudentCaseModel>? studentCasesModel;
   final List<StudentSkillModel>? studentSkillsModel;
   final List<StudentCompetenceModel>? caseListStudent;
@@ -19,6 +21,8 @@ class CompetenceState {
     this.isSkillSuccessAdded = false,
     this.isCaseSuccessAdded = false,
     this.studentCasesModel,
+    this.caseState = RequestState.init,
+    this.skillState = RequestState.init,
     this.requestState = RequestState.init,
     this.studentSkillsModel,
     this.listCasesModel,
@@ -33,6 +37,8 @@ class CompetenceState {
 
   CompetenceState copyWith({
     RequestState requestState = RequestState.init,
+    RequestState addSkillState = RequestState.init,
+    RequestState addCaseState = RequestState.init,
     bool isSkillSuccessAdded = false,
     bool isCaseSuccessAdded = false,
     List<StudentCaseModel>? studentCasesModel,
@@ -60,6 +66,8 @@ class CompetenceState {
       isCaseSuccessVerify: isCaseSuccessVerify,
       isAllCasesSuccessVerify: isAllCasesSuccessVerify,
       isAllSkillsSuccessVerify: isAllSkillsSuccessVerify,
+      caseState: addCaseState,
+      skillState: addSkillState,
     );
   }
 }

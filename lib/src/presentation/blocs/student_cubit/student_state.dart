@@ -11,6 +11,7 @@ class StudentState {
   final bool successUpdateStudentProfile;
   final bool successVerifyCheckIn;
   final bool successVerifyCheckOut;
+  final StudentById? studentDetail;
 
   StudentState({
     this.clinicalRecordResponse,
@@ -20,6 +21,7 @@ class StudentState {
     this.studentStatistic,
     this.successUpdateStudentProfile = false,
     this.studentsCheckIn,
+    this.studentDetail,
     this.studentsCheckOut,
     this.successVerifyCheckIn = false,
     this.successVerifyCheckOut = false,
@@ -34,6 +36,7 @@ class StudentState {
     bool successUpdateStudentProfile = false,
     List<StudentCheckInModel>? studentsCheckIn,
     List<StudentCheckOutModel>? studentsCheckOut,
+    StudentById? studentDetail,
     StudentStatistic? studentStatistic,
     bool successVerifyCheckIn = false,
     bool successVerifyCheckOut = false,
@@ -49,6 +52,7 @@ class StudentState {
         successUpdateStudentProfile: successUpdateStudentProfile,
         studentsCheckIn: studentsCheckIn ?? this.studentsCheckIn,
         successVerifyCheckIn: successVerifyCheckIn,
+        studentDetail: studentDetail ?? this.studentDetail,
         studentsCheckOut: studentsCheckOut ?? this.studentsCheckOut,
         successVerifyCheckOut: successVerifyCheckOut,
         studentStatistic: studentStatistic ?? this.studentStatistic);

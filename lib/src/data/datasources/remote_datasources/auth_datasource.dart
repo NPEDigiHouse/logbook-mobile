@@ -48,6 +48,15 @@ class AuthDataSourceImpl implements AuthDataSource {
       String? fullname,
       required String email}) async {
     try {
+      String? firstName;
+      String? lastName;
+      if (fullname != null && fullname.isNotEmpty) {
+        final splitName = fullname.split(' ');
+        firstName = splitName.first;
+        if (splitName.length > 1) {
+          lastName = fullname.substring(firstName.length + 1, fullname.length);
+        }
+      }
       final response = await dio.post(ApiService.baseUrl + '/students',
           options: Options(
             headers: {
@@ -61,6 +70,8 @@ class AuthDataSourceImpl implements AuthDataSource {
             "password": password,
             "studentId": studentId,
             "email": email,
+            if (firstName != null) "firstName": firstName,
+            if (lastName != null) "lastName": lastName,
           });
       he.handleErrorResponse(
         response: response,

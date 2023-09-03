@@ -51,16 +51,14 @@ class _WrapperState extends State<Wrapper> {
           switch (credential.role) {
             case 'SUPERVISOR':
               return MainMenuSupervisor(
-                credential: credential,
+                
               );
             case 'ER':
               return MainMenuCoordinator(
-                credential: credential,
+               
               );
             case 'STUDENT':
-              return MainMenu(
-                credential: credential,
-              );
+              return MainMenu();
             default:
           }
         }

@@ -1,8 +1,10 @@
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/coordinator/history/history_page.dart';
 import 'package:elogbook/src/presentation/features/coordinator/home/home_page.dart';
 import 'package:elogbook/src/presentation/features/coordinator/profile/profile_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
@@ -10,8 +12,9 @@ import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
 
 class MainMenuCoordinator extends StatefulWidget {
-  final UserCredential credential;
-  const MainMenuCoordinator({super.key, required this.credential});
+  const MainMenuCoordinator({
+    super.key,
+  });
 
   @override
   State<MainMenuCoordinator> createState() => _MainMenuCoordinatorState();
@@ -19,6 +22,14 @@ class MainMenuCoordinator extends StatefulWidget {
 
 class _MainMenuCoordinatorState extends State<MainMenuCoordinator> {
   final ValueNotifier<int> _selectedIndex = ValueNotifier(0);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(
+        () => BlocProvider.of<ProfileCubit>(context)..getUserCredential());
+  }
 
   @override
   void dispose() {
@@ -29,13 +40,13 @@ class _MainMenuCoordinatorState extends State<MainMenuCoordinator> {
 
   @override
   Widget build(BuildContext context) {
-    final _listPage = [
-      CoordinatorHomePage(
-        credential: widget.credential,
-      ),
-      const CoordinatorHistoryPage(),
-      CoordinatorProfilePage(),
-    ];
+    List<Widget> _listPage(UserCredential credential) => [
+          CoordinatorHomePage(
+            credential: credential,
+          ),
+          const CoordinatorHistoryPage(),
+          CoordinatorProfilePage(),
+        ];
 
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -47,21 +58,29 @@ class _MainMenuCoordinatorState extends State<MainMenuCoordinator> {
         return ValueListenableBuilder(
           valueListenable: _selectedIndex,
           builder: (context, value, _) {
-            return Scaffold(
-              body: IndexedStack(
-                children: _listPage,
-                index: value,
-              ),
-              bottomNavigationBar: CustomNavigationBar(
-                listIconPath: [
-                  "icon_task.svg",
-                  "icon_supervisor_history.svg",
-                  "icon_user.svg"
-                ],
-                listTitle: ['Tasks', 'History', 'Profile'],
-                selectedIndex: _selectedIndex,
-                value: value,
-              ),
+            return BlocBuilder<ProfileCubit, ProfileState>(
+              builder: (context, s) {
+                if (s.userCredential != null)
+                  return Scaffold(
+                    body: IndexedStack(
+                      children: _listPage(s.userCredential!),
+                      index: value,
+                    ),
+                    bottomNavigationBar: CustomNavigationBar(
+                      listIconPath: [
+                        "icon_task.svg",
+                        "icon_supervisor_history.svg",
+                        "icon_user.svg"
+                      ],
+                      listTitle: ['Tasks', 'History', 'Profile'],
+                      selectedIndex: _selectedIndex,
+                      value: value,
+                    ),
+                  );
+                return Scaffold(
+                  body: CustomLoading(),
+                );
+              },
             );
           },
         );

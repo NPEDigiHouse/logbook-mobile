@@ -35,6 +35,7 @@ class _SupervisorListClinicalRecordState
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            isMounted = false;
             await Future.wait([
               BlocProvider.of<ClinicalRecordSupervisorCubit>(context)
                   .getClinicalRecords(),

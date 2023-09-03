@@ -34,6 +34,7 @@ class _SupervisorListSglPageState extends State<SupervisorListSglPage> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            isMounted = false;
             await Future.wait([
               BlocProvider.of<SglCstCubit>(context).getListSglStudents(),
             ]);

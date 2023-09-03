@@ -163,7 +163,8 @@ class _DailyActivityWeekStatusPageState
                                                 width: 24,
                                                 height: 24,
                                                 decoration: BoxDecoration(
-                                                  color: errorColor.withOpacity(
+                                                  color:
+                                                      primaryColor.withOpacity(
                                                     .2,
                                                   ),
                                                   shape: BoxShape.circle,
@@ -171,19 +172,19 @@ class _DailyActivityWeekStatusPageState
                                                 padding: EdgeInsets.all(2),
                                                 child: SvgPicture.asset(
                                                     AssetPath.getIcon(
-                                                        'emoji_alfa.svg'))),
+                                                        'emoji_hadir.svg'))),
                                             SizedBox(
                                               height: 8,
                                             ),
                                             Text(
-                                              '${state.studentActivityPerweek!.alpha}',
+                                              '${state.studentActivityPerweek!.attend}',
                                               style: textTheme.titleMedium
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 height: 1,
                                               ),
                                             ),
-                                            Text('Alpha'),
+                                            Text('Hadir'),
                                           ],
                                         ),
                                       ),
@@ -207,8 +208,7 @@ class _DailyActivityWeekStatusPageState
                                                 width: 24,
                                                 height: 24,
                                                 decoration: BoxDecoration(
-                                                  color:
-                                                      primaryColor.withOpacity(
+                                                  color: errorColor.withOpacity(
                                                     .2,
                                                   ),
                                                   shape: BoxShape.circle,
@@ -216,19 +216,19 @@ class _DailyActivityWeekStatusPageState
                                                 padding: EdgeInsets.all(2),
                                                 child: SvgPicture.asset(
                                                     AssetPath.getIcon(
-                                                        'emoji_hadir.svg'))),
+                                                        'emoji_alfa.svg'))),
                                             SizedBox(
                                               height: 8,
                                             ),
                                             Text(
-                                              '${state.studentActivityPerweek!.attend}',
+                                              '${state.studentActivityPerweek!.alpha}',
                                               style: textTheme.titleMedium
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 height: 1,
                                               ),
                                             ),
-                                            Text('Hadir'),
+                                            Text('Tidak Hadir'),
                                           ],
                                         ),
                                       ),

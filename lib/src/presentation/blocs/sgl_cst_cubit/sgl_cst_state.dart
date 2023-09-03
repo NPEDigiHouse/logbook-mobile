@@ -10,6 +10,7 @@ class SglCstState {
   final bool isVerifySglCstSuccess;
   final SglResponse? sglDetail;
   final CstResponse? cstDetail;
+  final RequestState requestState;
   final bool isNewTopicAddSuccess;
 
   SglCstState(
@@ -17,6 +18,7 @@ class SglCstState {
       this.isCstPostSuccess = false,
       this.isNewTopicAddSuccess = false,
       this.sglStudents,
+      this.requestState = RequestState.init,
       this.cstStudents,
       this.isVerifySglCstSuccess = false,
       this.isVerifyTopicSuccess = false,
@@ -25,7 +27,7 @@ class SglCstState {
       this.cstDetail});
 
   SglCstState copyWith({
-    RequestState? requestState,
+    RequestState requestState = RequestState.init,
     bool isSglPostSuccess = false,
     bool isCstPostSuccess = false,
     bool isNewTopicAddSuccess = false,
@@ -48,6 +50,7 @@ class SglCstState {
       sglStudents: sglStudents ?? this.sglStudents,
       isVerifySglCstSuccess: isVerifySglCstSuccess,
       isVerifyTopicSuccess: isVerifyTopicSuccess,
+      requestState: requestState,
     );
   }
 }

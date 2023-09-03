@@ -57,8 +57,10 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
           if (state.isDailyActivityUpdated) {
             Navigator.pop(context);
             Future.microtask(
-              () => BlocProvider.of<DailyActivityCubit>(context)
-                ..getStudentActivityPerweek(id: widget.id),
+              () {
+                BlocProvider.of<DailyActivityCubit>(context)
+                  ..getStudentActivityPerweek(id: widget.id)..getStudentDailyActivities();
+              },
             );
           }
         },

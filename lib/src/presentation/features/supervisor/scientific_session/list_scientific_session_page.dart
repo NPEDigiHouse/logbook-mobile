@@ -35,6 +35,7 @@ class _SupervisorListScientificSessionPageState
       ).variant(),
       body: RefreshIndicator(
         onRefresh: () async {
+          isMounted = false;
           await Future.wait([
             BlocProvider.of<ScientificSessionSupervisorCubit>(context)
                 .getScientificSessionList(),

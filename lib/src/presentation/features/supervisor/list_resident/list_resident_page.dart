@@ -35,6 +35,7 @@ class _ListResidentPageState extends State<ListResidentPage> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            isMounted = false;
             await Future.wait(
                 [BlocProvider.of<SupervisorsCubit>(context).getAllStudents()]);
           },
@@ -150,7 +151,7 @@ class _ListResidentPageState extends State<ListResidentPage> {
               } else {
                 return FutureBuilder(
                   future: BlocProvider.of<SupervisorsCubit>(context)
-                      .getImageProfile(id: student.userId!),
+                      .getImageProfile(id: student.userId ?? ''),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return CustomShimmer(
@@ -181,7 +182,6 @@ class _ListResidentPageState extends State<ListResidentPage> {
               }
             },
           ),
-         
           SizedBox(
             width: 12,
           ),

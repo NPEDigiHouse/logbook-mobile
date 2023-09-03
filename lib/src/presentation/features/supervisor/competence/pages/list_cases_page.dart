@@ -105,6 +105,7 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
           body: SafeArea(
             child: RefreshIndicator(
               onRefresh: () async {
+                isMounted = false;
                 await Future.wait([
                   BlocProvider.of<CompetenceCubit>(context).getCasesByStudentId(
                     studentId: widget.studentId,

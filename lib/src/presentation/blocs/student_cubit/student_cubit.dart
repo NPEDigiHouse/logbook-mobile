@@ -3,6 +3,7 @@ import 'package:elogbook/src/data/datasources/remote_datasources/student_datasou
 import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/student_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
+import 'package:elogbook/src/data/models/students/student_by_id_model.dart';
 import 'package:elogbook/src/data/models/students/student_check_in_model.dart';
 import 'package:elogbook/src/data/models/students/student_check_out_model.dart';
 import 'package:elogbook/src/data/models/students/student_profile_post.dart';
@@ -25,6 +26,7 @@ class StudentCubit extends Cubit<StudentState> {
       try {
         emit(state.copyWith(
           clinicalRecordResponse: result,
+          requestState: RequestState.data,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
@@ -49,7 +51,29 @@ class StudentCubit extends Cubit<StudentState> {
       try {
         emit(state.copyWith(
           scientificSessionResponse: result,
+          requestState: RequestState.data,
         ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getStudentDetailById({required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+      final data = await dataSource.getStudentById(studentId: studentId);
+      try {
+        emit(state.copyWith(studentDetail: data));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

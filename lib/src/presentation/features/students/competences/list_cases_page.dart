@@ -3,6 +3,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/competences/list_cases_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/competences/widgets/add_competence_dialog.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -74,6 +75,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            isMounted = false;
             await Future.wait([
               BlocProvider.of<CompetenceCubit>(context).getListCases(),
             ]);
@@ -88,7 +90,11 @@ class _ListCasesPageState extends State<ListCasesPage> {
                       sliver: SliverFillRemaining(
                         child: BlocConsumer<CompetenceCubit, CompetenceState>(
                           listener: (context, state) {
-                            if (state.listCasesModel != null) {
+                            if (state.isCaseSuccessAdded) {
+                              isMounted = false;
+                            }
+                            if (state.listCasesModel != null &&
+                                state.caseState == RequestState.data) {
                               if (!isMounted) {
                                 Future.microtask(() {
                                   listData.value = [

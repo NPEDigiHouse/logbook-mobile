@@ -20,7 +20,7 @@ class CompetenceCubit extends Cubit<CompetenceState> {
   Future<void> getListSkills() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        addSkillState: RequestState.loading,
       ));
 
       final result = await competenceDataSource.getListSkill();
@@ -28,9 +28,10 @@ class CompetenceCubit extends Cubit<CompetenceState> {
       try {
         emit(state.copyWith(
           listSkillsModel: result,
+          addSkillState: RequestState.data,
         ));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(addSkillState: RequestState.error));
       }
     } catch (e) {
       print(e.toString());
@@ -45,7 +46,7 @@ class CompetenceCubit extends Cubit<CompetenceState> {
   Future<void> getListCases() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        addCaseState: RequestState.loading,
       ));
 
       final result = await competenceDataSource.getListCase();
@@ -53,15 +54,16 @@ class CompetenceCubit extends Cubit<CompetenceState> {
       try {
         emit(state.copyWith(
           listCasesModel: result,
+          addCaseState: RequestState.data,
         ));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(addCaseState: RequestState.error));
       }
     } catch (e) {
       print(e.toString());
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          addCaseState: RequestState.error,
         ),
       );
     }
@@ -79,6 +81,7 @@ class CompetenceCubit extends Cubit<CompetenceState> {
       try {
         emit(state.copyWith(
           studentSkillsModel: result,
+          requestState: RequestState.data,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
@@ -87,7 +90,7 @@ class CompetenceCubit extends Cubit<CompetenceState> {
       print(e.toString());
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          addSkillState: RequestState.error,
         ),
       );
     }

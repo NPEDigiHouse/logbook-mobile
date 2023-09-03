@@ -46,15 +46,15 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Entry Detail"),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.more_vert_rounded,
-              color: Colors.white,
-            ),
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {},
+        //     icon: Icon(
+        //       Icons.more_vert_rounded,
+        //       color: Colors.white,
+        //     ),
+        //   )
+        // ],
       ).variant(),
       body: BlocListener<ClinicalRecordCubit, ClinicalRecordState>(
         listener: (context, state) {
@@ -503,97 +503,99 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                     SizedBox(
                       height: 24,
                     ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 24),
-                      padding: EdgeInsets.only(
-                        bottom: 20,
-                        left: 20,
-                        right: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(0, 0),
-                              spreadRadius: 0,
-                              blurRadius: 6,
-                              color: Color(0xFFD4D4D4).withOpacity(.25)),
-                          BoxShadow(
-                              offset: Offset(0, 4),
-                              spreadRadius: 0,
-                              blurRadius: 24,
-                              color: Color(0xFFD4D4D4).withOpacity(.25)),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FormSectionHeader(
-                              label: 'Upload File',
-                              pathPrefix: 'icon_attachment.svg',
-                              padding: 0),
-                          ItemDivider(),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.file_present_outlined,
-                                color: secondaryTextColor,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  state.detailClinicalRecordModel!.filename ??
-                                      '',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: secondaryTextColor,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                    if (state.detailClinicalRecordModel!.attachments != null)
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 24),
+                        padding: EdgeInsets.only(
+                          bottom: 20,
+                          left: 20,
+                          right: 20,
+                        ),
+                        decoration: BoxDecoration(
+                          color: scaffoldBackgroundColor,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(0, 0),
+                                spreadRadius: 0,
+                                blurRadius: 6,
+                                color: Color(0xFFD4D4D4).withOpacity(.25)),
+                            BoxShadow(
+                                offset: Offset(0, 4),
+                                spreadRadius: 0,
+                                blurRadius: 24,
+                                color: Color(0xFFD4D4D4).withOpacity(.25)),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FormSectionHeader(
+                                label: 'Upload File',
+                                pathPrefix: 'icon_attachment.svg',
+                                padding: 0),
+                            ItemDivider(),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.file_present_outlined,
+                                  color: secondaryTextColor,
                                 ),
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              SizedBox(
-                                height: 24,
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                  ),
-                                  onPressed: () async {
-                                    final hasPermission =
-                                        await checkAndRequestPermission();
-                                    if (hasPermission) {
-                                      BlocProvider.of<ClinicalRecordCubit>(
-                                          context)
-                                        ..crDownloadPath(
-                                            id: widget.id,
-                                            filaname: state
-                                                    .detailClinicalRecordModel!
-                                                    .filename ??
-                                                '');
-                                    }
-                                  },
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Expanded(
                                   child: Text(
-                                    'Download',
-                                    style: textTheme.bodySmall?.copyWith(
-                                      color: primaryColor,
+                                    state.detailClinicalRecordModel!.filename ??
+                                        'data.pdf',
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      color: secondaryTextColor,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                SizedBox(
+                                  height: 24,
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                    ),
+                                    onPressed: () async {
+                                      final hasPermission =
+                                          await checkAndRequestPermission();
+                                      if (hasPermission) {
+                                        BlocProvider.of<ClinicalRecordCubit>(
+                                            context)
+                                          ..crDownloadPath(
+                                              id: widget.id,
+                                              filaname: state
+                                                      .detailClinicalRecordModel!
+                                                      .filename ??
+                                                  'data');
+                                      }
+                                    },
+                                    child: Text(
+                                      'Download',
+                                      style: textTheme.bodySmall?.copyWith(
+                                        color: primaryColor,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    
                     SizedBox(
                       height: 24,
                     ),

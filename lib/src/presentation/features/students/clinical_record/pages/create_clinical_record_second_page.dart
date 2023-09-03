@@ -1,6 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/clinical_records/affected_part_model.dart';
-import 'package:elogbook/src/data/models/clinical_records/clinical_record_post_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/diagnosis_types_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/examination_types_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/management_role_model.dart';
@@ -9,7 +8,6 @@ import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_r
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_third_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_temp.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/build_examination.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/diagnostics_adaptive_form.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/examination_adaptive_form.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/management_adaptive_form.dart';

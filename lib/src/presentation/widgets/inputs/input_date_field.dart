@@ -48,14 +48,7 @@ class _InputDateFieldState extends State<InputDateField> {
                   .subtract(
                   Duration(days: 30),
                 ),
-          lastDate: widget.controller.text.isEmpty
-              ? DateTime.now().add(
-                  const Duration(days: 1000),
-                )
-              : ReusableFunctionHelper.stringToDateTime(widget.controller.text)
-                  .add(
-                  Duration(days: 1000),
-                ),
+          lastDate: DateTime(2100),
         );
 
         if (selected == null) return;

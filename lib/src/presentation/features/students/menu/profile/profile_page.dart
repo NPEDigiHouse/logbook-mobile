@@ -30,9 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      BlocProvider.of<ProfileCubit>(context)
-        ..getProfilePic()
-        ..getUserCredential();
+      BlocProvider.of<ProfileCubit>(context)..getProfilePic();
       BlocProvider.of<UnitCubit>(
         context,
       )..getActiveUnit();
@@ -96,10 +94,28 @@ class _ProfilePageState extends State<ProfilePage> {
                               BlocBuilder<ProfileCubit, ProfileState>(
                                 builder: (context, state) {
                                   if (state.profilePic != null) {
-                                    return CircleAvatar(
-                                      radius: 50,
-                                      foregroundImage:
-                                          MemoryImage(state.profilePic!),
+                                    return Column(
+                                      children: [
+                                        Container(
+                                          width: 100,
+                                          height: 100,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 5,
+                                                color: scaffoldBackgroundColor,
+                                                strokeAlign: BorderSide
+                                                    .strokeAlignOutside),
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: MemoryImage(
+                                                state.profilePic!,
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     );
                                   } else {
                                     return CircleAvatar(

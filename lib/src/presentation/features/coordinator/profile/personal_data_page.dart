@@ -84,6 +84,7 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
             BlocProvider.of<ProfileCubit>(context)..getProfilePic();
           }
           if (state.successUpdateProfile) {
+            FocusScope.of(context).unfocus();
             BlocProvider.of<ProfileCubit>(context)..getUserCredential();
           }
         },
