@@ -1,5 +1,7 @@
+import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/static_datasource.dart';
+import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/styles/text_style.dart';
@@ -18,6 +20,34 @@ class GridMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (AppSize.getAppWidth(context) >= 800) {
+      return InkWellContainer(
+        onTap: onTap,
+        color: color.withOpacity(.1),
+        radius: 12,
+        padding: EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              AssetPath.getIcon(menuModel.iconPath),
+              color: color,
+              width: 48,
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Text(
+              menuModel.labels,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: textTheme.bodyMedium,
+            ),
+          ],
+        ),
+      );
+    }
     return GestureDetector(
       onTap: onTap,
       child: Column(

@@ -1,3 +1,4 @@
+import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/static_datasource.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/grid_menu_item.dart';
@@ -22,10 +23,10 @@ class GridMenuRow extends StatelessWidget {
       padding: const EdgeInsets.all(0),
       primary: false,
       shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         crossAxisSpacing: 16,
-        childAspectRatio: 0.6,
+        childAspectRatio: AppSize.getAppWidth(context) >= 800 ? 1 : 0.6,
       ),
       itemBuilder: (context, index) {
         return GridMenuItem(

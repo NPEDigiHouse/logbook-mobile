@@ -2,9 +2,9 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/final_score/student_final_score_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/student_final_score_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_shimmer.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class FinalGradeCard extends StatefulWidget {
-  final ActiveUnitModel model;
-  const FinalGradeCard({required this.model});
+  const FinalGradeCard();
 
   @override
   State<FinalGradeCard> createState() => _FinalGradeCardState();
@@ -35,9 +34,7 @@ class _FinalGradeCardState extends State<FinalGradeCard> {
           return LayoutBuilder(
             builder: (context, constraints) {
               return InkWellContainer(
-                onTap: () => context.navigateTo(StudentFinalScorePage(
-                  model: widget.model,
-                )),
+                onTap: () => context.navigateTo(StudentDetailFinalScorePage()),
                 color: Color(0xFF219ABF),
                 radius: 12,
                 child: ClipRRect(

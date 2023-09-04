@@ -1,9 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'student_unit_model.g.dart';
 
 @JsonSerializable()
 class StudentUnitModel {
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  Uint8List? profileImage;
   @JsonKey(name: "id")
   String? id;
   @JsonKey(name: "studentId")
@@ -19,6 +23,7 @@ class StudentUnitModel {
     this.id,
     this.studentId,
     this.studentName,
+    this.profileImage,
     this.activeUnitId,
     this.activeUnitName,
   });

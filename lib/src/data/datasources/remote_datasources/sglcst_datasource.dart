@@ -245,7 +245,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
             },
           ),
           data: {'verified': true});
-      print(response);
+      print(response.statusCode);
       if (response.statusCode != 200) {
         throw Exception();
       }

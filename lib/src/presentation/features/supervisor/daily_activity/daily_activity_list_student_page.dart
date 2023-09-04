@@ -144,6 +144,14 @@ class _DailyActivityListStudentPageState
                   foregroundImage: MemoryImage(student.profileImage!),
                 );
               } else {
+                if (student.userId == null) {
+                  return CircleAvatar(
+                    radius: 25,
+                    foregroundImage: AssetImage(
+                      AssetPath.getImage('profile_default.png'),
+                    ),
+                  );
+                }
                 return FutureBuilder(
                   future: BlocProvider.of<SupervisorsCubit>(context)
                       .getImageProfile(id: student.userId!),

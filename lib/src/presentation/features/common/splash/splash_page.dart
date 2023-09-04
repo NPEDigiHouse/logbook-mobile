@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:elogbook/core/helpers/app_size.dart';
+import 'package:elogbook/core/helpers/asset_path.dart';
+import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/common/wrapper/wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -31,12 +34,18 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Image.asset(
-        'assets/splash.png',
+      backgroundColor: primaryColor,
+      body: Container(
         width: AppSize.getAppWidth(context),
         height: AppSize.getAppHeight(context),
-        fit: BoxFit.cover,
+        color: primaryColor,
+        child: Center(
+          child: SvgPicture.asset(
+            AssetPath.getVector('splash_icon.svg'),
+            width: 150,
+            height: 150,
+          ),
+        ),
       ),
     );
   }

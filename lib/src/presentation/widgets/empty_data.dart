@@ -16,32 +16,34 @@ class EmptyData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 80,
-          ),
-          SvgPicture.asset(
-            AssetPath.getVector('no_data.svg'),
-            height: 200,
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          Text(
-            title,
-            style: textTheme.titleLarge?.copyWith(
-                color: primaryTextColor, fontWeight: FontWeight.bold),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Text(
-              subtitle,
-              textAlign: TextAlign.center,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 80,
             ),
-          )
-        ],
+            SvgPicture.asset(
+              AssetPath.getVector('no_data.svg'),
+              height: 200,
+            ),
+            SizedBox(
+              height: 12,
+            ),
+            Text(
+              title,
+              style: textTheme.titleLarge?.copyWith(
+                  color: primaryTextColor, fontWeight: FontWeight.bold),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Text(
+                subtitle,
+                textAlign: TextAlign.center,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

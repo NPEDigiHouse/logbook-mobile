@@ -289,14 +289,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.4"
-  file_saver:
-    dependency: "direct main"
-    description:
-      name: file_saver
-      sha256: "591d25e750e3a4b654f7b0293abc2ed857242f82ca7334051b2a8ceeb369dac8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.8"
   fixnum:
     dependency: transitive
     description:
@@ -525,14 +517,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.15.4"
-  http:
-    dependency: transitive
-    description:
-      name: http
-      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   http_multi_server:
     dependency: transitive
     description:

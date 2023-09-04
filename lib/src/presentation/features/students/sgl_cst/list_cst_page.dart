@@ -71,9 +71,13 @@ class _ListCstPageState extends State<ListCstPage> {
                         if (state.cstDetail != null &&
                             state.requestState == RequestState.data) {
                           if (state.cstDetail!.csts!.isEmpty) {
-                            return EmptyData(
-                                title: 'No CST Found',
-                                subtitle: 'There is no cst data added yet');
+                            return Column(
+                              children: [
+                                EmptyData(
+                                    title: 'No CST Found',
+                                    subtitle: 'There is no cst data added yet'),
+                              ],
+                            );
                           }
                           return ListView.separated(
                               shrinkWrap: true,
@@ -137,7 +141,9 @@ class _ListCstPageState extends State<ListCstPage> {
                                       SizedBox(
                                         height: 12,
                                       ),
-                                      for (int i = 0; i < data.topic!.length; i++)
+                                      for (int i = 0;
+                                          i < data.topic!.length;
+                                          i++)
                                         TimelineTile(
                                           indicatorStyle: IndicatorStyle(
                                             width: 14,
@@ -214,7 +220,8 @@ class _ListCstPageState extends State<ListCstPage> {
                                                               endTime: data
                                                                   .topic![i]
                                                                   .endTime),
-                                                      style: textTheme.bodyMedium
+                                                      style: textTheme
+                                                          .bodyMedium
                                                           ?.copyWith(
                                                               color:
                                                                   onFormDisableColor),
@@ -249,7 +256,8 @@ class _ListCstPageState extends State<ListCstPage> {
                                         icon: Icon(Icons.add_rounded),
                                         label: Text(
                                           'Add Topic',
-                                          style: textTheme.titleMedium?.copyWith(
+                                          style:
+                                              textTheme.titleMedium?.copyWith(
                                             fontWeight: FontWeight.bold,
                                             color: primaryColor,
                                           ),
@@ -266,7 +274,7 @@ class _ListCstPageState extends State<ListCstPage> {
                               },
                               itemCount: state.cstDetail!.csts!.length);
                         }
-              
+
                         return SizedBox(height: 300, child: CustomLoading());
                       },
                     ),

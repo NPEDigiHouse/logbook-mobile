@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
-import 'package:elogbook/src/presentation/features/students/menu/global/global_activity_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/profile_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/unit/unit_activity_page.dart';

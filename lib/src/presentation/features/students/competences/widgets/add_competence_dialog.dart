@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/models/competences/list_student_cases_model.da
 import 'package:elogbook/src/data/models/competences/list_student_skills_model.dart';
 import 'package:elogbook/src/data/models/competences/skill_post_model.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -136,29 +137,74 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                         _competences.cast<StudentSkillModel>();
                         _competences.addAll(state.studentSkillsModel!);
                       }
-                      return DropdownButtonFormField(
-                        hint: Text(widget.type == CompetenceType.caseType
-                            ? 'Cases'
-                            : 'Skills'),
-                        items: _competences
-                            .map(
-                              (e) => DropdownMenuItem(
-                                child: Text(e.name!),
-                                value: e,
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (v) {
-                          if (v != null) {
-                            if (widget.type == CompetenceType.caseType) {
-                              caseId = (v as StudentCaseModel).id;
-                            } else {
-                              caseId = (v as StudentSkillModel).id;
+                      return CustomDropdown(
+                          onSubmit: (text, controller) {
+                            if (_competences.indexWhere(
+                                    (element) => element.name == text.trim()) ==
+                                -1) {
+                              print("1fdasf");
+                              controller.clear();
+                              caseId = null;
                             }
-                          }
-                        },
-                        value: null,
-                      );
+                          },
+                          
+                          hint: widget.type == CompetenceType.caseType
+                              ? 'Cases'
+                              : 'Skills',
+                          onCallback: (pattern) {
+                            final temp = _competences
+                                .where((competence) => competence.name
+                                    .toLowerCase()
+                                    .trim()
+                                    .startsWith(pattern.toLowerCase()))
+                                .toList();
+
+                            return pattern.isEmpty ? _competences : temp;
+                          },
+                          child: (suggestion) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16,
+                              ),
+                              child: Text(suggestion.name),
+                            );
+                          },
+                          onItemSelect: (v, controller) {
+                            if (v != null) {
+                              if (widget.type == CompetenceType.caseType) {
+                                caseId = (v as StudentCaseModel).id;
+                                controller.text = v.name!;
+                              } else {
+                                caseId = (v as StudentSkillModel).id;
+                                controller.text = v.name!;
+                              }
+                            }
+                          });
+
+                      // return DropdownButtonFormField(
+                      //   hint: Text(widget.type == CompetenceType.caseType
+                      //       ? 'Cases'
+                      //       : 'Skills'),
+                      //   items: _competences
+                      //       .map(
+                      //         (e) => DropdownMenuItem(
+                      //           child: Text(e.name!),
+                      //           value: e,
+                      //         ),
+                      //       )
+                      //       .toList(),
+                      //   onChanged: (v) {
+                      //     if (v != null) {
+                      //       if (widget.type == CompetenceType.caseType) {
+                      //         caseId = (v as StudentCaseModel).id;
+                      //       } else {
+                      //         caseId = (v as StudentSkillModel).id;
+                      //       }
+                      //     }
+                      //   },
+                      //   value: null,
+                      // );
                     },
                   ),
                   Builder(

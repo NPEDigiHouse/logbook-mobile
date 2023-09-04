@@ -34,7 +34,9 @@ class AssesmentHomePage extends StatelessWidget {
             SizedBox(
               height: 12,
             ),
-            FinalGradeCard(),
+            FinalGradeCard(
+              model: activeUnitModel,
+            ),
             Row(
               children: [
                 AssementMenuCard(
@@ -51,7 +53,6 @@ class AssesmentHomePage extends StatelessWidget {
                   onTap: () =>
                       context.navigateTo(StudentScientificAssignmentPage(
                     unitName: activeUnitModel.unitName!,
-                  
                   )),
                 ),
               ],

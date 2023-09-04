@@ -71,7 +71,7 @@ class StudentUnitCard extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: data.activeUnitName!,
+                            text: data.activeUnitName ?? 'No Active Unit',
                           ),
                         ],
                       ),

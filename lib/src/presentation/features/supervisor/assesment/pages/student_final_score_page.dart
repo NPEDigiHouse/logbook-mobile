@@ -2,10 +2,9 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
-import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/input_score_modal.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/top_stat_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
@@ -13,22 +12,22 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SupervisorFinalGrade extends StatefulWidget {
-  final StudentUnitModel finalGrade;
-  const SupervisorFinalGrade({super.key, required this.finalGrade});
+class StudentDetailFinalScorePage extends StatefulWidget {
+  const StudentDetailFinalScorePage({
+    super.key,
+  });
 
   @override
-  State<SupervisorFinalGrade> createState() => _SupervisorFinalGradeState();
+  State<StudentDetailFinalScorePage> createState() =>
+      _StudentDetailFinalScorePageState();
 }
 
-class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
+class _StudentDetailFinalScorePageState
+    extends State<StudentDetailFinalScorePage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<AssesmentCubit>(context)
-      ..getFinalScore(
-          unitId: widget.finalGrade.activeUnitId!,
-          studentId: widget.finalGrade.studentId!);
+    BlocProvider.of<AssesmentCubit>(context)..getStudentFinalScore();
   }
 
   final Map<String, String> mapTitle = {
@@ -90,106 +89,56 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
       body: RefreshIndicator(
         onRefresh: () async {
           await Future.wait([
-            BlocProvider.of<AssesmentCubit>(context).getFinalScore(
-                unitId: widget.finalGrade.activeUnitId!,
-                studentId: widget.finalGrade.studentId!)
+            BlocProvider.of<AssesmentCubit>(context).getStudentFinalScore(),
           ]);
         },
-        child: BlocBuilder<AssesmentCubit, AssesmentState>(
-          builder: (context, state) {
-            if (state.finalScore != null)
-              return SingleChildScrollView(
-                child: SpacingColumn(
-                  horizontalPadding: 16,
-                  spacing: 12,
-                  children: [
-                    SizedBox(
-                      height: 16,
-                    ),
-                    FinalGradeTopStatCard(
-                      title: 'Final Grade Statistic',
-                      totalGrade:
-                          getTotalGrades(state.finalScore!.finalScore ?? 0),
-                    ),
-                    if (state.finalScore!.assesments != null) ...[
-                      for (int i = 0;
-                          i < state.finalScore!.assesments!.length;
-                          i++)
-                        if (state.finalScore!.assesments![i].type!
-                                .contains('OSCE') &&
-                            (widget.finalGrade.activeUnitName == 'FORENSIK' ||
-                                widget.finalGrade.activeUnitName == 'IKM-IKK'))
-                          FinalGradeScoreCard(
-                            type: mapTitle[
-                                    state.finalScore!.assesments![i].type] ??
-                                '-',
-                            score: state.finalScore!.assesments![i].score ?? 0,
-                            proportion:
-                                state.finalScore!.assesments![i].weight ?? 0,
-                          ),
-                    ],
-                    SizedBox(
-                      height: 12,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                          style: FilledButton.styleFrom(
-                              backgroundColor: primaryColor),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              barrierLabel: '',
-                              barrierDismissible: false,
-                              builder: (_) => InputFinalScoreDialog(
-                                studentId: widget.finalGrade.studentId!,
-                                unitId: widget.finalGrade.activeUnitId!,
-                                type: FinalScoreType.cbt,
-                                initScore: state.finalScore!.assesments!
-                                        .firstWhere(
-                                            (element) => element.type == 'CBT')
-                                        .score ??
-                                    0,
+        child: CustomScrollView(
+          slivers: [
+            BlocBuilder<AssesmentCubit, AssesmentState>(
+              builder: (context, state) {
+                if (state.finalScore != null) {
+                  return SliverToBoxAdapter(
+                    child: SpacingColumn(
+                      horizontalPadding: 16,
+                      spacing: 12,
+                      children: [
+                        SizedBox(
+                          height: 16,
+                        ),
+                        FinalGradeTopStatCard(
+                          title: 'Final Grade Statistic',
+                          totalGrade:
+                              getTotalGrades(state.finalScore!.finalScore ?? 0),
+                        ),
+                        if (state.finalScore!.assesments != null) ...[
+                          for (int i = 0;
+                              i < state.finalScore!.assesments!.length;
+                              i++)
+                            if (state.finalScore!.assesments![i].type!
+                                    .contains('OSCE') &&
+                                state.finalScore!.assesments![i] == 0)
+                              FinalGradeScoreCard(
+                                type: mapTitle[state
+                                        .finalScore!.assesments![i].type] ??
+                                    '-',
+                                score:
+                                    state.finalScore!.assesments![i].score ?? 0,
+                                proportion:
+                                    state.finalScore!.assesments![i].weight ??
+                                        0,
                               ),
-                            );
-                          },
-                          child: Text('Update CBT Score')),
+                        ],
+                        SizedBox(
+                          height: 12,
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                          style: FilledButton.styleFrom(
-                              backgroundColor: secondaryColor),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              barrierLabel: '',
-                              barrierDismissible: false,
-                              builder: (_) => InputFinalScoreDialog(
-                                studentId: widget.finalGrade.studentId!,
-                                unitId: widget.finalGrade.activeUnitId!,
-                                type: FinalScoreType.osce,
-                                initScore: state.finalScore!.assesments!
-                                        .firstWhere(
-                                            (element) => element.type == 'OSCE')
-                                        .score ??
-                                    0,
-                              ),
-                            );
-                          },
-                          child: Text('Update OSCE Score')),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                  ],
-                ),
-              );
-            return CustomLoading();
-          },
+                  );
+                }
+                return CustomLoading();
+              },
+            ),
+          ],
         ),
       ),
     );

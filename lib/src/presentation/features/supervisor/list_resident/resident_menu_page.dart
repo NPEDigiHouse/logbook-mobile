@@ -3,14 +3,12 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
-import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/daily_activity/daily_activity_student_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/detail_profile/detail_profile_student_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/self_reflection_student_page.dart/self_reflection_student_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/special_report/special_report_student_page.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ResidentMenuPage extends StatefulWidget {

@@ -2,10 +2,9 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
-import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/input_score_modal.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/top_stat_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
@@ -14,8 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StudentFinalScorePage extends StatefulWidget {
+  final ActiveUnitModel model;
   const StudentFinalScorePage({
     super.key,
+    required this.model,
   });
 
   @override
@@ -95,7 +96,7 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
           slivers: [
             BlocBuilder<AssesmentCubit, AssesmentState>(
               builder: (context, state) {
-                if (state.finalScore != null)
+                if (state.finalScore != null) {
                   return SliverToBoxAdapter(
                     child: SpacingColumn(
                       horizontalPadding: 16,
@@ -113,15 +114,20 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
                           for (int i = 0;
                               i < state.finalScore!.assesments!.length;
                               i++)
-                            FinalGradeScoreCard(
-                              type: mapTitle[
-                                      state.finalScore!.assesments![i].type] ??
-                                  '-',
-                              score:
-                                  state.finalScore!.assesments![i].score ?? 0,
-                              proportion:
-                                  state.finalScore!.assesments![i].weight ?? 0,
-                            ),
+                            if (state.finalScore!.assesments![i].type!
+                                    .contains('OSCE') &&
+                                (widget.model.unitName == 'FORENSIK' ||
+                                    widget.model.unitName == 'IKM-IKK'))
+                              FinalGradeScoreCard(
+                                type: mapTitle[state
+                                        .finalScore!.assesments![i].type] ??
+                                    '-',
+                                score:
+                                    state.finalScore!.assesments![i].score ?? 0,
+                                proportion:
+                                    state.finalScore!.assesments![i].weight ??
+                                        0,
+                              ),
                         ],
                         SizedBox(
                           height: 12,
@@ -129,6 +135,7 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
                       ],
                     ),
                   );
+                }
                 return CustomLoading();
               },
             ),

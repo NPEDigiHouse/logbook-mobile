@@ -54,6 +54,58 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     _isList.dispose();
   }
 
+  List<VoidCallback> onTaps(ActiveUnitModel activeUnitModel) => [
+        if (activeUnitModel.unitName != 'FORENSIK' &&
+            activeUnitModel.unitName != 'IKM-IKK')
+          () => context.navigateTo(
+                SglCstHomePage(
+                  activeUnitModel: activeUnitModel,
+                ),
+              ),
+        () => context.navigateTo(
+              DailyActivityPage(
+                activeUnitModel: activeUnitModel,
+              ),
+            ),
+        () => context.navigateTo(
+              ListClinicalRecordPage(
+                activeUnitModel: activeUnitModel,
+              ),
+            ),
+        () => context.navigateTo(
+              StudentListScientificSessionPage(
+                  activeUnitModel: activeUnitModel),
+            ),
+        () => context.navigateTo(
+              StudentSelfReflectionHomePage(
+                activeUnitModel: activeUnitModel,
+                credential: widget.credential,
+              ),
+            ),
+        () => context.navigateTo(
+              CompetenceHomePage(
+                unitId: activeUnitModel.unitId!,
+                model: activeUnitModel,
+              ),
+            ),
+        () => context.navigateTo(
+              AssesmentHomePage(
+                activeUnitModel: activeUnitModel,
+              ),
+            ),
+        () => context.navigateTo(
+              SpecialReportHomePage(
+                activeUnitModel: activeUnitModel,
+                credential: widget.credential,
+              ),
+            ),
+        () => context.navigateTo(
+              ReferencePage(
+                activeUnitModel: activeUnitModel,
+              ),
+            ),
+      ];
+
   @override
   Widget build(BuildContext context) {
     final unitCubit = context.watch<UnitCubit>().state;
@@ -434,157 +486,67 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
   }
 
   Column buildItemGrid({required ActiveUnitModel activeUnitModel}) {
+    bool isSglCstShow = activeUnitModel.unitName != 'FORENSIK' &&
+        activeUnitModel.unitName != 'IKM-IKK';
     return Column(
       key: const ValueKey(1),
       children: <Widget>[
         GridMenuRow(
           itemColor: primaryColor,
-          menus: listStudentMenu.sublist(0, 4),
-          onTaps: [
-            () => context.navigateTo(
-                  SglCstHomePage(
-                    activeUnitModel: activeUnitModel,
-                  ),
-                ),
-            () => context.navigateTo(
-                  DailyActivityPage(
-                    activeUnitModel: activeUnitModel,
-                  ),
-                ),
-            () => context.navigateTo(
-                  ListClinicalRecordPage(
-                    activeUnitModel: activeUnitModel,
-                  ),
-                ),
-            () => context.navigateTo(
-                  StudentListScientificSessionPage(
-                      activeUnitModel: activeUnitModel),
-                ),
-          ],
+          menus: listStudentMenu(isSglCstShow).sublist(0, 4),
+          onTaps: onTaps(activeUnitModel).sublist(0, 4),
         ),
         const SizedBox(height: 12),
         GridMenuRow(
           itemColor: variant2Color,
-          menus: listStudentMenu.sublist(4, 8),
-          onTaps: [
-            () => context.navigateTo(
-                  StudentSelfReflectionHomePage(
-                    activeUnitModel: activeUnitModel,
-                    credential: widget.credential,
-                  ),
-                ),
-            () => context.navigateTo(
-                  CompetenceHomePage(
-                    unitId: activeUnitModel.unitId!,
-                    model: activeUnitModel,
-                  ),
-                ),
-            () => context.navigateTo(
-                  AssesmentHomePage(
-                    activeUnitModel: activeUnitModel,
-                  ),
-                ),
-            () => context.navigateTo(
-                  SpecialReportHomePage(
-                    activeUnitModel: activeUnitModel,
-                    credential: widget.credential,
-                  ),
-                ),
-          ],
+          menus: listStudentMenu(isSglCstShow).sublist(4, 8),
+          onTaps: onTaps(activeUnitModel).sublist(4, 8),
         ),
-        const SizedBox(height: 12),
-        GridMenuRow(
-          length: 1,
-          itemColor: variant1Color,
-          menus: listStudentMenu.sublist(8, listStudentMenu.length),
-          onTaps: [
-            () => context.navigateTo(
-                  ReferencePage(
-                    activeUnitModel: activeUnitModel,
-                  ),
-                ),
-          ],
-        ),
+        if (onTaps(activeUnitModel).length > 8) ...[
+          const SizedBox(height: 12),
+          GridMenuRow(
+            length: 1,
+            itemColor: variant1Color,
+            menus: listStudentMenu(isSglCstShow).sublist(8, 9),
+            onTaps: onTaps(activeUnitModel).sublist(8, 9),
+          ),
+        ],
       ],
     );
   }
 
   Column buildItemList({required ActiveUnitModel activeUnitModel}) {
+    bool isSglCstShow = activeUnitModel.unitName != 'FORENSIK' &&
+        activeUnitModel.unitName != 'IKM-IKK';
     return Column(
       key: const ValueKey(2),
       children: <Widget>[
         ListMenuColumn(
-          itemColor: primaryColor,
-          menus: listStudentMenu.sublist(0, 4),
-          onTaps: [
-            () => context.navigateTo(
-                  SglCstHomePage(
-                    activeUnitModel: activeUnitModel,
-                  ),
-                ),
-            () => context.navigateTo(
-                  DailyActivityPage(
-                    activeUnitModel: activeUnitModel,
-                  ),
-                ),
-            () => context.navigateTo(
-                  ListClinicalRecordPage(activeUnitModel: activeUnitModel),
-                ),
-            () => StudentListScientificSessionPage(
-                activeUnitModel: activeUnitModel),
-          ],
-        ),
+            itemColor: primaryColor,
+            menus: listStudentMenu(isSglCstShow).sublist(0, 4),
+            onTaps: onTaps(activeUnitModel).sublist(0, 4)),
         const Divider(
           height: 30,
           thickness: 1,
           color: Color(0xFFEFF0F9),
         ),
         ListMenuColumn(
-          itemColor: variant2Color,
-          menus: listStudentMenu.sublist(4, 8),
-          onTaps: [
-            () => context.navigateTo(
-                  StudentSelfReflectionHomePage(
-                    activeUnitModel: activeUnitModel,
-                    credential: widget.credential,
-                  ),
-                ),
-            () => context.navigateTo(
-                  CompetenceHomePage(
-                    unitId: activeUnitModel.unitId!,
-                    model: activeUnitModel,
-                  ),
-                ),
-            () => context.navigateTo(
-                  AssesmentHomePage(
-                    activeUnitModel: activeUnitModel,
-                  ),
-                ),
-            () => context.navigateTo(
-                  SpecialReportHomePage(
-                    activeUnitModel: activeUnitModel,
-                    credential: widget.credential,
-                  ),
-                ),
-          ],
-        ),
-        const Divider(
-          height: 30,
-          thickness: 1,
-          color: Color(0xFFEFF0F9),
-        ),
-        ListMenuColumn(
-          length: 1,
-          itemColor: variant1Color,
-          menus: listStudentMenu.sublist(8, 9),
-          onTaps: [
-            () => context.navigateTo(
-                  ReferencePage(
-                    activeUnitModel: activeUnitModel,
-                  ),
-                ),
-          ],
-        ),
+            itemColor: variant2Color,
+            menus: listStudentMenu(isSglCstShow).sublist(4, 8),
+            onTaps: onTaps(activeUnitModel).sublist(4, 8)),
+        if (onTaps(activeUnitModel).length > 8) ...[
+          const Divider(
+            height: 30,
+            thickness: 1,
+            color: Color(0xFFEFF0F9),
+          ),
+          ListMenuColumn(
+            length: 1,
+            itemColor: variant1Color,
+            menus: listStudentMenu(isSglCstShow).sublist(8, 9),
+            onTaps: onTaps(activeUnitModel).sublist(8, 9),
+          ),
+        ],
       ],
     );
   }
