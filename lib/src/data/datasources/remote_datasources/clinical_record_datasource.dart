@@ -15,6 +15,7 @@ import 'package:elogbook/src/data/models/clinical_records/list_clinical_record_m
 import 'package:elogbook/src/data/models/clinical_records/management_role_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/management_types_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/verify_clinical_record_model.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -441,24 +442,38 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       } else {
         _directory = await getApplicationDocumentsDirectory();
       }
-      String savePath = '${_directory.path}/$filename.pdf';
-      await dio.download(
-        ApiService.baseUrl + '/clinical-records/$crId/attachments',
-        savePath,
-        onReceiveProgress: (received, total) {
-          if (total != -1) {
-            print((received / total * 100).toStringAsFixed(0) + "%");
-          }
-        },
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
+      String? savePath = '${_directory.path}/$filename.pdf';
+      if (Platform.isAndroid) {
+        await dio.download(
+          ApiService.baseUrl + '/clinical-records/$crId/attachments',
+          savePath,
+          onReceiveProgress: (received, total) {
+            if (total != -1) {
+              print((received / total * 100).toStringAsFixed(0) + "%");
+            }
           },
-        ),
-      );
-
-      return savePath;
+          options: Options(
+            headers: {
+              "content-type": 'application/json',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+          ),
+        );
+      } else {
+        savePath = await FileSaver.instance.saveAs(
+          name: filename,
+          ext: 'pdf',
+          link: LinkDetails(
+            link: ApiService.baseUrl + '/clinical-records/$crId/attachments',
+            headers: {
+              "content-type": 'application/json',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+          ),
+          mimeType: MimeType.pdf,
+        );
+      }
+      return savePath ?? '';
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

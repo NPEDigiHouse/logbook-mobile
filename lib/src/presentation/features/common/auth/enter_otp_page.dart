@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -94,7 +96,16 @@ class _EnterOtpPageState extends State<EnterOtpPage> {
                       children: [
                         TextSpan(
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => launchUrlString('googlegmail://'),
+                            ..onTap = () async {
+                              if (Platform.isAndroid) {
+                                launchUrlString('googlegmail://');
+                              } else {
+                                if (await canLaunchUrlString(
+                                    'googlegmail://')) {
+                                  launchUrlString('googlegmail://');
+                                }
+                              }
+                            },
                           text: widget.email,
                           style: textTheme.bodyLarge?.copyWith(
                             color: secondaryColor,

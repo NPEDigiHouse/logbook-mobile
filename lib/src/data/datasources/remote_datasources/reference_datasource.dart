@@ -6,8 +6,8 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/reference/reference_on_list_model.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 abstract class ReferenceDataSource {
   Future<List<ReferenceOnListModel>> getReferenceByUnitId(
@@ -63,24 +63,39 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
       } else {
         _directory = await getApplicationDocumentsDirectory();
       }
-      String savePath = '${_directory.path}/$filename.pdf';
-      await dio.download(
-        ApiService.baseUrl + '/references/$id',
-        savePath,
-        onReceiveProgress: (received, total) {
-          if (total != -1) {
-            print((received / total * 100).toStringAsFixed(0) + "%");
-          }
-        },
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
+      String? savePath = '${_directory.path}/$filename.pdf';
+      if (Platform.isAndroid) {
+        await dio.download(
+          ApiService.baseUrl + '/references/$id',
+          savePath,
+          onReceiveProgress: (received, total) {
+            if (total != -1) {
+              print((received / total * 100).toStringAsFixed(0) + "%");
+            }
           },
-        ),
-      );
+          options: Options(
+            headers: {
+              "content-type": 'application/json',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+          ),
+        );
+      } else {
+        savePath = await FileSaver.instance.saveAs(
+          name: filename,
+          ext: 'pdf',
+          link: LinkDetails(
+            link: ApiService.baseUrl + '/references/$id',
+            headers: {
+              "content-type": 'application/json',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+          ),
+          mimeType: MimeType.pdf,
+        );
+      }
 
-      return savePath;
+      return savePath ?? '';
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
