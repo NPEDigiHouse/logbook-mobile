@@ -2,8 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
-import 'package:elogbook/src/data/models/assessment/final_score_response.dart';
-import 'package:elogbook/src/data/models/students/student_statistic.dart';
 import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
@@ -65,7 +63,7 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
           },
         ),
       );
-      // print(response.statusCode);
+      print(response);
       if (response.statusCode != 200) {
         throw Exception();
       }
@@ -111,6 +109,4 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
       throw ClientFailure(e.toString());
     }
   }
-
-  
 }

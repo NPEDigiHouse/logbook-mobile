@@ -455,6 +455,7 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => StudentCubit(
       dataSource: locator(),
+      dataSourceSp: locator(),
     ),
   );
   locator.registerFactory(

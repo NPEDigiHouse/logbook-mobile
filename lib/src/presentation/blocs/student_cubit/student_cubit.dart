@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/student_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/supervisors_datasource.dart';
 import 'package:elogbook/src/data/models/clinical_records/student_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/student_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
@@ -8,13 +9,17 @@ import 'package:elogbook/src/data/models/students/student_check_in_model.dart';
 import 'package:elogbook/src/data/models/students/student_check_out_model.dart';
 import 'package:elogbook/src/data/models/students/student_profile_post.dart';
 import 'package:elogbook/src/data/models/students/student_statistic.dart';
+import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
 part 'student_state.dart';
 
 class StudentCubit extends Cubit<StudentState> {
   final StudentDataSource dataSource;
-  StudentCubit({required this.dataSource}) : super(StudentState());
+  final SupervisorsDataSource dataSourceSp;
+
+  StudentCubit({required this.dataSource, required this.dataSourceSp})
+      : super(StudentState());
 
   Future<void> getStudentClinicalRecordOfActiveUnit() async {
     try {
@@ -230,6 +235,25 @@ class StudentCubit extends Cubit<StudentState> {
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getAllStudents() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSourceSp.getAllStudents();
+
+      emit(state.copyWith(students: result));
     } catch (e) {
       print(e.toString());
       emit(

@@ -16,6 +16,7 @@ class SupervisorListStudentUnitPage extends StatefulWidget {
 
 class _SupervisorListStudentUnitPageState
     extends State<SupervisorListStudentUnitPage> {
+  bool isLoad = true;
   @override
   void initState() {
     super.initState();
@@ -36,7 +37,10 @@ class _SupervisorListStudentUnitPageState
               BlocProvider.of<SupervisorsCubit>(context).getAllStudentUnit(),
             ]);
           },
-          child: BlocBuilder<SupervisorsCubit, SupervisorsState>(
+          child: BlocConsumer<SupervisorsCubit, SupervisorsState>(
+            listener: (context, state) {
+              
+            },
             builder: (context, state) {
               if (state is Loading) {
                 return CustomLoading();

@@ -27,7 +27,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
     super.initState();
     BlocProvider.of<AssesmentCubit>(context)
       ..getFinalScore(
-          unitId: widget.finalGrade.activeUnitId!,
+          unitId: widget.finalGrade.activeUnitId ?? '',
           studentId: widget.finalGrade.studentId!);
   }
 
@@ -137,6 +137,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                           style: FilledButton.styleFrom(
                               backgroundColor: primaryColor),
                           onPressed: () {
+                            print(state.finalScore!.assesments.toString());
                             showDialog(
                               context: context,
                               barrierLabel: '',
@@ -146,10 +147,16 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                                 unitId: widget.finalGrade.activeUnitId!,
                                 type: FinalScoreType.cbt,
                                 initScore: state.finalScore!.assesments!
-                                        .firstWhere(
-                                            (element) => element.type == 'CBT')
-                                        .score ??
-                                    0,
+                                            .indexWhere((element) => element
+                                                .type!
+                                                .contains("CBT")) !=
+                                        -1
+                                    ? state.finalScore!.assesments!
+                                            .firstWhere((element) =>
+                                                element.type!.contains("CBT"))
+                                            .score ??
+                                        0
+                                    : 0,
                               ),
                             );
                           },
@@ -173,10 +180,16 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                                 unitId: widget.finalGrade.activeUnitId!,
                                 type: FinalScoreType.osce,
                                 initScore: state.finalScore!.assesments!
-                                        .firstWhere(
-                                            (element) => element.type == 'OSCE')
-                                        .score ??
-                                    0,
+                                            .indexWhere((element) => element
+                                                .type!
+                                                .contains("OSCE")) !=
+                                        -1
+                                    ? state.finalScore!.assesments!
+                                            .firstWhere((element) =>
+                                                element.type!.contains("OSCE"))
+                                            .score ??
+                                        0
+                                    : 0,
                               ),
                             );
                           },

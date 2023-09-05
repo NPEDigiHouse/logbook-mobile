@@ -5,7 +5,6 @@ import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/domain/usecases/supervisor_usecases/get_all_supervisors_usecase.dart';
-import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 
@@ -44,30 +43,7 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
     return image;
   }
 
-  Future<void> getAllStudents() async {
-    try {
-      emit(Loading());
-
-      final result = await dataSource.getAllStudents();
-
-      // for (var element in result) {
-      //   final image =
-      //       await profileDataSource.getProfilePic(userId: element.userId!);
-      //   element.profileImage = image;
-      //   print(image);
-      // }
-
-      emit(FetchStudentSuccess(students: result));
-    } catch (e) {
-      print(e.toString());
-      emit(
-        Failed(
-          message: e.toString(),
-        ),
-      );
-    }
-  }
-
+  
   Future<void> getAllStudentUnit() async {
     try {
       emit(Loading());

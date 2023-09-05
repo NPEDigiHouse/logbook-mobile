@@ -12,6 +12,7 @@ class StudentState {
   final bool successVerifyCheckIn;
   final bool successVerifyCheckOut;
   final StudentById? studentDetail;
+  final List<SupervisorStudent>? students;
 
   StudentState({
     this.clinicalRecordResponse,
@@ -25,6 +26,7 @@ class StudentState {
     this.studentsCheckOut,
     this.successVerifyCheckIn = false,
     this.successVerifyCheckOut = false,
+    this.students,
   });
 
   StudentState copyWith({
@@ -36,6 +38,7 @@ class StudentState {
     bool successUpdateStudentProfile = false,
     List<StudentCheckInModel>? studentsCheckIn,
     List<StudentCheckOutModel>? studentsCheckOut,
+    List<SupervisorStudent>? students,
     StudentById? studentDetail,
     StudentStatistic? studentStatistic,
     bool successVerifyCheckIn = false,
@@ -55,6 +58,7 @@ class StudentState {
         studentDetail: studentDetail ?? this.studentDetail,
         studentsCheckOut: studentsCheckOut ?? this.studentsCheckOut,
         successVerifyCheckOut: successVerifyCheckOut,
+        students: students ?? this.students,
         studentStatistic: studentStatistic ?? this.studentStatistic);
   }
 }

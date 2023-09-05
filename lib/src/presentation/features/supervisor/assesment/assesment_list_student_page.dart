@@ -4,6 +4,8 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/custom_shimmer.dart';
@@ -31,7 +33,7 @@ class _SupervisorAssesmentStudentPageState
   void initState() {
     super.initState();
     Future.microtask(
-        () => BlocProvider.of<SupervisorsCubit>(context)..getAllStudents());
+        () => BlocProvider.of<StudentCubit>(context)..getAllStudents());
   }
 
   @override
@@ -45,32 +47,24 @@ class _SupervisorAssesmentStudentPageState
           onRefresh: () async {
             isMounted = false;
             await Future.wait(
-                [BlocProvider.of<SupervisorsCubit>(context).getAllStudents()]);
+                [BlocProvider.of<StudentCubit>(context).getAllStudents()]);
           },
           child: ValueListenableBuilder(
               valueListenable: listData,
               builder: (context, s, _) {
-                return BlocConsumer<SupervisorsCubit, SupervisorsState>(
+                return BlocConsumer<StudentCubit, StudentState>(
                   listener: (context, state) {
-                    if (state is FetchStudentSuccess) {
+                    if (state.students != null) {
                       if (!isMounted) {
                         Future.microtask(() {
-                          listData.value = [...state.students];
+                          listData.value = [...state.students!];
                         });
                         isMounted = true;
                       }
                     }
                   },
                   builder: (context, state) {
-                    if (state is Loading) {
-                      return CustomLoading();
-                    }
-                    if (state is Error) {
-                      return Center(
-                        child: Text('Error'),
-                      );
-                    }
-                    if (state is FetchStudentSuccess) {
+                    if (state.students != null) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CustomScrollView(
@@ -90,7 +84,7 @@ class _SupervisorAssesmentStudentPageState
                                       .toList();
                                   if (value.isEmpty) {
                                     listData.value.clear();
-                                    listData.value = [...state.students];
+                                    listData.value = [...state.students!];
                                   } else {
                                     listData.value = [...data];
                                   }
@@ -119,7 +113,7 @@ class _SupervisorAssesmentStudentPageState
                         ),
                       );
                     }
-                    return SizedBox();
+                    return CustomLoading();
                   },
                 );
               }),

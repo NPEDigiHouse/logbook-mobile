@@ -3,6 +3,8 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/resident_menu_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -26,7 +28,7 @@ class _ListResidentPageState extends State<ListResidentPage> {
   void initState() {
     super.initState();
     Future.microtask(
-        () => BlocProvider.of<SupervisorsCubit>(context)..getAllStudents());
+        () => BlocProvider.of<StudentCubit>(context)..getAllStudents());
   }
 
   @override
@@ -37,32 +39,24 @@ class _ListResidentPageState extends State<ListResidentPage> {
           onRefresh: () async {
             isMounted = false;
             await Future.wait(
-                [BlocProvider.of<SupervisorsCubit>(context).getAllStudents()]);
+                [BlocProvider.of<StudentCubit>(context).getAllStudents()]);
           },
           child: ValueListenableBuilder(
               valueListenable: listStudent,
               builder: (context, s, _) {
-                return BlocConsumer<SupervisorsCubit, SupervisorsState>(
+                return BlocConsumer<StudentCubit, StudentState>(
                   listener: (context, state) {
-                    if (state is FetchStudentSuccess) {
+                    if (state.students != null) {
                       if (!isMounted) {
                         Future.microtask(() {
-                          listStudent.value = [...state.students];
+                          listStudent.value = [...state.students!];
                         });
                         isMounted = true;
                       }
                     }
                   },
                   builder: (context, state) {
-                    if (state is Loading) {
-                      return CustomLoading();
-                    }
-                    if (state is Error) {
-                      return Center(
-                        child: Text('Error'),
-                      );
-                    }
-                    if (state is FetchStudentSuccess)
+                    if (state.students != null)
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CustomScrollView(
@@ -96,7 +90,7 @@ class _ListResidentPageState extends State<ListResidentPage> {
                                       .toList();
                                   if (value.isEmpty) {
                                     listStudent.value.clear();
-                                    listStudent.value = [...state.students];
+                                    listStudent.value = [...state.students!];
                                   } else {
                                     listStudent.value = [...data];
                                   }
@@ -124,7 +118,7 @@ class _ListResidentPageState extends State<ListResidentPage> {
                           ],
                         ),
                       );
-                    return SizedBox();
+                    return CustomLoading();
                   },
                 );
               }),
