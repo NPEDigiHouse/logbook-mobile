@@ -67,7 +67,7 @@ Map<String, dynamic> _$ExaminationsModelToJson(ExaminationsModel instance) =>
 DiagnosisModel _$DiagnosisModelFromJson(Map<String, dynamic> json) =>
     DiagnosisModel(
       affectedPart: json['affectedPart'] as String?,
-      diagnosisType: (json['diagnosisType'] as List<dynamic>?)
+      diagnosesType: (json['diagnosesType'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
     );
@@ -75,7 +75,7 @@ DiagnosisModel _$DiagnosisModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$DiagnosisModelToJson(DiagnosisModel instance) =>
     <String, dynamic>{
       'affectedPart': instance.affectedPart,
-      'diagnosisType': instance.diagnosisType,
+      'diagnosesType': instance.diagnosesType,
     };
 
 ManagementModel _$ManagementModelFromJson(Map<String, dynamic> json) =>

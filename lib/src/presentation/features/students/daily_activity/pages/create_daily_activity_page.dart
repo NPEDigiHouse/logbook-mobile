@@ -94,6 +94,8 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                       _supervisors.addAll(state.supervisors);
                     }
                     return DropdownButtonFormField(
+                      isExpanded: true,
+
                       hint: Text('Supervisor'),
                       items: _supervisors
                           .map(
@@ -128,6 +130,8 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                   child: Builder(builder: (context) {
                     List<String> _type = ['Attend', 'Sick'];
                     return DropdownButtonFormField(
+                      isExpanded: true,
+
                       hint: Text('Status'),
                       items: _type
                           .map(
@@ -190,6 +194,8 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                         _activityLocations.addAll(state.activityNames!);
                       }
                       return DropdownButtonFormField(
+                      isExpanded: true,
+
                         hint: Text('Activity'),
                         items: _activityLocations
                             .map(

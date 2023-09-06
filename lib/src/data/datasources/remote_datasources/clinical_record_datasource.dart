@@ -80,7 +80,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           if (clinicalRecordPostModel.attachment != null)
             'attachment': clinicalRecordPostModel.attachment,
           'examinations': clinicalRecordPostModel.examinations,
-          'diagnosiss': clinicalRecordPostModel.diagnosiss,
+          'diagnosiss': clinicalRecordPostModel.diagnosess,
           'managements': clinicalRecordPostModel.managements,
         },
       );

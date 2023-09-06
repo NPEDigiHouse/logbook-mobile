@@ -59,11 +59,11 @@ class ExaminationsModel {
 @JsonSerializable()
 class DiagnosisModel {
   String? affectedPart;
-  List<String>? diagnosisType;
+  List<String>? diagnosesType;
 
   DiagnosisModel({
     this.affectedPart,
-    this.diagnosisType,
+    this.diagnosesType,
   });
 
   Map<String, dynamic> toJson() => _$DiagnosisModelToJson(this);

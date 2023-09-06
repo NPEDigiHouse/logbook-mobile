@@ -13,12 +13,12 @@ class ClinicalRecordPostModel {
   String? supervisorId;
   String? attachment;
   List<ExaminationsPostModel>? examinations;
-  List<DiagnosisPostModel>? diagnosiss;
+  List<DiagnosisPostModel>? diagnosess;
   List<ManagementPostModel>? managements;
 
   ClinicalRecordPostModel({
     this.attachment,
-    this.diagnosiss,
+    this.diagnosess,
     this.examinations,
     this.gender,
     this.managements,
@@ -35,11 +35,9 @@ class ClinicalRecordPostModel {
 
 @JsonSerializable()
 class ExaminationsPostModel {
-  String? affectedPartId;
   List<String>? examinationTypeId;
 
   ExaminationsPostModel({
-    this.affectedPartId,
     this.examinationTypeId,
   });
 
@@ -50,12 +48,10 @@ class ExaminationsPostModel {
 
 @JsonSerializable()
 class DiagnosisPostModel {
-  String? affectedPartId;
-  List<String>? diagnosisTypeId;
+  List<String>? diagnosesTypeId;
 
   DiagnosisPostModel({
-    this.affectedPartId,
-    this.diagnosisTypeId,
+    this.diagnosesTypeId,
   });
 
   Map<String, dynamic> toJson() => _$DiagnosisPostModelToJson(this);
@@ -65,11 +61,9 @@ class DiagnosisPostModel {
 
 @JsonSerializable()
 class ManagementPostModel {
-  String? affectedPartId;
   List<ManagementTypeRole>? management;
 
   ManagementPostModel({
-    this.affectedPartId,
     this.management,
   });
 

@@ -2,6 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/clinical_record/widgets/verify_dialog.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SupervisorDetailClinicalRecordPage extends StatefulWidget {
   final String id;
@@ -24,6 +26,14 @@ class SupervisorDetailClinicalRecordPage extends StatefulWidget {
 
 class _SupervisorDetailClinicalRecordPageState
     extends State<SupervisorDetailClinicalRecordPage> {
+  Future<bool> checkAndRequestPermission() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+    }
+    return status.isGranted;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -265,13 +275,6 @@ class _SupervisorDetailClinicalRecordPageState
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  e.affectedPart ?? '',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: primaryTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
                                 if (e.examinationType != null)
                                   ...e.examinationType!
                                       .map(
@@ -296,7 +299,7 @@ class _SupervisorDetailClinicalRecordPageState
                                                 b,
                                                 style: textTheme.bodyMedium
                                                     ?.copyWith(
-                                                  color: secondaryTextColor,
+                                                  color: primaryTextColor,
                                                 ),
                                               ),
                                             ),
@@ -352,15 +355,8 @@ class _SupervisorDetailClinicalRecordPageState
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  e.affectedPart ?? '',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: primaryTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                if (e.diagnosisType != null)
-                                  ...e.diagnosisType!
+                                if (e.diagnosesType != null)
+                                  ...e.diagnosesType!
                                       .map(
                                         (b) => Row(
                                           crossAxisAlignment:
@@ -383,7 +379,7 @@ class _SupervisorDetailClinicalRecordPageState
                                                 b,
                                                 style: textTheme.bodyMedium
                                                     ?.copyWith(
-                                                  color: secondaryTextColor,
+                                                  color: primaryTextColor,
                                                 ),
                                               ),
                                             ),
@@ -439,13 +435,6 @@ class _SupervisorDetailClinicalRecordPageState
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  e.affectedPart ?? '',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: primaryTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
                                 if (e.management != null)
                                   ...e.management!
                                       .map(
@@ -470,7 +459,7 @@ class _SupervisorDetailClinicalRecordPageState
                                                 '${b.managementType} (${b.managementRole})',
                                                 style: textTheme.bodyMedium
                                                     ?.copyWith(
-                                                  color: secondaryTextColor,
+                                                  color: primaryTextColor,
                                                 ),
                                               ),
                                             ),
@@ -487,147 +476,165 @@ class _SupervisorDetailClinicalRecordPageState
                     SizedBox(
                       height: 24,
                     ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 24),
-                      padding: EdgeInsets.only(
-                        bottom: 20,
-                        left: 20,
-                        right: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(0, 0),
-                              spreadRadius: 0,
-                              blurRadius: 6,
-                              color: Color(0xFFD4D4D4).withOpacity(.25)),
-                          BoxShadow(
-                              offset: Offset(0, 4),
-                              spreadRadius: 0,
-                              blurRadius: 24,
-                              color: Color(0xFFD4D4D4).withOpacity(.25)),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FormSectionHeader(
-                              label: 'Upload File',
-                              pathPrefix: 'icon_attachment.svg',
-                              padding: 0),
-                          ItemDivider(),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.file_present_outlined,
-                                color: secondaryTextColor,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  state.detailClinicalRecordModel!.filename ??
-                                      '',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: secondaryTextColor,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                    if (state.detailClinicalRecordModel!.attachments !=
+                        null) ...[
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 24),
+                        padding: EdgeInsets.only(
+                          bottom: 20,
+                          left: 20,
+                          right: 20,
+                        ),
+                        decoration: BoxDecoration(
+                          color: scaffoldBackgroundColor,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(0, 0),
+                                spreadRadius: 0,
+                                blurRadius: 6,
+                                color: Color(0xFFD4D4D4).withOpacity(.25)),
+                            BoxShadow(
+                                offset: Offset(0, 4),
+                                spreadRadius: 0,
+                                blurRadius: 24,
+                                color: Color(0xFFD4D4D4).withOpacity(.25)),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FormSectionHeader(
+                                label: 'Upload File',
+                                pathPrefix: 'icon_attachment.svg',
+                                padding: 0),
+                            ItemDivider(),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.file_present_outlined,
+                                  color: secondaryTextColor,
                                 ),
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              SizedBox(
-                                height: 24,
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                  ),
-                                  onPressed: () {},
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Expanded(
                                   child: Text(
-                                    'Download',
-                                    style: textTheme.bodySmall?.copyWith(
-                                      color: primaryColor,
+                                    state.detailClinicalRecordModel!.filename ??
+                                        'data.pdf',
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      color: secondaryTextColor,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                SizedBox(
+                                  height: 24,
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                    ),
+                                    onPressed: () async {
+                                      final hasPermission =
+                                          await checkAndRequestPermission();
+                                      if (hasPermission) {
+                                        BlocProvider.of<ClinicalRecordCubit>(
+                                            context)
+                                          ..crDownloadPath(
+                                              id: widget.id,
+                                              filaname: state
+                                                      .detailClinicalRecordModel!
+                                                      .filename ??
+                                                  'data');
+                                      }
+                                    },
+                                    child: Text(
+                                      'Download',
+                                      style: textTheme.bodySmall?.copyWith(
+                                        color: primaryColor,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 24),
-                      padding: EdgeInsets.only(
-                        bottom: 20,
-                        left: 20,
-                        right: 20,
+                      SizedBox(
+                        height: 24,
                       ),
-                      decoration: BoxDecoration(
-                        color: scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(0, 0),
-                              spreadRadius: 0,
-                              blurRadius: 6,
-                              color: Color(0xFFD4D4D4).withOpacity(.25)),
-                          BoxShadow(
-                              offset: Offset(0, 4),
-                              spreadRadius: 0,
-                              blurRadius: 24,
-                              color: Color(0xFFD4D4D4).withOpacity(.25)),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FormSectionHeader(
-                              label: 'Notes',
-                              pathPrefix: 'icon_note.svg',
-                              padding: 0),
-                          ItemDivider(),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                              'Penatalaksanaan: - MRI Kepala - Lumbal Pungsi - Ergicolin  1 cth/24 jam / oral loram ipsum lorem ipsum lorem'),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 24,
-                                child: Text(
-                                  'Show more',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: primaryColor,
-                                  ),
-                                ),
-                              ),
-                              Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: primaryColor,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    ],
+
+                    // Container(
+                    //   margin: EdgeInsets.symmetric(horizontal: 24),
+                    //   padding: EdgeInsets.only(
+                    //     bottom: 20,
+                    //     left: 20,
+                    //     right: 20,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //     color: scaffoldBackgroundColor,
+                    //     borderRadius: BorderRadius.circular(12),
+                    //     boxShadow: [
+                    //       BoxShadow(
+                    //           offset: Offset(0, 0),
+                    //           spreadRadius: 0,
+                    //           blurRadius: 6,
+                    //           color: Color(0xFFD4D4D4).withOpacity(.25)),
+                    //       BoxShadow(
+                    //           offset: Offset(0, 4),
+                    //           spreadRadius: 0,
+                    //           blurRadius: 24,
+                    //           color: Color(0xFFD4D4D4).withOpacity(.25)),
+                    //     ],
+                    //   ),
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       FormSectionHeader(
+                    //           label: 'Notes',
+                    //           pathPrefix: 'icon_note.svg',
+                    //           padding: 0),
+                    //       ItemDivider(),
+                    //       SizedBox(
+                    //         height: 16,
+                    //       ),
+                    //       Text(
+                    //           state.detailClinicalRecordModel.),
+                    //       SizedBox(
+                    //         height: 8,
+                    //       ),
+                    //       Row(
+                    //         crossAxisAlignment: CrossAxisAlignment.center,
+                    //         children: [
+                    //           SizedBox(
+                    //             height: 24,
+                    //             child: Text(
+                    //               'Show more',
+                    //               style: textTheme.bodyMedium?.copyWith(
+                    //                 color: primaryColor,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Icon(
+                    //             Icons.keyboard_arrow_down_rounded,
+                    //             color: primaryColor,
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+
                     SizedBox(
                       height: 24,
                     ),

@@ -4,6 +4,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier2.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_temp.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
@@ -68,7 +69,7 @@ class _CreateClinicalRecordThirdPageState
     return BlocListener<ClinicalRecordCubit, ClinicalRecordState>(
       listener: (context, state) {
         if (state.clinicalRecordPostSuccess) {
-          context.read<ClinicalRecordDataNotifier>()..reset();
+          context.read<ClinicalRecordDataNotifier2>()..reset();
           BlocProvider.of<StudentCubit>(context)
             ..getStudentClinicalRecordOfActiveUnit();
 

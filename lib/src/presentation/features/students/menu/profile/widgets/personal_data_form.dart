@@ -205,6 +205,8 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                                   .id!;
                                       }
                                       return DropdownButtonFormField(
+                      isExpanded: true,
+
                                         hint: Text(labels[i]),
                                         items: _supervisors
                                             .map(

@@ -281,13 +281,6 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  e.affectedPart ?? '-',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: primaryTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
                                 if (e.examinationType != null)
                                   ...e.examinationType!
                                       .map(
@@ -312,7 +305,7 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                                                 b,
                                                 style: textTheme.bodyMedium
                                                     ?.copyWith(
-                                                  color: secondaryTextColor,
+                                                  color: primaryTextColor,
                                                 ),
                                               ),
                                             ),
@@ -368,15 +361,8 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  e.affectedPart ?? '-',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: primaryTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                if (e.diagnosisType != null)
-                                  ...e.diagnosisType!
+                                if (e.diagnosesType != null)
+                                  ...e.diagnosesType!
                                       .map(
                                         (b) => Row(
                                           crossAxisAlignment:
@@ -399,7 +385,7 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                                                 b,
                                                 style: textTheme.bodyMedium
                                                     ?.copyWith(
-                                                  color: secondaryTextColor,
+                                                  color: primaryTextColor,
                                                 ),
                                               ),
                                             ),
@@ -455,13 +441,6 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  e.affectedPart ?? '-',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: primaryTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
                                 if (e.management != null)
                                   ...e.management!
                                       .map(
@@ -486,7 +465,7 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                                                 '${b.managementType} (${b.managementRole})',
                                                 style: textTheme.bodyMedium
                                                     ?.copyWith(
-                                                  color: secondaryTextColor,
+                                                  color: primaryTextColor,
                                                 ),
                                               ),
                                             ),
@@ -503,7 +482,8 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                     SizedBox(
                       height: 24,
                     ),
-                    if (state.detailClinicalRecordModel!.attachments != null)
+                    if (state.detailClinicalRecordModel!.attachments !=
+                        null) ...[
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 24),
                         padding: EdgeInsets.only(
@@ -595,10 +575,10 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                           ],
                         ),
                       ),
-                    
-                    SizedBox(
-                      height: 24,
-                    ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                    ],
                     // Container(
                     //   margin: EdgeInsets.symmetric(horizontal: 24),
                     //   padding: EdgeInsets.only(

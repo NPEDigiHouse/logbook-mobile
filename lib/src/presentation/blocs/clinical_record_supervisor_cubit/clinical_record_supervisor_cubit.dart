@@ -21,6 +21,9 @@ class ClinicalRecordSupervisorCubit
       ));
 
       final result = await datasource.getClinicalRecordsBySupervisor();
+      result.sort((a, b) =>
+          (b.time ?? DateTime.now()).compareTo(a.time ?? DateTime.now()));
+
       try {
         emit(state.copyWith(
           clinicalRecords: result,

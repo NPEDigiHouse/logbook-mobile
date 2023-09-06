@@ -7,6 +7,7 @@ import 'package:elogbook/src/data/models/clinical_records/management_types_model
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/pages/create_clinical_record_third_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier2.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_temp.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/diagnostics_adaptive_form.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/examination_adaptive_form.dart';
@@ -28,7 +29,6 @@ class CreateClinicalRecordSecondPage extends StatefulWidget {
 
 class _CreateClinicalRecordSecondPageState
     extends State<CreateClinicalRecordSecondPage> {
-  List<AffectedPart> affectedParts = [];
   List<ExaminationTypesModel> examTypes = [];
   List<ManagementTypesModel> managementTypes = [];
   List<ManagementRoleModel> managementRoles = [];
@@ -38,7 +38,6 @@ class _CreateClinicalRecordSecondPageState
   void initState() {
     Future.microtask(() {
       BlocProvider.of<ClinicalRecordCubit>(context)
-        ..getAffectedParts(unitId: widget.unitId)
         ..getExaminationTypes(unitId: widget.unitId)
         ..getDiagnosisTypes(unitId: widget.unitId)
         ..getManagementTypes(unitId: widget.unitId)
@@ -58,14 +57,6 @@ class _CreateClinicalRecordSecondPageState
           padding: EdgeInsets.only(bottom: 20),
           child: BlocBuilder<ClinicalRecordCubit, ClinicalRecordState>(
             builder: (context, state) {
-              if (state.affectedParts != null) {
-                if (affectedParts.isEmpty) {
-                  affectedParts.addAll(state.affectedParts!);
-                } else {
-                  affectedParts = state.affectedParts!;
-                }
-                ;
-              }
               if (state.examinationTypes != null) {
                 if (examTypes.isEmpty) {
                   examTypes.addAll(state.examinationTypes!);
@@ -98,7 +89,6 @@ class _CreateClinicalRecordSecondPageState
                   ),
                   if (examTypes.isNotEmpty)
                     ExaminationAdaptiveForm(
-                      affectedParts: affectedParts,
                       iconPath: 'icon_examination.svg',
                       title: 'Examination',
                       clinicalRecordData: widget.clinicalRecordData,
@@ -108,7 +98,6 @@ class _CreateClinicalRecordSecondPageState
                   SectionDivider(),
                   if (state.diagnosisTypes != null)
                     DiagnosticsAdaptiveForm(
-                      affectedParts: affectedParts,
                       iconPath: 'icon_diagnosis.svg',
                       title: 'Diagnosis',
                       clinicalRecordData: widget.clinicalRecordData,
@@ -122,7 +111,6 @@ class _CreateClinicalRecordSecondPageState
                       iconPath: 'icon_management.svg',
                       unitId: widget.unitId,
                       title: 'Management',
-                      affectedParts: affectedParts,
                       clinicalRecordData: widget.clinicalRecordData,
                       managementRole: managementRoles,
                       managementTypes: managementTypes,
@@ -134,10 +122,11 @@ class _CreateClinicalRecordSecondPageState
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: FilledButton(
                       onPressed: () {
-                        final data = context.read<ClinicalRecordDataNotifier>();
+                        final data =
+                            context.read<ClinicalRecordDataNotifier2>();
                         widget.clinicalRecordData.tempAddSecondData(
-                          data.getManagementPost(),
-                          data.getDiagnosisPost(),
+                          data.getManagementsPost(),
+                          data.getDiagnosticsPost(),
                           data.getExaminationPost(),
                         );
                         context.navigateTo(

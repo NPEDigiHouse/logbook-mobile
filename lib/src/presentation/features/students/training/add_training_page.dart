@@ -34,6 +34,8 @@ class AddTrainingPage extends StatelessWidget {
                 Builder(builder: (context) {
                   List<String> _type = ['Noor', 'Jasmine'];
                   return DropdownButtonFormField(
+                      isExpanded: true,
+
                     hint: Text('Training Type'),
                     items: _type
                         .map(
@@ -49,6 +51,8 @@ class AddTrainingPage extends StatelessWidget {
                 Builder(builder: (context) {
                   List<String> _type = ['Noor', 'Jasmine'];
                   return DropdownButtonFormField(
+                      isExpanded: true,
+
                     hint: Text('Supervisor'),
                     items: _type
                         .map(
@@ -64,6 +68,8 @@ class AddTrainingPage extends StatelessWidget {
                 Builder(builder: (context) {
                   List<String> _type = ['Noor', 'Jasmine'];
                   return DropdownButtonFormField(
+                      isExpanded: true,
+
                     hint: Text('Assistant'),
                     items: _type
                         .map(

@@ -1,6 +1,4 @@
-import 'package:elogbook/src/data/models/clinical_records/affected_part_model.dart';
 import 'package:elogbook/src/data/models/clinical_records/clinical_record_post_model.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/widgets/build_examination.dart';
 
 class ClinicalRecordData {
   ClinicalRecordPostModel _clinicalRecordPostModel = ClinicalRecordPostModel();
@@ -21,7 +19,7 @@ class ClinicalRecordData {
       List<DiagnosisPostModel> diagnosis,
       List<ExaminationsPostModel> examinations) {
     _clinicalRecordPostModel.managements = managements;
-    _clinicalRecordPostModel.diagnosiss = diagnosis;
+    _clinicalRecordPostModel.diagnosess = diagnosis;
     _clinicalRecordPostModel.examinations =examinations;
   }
 

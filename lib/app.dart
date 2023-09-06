@@ -19,6 +19,7 @@ import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cub
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/splash/splash_page.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
+import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier2.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => di.locator<HistoryCubit>()),
         ChangeNotifierProvider(create: (_) => di.locator<MiniCexProvider>()),
         ChangeNotifierProvider(
-            create: (_) => di.locator<ClinicalRecordDataNotifier>()),
+            create: (_) => di.locator<ClinicalRecordDataNotifier2>()),
         ChangeNotifierProvider(
             create: (_) => di.locator<ScientificAssignmentProvider>()),
       ],

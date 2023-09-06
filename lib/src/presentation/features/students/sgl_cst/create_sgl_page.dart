@@ -153,6 +153,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                                 children: [
                                   for (int i = 0; i < value.length; i++) ...[
                                     DropdownButtonFormField(
+                                      
                                       hint: Text('Topics'),
                                       isExpanded: true,
                                       items: _topics

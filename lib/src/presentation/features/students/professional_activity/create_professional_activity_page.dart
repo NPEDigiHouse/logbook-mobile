@@ -48,6 +48,8 @@ class _CreateProfessionalActivityPageState
                   Builder(builder: (context) {
                     List<String> _type = ['Noor', 'Jasmine'];
                     return DropdownButtonFormField(
+                      isExpanded: true,
+
                       hint: Text('Supervisor'),
                       items: _type
                           .map(
@@ -89,6 +91,8 @@ class _CreateProfessionalActivityPageState
                   Builder(builder: (context) {
                     List<String> _type = ['Presenter', 'Audience'];
                     return DropdownButtonFormField(
+                      isExpanded: true,
+
                       hint: Text('Role'),
                       items: _type
                           .map(

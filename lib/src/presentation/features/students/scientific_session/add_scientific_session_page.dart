@@ -176,6 +176,8 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                     spacing: 14,
                     children: [
                       DropdownButtonFormField(
+                      isExpanded: true,
+
                         hint: Text('Session Type'),
                         items: _sessionTypes
                             .map(
@@ -211,6 +213,8 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                         controller: referenceController,
                       ),
                       DropdownButtonFormField(
+                      isExpanded: true,
+
                         hint: Text('Role'),
                         items: _roles
                             .map(

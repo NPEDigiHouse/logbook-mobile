@@ -90,6 +90,8 @@ class _CreateClinicalRecordFirstPageState
                       }
                       return DropdownButtonFormField(
                         hint: Text('Supervisor'),
+                      isExpanded: true,
+
                         items: _supervisors
                             .map(
                               (e) => DropdownMenuItem(
@@ -133,6 +135,8 @@ class _CreateClinicalRecordFirstPageState
                     Builder(builder: (context) {
                       List<String> _genderType = ['MALE', 'FEMALE'];
                       return DropdownButtonFormField(
+                      isExpanded: true,
+
                         items: _genderType
                             .map(
                               (e) => DropdownMenuItem(

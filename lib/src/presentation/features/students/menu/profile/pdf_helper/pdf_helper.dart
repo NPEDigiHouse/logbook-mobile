@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:open_file/open_file.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
@@ -199,14 +198,6 @@ class PdfApi {
 
     await file.writeAsBytes(bytes);
 
-    openFile(file);
-
     return file;
-  }
-
-  static Future openFile(File file) async {
-    final url = file.path;
-    print(url);
-    await OpenFile.open(url);
   }
 }

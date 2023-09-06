@@ -76,6 +76,8 @@ class _CreateCstPageState extends State<CreateCstPage> {
                       _supervisors.addAll(state.supervisors);
                     }
                     return DropdownButtonFormField(
+                      isExpanded: true,
+
                       hint: Text('Supervisor'),
                       items: _supervisors
                           .map(
@@ -152,6 +154,8 @@ class _CreateCstPageState extends State<CreateCstPage> {
                                 children: [
                                   for (int i = 0; i < value.length; i++) ...[
                                     DropdownButtonFormField(
+                      isExpanded: true,
+
                                       hint: Text('Topics'),
                                       items: _topics
                                           .map(

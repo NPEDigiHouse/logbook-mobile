@@ -137,6 +137,7 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                       _topics.addAll(state.topics!);
                     }
                     return DropdownButtonFormField(
+                      isExpanded: true,
                       hint: Text(
                         'Topic',
                       ),
@@ -184,6 +185,7 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                       _supervisors.addAll(state.supervisors);
                     }
                     return DropdownButtonFormField(
+                      isExpanded: true,
                       hint: Text('Supervisor'),
                       items: _supervisors
                           .map(

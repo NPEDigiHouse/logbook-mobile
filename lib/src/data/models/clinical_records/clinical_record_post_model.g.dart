@@ -10,7 +10,7 @@ ClinicalRecordPostModel _$ClinicalRecordPostModelFromJson(
         Map<String, dynamic> json) =>
     ClinicalRecordPostModel(
       attachment: json['attachment'] as String?,
-      diagnosiss: (json['diagnosiss'] as List<dynamic>?)
+      diagnosess: (json['diagnosess'] as List<dynamic>?)
           ?.map((e) => DiagnosisPostModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       examinations: (json['examinations'] as List<dynamic>?)
@@ -41,14 +41,13 @@ Map<String, dynamic> _$ClinicalRecordPostModelToJson(
       'supervisorId': instance.supervisorId,
       'attachment': instance.attachment,
       'examinations': instance.examinations,
-      'diagnosiss': instance.diagnosiss,
+      'diagnosess': instance.diagnosess,
       'managements': instance.managements,
     };
 
 ExaminationsPostModel _$ExaminationsPostModelFromJson(
         Map<String, dynamic> json) =>
     ExaminationsPostModel(
-      affectedPartId: json['affectedPartId'] as String?,
       examinationTypeId: (json['examinationTypeId'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -57,27 +56,23 @@ ExaminationsPostModel _$ExaminationsPostModelFromJson(
 Map<String, dynamic> _$ExaminationsPostModelToJson(
         ExaminationsPostModel instance) =>
     <String, dynamic>{
-      'affectedPartId': instance.affectedPartId,
       'examinationTypeId': instance.examinationTypeId,
     };
 
 DiagnosisPostModel _$DiagnosisPostModelFromJson(Map<String, dynamic> json) =>
     DiagnosisPostModel(
-      affectedPartId: json['affectedPartId'] as String?,
-      diagnosisTypeId: (json['diagnosisTypeId'] as List<dynamic>?)
+      diagnosesTypeId: (json['diagnosesTypeId'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
     );
 
 Map<String, dynamic> _$DiagnosisPostModelToJson(DiagnosisPostModel instance) =>
     <String, dynamic>{
-      'affectedPartId': instance.affectedPartId,
-      'diagnosisTypeId': instance.diagnosisTypeId,
+      'diagnosesTypeId': instance.diagnosesTypeId,
     };
 
 ManagementPostModel _$ManagementPostModelFromJson(Map<String, dynamic> json) =>
     ManagementPostModel(
-      affectedPartId: json['affectedPartId'] as String?,
       management: (json['management'] as List<dynamic>?)
           ?.map((e) => ManagementTypeRole.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -86,7 +81,6 @@ ManagementPostModel _$ManagementPostModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ManagementPostModelToJson(
         ManagementPostModel instance) =>
     <String, dynamic>{
-      'affectedPartId': instance.affectedPartId,
       'management': instance.management,
     };
 

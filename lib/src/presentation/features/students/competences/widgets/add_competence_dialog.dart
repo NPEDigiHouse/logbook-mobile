@@ -147,7 +147,6 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                               caseId = null;
                             }
                           },
-                          
                           hint: widget.type == CompetenceType.caseType
                               ? 'Cases'
                               : 'Skills',
@@ -216,6 +215,7 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                       ];
 
                       return DropdownButtonFormField(
+                        isExpanded: true,
                         hint: Text('Description'),
                         items: _desc
                             .map(

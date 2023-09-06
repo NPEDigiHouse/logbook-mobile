@@ -160,6 +160,8 @@ class _HistoryFilterBottomSheetState extends State<HistoryFilterBottomSheet> {
               ),
               const SizedBox(height: 10),
               DropdownButtonFormField(
+                      isExpanded: true,
+
                 value: _activities.first,
                 items: _activities.map((e) {
                   return DropdownMenuItem(
