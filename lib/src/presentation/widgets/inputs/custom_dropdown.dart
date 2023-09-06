@@ -2,7 +2,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-class CustomDropdown extends StatefulWidget {
+class CustomDropdown<T> extends StatefulWidget {
   final String hint;
   final List<dynamic> Function(String pattern) onCallback;
   final Widget Function(dynamic suggestion) child;

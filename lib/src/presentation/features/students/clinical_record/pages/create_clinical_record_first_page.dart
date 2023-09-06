@@ -7,6 +7,7 @@ import 'package:elogbook/src/presentation/features/students/clinical_record/prov
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/build_text_field.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -88,24 +89,42 @@ class _CreateClinicalRecordFirstPageState
                         _supervisors.clear();
                         _supervisors.addAll(state.supervisors);
                       }
-                      return DropdownButtonFormField(
-                        hint: Text('Supervisor'),
-                      isExpanded: true,
+                      return CustomDropdown<SupervisorModel>(
+                          onSubmit: (text, controller) {
+                            if (_supervisors.indexWhere((element) =>
+                                    element.fullName == text.trim()) ==
+                                -1) {
+                              controller.clear();
+                              supervisorId = '';
+                            }
+                          },
+                          hint: 'Supervisor',
+                          onCallback: (pattern) {
+                            final temp = _supervisors
+                                .where((competence) =>
+                                    (competence.fullName ?? 'unknown')
+                                        .toLowerCase()
+                                        .trim()
+                                        .contains(pattern.toLowerCase()))
+                                .toList();
 
-                        items: _supervisors
-                            .map(
-                              (e) => DropdownMenuItem(
-                                child: Text(e.fullName!),
-                                value: e,
+                            return pattern.isEmpty ? _supervisors : temp;
+                          },
+                          child: (suggestion) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16,
                               ),
-                            )
-                            .toList(),
-                        onChanged: (v) {
-                          if (v != null) supervisorId = v.id!;
-                          ;
-                        },
-                        value: null,
-                      );
+                              child: Text(suggestion?.fullName ?? ''),
+                            );
+                          },
+                          onItemSelect: (v, controller) {
+                            if (v != null) {
+                              supervisorId = v.id!;
+                              controller.text = v.fullName!;
+                            }
+                          });
                     }),
                     BuildTextField(
                       onChanged: (v) {},
@@ -135,8 +154,7 @@ class _CreateClinicalRecordFirstPageState
                     Builder(builder: (context) {
                       List<String> _genderType = ['MALE', 'FEMALE'];
                       return DropdownButtonFormField(
-                      isExpanded: true,
-
+                        isExpanded: true,
                         items: _genderType
                             .map(
                               (e) => DropdownMenuItem(

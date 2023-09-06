@@ -137,12 +137,11 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                         _competences.cast<StudentSkillModel>();
                         _competences.addAll(state.studentSkillsModel!);
                       }
-                      return CustomDropdown(
+                      return CustomDropdown<dynamic>(
                           onSubmit: (text, controller) {
                             if (_competences.indexWhere(
                                     (element) => element.name == text.trim()) ==
                                 -1) {
-                              print("1fdasf");
                               controller.clear();
                               caseId = null;
                             }
