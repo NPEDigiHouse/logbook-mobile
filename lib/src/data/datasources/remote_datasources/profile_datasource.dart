@@ -13,7 +13,7 @@ abstract class ProfileDataSource {
   Future<void> updateStudentData(
       {required StudentPostModel studentDataPostModel});
   Future<void> updateUserProfilePicture({required String path});
-  Future<Uint8List> getUserProfilePicture();
+  Future<Uint8List?> getUserProfilePicture();
   Future<Uint8List> getProfilePic({required String userId});
 }
 
@@ -73,7 +73,7 @@ class ProfileDataSourceImpl extends ProfileDataSource {
   }
 
   @override
-  Future<Uint8List> getUserProfilePicture() async {
+  Future<Uint8List?> getUserProfilePicture() async {
     try {
       final credential = await preferenceHandler.getCredential();
       final response = await dio.get(
@@ -91,7 +91,9 @@ class ProfileDataSourceImpl extends ProfileDataSource {
         ),
       );
       print(response.data);
-      if (response.statusCode != 200) {
+      if (response.statusCode == 404) {
+        return null;
+      } else if (response.statusCode != 200) {
         throw Exception();
       } else {
         final List<int> bytes = response.data;

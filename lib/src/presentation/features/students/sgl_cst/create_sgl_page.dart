@@ -77,6 +77,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                     }
                     return DropdownButtonFormField(
                       hint: Text('Supervisor'),
+                      isExpanded: true,
                       items: _supervisors
                           .map(
                             (e) => DropdownMenuItem(
@@ -153,6 +154,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                                   for (int i = 0; i < value.length; i++) ...[
                                     DropdownButtonFormField(
                                       hint: Text('Topics'),
+                                      isExpanded: true,
                                       items: _topics
                                           .map(
                                             (e) => DropdownMenuItem(

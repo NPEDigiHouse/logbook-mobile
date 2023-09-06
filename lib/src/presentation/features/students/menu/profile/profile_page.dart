@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/export_data_page.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -196,6 +198,23 @@ class _ProfilePageState extends State<ProfilePage> {
                         return SizedBox.shrink();
                     },
                   ),
+                  // const SizedBox(height: 14),
+                  // BlocBuilder<ProfileCubit, ProfileState>(
+                  //   builder: (context, state) {
+                  //     if (state.requestState == RequestState.data) {
+                  //       return ProfileItemMenuCard(
+                  //         iconPath: 'file_export_filled.svg',
+                  //         title: 'Export Data',
+                  //         onTap: () => context.navigateTo(ExportDataPage(
+                  //           memoryImage: state.profilePic,
+                  //         )),
+                  //       );
+                  //     } else {
+                  //       return SizedBox.shrink();
+                  //     }
+                  //   },
+                  // ),
+
                   const SizedBox(height: 14),
                   ProfileItemMenuCard(
                     iconPath: 'delete_icon.svg',
@@ -209,12 +228,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                     },
                   ),
-                  // const SizedBox(height: 14),
-                  // ProfileItemMenuCard(
-                  //   iconPath: 'file_export_filled.svg',
-                  //   title: 'Export Data',
-                  //   onTap: () => context.navigateTo(const ExportDataPage()),
-                  // ),
+
                   // const SizedBox(height: 14),
                   // ProfileItemMenuCard(
                   //   iconPath: 'lock_filled.svg',

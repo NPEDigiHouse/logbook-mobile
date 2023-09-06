@@ -28,6 +28,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       try {
         emit(state.copyWith(
           profilePic: result,
+          requestState: RequestState.data,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
