@@ -12,6 +12,7 @@ import 'package:elogbook/src/data/models/scientific_session/scientific_session_o
 import 'package:elogbook/src/data/models/scientific_session/scientific_session_post_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/session_types_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/verify_scientific_session_model.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -155,24 +156,39 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
       } else {
         _directory = await getApplicationDocumentsDirectory();
       }
-      String savePath = '${_directory.path}/$filename.pdf';
-      await dio.download(
-        ApiService.baseUrl + '/scientific-sessions/$crId/attachments',
-        savePath,
-        onReceiveProgress: (received, total) {
-          if (total != -1) {
-            print((received / total * 100).toStringAsFixed(0) + "%");
-          }
-        },
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
+      String? savePath = '${_directory.path}/$filename.pdf';
+      if (Platform.isAndroid) {
+        await dio.download(
+          ApiService.baseUrl + '/scientific-sessions/$crId/attachments',
+          savePath,
+          onReceiveProgress: (received, total) {
+            if (total != -1) {
+              print((received / total * 100).toStringAsFixed(0) + "%");
+            }
           },
-        ),
-      );
+          options: Options(
+            headers: {
+              "content-type": 'application/json',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+          ),
+        );
+      } else {
+        savePath = await FileSaver.instance.saveAs(
+          name: filename,
+          ext: 'pdf',
+          link: LinkDetails(
+            link: ApiService.baseUrl + '/scientific-sessions/$crId/attachments',
+            headers: {
+              "content-type": 'application/json',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+          ),
+          mimeType: MimeType.pdf,
+        );
+      }
 
-      return savePath;
+      return savePath ?? '';
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
