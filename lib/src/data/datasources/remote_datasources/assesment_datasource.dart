@@ -352,6 +352,8 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
       {required String unitId, required String studentId}) async {
     final credential = await preferenceHandler.getCredential();
     try {
+      print(unitId);
+      print(studentId);
       final response = await dio.get(
         ApiService.baseUrl + '/assesments/students/$studentId/units/$unitId',
         options: Options(
@@ -359,8 +361,13 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
         ),
       );
+
       print(response);
       if (response.statusCode != 200) {
         throw Exception();

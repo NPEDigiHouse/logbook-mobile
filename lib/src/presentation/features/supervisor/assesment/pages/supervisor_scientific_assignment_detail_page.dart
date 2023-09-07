@@ -10,6 +10,7 @@ import 'package:elogbook/src/presentation/features/supervisor/assesment/provider
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -142,7 +143,10 @@ class _SupervisorScientificAssignmentDetailPageState
                             ),
                           ],
                         );
-                      return CustomLoading();
+                      return EmptyData(
+                        title: 'No Assesment Items',
+                        subtitle: 'No Assesment Items',
+                      );
                     } else {
                       return CustomLoading();
                     }

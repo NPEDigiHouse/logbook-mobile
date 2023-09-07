@@ -387,6 +387,11 @@ class AssesmentCubit extends Cubit<AssesmentState> {
 
       final data =
           await dataSource.getFinalScore(studentId: studentId, unitId: unitId);
+      data.assesments?.sort(
+        (a, b) {
+          return b.weight!.compareTo(a.weight!);
+        },
+      );
       try {
         emit(
           state.copyWith(

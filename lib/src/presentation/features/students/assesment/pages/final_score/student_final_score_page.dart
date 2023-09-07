@@ -132,6 +132,7 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
                                         0,
                               ),
                         ],
+                        
                         SizedBox(
                           height: 12,
                         ),

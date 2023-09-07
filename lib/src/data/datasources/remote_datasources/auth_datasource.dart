@@ -55,6 +55,8 @@ class AuthDataSourceImpl implements AuthDataSource {
         firstName = splitName.first;
         if (splitName.length > 1) {
           lastName = fullname.substring(firstName.length + 1, fullname.length);
+        } else {
+          lastName = '';
         }
       }
       final response = await dio.post(ApiService.baseUrl + '/students',

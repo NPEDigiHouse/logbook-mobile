@@ -14,9 +14,9 @@ class StudentDepartmentModel {
   String? studentId;
   @JsonKey(name: "studentName")
   String? studentName;
-  @JsonKey(name: "activeDepartmentId")
+  @JsonKey(name: "activeUnitId")
   String? activeDepartmentId;
-  @JsonKey(name: "activeDepartmentName")
+  @JsonKey(name: "activeUnitName")
   String? activeDepartmentName;
 
   StudentDepartmentModel({

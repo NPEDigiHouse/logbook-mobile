@@ -23,6 +23,7 @@ class _FinalGradeCardState extends State<FinalGradeCard> {
   @override
   void initState() {
     super.initState();
+    //GANTI SETELAH ADA ACTIVE UNIT
     BlocProvider.of<AssesmentCubit>(context)..getStudentFinalScore();
   }
 

@@ -2,7 +2,6 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/top_stat_card.dart';
@@ -114,19 +113,24 @@ class _StudentDetailFinalScorePageState
                           for (int i = 0;
                               i < state.finalScore!.assesments!.length;
                               i++)
-                            if (state.finalScore!.assesments![i].type!
-                                    .contains('OSCE') &&
-                                state.finalScore!.assesments![i] == 0)
-                              FinalGradeScoreCard(
+                            Builder(builder: (context) {
+                              if (state.finalScore!.assesments![i].type!
+                                      .contains('OSCE') &&
+                                  state.finalScore!.assesments![i].score ==
+                                      null) {
+                                return SizedBox.shrink();
+                              }
+                              return FinalGradeScoreCard(
                                 type: mapTitle[state
                                         .finalScore!.assesments![i].type] ??
                                     '-',
-                                score:
-                                    state.finalScore!.assesments![i].score ?? 0,
+                                score: state.finalScore!.assesments![i].score ??
+                                    -1,
                                 proportion:
                                     state.finalScore!.assesments![i].weight ??
                                         0,
-                              ),
+                              );
+                            }),
                         ],
                         SizedBox(
                           height: 12,
@@ -234,6 +238,17 @@ class FinalGradeScoreCard extends StatelessWidget {
                   SizedBox(
                     height: 12,
                   ),
+                  if (score == -1)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text(
+                        'The student has not yet taken this exam',
+                        style: textTheme.bodySmall?.copyWith(
+                          height: 1,
+                          color: onFormDisableColor,
+                        ),
+                      ),
+                    )
                   // Text(
                   //   'Exam date',
                   //   style: textTheme.bodySmall?.copyWith(
@@ -250,31 +265,33 @@ class FinalGradeScoreCard extends StatelessWidget {
                 ],
               ),
             ),
-            SectionDivider(
-              isVertical: true,
-            ),
-            SizedBox(
-              width: 70,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Score',
-                    style: textTheme.bodyMedium?.copyWith(
-                      color: secondaryTextColor,
-                    ),
-                  ),
-                  Text(
-                    score.toStringAsFixed(0),
-                    style: textTheme.headlineSmall?.copyWith(
-                      color: primaryTextColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                ],
+            if (score != -1) ...[
+              SectionDivider(
+                isVertical: true,
               ),
-            )
+              SizedBox(
+                width: 70,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Score',
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: secondaryTextColor,
+                      ),
+                    ),
+                    Text(
+                      score.toStringAsFixed(0),
+                      style: textTheme.headlineSmall?.copyWith(
+                        color: primaryTextColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ]
           ],
         ),
       ),

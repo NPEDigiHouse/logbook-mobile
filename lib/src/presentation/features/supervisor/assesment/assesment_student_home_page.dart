@@ -42,11 +42,11 @@ class AssesmentStudentHomePage extends StatelessWidget {
             SizedBox(
               height: 12,
             ),
-            if (credential.badges!
-                    .indexWhere((element) => element.name == 'CEU') !=
-                -1) ...[
-              FinalGradeCard(),
-            ],
+            // if (credential.badges!
+            //         .indexWhere((element) => element.name == 'CEU') !=
+            //     -1) ...[
+            //   FinalGradeCard(),
+            // ],
             Row(
               children: [
                 AssementMenuCard(

@@ -12,8 +12,8 @@ StudentDepartmentModel _$StudentDepartmentModelFromJson(
       id: json['id'] as String?,
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
-      activeDepartmentId: json['activeDepartmentId'] as String?,
-      activeDepartmentName: json['activeDepartmentName'] as String?,
+      activeDepartmentId: json['activeUnitId'] as String?,
+      activeDepartmentName: json['activeUnitName'] as String?,
     );
 
 Map<String, dynamic> _$StudentDepartmentModelToJson(
@@ -22,6 +22,6 @@ Map<String, dynamic> _$StudentDepartmentModelToJson(
       'id': instance.id,
       'studentId': instance.studentId,
       'studentName': instance.studentName,
-      'activeDepartmentId': instance.activeDepartmentId,
-      'activeDepartmentName': instance.activeDepartmentName,
+      'activeUnitId': instance.activeDepartmentId,
+      'activeUnitName': instance.activeDepartmentName,
     };
