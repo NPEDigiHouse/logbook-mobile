@@ -17,6 +17,10 @@ class ProfileCubit extends Cubit<ProfileState> {
     required this.userDataSource,
   }) : super(ProfileState(stateProfilePic: RequestState.init));
 
+  Future<void> reset() async {
+    emit(state.copyWith(profilePic: null, userCredential: null));
+  }
+
   Future<void> getProfilePic() async {
     print("call");
     try {
@@ -113,8 +117,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       );
     }
   }
-
-
 
   Future<void> updateFullName({required String fullname}) async {
     try {
