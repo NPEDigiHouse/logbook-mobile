@@ -116,8 +116,11 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
                               i++)
                             if (state.finalScore!.assesments![i].type!
                                     .contains('OSCE') &&
-                                (widget.model.unitName == 'FORENSIK' ||
-                                    widget.model.unitName == 'IKM-IKK'))
+                                (widget.model.unitName!
+                                        .toUpperCase()
+                                        .contains('FORENSIK') ||
+                                    widget.model.unitName?.toUpperCase() ==
+                                        'IKM-IKK'))
                               FinalGradeScoreCard(
                                 type: mapTitle[state
                                         .finalScore!.assesments![i].type] ??

@@ -30,11 +30,11 @@ final List<MenuModel> listGlobalMenu = [
 ];
 
 List<MenuModel> listStudentMenu(bool isSglCstShow) => [
-      if (isSglCstShow)
-        MenuModel(
-            iconPath: 'diversity_3_rounded.svg',
-            labels: 'SGL and CST',
-            desc: 'Small Group Learning and Clinical Education Department'),
+      // if (isSglCstShow)
+      MenuModel(
+          iconPath: 'diversity_3_rounded.svg',
+          labels: 'SGL and CST',
+          desc: 'Small Group Learning and Clinical Education Department'),
       MenuModel(
           iconPath: 'summarize_rounded.svg',
           labels: 'Daily Activity',
@@ -54,7 +54,7 @@ List<MenuModel> listStudentMenu(bool isSglCstShow) => [
       ),
       MenuModel(
         iconPath: 'school_rounded.svg',
-        labels: 'Competence',
+        labels: 'Competency',
         desc: 'List cases and skills you discussed, observed or performed.',
       ),
       MenuModel(

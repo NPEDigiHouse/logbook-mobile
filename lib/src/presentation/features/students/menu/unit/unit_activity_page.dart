@@ -59,8 +59,11 @@ class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
         () => context.navigateTo(
               SglCstHomePage(
                   activeDepartmentModel: activeDepartmentModel,
-                  isCstHide: (activeDepartmentModel.unitName == 'FORENSIK' ||
-                      activeDepartmentModel.unitName == 'IKM-IKK')),
+                  isCstHide: (activeDepartmentModel.unitName!
+                          .toUpperCase()
+                          .contains('FORENSIK') ||
+                      activeDepartmentModel.unitName?.toUpperCase() ==
+                          'IKM-IKK')),
             ),
         () => context.navigateTo(
               DailyActivityPage(
@@ -514,8 +517,9 @@ class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
   }
 
   Column buildItemGrid({required ActiveDepartmentModel activeDepartmentModel}) {
-    bool isSglCstShow = activeDepartmentModel.unitName != 'FORENSIK' &&
-        activeDepartmentModel.unitName != 'IKM-IKK';
+    bool isSglCstShow =
+        !activeDepartmentModel.unitName!.toUpperCase().contains('FORENSIK') &&
+            activeDepartmentModel.unitName?.toCapitalize() != 'IKM-IKK';
     return Column(
       key: const ValueKey(1),
       children: <Widget>[
@@ -544,8 +548,9 @@ class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
   }
 
   Column buildItemList({required ActiveDepartmentModel activeDepartmentModel}) {
-    bool isSglCstShow = activeDepartmentModel.unitName != 'FORENSIK' &&
-        activeDepartmentModel.unitName != 'IKM-IKK';
+    bool isSglCstShow =
+        activeDepartmentModel.unitName!.toUpperCase().contains('FORENSIK') &&
+            activeDepartmentModel.unitName?.toUpperCase() != 'IKM-IKK';
     return Column(
       key: const ValueKey(2),
       children: <Widget>[

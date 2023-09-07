@@ -117,9 +117,11 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                           i++)
                         if (state.finalScore!.assesments![i].type!
                                 .contains('OSCE') &&
-                            (widget.finalGrade.activeDepartmentName ==
-                                    'FORENSIK' ||
-                                widget.finalGrade.activeDepartmentName ==
+                            (widget.finalGrade.activeDepartmentName!
+                                    .toUpperCase()
+                                    .contains('FORENSIK') ||
+                                widget.finalGrade.activeDepartmentName
+                                        ?.toUpperCase() ==
                                     'IKM-IKK'))
                           FinalGradeScoreCard(
                             type: mapTitle[
