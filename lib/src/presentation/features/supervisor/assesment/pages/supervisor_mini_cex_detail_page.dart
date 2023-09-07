@@ -21,8 +21,12 @@ import '../../../../blocs/assesment_cubit/assesment_cubit.dart';
 class SupervisorMiniCexDetailPage extends StatefulWidget {
   final String id;
   final String unitName;
+  final String supervisorId;
   const SupervisorMiniCexDetailPage(
-      {super.key, required this.unitName, required this.id});
+      {super.key,
+      required this.unitName,
+      required this.id,
+      required this.supervisorId});
 
   @override
   State<SupervisorMiniCexDetailPage> createState() =>
@@ -52,22 +56,30 @@ class _SupervisorMiniCexDetailPageState
       appBar: AppBar(
         title: Text("Mini Cex"),
       ).variant(),
-      floatingActionButton: SizedBox(
-        width: AppSize.getAppWidth(context) - 32,
-        child: FilledButton.icon(
-          onPressed: () {
-            itemRating.getMiniCexData();
-            BlocProvider.of<AssesmentCubit>(context)
-              ..assesmentMiniCex(
-                id: widget.id,
-                miniCex: {
-                  'scores': itemRating.getMiniCexData(),
+      floatingActionButton: BlocBuilder<AssesmentCubit, AssesmentState>(
+        builder: (context, state) {
+          if (state.miniCexStudentDetail != null &&
+              state.miniCexStudentDetail!.examinerDPKId == widget.supervisorId)
+            return SizedBox(
+              width: AppSize.getAppWidth(context) - 32,
+              child: FilledButton.icon(
+                onPressed: () {
+                  itemRating.getMiniCexData();
+                  BlocProvider.of<AssesmentCubit>(context)
+                    ..assesmentMiniCex(
+                      id: widget.id,
+                      miniCex: {
+                        'scores': itemRating.getMiniCexData(),
+                      },
+                    );
                 },
-              );
-          },
-          icon: Icon(Icons.check_circle),
-          label: Text('Update Changed'),
-        ),
+                icon: Icon(Icons.check_circle),
+                label: Text('Update Changed'),
+              ),
+            );
+          else
+            return SizedBox.shrink();
+        },
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -100,9 +112,9 @@ class _SupervisorMiniCexDetailPageState
                   builder: (context, state) {
                     if (state.miniCexStudentDetail != null) {
                       final miniCex = state.miniCexStudentDetail!;
-
                       return BuildScoreSection(
                         miniCex: miniCex,
+                        supervisorId: widget.supervisorId,
                       );
                     } else {
                       return CustomLoading();
@@ -120,9 +132,11 @@ class BuildScoreSection extends StatefulWidget {
   const BuildScoreSection({
     super.key,
     required this.miniCex,
+    required this.supervisorId,
   });
 
   final MiniCexStudentDetailModel miniCex;
+  final String supervisorId;
 
   @override
   State<BuildScoreSection> createState() => _BuildScoreSectionState();
@@ -181,33 +195,34 @@ class _BuildScoreSectionState extends State<BuildScoreSection> {
                     style: textTheme.titleMedium,
                   ),
                   Spacer(),
-                  SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: IconButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(primaryColor),
-                      ),
-                      padding: new EdgeInsets.all(0.0),
-                      iconSize: 14,
-                      onPressed: () {
-                        itemRating.addItemRating(
-                          ItemRatingModel(
-                            gradeItem: '',
-                            grade: 0.0,
-                            scoreController: TextEditingController(),
-                            titleController: TextEditingController(),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.add_rounded,
-                        color: backgroundColor,
-                        size: 16,
+                  if (widget.supervisorId == widget.miniCex.examinerDPKId)
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: IconButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(primaryColor),
+                        ),
+                        padding: new EdgeInsets.all(0.0),
+                        iconSize: 14,
+                        onPressed: () {
+                          itemRating.addItemRating(
+                            ItemRatingModel(
+                              gradeItem: '',
+                              grade: 0.0,
+                              scoreController: TextEditingController(),
+                              titleController: TextEditingController(),
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.add_rounded,
+                          color: backgroundColor,
+                          size: 16,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
               SizedBox(
@@ -221,60 +236,91 @@ class _BuildScoreSectionState extends State<BuildScoreSection> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
+                    if (widget.miniCex.examinerDPKId == widget.supervisorId)
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: BuildTextField(
+                                  controller:
+                                      itemRating.items[index].titleController,
+                                  label: 'Item Name',
+                                  onChanged: (v) {
+                                    itemRating.updateGradeItem(
+                                        v, itemRating.items[index].id!);
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: BuildTextField(
+                                  label: 'Score',
+                                  controller:
+                                      itemRating.items[index].scoreController,
+                                  onChanged: (v) {
+                                    itemRating.updateScore(
+                                        v.isNotEmpty ? double.parse(v) : 0.0,
+                                        itemRating.items[index].id!);
+                                  },
+                                  isOnlyNumber: true,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  itemRating.removeItemRating(
+                                      itemRating.items[index].id!);
+                                },
+                                icon: Icon(Icons.delete),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: BuildTextField(
-                                controller:
-                                    itemRating.items[index].titleController,
-                                label: 'Item Name',
-                                onChanged: (v) {
-                                  itemRating.updateGradeItem(
-                                      v, itemRating.items[index].id!);
-                                },
-                              ),
-                            ),
-                          ],
+                        TextField(
+                          controller: itemRating.items[index].titleController,
+                          decoration: InputDecoration(
+                            label: Text('Item Name'),
+                          ),
+                          readOnly: true,
                         ),
                         SizedBox(
                           height: 8,
                         ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: BuildTextField(
-                                label: 'Score',
-                                controller:
-                                    itemRating.items[index].scoreController,
-                                onChanged: (v) {
-                                  itemRating.updateScore(
-                                      v.isNotEmpty ? double.parse(v) : 0.0,
-                                      itemRating.items[index].id!);
-                                },
-                                isOnlyNumber: true,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                itemRating.removeItemRating(
-                                    itemRating.items[index].id!);
-                              },
-                              icon: Icon(Icons.delete),
-                            ),
-                          ],
+                        TextField(
+                          controller: itemRating.items[index].scoreController,
+                          decoration: InputDecoration(
+                            label: Text('Score'),
+                          ),
+                          readOnly: true,
                         ),
                       ],
                     );
                   },
                   separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: 12,
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 12,
+                        ),
+                        ItemDivider(),
+                        SizedBox(
+                          height: 12,
+                        ),
+                      ],
                     );
                   },
                   itemCount: itemRating.items.length),
@@ -471,11 +517,12 @@ class MiniCexHeadCard extends StatelessWidget {
             style: textTheme.bodySmall
                 ?.copyWith(color: secondaryTextColor, height: 1),
           ),
-          Text(
-            miniCex.location ?? '',
-            style: textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+          Text(miniCex.location ?? '',
+              style: textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              )),
+          SizedBox(
+            height: 12,
           ),
         ],
       ),

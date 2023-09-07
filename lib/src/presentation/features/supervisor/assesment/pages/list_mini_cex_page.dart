@@ -11,8 +11,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ListMiniCexPage extends StatefulWidget {
   final String studentId;
   final String unitName;
+  final String supervisorId;
   const ListMiniCexPage(
-      {super.key, required this.unitName, required this.studentId});
+      {super.key, required this.unitName, required this.studentId, required this.supervisorId});
 
   @override
   State<ListMiniCexPage> createState() => _ListMiniCexPageState();
@@ -44,7 +45,7 @@ class _ListMiniCexPageState extends State<ListMiniCexPage> {
             if (state.studentMiniCex != null &&
                 state.studentMiniCex!.id != null) {
               context.replace(SupervisorMiniCexDetailPage(
-                  unitName: '', id: state.studentMiniCex!.id!));
+                  unitName: '', id: state.studentMiniCex!.id!, supervisorId: widget.supervisorId));
             }
           },
           builder: (context, state) {
