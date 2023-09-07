@@ -18,24 +18,31 @@ class ProfileCubit extends Cubit<ProfileState> {
   }) : super(ProfileState(stateProfilePic: RequestState.init));
 
   Future<void> reset() async {
-    emit(state.copyWith(profilePic: null, userCredential: null));
+    emit(
+      state.copyWith(
+          profilePic: null,
+          userCredential: null,
+          requestState: RequestState.init,
+          rsPP: RequestState.init,
+          stateProfilePic: RequestState.init),
+    );
   }
 
   Future<void> getProfilePic() async {
     print("call");
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        rsPP: RequestState.loading,
       ));
 
       final result = await dataSource.getUserProfilePicture();
       try {
         emit(state.copyWith(
           profilePic: result,
-          requestState: RequestState.data,
+          rsPP: RequestState.data,
         ));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(rsPP: RequestState.error));
       }
     } catch (e) {
       print(e.toString());
@@ -104,7 +111,8 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       await userDataSource.uploadProfilePicture(path);
       try {
-        emit(state.copyWith(successUploadProfilePic: true));
+        emit(state.copyWith(
+            successUploadProfilePic: true, stateProfilePic: RequestState.data));
       } catch (e) {
         emit(state.copyWith(stateProfilePic: RequestState.error));
       }
@@ -121,20 +129,20 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> updateFullName({required String fullname}) async {
     try {
       emit(state.copyWith(
-        stateProfilePic: RequestState.loading,
+        requestState: RequestState.loading,
       ));
 
       await userDataSource.updateFullName(fullname: fullname);
       try {
         emit(state.copyWith(successUpdateProfile: true));
       } catch (e) {
-        emit(state.copyWith(stateProfilePic: RequestState.error));
+        emit(state.copyWith(requestState: RequestState.error));
       }
     } catch (e) {
       print(e.toString());
       emit(
         state.copyWith(
-          stateProfilePic: RequestState.error,
+          requestState: RequestState.error,
         ),
       );
     }

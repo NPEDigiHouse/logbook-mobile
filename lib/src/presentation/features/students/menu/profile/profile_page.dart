@@ -5,7 +5,6 @@ import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
-import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/export_data_page.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -95,7 +94,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: <Widget>[
                               BlocBuilder<ProfileCubit, ProfileState>(
                                 builder: (context, state) {
-                                  if (state.profilePic != null) {
+                                  if (state.profilePic != null &&
+                                      state.rspp == RequestState.data) {
                                     return Column(
                                       children: [
                                         Container(
@@ -164,9 +164,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Text(
+                  Text(
                     'Student',
-                    style: TextStyle(color: secondaryColor),
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: secondaryColor,
+                    ),
                   ),
                   const SizedBox(height: 28),
                   ProfileItemMenuCard(
@@ -190,6 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 credential: widget.credential,
                                 profilePic: state.profilePic,
                                 activeDepartmentModel: state1.activeDepartment,
+                                stateProfilePic: state.rspp,
                               )),
                             );
                           },

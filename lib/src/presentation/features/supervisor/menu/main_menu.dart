@@ -23,7 +23,6 @@ class MainMenuSupervisor extends StatefulWidget {
 class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(
         () => BlocProvider.of<ProfileCubit>(context)..getUserCredential());
@@ -72,10 +71,7 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
               builder: (context, s) {
                 if (s.userCredential != null)
                   return Scaffold(
-                    body: IndexedStack(
-                      children: _listPage(s.userCredential!),
-                      index: value,
-                    ),
+                    body: _listPage(s.userCredential!)[value],
                     bottomNavigationBar: CustomNavigationBar(
                       listIconPath: [
                         "home_icon.svg",

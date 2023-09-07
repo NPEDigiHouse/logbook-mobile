@@ -1,8 +1,8 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/coordinator/profile/personal_data_page.dart';
-import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,7 +25,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-
     Future.microtask(() {
       BlocProvider.of<ProfileCubit>(context)..getProfilePic();
     });
@@ -73,7 +72,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         bottom: -40,
                         child: BlocBuilder<ProfileCubit, ProfileState>(
                           builder: (context, state) {
-                            if (state.profilePic != null) {
+                            print(state.rspp);
+                            if (state.profilePic != null &&
+                                state.rspp == RequestState.data) {
                               return Column(
                                 children: [
                                   Container(
@@ -98,11 +99,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ],
                               );
                             } else {
-                              return CircleAvatar(
-                                radius: 50,
-                                foregroundImage: AssetImage(
-                                  AssetPath.getImage('profile_default.png'),
-                                ),
+                              return Column(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 50,
+                                    foregroundImage: AssetImage(
+                                      AssetPath.getImage('profile_default.png'),
+                                    ),
+                                  ),
+                                ],
                               );
                             }
                           },
@@ -114,16 +119,49 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 56),
                 BlocBuilder<ProfileCubit, ProfileState>(
                   builder: (context, state) {
-                    return Text(
-                      state.userCredential != null
-                          ? state.userCredential!.fullname!
-                          : '...',
-                      style: textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    return Column(
+                      children: [
+                        Text(
+                          state.userCredential != null
+                              ? state.userCredential!.fullname!
+                              : '...',
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Builder(
+                          builder: (context) {
+                            if (state.userCredential != null) {
+                              if (state.userCredential!.supervisor!.locations!
+                                  .isNotEmpty) {
+                                return Text(
+                                  state.userCredential!.supervisor!.locations!
+                                      .join(','),
+                                );
+                              }
+                            }
+                            return SizedBox.shrink();
+                          },
+                        ),
+                        Builder(
+                          builder: (context) {
+                            if (state.userCredential != null) {
+                              if (state.userCredential!.supervisor!.units!
+                                  .isNotEmpty) {
+                                return Text(
+                                  state.userCredential!.supervisor!.units!
+                                      .join(','),
+                                );
+                              }
+                            }
+                            return SizedBox.shrink();
+                          },
+                        )
+                      ],
                     );
                   },
                 ),
+
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Chip(
                     backgroundColor: primaryColor,
@@ -134,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     labelStyle: textTheme.bodyMedium?.copyWith(
                       color: Colors.white,
                     ),
-                    label: Text('SUPERVISOR'),
+                    label: Text(widget.credential.role ?? 'SUPERVISOR'),
                   ),
                   SizedBox(
                     width: 4,

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -17,11 +18,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DepartmentStatisticsPage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
   final Uint8List? profilePic;
+  final RequestState? stateProfilePic;
   final UserCredential credential;
   const DepartmentStatisticsPage(
       {super.key,
       required this.credential,
       this.profilePic,
+      this.stateProfilePic,
       required this.activeDepartmentModel});
 
   @override
@@ -79,20 +82,25 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
                   collapsedIconColor: primaryTextColor,
                   tilePadding: const EdgeInsets.fromLTRB(4, 4, 10, 4),
                   childrenPadding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-                  leading: (widget.profilePic != null)
-                      ? Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: MemoryImage(
-                                widget.profilePic!,
+                  leading: (widget.profilePic != null &&
+                          widget.stateProfilePic == RequestState.data)
+                      ? Column(
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: MemoryImage(
+                                    widget.profilePic!,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                              fit: BoxFit.cover,
                             ),
-                          ),
+                          ],
                         )
                       : CircleAvatar(
                           radius: 50,

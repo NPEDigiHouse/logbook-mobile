@@ -1,5 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/coordinator/profile/personal_data_page.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +72,8 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                             bottom: -40,
                             child: BlocBuilder<ProfileCubit, ProfileState>(
                               builder: (context, state) {
-                                if (state.profilePic != null) {
+                                if (state.profilePic != null &&
+                                    state.rspp == RequestState.data) {
                                   return Column(
                                     children: [
                                       Container(

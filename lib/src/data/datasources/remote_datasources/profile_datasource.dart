@@ -83,17 +83,11 @@ class ProfileDataSourceImpl extends ProfileDataSource {
             "content-type": 'multipart/form-data',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
           responseType: ResponseType.bytes,
         ),
       );
-      print(response.data);
-      if (response.statusCode == 404) {
-        return null;
-      } else if (response.statusCode != 200) {
+      print("ini ${response.statusCode}");
+      if (response.statusCode != 200) {
         throw Exception();
       } else {
         final List<int> bytes = response.data;
@@ -138,10 +132,6 @@ class ProfileDataSourceImpl extends ProfileDataSource {
           headers: {
             "content-type": 'multipart/form-data',
             "authorization": 'Bearer ${credential?.accessToken}'
-          },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
           },
           responseType: ResponseType.bytes,
         ),

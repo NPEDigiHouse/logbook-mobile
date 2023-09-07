@@ -87,11 +87,20 @@ class StudentCredentialProfile {
 @JsonSerializable()
 class SupervisorCredentialProfile {
   final String? id;
+  final String? userId;
+  final List<String>? locations;
+  final List<String>? units;
   final String? supervisorId;
   final String? fullname;
 
-  SupervisorCredentialProfile(
-      {required this.fullname, required this.id, required this.supervisorId});
+  SupervisorCredentialProfile({
+    required this.fullname,
+    required this.id,
+    required this.supervisorId,
+    required this.locations,
+    required this.units,
+    required this.userId,
+  });
 
   factory SupervisorCredentialProfile.fromJson(Map<String, dynamic> data) =>
       _$SupervisorCredentialProfileFromJson(data);

@@ -100,12 +100,21 @@ SupervisorCredentialProfile _$SupervisorCredentialProfileFromJson(
       fullname: json['fullname'] as String?,
       id: json['id'] as String?,
       supervisorId: json['supervisorId'] as String?,
+      locations: (json['locations'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      units:
+          (json['units'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      userId: json['userId'] as String?,
     );
 
 Map<String, dynamic> _$SupervisorCredentialProfileToJson(
         SupervisorCredentialProfile instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'userId': instance.userId,
+      'locations': instance.locations,
+      'units': instance.units,
       'supervisorId': instance.supervisorId,
       'fullname': instance.fullname,
     };

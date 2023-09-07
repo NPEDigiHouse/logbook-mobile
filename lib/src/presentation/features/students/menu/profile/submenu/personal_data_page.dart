@@ -105,7 +105,8 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
                                   height: 100,
                                 ));
                               }
-                              if (state.profilePic != null) {
+                              if (state.profilePic != null &&
+                                  state.rspp == RequestState.data) {
                                 return CircleAvatar(
                                   radius: 50,
                                   foregroundImage:

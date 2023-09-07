@@ -117,7 +117,8 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
                                   )),
                                 );
                               }
-                              if (state.profilePic != null) {
+                              if (state.profilePic != null &&
+                                  state.rspp == RequestState.data) {
                                 return CircleAvatar(
                                   radius: 50,
                                   foregroundImage:
