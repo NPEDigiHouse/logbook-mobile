@@ -53,7 +53,9 @@ class _ListCstPageState extends State<ListCstPage> {
               SglCstAppBar(
                 title: 'Clinical Skill Training (CST)',
                 onBtnPressed: () {
-                  context.navigateTo(CreateCstPage());
+                  context.navigateTo(CreateCstPage(
+                    model: widget.activeUnitModel,
+                  ));
                 },
               ),
             SliverFillRemaining(

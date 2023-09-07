@@ -165,7 +165,6 @@ class _CreateSglPageState extends State<CreateSglPage> {
                       _topics.clear();
                       _topics.addAll(state.topics!);
                     }
-
                     if (_topics.isNotEmpty)
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,29 +175,47 @@ class _CreateSglPageState extends State<CreateSglPage> {
                               return Column(
                                 children: [
                                   for (int i = 0; i < value.length; i++) ...[
-                                    DropdownButtonFormField(
-                                      hint: Text('Topics'),
-                                      isExpanded: true,
-                                      items: _topics
-                                          .map(
-                                            (e) => DropdownMenuItem(
-                                              child: Text(e.name!),
-                                              value: e,
+                                    CustomDropdown<TopicModel>(
+                                        onSubmit: (text, controller) {
+                                          if (_topics.indexWhere((element) =>
+                                                  element.name ==
+                                                  text.trim()) ==
+                                              -1) {
+                                            controller.clear();
+                                            topics.value[i] = -1;
+                                          }
+                                        },
+                                        hint: 'Topics',
+                                        onCallback: (pattern) {
+                                          final temp = _topics
+                                              .where((competence) => (competence
+                                                          .name ??
+                                                      'unknown')
+                                                  .toLowerCase()
+                                                  .trim()
+                                                  .startsWith(
+                                                      pattern.toLowerCase()))
+                                              .toList();
+
+                                          return pattern.isEmpty
+                                              ? _topics
+                                              : temp;
+                                        },
+                                        child: (suggestion) {
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 12.0,
+                                              vertical: 16,
                                             ),
-                                          )
-                                          .toList(),
-                                      onChanged: (v) {
-                                        if (v != null &&
-                                            !value.contains(v.id!)) {
-                                          topics.value[i] = v.id!;
-                                        }
-                                      },
-                                      value: null,
-                                    ),
-                                    if (i < value.length)
-                                      SizedBox(
-                                        height: 8,
-                                      ),
+                                            child: Text(suggestion?.name ?? ''),
+                                          );
+                                        },
+                                        onItemSelect: (v, controller) {
+                                          if (v != null) {
+                                            topics.value[i] = v.id!;
+                                            controller.text = v.name!;
+                                          }
+                                        }),
                                   ],
                                 ],
                               );

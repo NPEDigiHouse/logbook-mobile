@@ -55,13 +55,12 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
   }
 
   List<VoidCallback> onTaps(ActiveUnitModel activeUnitModel) => [
-        if (activeUnitModel.unitName != 'FORENSIK' &&
-            activeUnitModel.unitName != 'IKM-IKK')
-          () => context.navigateTo(
-                SglCstHomePage(
+        () => context.navigateTo(
+              SglCstHomePage(
                   activeUnitModel: activeUnitModel,
-                ),
-              ),
+                  isCstHide: (activeUnitModel.unitName == 'FORENSIK' ||
+                      activeUnitModel.unitName == 'IKM-IKK')),
+            ),
         () => context.navigateTo(
               DailyActivityPage(
                 activeUnitModel: activeUnitModel,

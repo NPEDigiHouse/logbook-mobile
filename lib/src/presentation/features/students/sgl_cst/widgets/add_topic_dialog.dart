@@ -4,6 +4,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_post_model.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -129,25 +130,42 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                       _topics.clear();
                       _topics.addAll(state.topics!);
                     }
-                    return DropdownButtonFormField(
-                      isExpanded: true,
-                      hint: Text(
-                        'Topic',
-                      ),
-                      items: _topics
-                          .map(
-                            (e) => DropdownMenuItem(
-                              child: Text(e.name!),
-                              value: e,
+                    return CustomDropdown<TopicModel>(
+                        onSubmit: (text, controller) {
+                          if (_topics.indexWhere(
+                                  (element) => element.name == text.trim()) ==
+                              -1) {
+                            controller.clear();
+                            topicId.clear();
+                          }
+                        },
+                        hint: 'Topics',
+                        onCallback: (pattern) {
+                          final temp = _topics
+                              .where((competence) =>
+                                  (competence.name ?? 'unknown')
+                                      .toLowerCase()
+                                      .trim()
+                                      .startsWith(pattern.toLowerCase()))
+                              .toList();
+
+                          return pattern.isEmpty ? _topics : temp;
+                        },
+                        child: (suggestion) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 16,
                             ),
-                          )
-                          .toList(),
-                      onChanged: (v) {
-                        topicId.clear();
-                        if (v != null) topicId.add(v.id!);
-                      },
-                      value: null,
-                    );
+                            child: Text(suggestion?.name ?? ''),
+                          );
+                        },
+                        onItemSelect: (v, controller) {
+                          if (v != null) {
+                            topicId = [v.id!];
+                            controller.text = v.name!;
+                          }
+                        });
                   }),
                   TextFormField(
                     maxLines: 4,

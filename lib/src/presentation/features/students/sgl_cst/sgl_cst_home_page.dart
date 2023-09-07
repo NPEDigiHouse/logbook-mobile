@@ -12,9 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SglCstHomePage extends StatefulWidget {
+  final bool isCstHide;
   final ActiveUnitModel activeUnitModel;
 
-  const SglCstHomePage({super.key, required this.activeUnitModel});
+  const SglCstHomePage(
+      {super.key, required this.activeUnitModel, required this.isCstHide});
 
   @override
   State<SglCstHomePage> createState() => _SglCstHomePageState();
@@ -51,17 +53,19 @@ class _SglCstHomePageState extends State<SglCstHomePage> {
                     desc:
                         'Lorem ipsum dolor sit amet consectetur. Sagitti viverra risus quis arcu siholmet.',
                   ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  SglCstCard(
-                    onTap: () => context.navigateTo(ListCstPage(
-                      activeUnitModel: widget.activeUnitModel,
-                    )),
-                    title: 'Clinical Skill Training',
-                    desc:
-                        'Lorem ipsum dolor sit amet consectetur. Sagitti viverra risus quis arcu siholmet.',
-                  ),
+                  if (!widget.isCstHide) ...[
+                    SizedBox(
+                      height: 16,
+                    ),
+                    SglCstCard(
+                      onTap: () => context.navigateTo(ListCstPage(
+                        activeUnitModel: widget.activeUnitModel,
+                      )),
+                      title: 'Clinical Skill Training',
+                      desc:
+                          'Lorem ipsum dolor sit amet consectetur. Sagitti viverra risus quis arcu siholmet.',
+                    ),
+                  ]
                 ],
               ),
             ],

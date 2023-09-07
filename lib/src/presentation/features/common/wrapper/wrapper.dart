@@ -49,14 +49,10 @@ class _WrapperState extends State<Wrapper> {
         if (state is CredentialExist) {
           final UserCredential credential = state.credential;
           switch (credential.role) {
-            case 'SUPERVISOR':
-              return MainMenuSupervisor(
-                
-              );
+            case 'SUPERVISOR' || 'DPK':
+              return MainMenuSupervisor();
             case 'ER':
-              return MainMenuCoordinator(
-               
-              );
+              return MainMenuCoordinator();
             case 'STUDENT':
               return MainMenu();
             default:
