@@ -6,6 +6,7 @@ import 'package:elogbook/src/presentation/blocs/activity_cubit/activity_cubit.da
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/input_date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
@@ -194,6 +195,79 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                       if (state is FetchSuccess) {
                                         _supervisors.clear();
                                         _supervisors.addAll(state.supervisors);
+                                        if (values[i] != null)
+                                          editingControllers[i].text =
+                                              _supervisors
+                                                  .where((element) =>
+                                                      element.fullName ==
+                                                      values[i])
+                                                  .first
+                                                  .id!;
+                                      }
+                                      return CustomDropdown<SupervisorModel>(
+                                          onSubmit: (text, controller) {
+                                            if (_supervisors.indexWhere(
+                                                    (element) =>
+                                                        element.fullName ==
+                                                        text.trim()) ==
+                                                -1) {
+                                              controller.clear();
+                                              editingControllers[i].text = '';
+                                            }
+                                          },
+                                          init: _supervisors
+                                                  .map((e) => e.fullName)
+                                                  .toList()
+                                                  .contains(values[i])
+                                              ? _supervisors
+                                                  .where((element) =>
+                                                      element.fullName ==
+                                                      values[i])
+                                                  .first
+                                                  .fullName
+                                              : null,
+                                          hint: 'Supervisor',
+                                          onCallback: (pattern) {
+                                            final temp = _supervisors
+                                                .where((competence) =>
+                                                    (competence.fullName ??
+                                                            'unknown')
+                                                        .toLowerCase()
+                                                        .trim()
+                                                        .startsWith(pattern
+                                                            .toLowerCase()))
+                                                .toList();
+
+                                            return pattern.isEmpty
+                                                ? _supervisors
+                                                : temp;
+                                          },
+                                          child: (suggestion) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 12.0,
+                                                vertical: 16,
+                                              ),
+                                              child: Text(
+                                                  suggestion?.fullName ?? ''),
+                                            );
+                                          },
+                                          onItemSelect: (v, controller) {
+                                            if (v != null) {
+                                              editingControllers[i].text =
+                                                  v.id!;
+                                              controller.text = v.fullName!;
+                                            }
+                                          });
+                                    });
+                                    return BlocBuilder<SupervisorsCubit,
+                                            SupervisorsState>(
+                                        builder: (context, state) {
+                                      List<SupervisorModel> _supervisors = [];
+                                      if (state is FetchSuccess) {
+                                        _supervisors.clear();
+                                        _supervisors.addAll(state.supervisors);
                                         print(values[i]);
                                         if (values[i] != null)
                                           editingControllers[i].text =
@@ -205,8 +279,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                                   .id!;
                                       }
                                       return DropdownButtonFormField(
-                      isExpanded: true,
-
+                                        isExpanded: true,
                                         hint: Text(labels[i]),
                                         items: _supervisors
                                             .map(

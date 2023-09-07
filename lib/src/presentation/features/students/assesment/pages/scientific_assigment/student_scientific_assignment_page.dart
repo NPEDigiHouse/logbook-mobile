@@ -1,4 +1,6 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/core/styles/color_palette.dart';
+import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/add_scientific_assignment_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/student_scientific_assignment_detail.dart';
@@ -10,7 +12,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StudentScientificAssignmentPage extends StatefulWidget {
   final String unitName;
-  const StudentScientificAssignmentPage({super.key, required this.unitName});
+  final bool isSupervisingDPKExist;
+  const StudentScientificAssignmentPage(
+      {super.key, required this.unitName, required this.isSupervisingDPKExist});
 
   @override
   State<StudentScientificAssignmentPage> createState() =>
@@ -56,19 +60,28 @@ class _StudentScientificAssignmentPageState
                             SizedBox(
                               height: 16,
                             ),
+                            if (!widget.isSupervisingDPKExist)
+                              Text(
+                                'Please select supervising dpk before upload scientific assignment data',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: errorColor,
+                                ),
+                              ),
                             EmptyData(
                                 title: 'Empty Data',
                                 subtitle:
-                                    'Please upload mini cex data before!'),
+                                    'Please upload scientific assignment data before!'),
                             SizedBox(
                               height: 12,
                             ),
                             Center(
                               child: FilledButton(
-                                onPressed: () => context
-                                    .navigateTo(AddScientificAssignmentPage(
-                                  unitName: widget.unitName,
-                                )),
+                                onPressed: widget.isSupervisingDPKExist
+                                    ? () => context.navigateTo(
+                                            AddScientificAssignmentPage(
+                                          unitName: widget.unitName,
+                                        ))
+                                    : null,
                                 child: Text('Add Scientific Assignment'),
                               ),
                             ),

@@ -1,5 +1,6 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/personal_behavior/student_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/student_scientific_assignment_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_test_grade_page.dart';
@@ -12,8 +13,10 @@ import 'package:flutter/material.dart';
 
 class AssesmentHomePage extends StatelessWidget {
   final ActiveUnitModel activeUnitModel;
+  final UserCredential credential;
 
-  const AssesmentHomePage({super.key, required this.activeUnitModel});
+  const AssesmentHomePage(
+      {super.key, required this.activeUnitModel, required this.credential});
 
   @override
   Widget build(BuildContext context) {
@@ -53,19 +56,26 @@ class AssesmentHomePage extends StatelessWidget {
                   onTap: () =>
                       context.navigateTo(StudentScientificAssignmentPage(
                     unitName: activeUnitModel.unitName!,
+                    isSupervisingDPKExist:
+                        credential.student?.supervisingDPKId != null,
                   )),
                 ),
               ],
             ),
             Row(
               children: [
-                AssementMenuCard(
-                  iconPath: 'icon_test.svg',
-                  title: 'Mini Cex',
-                  onTap: () => context.navigateTo(StudentTestGrade(
-                    unitName: activeUnitModel.unitName!,
-                  )),
-                ),
+                Builder(builder: (context) {
+                  print(credential.student?.examinerDPKId);
+                  return AssementMenuCard(
+                    iconPath: 'icon_test.svg',
+                    title: 'Mini Cex',
+                    onTap: () => context.navigateTo(StudentTestGrade(
+                      unitName: activeUnitModel.unitName!,
+                      isExaminerDPKExist:
+                          credential.student?.examinerDPKId != null,
+                    )),
+                  );
+                }),
                 SizedBox(
                   width: 12,
                 ),

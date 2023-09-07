@@ -105,7 +105,7 @@ class _CreateClinicalRecordFirstPageState
                                     (competence.fullName ?? 'unknown')
                                         .toLowerCase()
                                         .trim()
-                                        .contains(pattern.toLowerCase()))
+                                        .startsWith(pattern.toLowerCase()))
                                 .toList();
 
                             return pattern.isEmpty ? _supervisors : temp;

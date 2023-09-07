@@ -1,5 +1,4 @@
 import 'package:elogbook/src/data/models/assessment/personal_behavior_detail.dart';
-import 'package:flutter/material.dart';
 
 class PersonalBehaviorHelperModel {
   final String name;

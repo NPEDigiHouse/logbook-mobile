@@ -31,7 +31,7 @@ class TitleAssesmentCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Exam Case Title",
+            "Exam Title",
             style: textTheme.titleMedium?.copyWith(
               color: scaffoldBackgroundColor,
               fontWeight: FontWeight.bold,

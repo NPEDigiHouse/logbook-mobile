@@ -99,100 +99,103 @@ class _ScientificAssignmentDetailState
                       return CustomLoading();
                     if (state.scientificAssignmentDetail != null ||
                         state.requestState == RequestState.data)
-                      return Builder(builder: (context) {
-                        if (state
-                            .scientificAssignmentDetail!.scores!.isNotEmpty) {
-                          return SingleChildScrollView(
-                            child: SpacingColumn(
-                              horizontalPadding: 16,
-                              spacing: 12,
-                              children: [
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                TitleAssesmentCard(
-                                  title: state.scientificAssignmentDetail
-                                          ?.listScientificAssignmentCase ??
-                                      'Title',
-                                  subtitle: state.scientificAssignmentDetail
-                                          ?.location ??
-                                      'Unknown Location',
-                                ),
-                                TopStatCard(
-                                  title: 'Scientific Assignment Statistic',
-                                  totalGrade: getTotalGrades(state
-                                              .scientificAssignmentDetail!
-                                              .grade !=
-                                          null
-                                      ? state.scientificAssignmentDetail!.grade!
-                                              .toDouble() /
-                                          100
-                                      : 0),
-                                ),
-                                ...[
-                                  ScientificGradeCard(
-                                    title: 'Presentation',
-                                    iconPath:
-                                        'assets/icons/presentation_icon.svg',
-                                    saScores: state
-                                        .scientificAssignmentDetail!.scores!
-                                        .where((element) =>
-                                            element.type ==
-                                            ScientificAssignmentType.SAJIAN)
-                                        .toList()
-                                        .map((e) => ItemRatingSA(
-                                            indicator: e.name ?? '',
-                                            score: e.score ?? 0))
-                                        .toList(),
-                                  ),
-                                  ScientificGradeCard(
-                                    title: 'Presentation Style',
-                                    iconPath:
-                                        'assets/icons/presentation_style_icon.svg',
-                                    saScores: state
-                                        .scientificAssignmentDetail!.scores!
-                                        .where((element) =>
-                                            element.type ==
-                                            ScientificAssignmentType
-                                                .CARA_PENYAJIAN)
-                                        .toList()
-                                        .map((e) => ItemRatingSA(
-                                            indicator: e.name ?? '',
-                                            score: e.score ?? 0))
-                                        .toList(),
-                                  ),
-                                  ScientificGradeCard(
-                                    title: 'Discussion',
-                                    iconPath:
-                                        'assets/icons/discussion_icon.svg',
-                                    saScores: state
-                                        .scientificAssignmentDetail!.scores!
-                                        .where((element) =>
-                                            element.type ==
-                                            ScientificAssignmentType.DISKUSI)
-                                        .toList()
-                                        .map((e) => ItemRatingSA(
-                                            indicator: e.name ?? '',
-                                            score: e.score ?? 0))
-                                        .toList(),
-                                  ),
-                                ],
-                                SizedBox(
-                                  height: 16,
-                                ),
-                              ],
+                      return SingleChildScrollView(
+                        child: SpacingColumn(
+                          horizontalPadding: 16,
+                          spacing: 12,
+                          children: [
+                            SizedBox(
+                              height: 16,
                             ),
-                          );
-                        } else {
-                          return Center(
-                            child: EmptyData(
-                              title: 'Waiting for assessment',
+                            TitleAssesmentCard(
+                              title: state.scientificAssignmentDetail
+                                      ?.listScientificAssignmentCase ??
+                                  'Title',
                               subtitle:
-                                  'the supervisor has not given a value for the mini cex',
+                                  state.scientificAssignmentDetail?.location ??
+                                      'Unknown Location',
                             ),
-                          );
-                        }
-                      });
+                            Builder(builder: (context) {
+                              if (state.scientificAssignmentDetail!.scores!
+                                  .isNotEmpty) {
+                                return SpacingColumn(spacing: 12, children: [
+                                  TopStatCard(
+                                    title: 'Scientific Assignment Statistic',
+                                    totalGrade: getTotalGrades(state
+                                                .scientificAssignmentDetail!
+                                                .grade !=
+                                            null
+                                        ? state.scientificAssignmentDetail!
+                                                .grade!
+                                                .toDouble() /
+                                            100
+                                        : 0),
+                                  ),
+                                  ...[
+                                    ScientificGradeCard(
+                                      title: 'Presentation',
+                                      iconPath:
+                                          'assets/icons/presentation_icon.svg',
+                                      saScores: state
+                                          .scientificAssignmentDetail!.scores!
+                                          .where((element) =>
+                                              element.type ==
+                                              ScientificAssignmentType.SAJIAN)
+                                          .toList()
+                                          .map((e) => ItemRatingSA(
+                                              indicator: e.name ?? '',
+                                              score: e.score ?? 0))
+                                          .toList(),
+                                    ),
+                                    ScientificGradeCard(
+                                      title: 'Presentation Style',
+                                      iconPath:
+                                          'assets/icons/presentation_style_icon.svg',
+                                      saScores: state
+                                          .scientificAssignmentDetail!.scores!
+                                          .where((element) =>
+                                              element.type ==
+                                              ScientificAssignmentType
+                                                  .CARA_PENYAJIAN)
+                                          .toList()
+                                          .map((e) => ItemRatingSA(
+                                              indicator: e.name ?? '',
+                                              score: e.score ?? 0))
+                                          .toList(),
+                                    ),
+                                    ScientificGradeCard(
+                                      title: 'Discussion',
+                                      iconPath:
+                                          'assets/icons/discussion_icon.svg',
+                                      saScores: state
+                                          .scientificAssignmentDetail!.scores!
+                                          .where((element) =>
+                                              element.type ==
+                                              ScientificAssignmentType.DISKUSI)
+                                          .toList()
+                                          .map((e) => ItemRatingSA(
+                                              indicator: e.name ?? '',
+                                              score: e.score ?? 0))
+                                          .toList(),
+                                    ),
+                                    SizedBox(
+                                      height: 16,
+                                    ),
+                                  ],
+                                ]);
+                              } else {
+                                return Center(
+                                  child: EmptyData(
+                                    title: 'Waiting for assessment',
+                                    subtitle:
+                                        'the supervisor has not given a value for the scientific assesment',
+                                  ),
+                                );
+                              }
+                            }),
+                          ],
+                        ),
+                      );
                     else
                       return SizedBox(
                         child: Column(

@@ -91,6 +91,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
         () => context.navigateTo(
               AssesmentHomePage(
                 activeUnitModel: activeUnitModel,
+                credential: widget.credential,
               ),
             ),
         () => context.navigateTo(

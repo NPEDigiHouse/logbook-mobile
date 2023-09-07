@@ -1,4 +1,6 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/core/styles/color_palette.dart';
+import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/add_mini_cex_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_mini_cex_detail.dart';
@@ -11,7 +13,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StudentTestGrade extends StatefulWidget {
   final String unitName;
-  const StudentTestGrade({super.key, required this.unitName});
+  final bool isExaminerDPKExist;
+
+  const StudentTestGrade(
+      {super.key, required this.unitName, required this.isExaminerDPKExist});
 
   @override
   State<StudentTestGrade> createState() => _StudentTestGradeState();
@@ -53,6 +58,13 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
                             SizedBox(
                               height: 16,
                             ),
+                            if (!widget.isExaminerDPKExist)
+                              Text(
+                                'Please select examiner dpk before upload mini cex data',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: errorColor,
+                                ),
+                              ),
                             EmptyData(
                                 title: 'Empty Data',
                                 subtitle:
@@ -62,10 +74,11 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
                             ),
                             Center(
                               child: FilledButton(
-                                onPressed: () =>
-                                    context.navigateTo(AddMiniCexPage(
-                                  unitName: widget.unitName,
-                                )),
+                                onPressed: widget.isExaminerDPKExist
+                                    ? () => context.navigateTo(AddMiniCexPage(
+                                          unitName: widget.unitName,
+                                        ))
+                                    : null,
                                 child: Text('Add Mini Cex'),
                               ),
                             ),

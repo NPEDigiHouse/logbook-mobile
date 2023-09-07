@@ -4,6 +4,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class CustomDropdown<T> extends StatefulWidget {
   final String hint;
+  final String? init;
   final List<dynamic> Function(String pattern) onCallback;
   final Widget Function(dynamic suggestion) child;
   final void Function(dynamic v, TextEditingController controller) onItemSelect;
@@ -15,6 +16,7 @@ class CustomDropdown<T> extends StatefulWidget {
     required this.child,
     required this.onItemSelect,
     required this.onSubmit,
+    this.init,
   });
 
   @override
@@ -23,6 +25,12 @@ class CustomDropdown<T> extends StatefulWidget {
 
 class _CustomDropdownState extends State<CustomDropdown> {
   final TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.init != null) controller.text = widget.init!;
+  }
 
   @override
   void dispose() {

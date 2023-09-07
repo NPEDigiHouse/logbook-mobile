@@ -417,6 +417,7 @@ class AssesmentCubit extends Cubit<AssesmentState> {
         emit(
           state.copyWith(
             finalScore: data,
+            stateSa: RequestState.data,
           ),
         );
       } catch (e) {

@@ -63,7 +63,7 @@ class _AddScientificAssignmentPageState
                   TextFormField(
                     controller: fieldController,
                     decoration: InputDecoration(
-                      label: Text('Case Title'),
+                      label: Text('Scientific assignment title'),
                     ),
                   ),
                   SizedBox(

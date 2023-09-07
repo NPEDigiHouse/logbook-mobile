@@ -3,7 +3,7 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/final_score/student_final_score_page.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/student_final_score_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_shimmer.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
@@ -181,19 +181,23 @@ class _FinalGradeCardState extends State<FinalGradeCard> {
               );
             },
           );
-        return CustomShimmer(
-            child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.white,
-              ),
-              height: 120,
-              width: double.infinity,
-            ),
-          ],
-        ));
+        else {
+          if (state.stateSa == RequestState.loading)
+            return CustomShimmer(
+                child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                  ),
+                  height: 120,
+                  width: double.infinity,
+                ),
+              ],
+            ));
+          return SizedBox.shrink();
+        }
       },
     );
   }

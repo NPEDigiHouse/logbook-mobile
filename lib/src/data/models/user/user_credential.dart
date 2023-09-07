@@ -55,7 +55,7 @@ class StudentCredentialProfile {
   final String? supervisingDPKName;
   final String? supervisingDPKId;
   final String? examinerDPKName;
-  final String? examinerDPKid;
+  final String? examinerDPKId;
   final String? rsStation;
   final String? pkmStation;
   final int? periodLengthStation;
@@ -73,7 +73,7 @@ class StudentCredentialProfile {
       this.academicSupervisorId,
       this.academicSupervisorName,
       this.examinerDPKName,
-      this.examinerDPKid,
+      this.examinerDPKId,
       this.pkmStation,
       this.periodLengthStation,
       this.rsStation,
