@@ -191,13 +191,21 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
           builder: (context, state) {
             return Column(
               children: [
-                ValueListenableBuilder(
-                  valueListenable: _query,
-                  builder: (context, query, child) {
-                    return SearchField(
-                      text: query,
-                      onChanged: (value) => _query.value = value,
-                    );
+                SearchField(
+                  text: '',
+                  hint: 'Search Skill',
+                  onChanged: (value) {
+                    final data = state.listSkillsModel!.listSkills!
+                        .where((element) => element.skillName!
+                            .toLowerCase()
+                            .contains(value.toLowerCase()))
+                        .toList();
+                    if (value.isEmpty) {
+                      listData.value.clear();
+                      listData.value = [...state.listSkillsModel!.listSkills!];
+                    } else {
+                      listData.value = [...data];
+                    }
                   },
                 ),
                 SizedBox(

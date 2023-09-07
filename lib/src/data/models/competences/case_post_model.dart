@@ -6,8 +6,8 @@ part 'case_post_model.g.dart';
 class CasePostModel {
   final String? type;
   final int? caseTypeId;
-
-  CasePostModel({this.type, this.caseTypeId});
+  final String? supervisorId;
+  CasePostModel({this.type, this.caseTypeId, this.supervisorId});
 
   factory CasePostModel.fromJson(Map<String, dynamic> json) =>
       _$CasePostModelFromJson(json);

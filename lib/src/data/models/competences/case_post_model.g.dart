@@ -10,10 +10,12 @@ CasePostModel _$CasePostModelFromJson(Map<String, dynamic> json) =>
     CasePostModel(
       type: json['type'] as String?,
       caseTypeId: json['caseTypeId'] as int?,
+      supervisorId: json['supervisorId'] as String?,
     );
 
 Map<String, dynamic> _$CasePostModelToJson(CasePostModel instance) =>
     <String, dynamic>{
       'type': instance.type,
       'caseTypeId': instance.caseTypeId,
+      'supervisorId': instance.supervisorId,
     };

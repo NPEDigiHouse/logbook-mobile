@@ -6,8 +6,9 @@ part 'skill_post_model.g.dart';
 class SkillPostModel {
   final String? type;
   final int? skillTypeId;
+  final String? supervisorId;
 
-  SkillPostModel({this.type, this.skillTypeId});
+  SkillPostModel({this.type, this.skillTypeId, this.supervisorId});
 
   factory SkillPostModel.fromJson(Map<String, dynamic> json) =>
       _$SkillPostModelFromJson(json);

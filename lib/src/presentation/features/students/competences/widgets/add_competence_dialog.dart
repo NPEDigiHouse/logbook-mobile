@@ -5,7 +5,9 @@ import 'package:elogbook/src/data/models/competences/case_post_model.dart';
 import 'package:elogbook/src/data/models/competences/list_student_cases_model.dart';
 import 'package:elogbook/src/data/models/competences/list_student_skills_model.dart';
 import 'package:elogbook/src/data/models/competences/skill_post_model.dart';
+import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +31,7 @@ class AddCompetenceDialog extends StatefulWidget {
 class _AddTopicDialogState extends State<AddCompetenceDialog> {
   int? caseId;
   String? desc;
+  String? supervisorId;
 
   @override
   void initState() {
@@ -39,6 +42,8 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
       BlocProvider.of<CompetenceCubit>(context)
         ..getStudentSkills(unitId: widget.unitId);
     }
+    BlocProvider.of<SupervisorsCubit>(context, listen: false)
+      ..getAllSupervisors();
     super.initState();
   }
 
@@ -120,6 +125,50 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                 horizontalPadding: 16,
                 spacing: 12,
                 children: [
+                  BlocBuilder<SupervisorsCubit, SupervisorsState>(
+                      builder: (context, state) {
+                    List<SupervisorModel> _supervisors = [];
+                    if (state is FetchSuccess) {
+                      _supervisors.clear();
+                      _supervisors.addAll(state.supervisors);
+                    }
+                    return CustomDropdown<SupervisorModel>(
+                        onSubmit: (text, controller) {
+                          if (_supervisors.indexWhere((element) =>
+                                  element.fullName == text.trim()) ==
+                              -1) {
+                            controller.clear();
+                            supervisorId = '';
+                          }
+                        },
+                        hint: 'Supervisor',
+                        onCallback: (pattern) {
+                          final temp = _supervisors
+                              .where((competence) =>
+                                  (competence.fullName ?? 'unknown')
+                                      .toLowerCase()
+                                      .trim()
+                                      .contains(pattern.toLowerCase()))
+                              .toList();
+
+                          return pattern.isEmpty ? _supervisors : temp;
+                        },
+                        child: (suggestion) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 16,
+                            ),
+                            child: Text(suggestion?.fullName ?? ''),
+                          );
+                        },
+                        onItemSelect: (v, controller) {
+                          if (v != null) {
+                            supervisorId = v.id!;
+                            controller.text = v.fullName!;
+                          }
+                        });
+                  }),
                   Builder(
                     builder: (context) {
                       List<dynamic> _competences = [];
@@ -139,8 +188,11 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                       }
                       return CustomDropdown<dynamic>(
                           onSubmit: (text, controller) {
-                            if (_competences.indexWhere(
-                                    (element) => element.name == text.trim()) ==
+                            print(_competences.indexWhere((element) =>
+                                    element.name.trim() == text.trim()) ==
+                                -1);
+                            if (_competences.indexWhere((element) =>
+                                    element.name.trim() == text.trim()) ==
                                 -1) {
                               controller.clear();
                               caseId = null;
@@ -154,7 +206,7 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                                 .where((competence) => competence.name
                                     .toLowerCase()
                                     .trim()
-                                    .startsWith(pattern.toLowerCase()))
+                                    .contains(pattern.toLowerCase()))
                                 .toList();
 
                             return pattern.isEmpty ? _competences : temp;
@@ -207,11 +259,14 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                   ),
                   Builder(
                     builder: (context) {
-                      List<String> _desc = [
-                        'OBTAINED',
-                        'DISCUSSED',
-                        'OBSERVER'
-                      ];
+                      List<String> _desc = [];
+                      if (widget.type == CompetenceType.caseType) {
+                        _desc.clear();
+                        _desc.addAll(['DISCUSSED', 'OBTAINED']);
+                      } else {
+                        _desc.clear();
+                        _desc.addAll(['OBSERVER', 'PERFORM']);
+                      }
 
                       return DropdownButtonFormField(
                         isExpanded: true,
@@ -242,16 +297,25 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: FilledButton(
                   onPressed: () {
-                    if (widget.type == CompetenceType.caseType) {
-                      BlocProvider.of<CompetenceCubit>(context)
-                        ..uploadNewCase(
-                            model:
-                                CasePostModel(caseTypeId: caseId, type: desc));
-                    } else {
-                      BlocProvider.of<CompetenceCubit>(context)
-                        ..uploadNewSkills(
-                            model: SkillPostModel(
-                                skillTypeId: caseId, type: desc));
+                    print(caseId);
+                    if (supervisorId != null &&
+                        supervisorId!.isNotEmpty &&
+                        caseId != null) {
+                      if (widget.type == CompetenceType.caseType) {
+                        BlocProvider.of<CompetenceCubit>(context)
+                          ..uploadNewCase(
+                              model: CasePostModel(
+                                  caseTypeId: caseId,
+                                  type: desc,
+                                  supervisorId: supervisorId));
+                      } else {
+                        BlocProvider.of<CompetenceCubit>(context)
+                          ..uploadNewSkills(
+                              model: SkillPostModel(
+                                  skillTypeId: caseId,
+                                  type: desc,
+                                  supervisorId: supervisorId));
+                      }
                     }
                   },
                   child: Text('Submit'),

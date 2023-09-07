@@ -193,13 +193,21 @@ class _ListCasesPageState extends State<ListCasesPage> {
           builder: (context, state) {
             return Column(
               children: [
-                ValueListenableBuilder(
-                  valueListenable: _query,
-                  builder: (context, query, child) {
-                    return SearchField(
-                      text: query,
-                      onChanged: (value) => _query.value = value,
-                    );
+                SearchField(
+                  text: '',
+                  hint: 'Search Cases',
+                  onChanged: (value) {
+                    final data = state.listCasesModel!.listCases!
+                        .where((element) => element.caseName!
+                            .toLowerCase()
+                            .contains(value.toLowerCase()))
+                        .toList();
+                    if (value.isEmpty) {
+                      listData.value.clear();
+                      listData.value = [...state.listCasesModel!.listCases!];
+                    } else {
+                      listData.value = [...data];
+                    }
                   },
                 ),
                 SizedBox(

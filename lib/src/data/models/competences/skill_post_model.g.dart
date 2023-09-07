@@ -10,10 +10,12 @@ SkillPostModel _$SkillPostModelFromJson(Map<String, dynamic> json) =>
     SkillPostModel(
       type: json['type'] as String?,
       skillTypeId: json['skillTypeId'] as int?,
+      supervisorId: json['supervisorId'] as String?,
     );
 
 Map<String, dynamic> _$SkillPostModelToJson(SkillPostModel instance) =>
     <String, dynamic>{
       'type': instance.type,
       'skillTypeId': instance.skillTypeId,
+      'supervisorId': instance.supervisorId,
     };
