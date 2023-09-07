@@ -12,11 +12,13 @@ FinalScoreResponse _$FinalScoreResponseFromJson(Map<String, dynamic> json) =>
       assesments: (json['assesments'] as List<dynamic>?)
           ?.map((e) => Assesment.fromJson(e as Map<String, dynamic>))
           .toList(),
+      verified: json['verified'] as bool?,
     );
 
 Map<String, dynamic> _$FinalScoreResponseToJson(FinalScoreResponse instance) =>
     <String, dynamic>{
       'finalScore': instance.finalScore,
+      'verified': instance.verified,
       'assesments': instance.assesments,
     };
 

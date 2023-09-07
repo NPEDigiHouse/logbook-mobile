@@ -42,6 +42,10 @@ abstract class AssesmentDataSource {
       required String unitId,
       required double score});
   Future<void> scoreWeeklyAssesment({required String id, required int score});
+  Future<void> submitFinalScore(
+      {required String studentId,
+      required String unitId,
+      required bool status});
 }
 
 class AssesmentDataSourceImpl implements AssesmentDataSource {
@@ -465,6 +469,41 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         },
       );
       print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> submitFinalScore(
+      {required String studentId,
+      required String unitId,
+      required bool status}) async {
+    try {
+      final credential = await preferenceHandler.getCredential();
+
+      final response = await dio.put(
+        ApiService.baseUrl +
+            '/assesments/students/$studentId/units/$unitId/submit',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+        data: {
+          'verified': status,
+        },
+      );
+      print(response.data);
       if (response.statusCode != 200) {
         throw Exception();
       }

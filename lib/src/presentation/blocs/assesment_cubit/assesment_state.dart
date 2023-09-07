@@ -18,6 +18,7 @@ class AssesmentState {
   final StudentMiniCex? studentMiniCex;
   final bool isAssesmentMiniCexSuccess;
   final RequestState stateSa;
+  final bool isSubmitFinalScoreSuccess;
   RequestState requestState;
 
   AssesmentState({
@@ -34,6 +35,7 @@ class AssesmentState {
     this.weeklyAssesment,
     this.scientificAssignmentDetail,
     this.scientificAssignmentStudents,
+    this.isSubmitFinalScoreSuccess = false,
     this.finalScore,
     this.isAssementScientificAssignmentSuccess = false,
     this.isPersonalBehaviorVerify = false,
@@ -45,6 +47,7 @@ class AssesmentState {
     RequestState requestState = RequestState.init,
     bool isUploadMiniCexSuccess = false,
     bool isAssesmentMiniCexSuccess = false,
+    bool isSubmitFinalScoreSuccess = false,
     MiniCexStudentDetailModel? miniCexStudentDetail,
     StudentMiniCex? studentMiniCex,
     bool isUploadAssignmentSuccess = false,
@@ -62,6 +65,7 @@ class AssesmentState {
     bool isPersonalBehaviorVerify = false,
   }) {
     return AssesmentState(
+      isSubmitFinalScoreSuccess: isSubmitFinalScoreSuccess,
       isUploadMiniCexSuccess: isUploadMiniCexSuccess,
       miniCexStudentDetail: miniCexStudentDetail,
       studentMiniCexs: studentMiniCexs ?? this.studentMiniCexs,

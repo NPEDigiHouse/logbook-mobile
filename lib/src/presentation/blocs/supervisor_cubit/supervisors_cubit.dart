@@ -49,7 +49,12 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
 
       final result = await dataSource.getAllStudentsByCeu();
 
-      emit(FetchStudentDepartmentSuccess(students: result));
+      emit(FetchStudentDepartmentSuccess(
+          students: result
+              .where(
+                (element) => element.activeDepartmentId != null,
+              )
+              .toList()));
     } catch (e) {
       print(e.toString());
       emit(

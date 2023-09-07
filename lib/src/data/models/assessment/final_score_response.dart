@@ -6,12 +6,15 @@ part 'final_score_response.g.dart';
 class FinalScoreResponse {
   @JsonKey(name: "finalScore")
   double? finalScore;
+  @JsonKey(name: "verified")
+  bool? verified;
   @JsonKey(name: "assesments")
   List<Assesment>? assesments;
 
   FinalScoreResponse({
     this.finalScore,
     this.assesments,
+    this.verified,
   });
 
   factory FinalScoreResponse.fromJson(Map<String, dynamic> json) =>

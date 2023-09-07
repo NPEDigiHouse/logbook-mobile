@@ -12,6 +12,8 @@ class StudentDepartmentModel {
   String? id;
   @JsonKey(name: "studentId")
   String? studentId;
+  @JsonKey(name: "userId")
+  String? userId;
   @JsonKey(name: "studentName")
   String? studentName;
   @JsonKey(name: "activeUnitId")
@@ -24,6 +26,7 @@ class StudentDepartmentModel {
     this.studentId,
     this.studentName,
     this.profileImage,
+    this.userId,
     this.activeDepartmentId,
     this.activeDepartmentName,
   });

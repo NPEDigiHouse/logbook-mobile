@@ -215,24 +215,25 @@ class _SupervisorDetailClinicalRecordPageState
                               color: primaryTextColor,
                             ),
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Age',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            '18th',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
+                          // SizedBox(
+                          //   height: 8,
+                          // ),
+                          // Text(
+                          //   'Age',
+                          //   style: textTheme.bodyMedium?.copyWith(
+                          //     color: secondaryTextColor,
+                          //   ),
+                          // ),
+                          // Text(
+                          //    state.detailClinicalRecordModel!.p ?? '',
+                          //   style: textTheme.titleMedium?.copyWith(
+                          //     color: primaryTextColor,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
+
                     SizedBox(
                       height: 24,
                     ),

@@ -8,6 +8,7 @@ import 'package:elogbook/src/presentation/features/supervisor/assesment/provider
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/input_score_modal.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/top_stat_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SupervisorFinalGrade extends StatefulWidget {
   final StudentDepartmentModel finalGrade;
+
   const SupervisorFinalGrade({super.key, required this.finalGrade});
 
   @override
@@ -95,7 +97,15 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                 studentId: widget.finalGrade.studentId!)
           ]);
         },
-        child: BlocBuilder<AssesmentCubit, AssesmentState>(
+        child: BlocConsumer<AssesmentCubit, AssesmentState>(
+          listener: (context, state) {
+            if (state.isSubmitFinalScoreSuccess) {
+              BlocProvider.of<AssesmentCubit>(context)
+                ..getFinalScore(
+                    unitId: widget.finalGrade.activeDepartmentId ?? '',
+                    studentId: widget.finalGrade.studentId!);
+            }
+          },
           builder: (context, state) {
             if (state.finalScore != null) {
               return SingleChildScrollView(
@@ -105,6 +115,79 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                   children: [
                     SizedBox(
                       height: 16,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: scaffoldBackgroundColor,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                              offset: Offset(0, 0),
+                              spreadRadius: 0,
+                              blurRadius: 6,
+                              color: Color(0xFFD4D4D4).withOpacity(.25)),
+                          BoxShadow(
+                              offset: Offset(0, 4),
+                              spreadRadius: 0,
+                              blurRadius: 24,
+                              color: Color(0xFFD4D4D4).withOpacity(.25)),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Student Name',
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: secondaryTextColor,
+                            ),
+                          ),
+                          Text(
+                            widget.finalGrade.studentName ?? '',
+                            style: textTheme.titleMedium?.copyWith(
+                              color: primaryTextColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Student Id',
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: secondaryTextColor,
+                            ),
+                          ),
+                          Text(
+                            widget.finalGrade.studentId ?? '',
+                            style: textTheme.titleMedium?.copyWith(
+                              color: primaryTextColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Department',
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: secondaryTextColor,
+                            ),
+                          ),
+                          Text(
+                            widget.finalGrade.activeDepartmentName ?? '',
+                            style: textTheme.titleMedium?.copyWith(
+                              color: primaryTextColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 12,
                     ),
                     FinalGradeTopStatCard(
                       title: 'Final Grade Statistic',
@@ -173,37 +256,45 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                               },
                               child: Text('Update CBT')),
                         ),
-                        SizedBox(
-                          width: 4,
-                        ),
-                        FilledButton(
-                            style: FilledButton.styleFrom(
-                                backgroundColor: primaryColor),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                barrierLabel: '',
-                                barrierDismissible: false,
-                                builder: (_) => InputFinalScoreDialog(
-                                  studentId: widget.finalGrade.studentId!,
-                                  unitId: widget.finalGrade.activeDepartmentId!,
-                                  type: FinalScoreType.osce,
-                                  initScore: state.finalScore!.assesments!
-                                              .indexWhere((element) => element
-                                                  .type!
-                                                  .contains("OSCE")) !=
-                                          -1
-                                      ? state.finalScore!.assesments!
-                                              .firstWhere((element) => element
-                                                  .type!
-                                                  .contains("OSCE"))
-                                              .score ??
-                                          0
-                                      : 0,
-                                ),
-                              );
-                            },
-                            child: Text('Update OSCE')),
+                        if (!(widget.finalGrade.activeDepartmentName!
+                                .toUpperCase()
+                                .contains('FORENSIK') ||
+                            widget.finalGrade.activeDepartmentName!
+                                    .toUpperCase() ==
+                                'IKM-IKK')) ...[
+                          SizedBox(
+                            width: 4,
+                          ),
+                          FilledButton(
+                              style: FilledButton.styleFrom(
+                                  backgroundColor: primaryColor),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  barrierLabel: '',
+                                  barrierDismissible: false,
+                                  builder: (_) => InputFinalScoreDialog(
+                                    studentId: widget.finalGrade.studentId!,
+                                    unitId:
+                                        widget.finalGrade.activeDepartmentId!,
+                                    type: FinalScoreType.osce,
+                                    initScore: state.finalScore!.assesments!
+                                                .indexWhere((element) => element
+                                                    .type!
+                                                    .contains("OSCE")) !=
+                                            -1
+                                        ? state.finalScore!.assesments!
+                                                .firstWhere((element) => element
+                                                    .type!
+                                                    .contains("OSCE"))
+                                                .score ??
+                                            0
+                                        : 0,
+                                  ),
+                                );
+                              },
+                              child: Text('Update OSCE')),
+                        ],
                       ],
                     ),
                     if (state.finalScore!.assesments
@@ -212,13 +303,37 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                       SizedBox(
                         height: 40,
                         width: double.infinity,
-                        child: FilledButton(
-                          style: FilledButton.styleFrom(
-                            backgroundColor: variant2Color,
-                          ),
-                          onPressed: () {},
-                          child: Text('Submit Final Score'),
-                        ),
+                        child: Builder(builder: (context) {
+                          if (!state.finalScore!.verified!) {
+                            return FilledButton(
+                              style: FilledButton.styleFrom(
+                                backgroundColor: variant2Color,
+                              ),
+                              onPressed: () {
+                                BlocProvider.of<AssesmentCubit>(context)
+                                  ..submitFinalScore(
+                                      studentId: widget.finalGrade.studentId!,
+                                      unitId:
+                                          widget.finalGrade.activeDepartmentId!,
+                                      status: true);
+                              },
+                              child: Text('Submit Final Score'),
+                            );
+                          } else {
+                            return OutlinedButton(
+                              onPressed: () {
+                                print("va");
+                                BlocProvider.of<AssesmentCubit>(context)
+                                  ..submitFinalScore(
+                                      studentId: widget.finalGrade.studentId!,
+                                      unitId:
+                                          widget.finalGrade.activeDepartmentId!,
+                                      status: false);
+                              },
+                              child: Text('Cancel Submit'),
+                            );
+                          }
+                        }),
                       ),
                     SizedBox(
                       height: 16,
