@@ -91,13 +91,13 @@ class SglCstCubit extends Cubit<SglCstState> {
     }
   }
 
-  Future<void> getTopicsByUnitId({required String unitId}) async {
+  Future<void> getTopicsByDepartmentId({required String unitId}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result = await dataSource.getTopicsByUnitId(unitId: unitId);
+      final result = await dataSource.getTopicsByDepartmentId(unitId: unitId);
       try {
         emit(state.copyWith(
           topics: result,

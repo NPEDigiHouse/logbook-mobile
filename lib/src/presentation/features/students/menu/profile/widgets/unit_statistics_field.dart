@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 
-class UnitStatisticsField extends StatelessWidget {
+class DepartmentStatisticsField extends StatelessWidget {
   final String label;
   final String? value;
 
-  const UnitStatisticsField({
+  const DepartmentStatisticsField({
     super.key,
     required this.label,
     required this.value,

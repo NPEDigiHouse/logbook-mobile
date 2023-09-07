@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateCstPage extends StatefulWidget {
-  final ActiveUnitModel model;
+  final ActiveDepartmentModel model;
 
   const CreateCstPage({super.key, required this.model});
 
@@ -38,7 +38,7 @@ class _CreateCstPageState extends State<CreateCstPage> {
     BlocProvider.of<SupervisorsCubit>(context, listen: false)
       ..getAllSupervisors();
     BlocProvider.of<SglCstCubit>(context, listen: false)
-      ..getTopicsByUnitId(unitId: widget.model.unitId!);
+      ..getTopicsByDepartmentId(unitId: widget.model.unitId!);
     dateController.text =
         ReusableFunctionHelper.datetimeToString(DateTime.now());
   }
@@ -159,7 +159,7 @@ class _CreateCstPageState extends State<CreateCstPage> {
                       ),
                     ],
                   ),
-                   BlocBuilder<SglCstCubit, SglCstState>(
+                  BlocBuilder<SglCstCubit, SglCstState>(
                       builder: (context, state) {
                     List<TopicModel> _topics = [];
                     if (state.topics != null) {
@@ -244,7 +244,6 @@ class _CreateCstPageState extends State<CreateCstPage> {
                       );
                     return SizedBox.shrink();
                   }),
-                  
                   TextFormField(
                     maxLines: 4,
                     minLines: 4,

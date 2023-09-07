@@ -2,12 +2,12 @@ import 'package:dartz/dartz.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/domain/repositories/unit_repository.dart';
 
-class CheckInActiveUnitUsecase {
-  final UnitRepository repository;
+class CheckInActiveDepartmentUsecase {
+  final DepartmentRepository repository;
 
-  CheckInActiveUnitUsecase({required this.repository});
+  CheckInActiveDepartmentUsecase({required this.repository});
 
   Future<Either<Failure, void>> execute() async {
-    return await repository.checkInActiveUnit();
+    return await repository.checkInActiveDepartment();
   }
 }

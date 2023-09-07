@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StudentFinalScorePage extends StatefulWidget {
-  final ActiveUnitModel model;
+  final ActiveDepartmentModel model;
   const StudentFinalScorePage({
     super.key,
     required this.model,

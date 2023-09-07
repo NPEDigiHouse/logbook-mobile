@@ -198,7 +198,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
               length: 1,
               menus: listSupervisorMenu.sublist(8, listSupervisorMenu.length),
               onTaps: [
-                () => context.navigateTo(SupervisorListStudentUnitPage()),
+                () => context.navigateTo(SupervisorListStudentDepartmentPage()),
               ]),
         ],
       ],
@@ -251,7 +251,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
             length: 1,
             menus: listSupervisorMenu.sublist(8, listSupervisorMenu.length),
             onTaps: [
-              () => context.navigateTo(SupervisorListStudentUnitPage()),
+              () => context.navigateTo(SupervisorListStudentDepartmentPage()),
             ],
           ),
         ],

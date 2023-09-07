@@ -19,9 +19,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class ListCstPage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
 
-  const ListCstPage({super.key, required this.activeUnitModel});
+  const ListCstPage({super.key, required this.activeDepartmentModel});
 
   @override
   State<ListCstPage> createState() => _ListCstPageState();
@@ -37,7 +37,7 @@ class _ListCstPageState extends State<ListCstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: (widget.activeUnitModel.countCheckIn! > 0)
+      appBar: (widget.activeDepartmentModel.countCheckIn! > 0)
           ? AppBar(
               title: Text('Clinical Skill Training (CST)'),
             )
@@ -49,12 +49,12 @@ class _ListCstPageState extends State<ListCstPage> {
         },
         child: CustomScrollView(
           slivers: [
-            if (widget.activeUnitModel.countCheckIn! == 0)
+            if (widget.activeDepartmentModel.countCheckIn! == 0)
               SglCstAppBar(
                 title: 'Clinical Skill Training (CST)',
                 onBtnPressed: () {
                   context.navigateTo(CreateCstPage(
-                    model: widget.activeUnitModel,
+                    model: widget.activeDepartmentModel,
                   ));
                 },
               ),

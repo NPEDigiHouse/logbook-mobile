@@ -34,7 +34,7 @@ List<MenuModel> listStudentMenu(bool isSglCstShow) => [
         MenuModel(
             iconPath: 'diversity_3_rounded.svg',
             labels: 'SGL and CST',
-            desc: 'Small Group Learning and Clinical Education Unit'),
+            desc: 'Small Group Learning and Clinical Education Department'),
       MenuModel(
           iconPath: 'summarize_rounded.svg',
           labels: 'Daily Activity',

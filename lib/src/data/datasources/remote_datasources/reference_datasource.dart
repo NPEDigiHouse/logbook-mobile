@@ -10,7 +10,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
 abstract class ReferenceDataSource {
-  Future<List<ReferenceOnListModel>> getReferenceByUnitId(
+  Future<List<ReferenceOnListModel>> getReferenceByDepartmentId(
       {required String unitId});
   Future<String> downloadDataReference(
       {required int id, required String filename});
@@ -23,7 +23,7 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
   ReferenceDataSourceImpl({required this.dio, required this.preferenceHandler});
 
   @override
-  Future<List<ReferenceOnListModel>> getReferenceByUnitId(
+  Future<List<ReferenceOnListModel>> getReferenceByDepartmentId(
       {required String unitId}) async {
     final credential = await preferenceHandler.getCredential();
     try {

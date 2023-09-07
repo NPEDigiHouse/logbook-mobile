@@ -10,28 +10,38 @@ import 'package:equatable/equatable.dart';
 
 part 'unit_state.dart';
 
-class UnitCubit extends Cubit<UnitState> {
-  final FetchUnitsUsecase fetchUnitsUsecase;
-  final ChangeActiveUnitUsecase changeActiveUnitUsecase;
-  final GetActiveUnitUsecase getActiveUnitUsecase;
-  final CheckInActiveUnitUsecase checkInActiveUnitUsecase;
-  final UnitDatasource datasource;
-  UnitCubit({
-    required this.fetchUnitsUsecase,
-    required this.changeActiveUnitUsecase,
-    required this.getActiveUnitUsecase,
-    required this.checkInActiveUnitUsecase,
+class DepartmentCubit extends Cubit<DepartmentState> {
+  final FetchDepartmentsUsecase fetchDepartmentsUsecase;
+  final ChangeActiveDepartmentUsecase changeActiveDepartmentUsecase;
+  final GetActiveDepartmentUsecase getActiveDepartmentUsecase;
+  final CheckInActiveDepartmentUsecase checkInActiveDepartmentUsecase;
+  final DepartmentDatasource datasource;
+  DepartmentCubit({
+    required this.fetchDepartmentsUsecase,
+    required this.changeActiveDepartmentUsecase,
+    required this.getActiveDepartmentUsecase,
+    required this.checkInActiveDepartmentUsecase,
     required this.datasource,
   }) : super(Initial());
 
-  Future<void> fetchUnits() async {
+  Future<void> fetchDepartments(bool? isSortAZ) async {
     try {
       emit(Loading());
 
-      final result = await fetchUnitsUsecase.execute();
+      final result = await fetchDepartmentsUsecase.execute();
 
-      result.fold((l) => emit(Failed(message: l.message)),
-          (r) => emit(FetchSuccess(units: r)));
+      result.fold((l) => emit(Failed(message: l.message)), (r) {
+        if (isSortAZ != null) {
+          if (isSortAZ) {
+            r.sort(
+                (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+          } else {
+            r.sort(
+                (a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
+          }
+        }
+        emit(FetchSuccess(units: r));
+      });
     } catch (e) {
       print(e.toString());
       emit(
@@ -42,11 +52,12 @@ class UnitCubit extends Cubit<UnitState> {
     }
   }
 
-  Future<void> changeUnitActive({required String unitId}) async {
+  Future<void> changeDepartmentActive({required String unitId}) async {
     try {
       emit(Loading());
 
-      final result = await changeActiveUnitUsecase.execute(unitId: unitId);
+      final result =
+          await changeActiveDepartmentUsecase.execute(unitId: unitId);
 
       result.fold(
         (l) => emit(ChangeActiveFailed()),
@@ -61,15 +72,15 @@ class UnitCubit extends Cubit<UnitState> {
     }
   }
 
-  Future<void> getActiveUnit() async {
+  Future<void> getActiveDepartment() async {
     try {
       emit(Loading());
 
-      final result = await getActiveUnitUsecase.execute();
+      final result = await getActiveDepartmentUsecase.execute();
 
       result.fold(
         (l) => emit(Failed(message: l.message)),
-        (r) => emit(GetActiveUnitSuccess(activeUnit: r)),
+        (r) => emit(GetActiveDepartmentSuccess(activeDepartment: r)),
       );
     } catch (e) {
       print("Error");
@@ -81,15 +92,15 @@ class UnitCubit extends Cubit<UnitState> {
     }
   }
 
-  Future<void> checkInActiveUnit() async {
+  Future<void> checkInActiveDepartment() async {
     try {
       emit(Loading());
 
-      final result = await checkInActiveUnitUsecase.execute();
+      final result = await checkInActiveDepartmentUsecase.execute();
 
       result.fold(
         (l) => emit(Failed(message: l.message)),
-        (r) => emit(CheckInActiveUnitSuccess()),
+        (r) => emit(CheckInActiveDepartmentSuccess()),
       );
     } catch (e) {
       emit(
@@ -100,13 +111,13 @@ class UnitCubit extends Cubit<UnitState> {
     }
   }
 
-  Future<void> checkOutActiveUnit() async {
+  Future<void> checkOutActiveDepartment() async {
     try {
       emit(Loading());
 
-      await datasource.checkOutActiveUnit();
+      await datasource.checkOutActiveDepartment();
 
-      emit(CheckOutActiveUnitSuccess());
+      emit(CheckOutActiveDepartmentSuccess());
     } catch (e) {
       emit(
         Failed(

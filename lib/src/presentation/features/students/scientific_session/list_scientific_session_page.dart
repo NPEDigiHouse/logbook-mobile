@@ -17,10 +17,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StudentListScientificSessionPage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
 
   const StudentListScientificSessionPage(
-      {super.key, required this.activeUnitModel});
+      {super.key, required this.activeDepartmentModel});
 
   @override
   State<StudentListScientificSessionPage> createState() =>
@@ -41,7 +41,7 @@ class _StudentListScientificSessionPageState
     _selectedMenu = ValueNotifier('All');
     _dataFilters = ValueNotifier(null);
     BlocProvider.of<StudentCubit>(context)
-      ..getStudentScientificSessionOfActiveUnit();
+      ..getStudentScientificSessionOfActiveDepartment();
     super.initState();
   }
 
@@ -59,10 +59,10 @@ class _StudentListScientificSessionPageState
       appBar: AppBar(
         title: Text("Scientific Session"),
       ),
-      floatingActionButton: widget.activeUnitModel.countCheckIn == 0
+      floatingActionButton: widget.activeDepartmentModel.countCheckIn == 0
           ? FloatingActionButton(
               onPressed: () => context.navigateTo(AddScientificSessionPage(
-                  activeUnitModel: widget.activeUnitModel)),
+                  activeDepartmentModel: widget.activeDepartmentModel)),
               child: Icon(
                 Icons.add_rounded,
               ),
@@ -74,7 +74,7 @@ class _StudentListScientificSessionPageState
             isMounted = false;
             await Future.wait([
               BlocProvider.of<StudentCubit>(context)
-                  .getStudentScientificSessionOfActiveUnit(),
+                  .getStudentScientificSessionOfActiveDepartment(),
             ]);
           },
           child: ValueListenableBuilder(
@@ -117,9 +117,9 @@ class _StudentListScientificSessionPageState
                                     onlyPading: true,
                                     horizontalPadding: 16,
                                     children: [
-                                      UnitHeader(
-                                          unitName:
-                                              widget.activeUnitModel.unitName!),
+                                      DepartmentHeader(
+                                          unitName: widget
+                                              .activeDepartmentModel.unitName!),
                                       SizedBox(
                                         height: 12,
                                       ),

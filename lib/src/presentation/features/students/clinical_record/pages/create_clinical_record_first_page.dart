@@ -14,9 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class CreateClinicalRecordFirstPage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
   const CreateClinicalRecordFirstPage(
-      {super.key, required this.activeUnitModel});
+      {super.key, required this.activeDepartmentModel});
 
   @override
   State<CreateClinicalRecordFirstPage> createState() =>
@@ -77,10 +77,10 @@ class _CreateClinicalRecordFirstPageState
                     ),
                     TextFormField(
                       decoration: InputDecoration(
-                        label: Text('Unit'),
+                        label: Text('Department'),
                         enabled: false,
                       ),
-                      initialValue: widget.activeUnitModel.unitName,
+                      initialValue: widget.activeDepartmentModel.unitName,
                     ),
                     BlocBuilder<SupervisorsCubit, SupervisorsState>(
                         builder: (context, state) {
@@ -194,7 +194,7 @@ class _CreateClinicalRecordFirstPageState
                         if (clinicalRecord.isFirstDataComplete())
                           context.navigateTo(
                             CreateClinicalRecordSecondPage(
-                              unitId: widget.activeUnitModel.unitId!,
+                              unitId: widget.activeDepartmentModel.unitId!,
                               clinicalRecordData: clinicalRecord,
                             ),
                           );

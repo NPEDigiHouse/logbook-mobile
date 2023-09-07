@@ -2,9 +2,9 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:flutter/material.dart';
 
-class UnitHeader extends StatelessWidget {
+class DepartmentHeader extends StatelessWidget {
   final String unitName;
-  const UnitHeader({super.key, required this.unitName});
+  const DepartmentHeader({super.key, required this.unitName});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class UnitHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Unit',
+          'Department',
           style: textTheme.titleLarge?.copyWith(color: primaryColor),
         ),
         Text(

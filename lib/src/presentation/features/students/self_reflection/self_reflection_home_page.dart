@@ -16,11 +16,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StudentSelfReflectionHomePage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
   final UserCredential credential;
 
   const StudentSelfReflectionHomePage(
-      {super.key, required this.activeUnitModel, required this.credential});
+      {super.key,
+      required this.activeDepartmentModel,
+      required this.credential});
 
   @override
   State<StudentSelfReflectionHomePage> createState() =>
@@ -55,7 +57,7 @@ class _StudentSelfReflectionHomePageState
       appBar: AppBar(
         title: Text("Self Reflections"),
       ),
-      floatingActionButton: widget.activeUnitModel.countCheckIn! == 0
+      floatingActionButton: widget.activeDepartmentModel.countCheckIn! == 0
           ? FloatingActionButton(
               onPressed: () => context.navigateTo(CreateSelfReflectionPage(
                 credential: widget.credential,
@@ -87,8 +89,9 @@ class _StudentSelfReflectionHomePageState
                             onlyPading: true,
                             horizontalPadding: 16,
                             children: [
-                              UnitHeader(
-                                  unitName: widget.activeUnitModel.unitName!),
+                              DepartmentHeader(
+                                  unitName:
+                                      widget.activeDepartmentModel.unitName!),
                               SizedBox(
                                 height: 12,
                               ),

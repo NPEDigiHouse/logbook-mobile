@@ -86,7 +86,7 @@ class _SupervisorMiniCexDetailPageState
                 SizedBox(
                   height: 16,
                 ),
-                UnitHeader(unitName: 'Unit Name'),
+                DepartmentHeader(unitName: 'Department Name'),
                 BlocConsumer<AssesmentCubit, AssesmentState>(
                   listener: (context, state) {
                     if (state.isAssesmentMiniCexSuccess) {

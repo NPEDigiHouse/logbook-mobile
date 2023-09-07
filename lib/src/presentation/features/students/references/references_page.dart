@@ -14,9 +14,9 @@ import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 
 class ReferencePage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
 
-  const ReferencePage({super.key, required this.activeUnitModel});
+  const ReferencePage({super.key, required this.activeDepartmentModel});
 
   @override
   State<ReferencePage> createState() => _ReferencePageState();
@@ -38,7 +38,7 @@ class _ReferencePageState extends State<ReferencePage> {
   void initState() {
     super.initState();
     BlocProvider.of<ReferenceCubit>(context)
-      ..getListReference(unitId: widget.activeUnitModel.unitId!);
+      ..getListReference(unitId: widget.activeDepartmentModel.unitId!);
   }
 
   @override
@@ -51,8 +51,8 @@ class _ReferencePageState extends State<ReferencePage> {
         child: RefreshIndicator(
           onRefresh: () async {
             await Future.wait([
-              BlocProvider.of<ReferenceCubit>(context)
-                  .getListReference(unitId: widget.activeUnitModel.unitId!),
+              BlocProvider.of<ReferenceCubit>(context).getListReference(
+                  unitId: widget.activeDepartmentModel.unitId!),
             ]);
           },
           child: ValueListenableBuilder(
@@ -70,8 +70,9 @@ class _ReferencePageState extends State<ReferencePage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                UnitHeader(
-                                  unitName: widget.activeUnitModel.unitName!,
+                                DepartmentHeader(
+                                  unitName:
+                                      widget.activeDepartmentModel.unitName!,
                                 ),
                                 BlocConsumer<ReferenceCubit, ReferenceState>(
                                   listener: (context, state) {

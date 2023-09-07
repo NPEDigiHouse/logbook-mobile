@@ -48,7 +48,8 @@ class _HistoryPageState extends State<HistoryPage> {
     ];
 
     Future.microtask(() {
-      BlocProvider.of<UnitCubit>(context, listen: false)..getActiveUnit();
+      BlocProvider.of<DepartmentCubit>(context, listen: false)
+        ..getActiveDepartment();
       BlocProvider.of<HistoryCubit>(context)..getHistories();
     });
     _query = ValueNotifier('');
@@ -69,7 +70,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final activeUnit = context.watch<UnitCubit>().state;
+    final activeDepartment = context.watch<DepartmentCubit>().state;
     return NestedScrollView(
       floatHeaderSlivers: true,
       headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -118,7 +119,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 builder: (context, state) {
                   if (state.histories != null &&
                       state.requestState == RequestState.data &&
-                      activeUnit is GetActiveUnitSuccess) {
+                      activeDepartment is GetActiveDepartmentSuccess) {
                     return CustomScrollView(
                       slivers: <Widget>[
                         SliverGroupedListView<Activity, DateTime>(
@@ -135,15 +136,17 @@ class _HistoryPageState extends State<HistoryPage> {
                                     case 'SGL':
                                       context.navigateTo(
                                         ListSglPage(
-                                            activeUnitModel:
-                                                activeUnit.activeUnit),
+                                            activeDepartmentModel:
+                                                activeDepartment
+                                                    .activeDepartment),
                                       );
                                       break;
                                     case 'CST':
                                       context.navigateTo(
                                         ListCstPage(
-                                            activeUnitModel:
-                                                activeUnit.activeUnit),
+                                            activeDepartmentModel:
+                                                activeDepartment
+                                                    .activeDepartment),
                                       );
                                       break;
                                     case 'Scientific Session':

@@ -19,9 +19,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class ListSglPage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
 
-  const ListSglPage({super.key, required this.activeUnitModel});
+  const ListSglPage({super.key, required this.activeDepartmentModel});
 
   @override
   State<ListSglPage> createState() => _ListSglPageState();
@@ -37,7 +37,7 @@ class _ListSglPageState extends State<ListSglPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: (widget.activeUnitModel.countCheckIn! > 0)
+      appBar: (widget.activeDepartmentModel.countCheckIn! > 0)
           ? AppBar(
               title: Text('Small Group Learning (SGL)'),
             )
@@ -49,13 +49,13 @@ class _ListSglPageState extends State<ListSglPage> {
         },
         child: CustomScrollView(
           slivers: [
-            if (widget.activeUnitModel.countCheckIn! == 0)
+            if (widget.activeDepartmentModel.countCheckIn! == 0)
               SglCstAppBar(
                 title: 'Small Group Learning (SGL)',
                 onBtnPressed: () {
                   context.navigateTo(
                     CreateSglPage(
-                      model: widget.activeUnitModel,
+                      model: widget.activeDepartmentModel,
                     ),
                   );
                 },

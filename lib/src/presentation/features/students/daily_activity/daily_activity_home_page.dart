@@ -31,9 +31,9 @@ class DailyActivityTempModel {
 }
 
 class DailyActivityPage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
 
-  const DailyActivityPage({super.key, required this.activeUnitModel});
+  const DailyActivityPage({super.key, required this.activeDepartmentModel});
 
   @override
   State<DailyActivityPage> createState() => _DailyActivityPageState();
@@ -69,8 +69,8 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                   horizontalPadding: 16,
                   spacing: 20,
                   children: [
-                    UnitHeader(
-                      unitName: widget.activeUnitModel.unitName!,
+                    DepartmentHeader(
+                      unitName: widget.activeDepartmentModel.unitName!,
                     ),
                     Container(
                       width: AppSize.getAppWidth(context),
@@ -278,7 +278,8 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                       (index) => DailyActivityHomeCard(
                         dailyActivity:
                             state.studentDailyActivity!.dailyActivities![index],
-                        checkInCount: widget.activeUnitModel.countCheckIn!,
+                        checkInCount:
+                            widget.activeDepartmentModel.countCheckIn!,
                       ),
                     )
                   ],

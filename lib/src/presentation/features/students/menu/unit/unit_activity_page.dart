@@ -29,22 +29,23 @@ import 'package:elogbook/src/presentation/widgets/glassmorphism.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
 import 'package:intl/intl.dart';
 
-class UnitActivityPage extends StatefulWidget {
+class DepartmentActivityPage extends StatefulWidget {
   final UserCredential credential;
-  const UnitActivityPage({super.key, required this.credential});
+  const DepartmentActivityPage({super.key, required this.credential});
 
   @override
-  State<UnitActivityPage> createState() => _UnitActivityPageState();
+  State<DepartmentActivityPage> createState() => _DepartmentActivityPageState();
 }
 
-class _UnitActivityPageState extends State<UnitActivityPage> {
+class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
   late final ValueNotifier<bool> _isList;
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() =>
-        BlocProvider.of<UnitCubit>(context, listen: false)..getActiveUnit());
+        BlocProvider.of<DepartmentCubit>(context, listen: false)
+          ..getActiveDepartment());
     _isList = ValueNotifier(false);
   }
 
@@ -54,83 +55,86 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     _isList.dispose();
   }
 
-  List<VoidCallback> onTaps(ActiveUnitModel activeUnitModel) => [
+  List<VoidCallback> onTaps(ActiveDepartmentModel activeDepartmentModel) => [
         () => context.navigateTo(
               SglCstHomePage(
-                  activeUnitModel: activeUnitModel,
-                  isCstHide: (activeUnitModel.unitName == 'FORENSIK' ||
-                      activeUnitModel.unitName == 'IKM-IKK')),
+                  activeDepartmentModel: activeDepartmentModel,
+                  isCstHide: (activeDepartmentModel.unitName == 'FORENSIK' ||
+                      activeDepartmentModel.unitName == 'IKM-IKK')),
             ),
         () => context.navigateTo(
               DailyActivityPage(
-                activeUnitModel: activeUnitModel,
+                activeDepartmentModel: activeDepartmentModel,
               ),
             ),
         () => context.navigateTo(
               ListClinicalRecordPage(
-                activeUnitModel: activeUnitModel,
+                activeDepartmentModel: activeDepartmentModel,
               ),
             ),
         () => context.navigateTo(
               StudentListScientificSessionPage(
-                  activeUnitModel: activeUnitModel),
+                  activeDepartmentModel: activeDepartmentModel),
             ),
         () => context.navigateTo(
               StudentSelfReflectionHomePage(
-                activeUnitModel: activeUnitModel,
+                activeDepartmentModel: activeDepartmentModel,
                 credential: widget.credential,
               ),
             ),
         () => context.navigateTo(
               CompetenceHomePage(
-                unitId: activeUnitModel.unitId!,
-                model: activeUnitModel,
+                unitId: activeDepartmentModel.unitId!,
+                model: activeDepartmentModel,
               ),
             ),
         () => context.navigateTo(
               AssesmentHomePage(
-                activeUnitModel: activeUnitModel,
+                activeDepartmentModel: activeDepartmentModel,
                 credential: widget.credential,
               ),
             ),
         () => context.navigateTo(
               SpecialReportHomePage(
-                activeUnitModel: activeUnitModel,
+                activeDepartmentModel: activeDepartmentModel,
                 credential: widget.credential,
               ),
             ),
         () => context.navigateTo(
               ReferencePage(
-                activeUnitModel: activeUnitModel,
+                activeDepartmentModel: activeDepartmentModel,
               ),
             ),
       ];
 
   @override
   Widget build(BuildContext context) {
-    final unitCubit = context.watch<UnitCubit>().state;
+    final unitCubit = context.watch<DepartmentCubit>().state;
     return RefreshIndicator(
       onRefresh: () => Future.wait([
         Future.microtask(() =>
-            BlocProvider.of<UnitCubit>(context, listen: false)..getActiveUnit())
+            BlocProvider.of<DepartmentCubit>(context, listen: false)
+              ..getActiveDepartment())
       ]),
       child: CustomScrollView(
         slivers: <Widget>[
           const MainAppBar(),
           SliverFillRemaining(
-            child: BlocListener<UnitCubit, UnitState>(
+            child: BlocListener<DepartmentCubit, DepartmentState>(
               listener: (context, state) {
-                if (state is CheckInActiveUnitSuccess ||
-                    state is CheckOutActiveUnitSuccess) {
+                if (state is CheckInActiveDepartmentSuccess ||
+                    state is CheckOutActiveDepartmentSuccess) {
                   Future.microtask(
-                    () => BlocProvider.of<UnitCubit>(context, listen: false)
-                      ..getActiveUnit(),
+                    () =>
+                        BlocProvider.of<DepartmentCubit>(context, listen: false)
+                          ..getActiveDepartment(),
                   );
                 }
               },
               child: Builder(builder: (context) {
-                if (unitCubit is GetActiveUnitSuccess) {
-                  final ActiveUnitModel activeUnitModel = unitCubit.activeUnit;
+                if (unitCubit is GetActiveDepartmentSuccess) {
+                  final ActiveDepartmentModel activeDepartmentModel =
+                      unitCubit.activeDepartment;
                   return SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
@@ -140,10 +144,10 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Unit Activity',
+                          'Department Activity',
                           style: textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.w600,
-                            fontSize: 32,
+                            fontSize: 28,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -197,13 +201,13 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     const Text(
-                                      'Current Unit',
+                                      'Current Department',
                                       style: TextStyle(color: backgroundColor),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      unitCubit.activeUnit.unitName ??
-                                          'No Unit Active',
+                                      unitCubit.activeDepartment.unitName ??
+                                          'No Department Active',
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: textTheme.titleMedium?.copyWith(
@@ -215,8 +219,9 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                     const SizedBox(height: 16),
                                     InkWell(
                                       onTap: () {
-                                        context.navigateTo(SelectUnitPage(
-                                          activeUnitModel: unitCubit.activeUnit,
+                                        context.navigateTo(SelectDepartmentPage(
+                                          activeDepartmentModel:
+                                              unitCubit.activeDepartment,
                                         ));
                                       },
                                       child: Glassmorphism(
@@ -238,7 +243,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                               ),
                                               const SizedBox(width: 5),
                                               Text(
-                                                'Change Unit',
+                                                'Change Department',
                                                 style: textTheme.labelLarge
                                                     ?.copyWith(
                                                   color: backgroundColor,
@@ -257,28 +262,31 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                         ),
 
                         const SizedBox(height: 32),
-                        if (activeUnitModel.unitName != null)
+                        if (activeDepartmentModel.unitName != null)
                           ReportExpansionTile(
-                            isVerified:
-                                activeUnitModel.checkInStatus == 'VERIFIED',
+                            isVerified: activeDepartmentModel.checkInStatus ==
+                                'VERIFIED',
                             leadingIcon: Icons.arrow_upward_rounded,
                             leadingColor: variant2Color,
                             title: 'Check In',
-                            subtitle: activeUnitModel.checkInStatus == null
-                                ? 'Not Submitted yet'
-                                : DateFormat('dd, MMM yyyy, HH.mm').format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        activeUnitModel.checkInTime! * 1000),
-                                  ),
+                            subtitle:
+                                activeDepartmentModel.checkInStatus == null
+                                    ? 'Not Submitted yet'
+                                    : DateFormat('dd, MMM yyyy, HH.mm').format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            activeDepartmentModel.checkInTime! *
+                                                1000),
+                                      ),
                             children: <Widget>[
-                              activeUnitModel.checkInStatus == null
+                              activeDepartmentModel.checkInStatus == null
                                   ? SizedBox(
                                       width: double.infinity,
                                       child: FilledButton.icon(
                                         onPressed: () {
-                                          BlocProvider.of<UnitCubit>(context,
+                                          BlocProvider.of<DepartmentCubit>(
+                                              context,
                                               listen: false)
-                                            ..checkInActiveUnit();
+                                            ..checkInActiveDepartment();
                                         },
                                         icon: SvgPicture.asset(
                                           AssetPath.getIcon(
@@ -317,7 +325,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                                   successColor.withOpacity(.25),
                                             ),
                                             child: Text(
-                                              activeUnitModel.checkInStatus ??
+                                              activeDepartmentModel
+                                                      .checkInStatus ??
                                                   '-',
                                               style:
                                                   textTheme.bodySmall?.copyWith(
@@ -338,7 +347,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                                 .format(
                                               DateTime
                                                   .fromMillisecondsSinceEpoch(
-                                                      activeUnitModel
+                                                      activeDepartmentModel
                                                               .checkInTime! *
                                                           1000),
                                             ),
@@ -353,28 +362,31 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                             ],
                           ),
                         const SizedBox(height: 12),
-                        if (activeUnitModel.checkInStatus == 'VERIFIED')
+                        if (activeDepartmentModel.checkInStatus == 'VERIFIED')
                           ReportExpansionTile(
-                            isVerified:
-                                activeUnitModel.checkOutStatus == 'VERIFIED',
+                            isVerified: activeDepartmentModel.checkOutStatus ==
+                                'VERIFIED',
                             leadingIcon: Icons.arrow_downward_rounded,
                             leadingColor: successColor,
                             title: 'Check Out',
-                            subtitle: activeUnitModel.checkOutStatus == null
+                            subtitle: activeDepartmentModel.checkOutStatus ==
+                                    null
                                 ? 'Not Submitted yet'
                                 : DateFormat('dd, MMM yyyy, HH.mm').format(
                                     DateTime.fromMillisecondsSinceEpoch(
-                                        activeUnitModel.checkOutTime! * 1000),
+                                        activeDepartmentModel.checkOutTime! *
+                                            1000),
                                   ),
                             children: <Widget>[
-                              activeUnitModel.checkOutStatus == null
+                              activeDepartmentModel.checkOutStatus == null
                                   ? SizedBox(
                                       width: double.infinity,
                                       child: FilledButton.icon(
                                         onPressed: () {
-                                          BlocProvider.of<UnitCubit>(context,
+                                          BlocProvider.of<DepartmentCubit>(
+                                              context,
                                               listen: false)
-                                            ..checkOutActiveUnit();
+                                            ..checkOutActiveDepartment();
                                         },
                                         icon: SvgPicture.asset(
                                           AssetPath.getIcon(
@@ -413,7 +425,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                                   successColor.withOpacity(.25),
                                             ),
                                             child: Text(
-                                              activeUnitModel.checkOutStatus ??
+                                              activeDepartmentModel
+                                                      .checkOutStatus ??
                                                   '-',
                                               style:
                                                   textTheme.bodySmall?.copyWith(
@@ -434,7 +447,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                                 .format(
                                               DateTime
                                                   .fromMillisecondsSinceEpoch(
-                                                      activeUnitModel
+                                                      activeDepartmentModel
                                                               .checkOutTime! *
                                                           1000),
                                             ),
@@ -449,7 +462,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                             ],
                           ),
                         // ! Ubah ke VERIFIED setelah integrasi supervior Selesai
-                        if (activeUnitModel.checkInStatus == 'VERIFIED') ...[
+                        if (activeDepartmentModel.checkInStatus ==
+                            'VERIFIED') ...[
                           const SizedBox(height: 28),
                           ValueListenableBuilder(
                             valueListenable: _isList,
@@ -476,10 +490,12 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
                                   },
                                   child: isList
                                       ? buildItemList(
-                                          activeUnitModel: activeUnitModel,
+                                          activeDepartmentModel:
+                                              activeDepartmentModel,
                                         )
                                       : buildItemGrid(
-                                          activeUnitModel: activeUnitModel,
+                                          activeDepartmentModel:
+                                              activeDepartmentModel,
                                         ));
                             },
                           ),
@@ -497,46 +513,46 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
     );
   }
 
-  Column buildItemGrid({required ActiveUnitModel activeUnitModel}) {
-    bool isSglCstShow = activeUnitModel.unitName != 'FORENSIK' &&
-        activeUnitModel.unitName != 'IKM-IKK';
+  Column buildItemGrid({required ActiveDepartmentModel activeDepartmentModel}) {
+    bool isSglCstShow = activeDepartmentModel.unitName != 'FORENSIK' &&
+        activeDepartmentModel.unitName != 'IKM-IKK';
     return Column(
       key: const ValueKey(1),
       children: <Widget>[
         GridMenuRow(
           itemColor: primaryColor,
           menus: listStudentMenu(isSglCstShow).sublist(0, 4),
-          onTaps: onTaps(activeUnitModel).sublist(0, 4),
+          onTaps: onTaps(activeDepartmentModel).sublist(0, 4),
         ),
         const SizedBox(height: 12),
         GridMenuRow(
           itemColor: variant2Color,
           menus: listStudentMenu(isSglCstShow).sublist(4, 8),
-          onTaps: onTaps(activeUnitModel).sublist(4, 8),
+          onTaps: onTaps(activeDepartmentModel).sublist(4, 8),
         ),
-        if (onTaps(activeUnitModel).length > 8) ...[
+        if (onTaps(activeDepartmentModel).length > 8) ...[
           const SizedBox(height: 12),
           GridMenuRow(
             length: 1,
             itemColor: variant1Color,
             menus: listStudentMenu(isSglCstShow).sublist(8, 9),
-            onTaps: onTaps(activeUnitModel).sublist(8, 9),
+            onTaps: onTaps(activeDepartmentModel).sublist(8, 9),
           ),
         ],
       ],
     );
   }
 
-  Column buildItemList({required ActiveUnitModel activeUnitModel}) {
-    bool isSglCstShow = activeUnitModel.unitName != 'FORENSIK' &&
-        activeUnitModel.unitName != 'IKM-IKK';
+  Column buildItemList({required ActiveDepartmentModel activeDepartmentModel}) {
+    bool isSglCstShow = activeDepartmentModel.unitName != 'FORENSIK' &&
+        activeDepartmentModel.unitName != 'IKM-IKK';
     return Column(
       key: const ValueKey(2),
       children: <Widget>[
         ListMenuColumn(
             itemColor: primaryColor,
             menus: listStudentMenu(isSglCstShow).sublist(0, 4),
-            onTaps: onTaps(activeUnitModel).sublist(0, 4)),
+            onTaps: onTaps(activeDepartmentModel).sublist(0, 4)),
         const Divider(
           height: 30,
           thickness: 1,
@@ -545,8 +561,8 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
         ListMenuColumn(
             itemColor: variant2Color,
             menus: listStudentMenu(isSglCstShow).sublist(4, 8),
-            onTaps: onTaps(activeUnitModel).sublist(4, 8)),
-        if (onTaps(activeUnitModel).length > 8) ...[
+            onTaps: onTaps(activeDepartmentModel).sublist(4, 8)),
+        if (onTaps(activeDepartmentModel).length > 8) ...[
           const Divider(
             height: 30,
             thickness: 1,
@@ -556,7 +572,7 @@ class _UnitActivityPageState extends State<UnitActivityPage> {
             length: 1,
             itemColor: variant1Color,
             menus: listStudentMenu(isSglCstShow).sublist(8, 9),
-            onTaps: onTaps(activeUnitModel).sublist(8, 9),
+            onTaps: onTaps(activeDepartmentModel).sublist(8, 9),
           ),
         ],
       ],

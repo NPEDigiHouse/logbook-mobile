@@ -163,7 +163,7 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
               ItemDivider(),
               const SizedBox(height: 16),
               Text(
-                'Unit Name',
+                'Department Name',
                 style: textTheme.bodyMedium?.copyWith(
                   color: secondaryTextColor,
                 ),

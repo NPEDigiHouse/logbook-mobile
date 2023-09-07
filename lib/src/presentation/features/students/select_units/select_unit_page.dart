@@ -9,36 +9,39 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/students/select_units/widgets/select_unit_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SelectUnitPage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
-  const SelectUnitPage({super.key, required this.activeUnitModel});
+class SelectDepartmentPage extends StatefulWidget {
+  final ActiveDepartmentModel activeDepartmentModel;
+  const SelectDepartmentPage({super.key, required this.activeDepartmentModel});
 
   @override
-  State<SelectUnitPage> createState() => _SelectUnitPageState();
+  State<SelectDepartmentPage> createState() => _SelectDepartmentPageState();
 }
 
-class _SelectUnitPageState extends State<SelectUnitPage> {
+class _SelectDepartmentPageState extends State<SelectDepartmentPage> {
+  bool sortAZ = false;
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<UnitCubit>(context, listen: false)..fetchUnits();
+    BlocProvider.of<DepartmentCubit>(context, listen: false)
+      ..fetchDepartments(true);
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        BlocProvider.of<UnitCubit>(context, listen: false)..getActiveUnit();
+        BlocProvider.of<DepartmentCubit>(context, listen: false)
+          ..getActiveDepartment();
         return true;
       },
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text("Select Unit"),
+          title: Text("Select Department"),
           leading: IconButton(
             onPressed: () {
-              BlocProvider.of<UnitCubit>(context, listen: false)
-                ..getActiveUnit();
+              BlocProvider.of<DepartmentCubit>(context, listen: false)
+                ..getActiveDepartment();
               context.back();
             },
             icon: Icon(
@@ -47,7 +50,11 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                BlocProvider.of<DepartmentCubit>(context, listen: false)
+                  ..fetchDepartments(sortAZ);
+                sortAZ = !sortAZ;
+              },
               icon: Icon(
                 Icons.sort_by_alpha,
                 color: primaryColor,
@@ -56,7 +63,7 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
           ],
         ),
         body: SafeArea(
-          child: BlocConsumer<UnitCubit, UnitState>(
+          child: BlocConsumer<DepartmentCubit, DepartmentState>(
             listener: (context, state) {
               if (state is ChangeActiveSuccess) {
                 showModalBottomSheet(
@@ -68,8 +75,8 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
                     );
                   },
                 ).whenComplete(() {
-                  BlocProvider.of<UnitCubit>(context, listen: false)
-                      .getActiveUnit();
+                  BlocProvider.of<DepartmentCubit>(context, listen: false)
+                      .getActiveDepartment();
                   Navigator.pop(context); // Jika ini adalah tujuan yang benar
                 });
               } else if (state is ChangeActiveFailed) {
@@ -83,23 +90,23 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
                     );
                   },
                 ).whenComplete(() {
-                  BlocProvider.of<UnitCubit>(context, listen: false)
-                      .getActiveUnit();
+                  BlocProvider.of<DepartmentCubit>(context, listen: false)
+                      .getActiveDepartment();
                   Navigator.pop(context); // Jika ini adalah tujuan yang benar
                 });
               }
             },
             builder: (context, state) {
               if (state is FetchSuccess) {
-                final List<UnitModel> data = [
-                  if (widget.activeUnitModel.unitId != null)
-                    UnitModel(
-                      id: widget.activeUnitModel.unitId!,
-                      name: widget.activeUnitModel.unitName!,
+                final List<DepartmentModel> data = [
+                  if (widget.activeDepartmentModel.unitId != null)
+                    DepartmentModel(
+                      id: widget.activeDepartmentModel.unitId!,
+                      name: widget.activeDepartmentModel.unitName!,
                     ),
                   ...state.units
                       .where((element) =>
-                          element.id != widget.activeUnitModel.unitId)
+                          element.id != widget.activeDepartmentModel.unitId)
                       .toList()
                 ];
                 return ListView.separated(
@@ -108,10 +115,11 @@ class _SelectUnitPageState extends State<SelectUnitPage> {
                     height: 16,
                   ),
                   itemBuilder: (context, index) {
-                    return SelectUnitCard(
+                    return SelectDepartmentCard(
                       unitName: data[index].name,
                       unitId: data[index].id,
-                      activeUnitId: widget.activeUnitModel.unitId ?? '',
+                      activeDepartmentId:
+                          widget.activeDepartmentModel.unitId ?? '',
                     );
                   },
                   itemCount: state.units.length,

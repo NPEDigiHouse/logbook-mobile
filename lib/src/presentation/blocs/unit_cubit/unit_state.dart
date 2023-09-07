@@ -1,35 +1,36 @@
 part of 'unit_cubit.dart';
 
-abstract class UnitState extends Equatable {
-  const UnitState();
+abstract class DepartmentState extends Equatable {
+  const DepartmentState();
 
   @override
   List<Object> get props => [];
 }
 
-class Initial extends UnitState {}
+class Initial extends DepartmentState {}
 
-class Loading extends UnitState {}
+class Loading extends DepartmentState {}
 
-class FetchSuccess extends UnitState {
-  final List<UnitModel> units;
+class FetchSuccess extends DepartmentState {
+  final List<DepartmentModel> units;
   FetchSuccess({required this.units});
 }
 
-class ChangeActiveSuccess extends UnitState {}
+class ChangeActiveSuccess extends DepartmentState {}
 
-class ChangeActiveFailed extends UnitState {}
+class ChangeActiveFailed extends DepartmentState {}
 
-class CheckInActiveUnitSuccess extends UnitState {}
-class CheckOutActiveUnitSuccess extends UnitState {}
+class CheckInActiveDepartmentSuccess extends DepartmentState {}
 
-class GetActiveUnitSuccess extends UnitState {
-  final ActiveUnitModel activeUnit;
+class CheckOutActiveDepartmentSuccess extends DepartmentState {}
 
-  GetActiveUnitSuccess({required this.activeUnit});
+class GetActiveDepartmentSuccess extends DepartmentState {
+  final ActiveDepartmentModel activeDepartment;
+
+  GetActiveDepartmentSuccess({required this.activeDepartment});
 }
 
-class Failed extends UnitState {
+class Failed extends DepartmentState {
   final String message;
   Failed({required this.message});
 }

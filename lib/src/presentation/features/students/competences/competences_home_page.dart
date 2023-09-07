@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CompetenceHomePage extends StatefulWidget {
-  final ActiveUnitModel model;
+  final ActiveDepartmentModel model;
   final String unitId;
   const CompetenceHomePage(
       {super.key, required this.unitId, required this.model});
@@ -39,7 +39,7 @@ class _CompetenceHomePageState extends State<CompetenceHomePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UnitHeader(
+                  DepartmentHeader(
                     unitName: widget.model.unitName!,
                   ),
                   SizedBox(

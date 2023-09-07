@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateSglPage extends StatefulWidget {
-  final ActiveUnitModel model;
+  final ActiveDepartmentModel model;
   const CreateSglPage({super.key, required this.model});
 
   @override
@@ -37,7 +37,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
     BlocProvider.of<SupervisorsCubit>(context, listen: false)
       ..getAllSupervisors();
     BlocProvider.of<SglCstCubit>(context, listen: false)
-      ..getTopicsByUnitId(unitId: widget.model.unitId!);
+      ..getTopicsByDepartmentId(unitId: widget.model.unitId!);
     dateController.text =
         ReusableFunctionHelper.datetimeToString(DateTime.now());
   }

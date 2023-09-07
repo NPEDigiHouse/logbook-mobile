@@ -24,7 +24,7 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
 
   @override
   void initState() {
-    BlocProvider.of<SupervisorsCubit>(context)..getAllStudentUnit();
+    BlocProvider.of<SupervisorsCubit>(context)..getAllStudentDepartment();
     _menuList = [
       'All',
       'Inputed',
@@ -49,8 +49,9 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () => Future.wait(
-            [BlocProvider.of<SupervisorsCubit>(context).getAllStudentUnit()]),
+        onRefresh: () => Future.wait([
+          BlocProvider.of<SupervisorsCubit>(context).getAllStudentDepartment()
+        ]),
         child: NestedScrollView(
           floatHeaderSlivers: true,
           headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -87,7 +88,7 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
               if (state is Loading) {
                 return CustomLoading();
               }
-              if (state is FetchStudentUnitSuccess)
+              if (state is FetchStudentDepartmentSuccess)
                 return CustomScrollView(
                   slivers: <Widget>[
                     SliverPadding(

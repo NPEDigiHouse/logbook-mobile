@@ -3,17 +3,17 @@ import 'package:json_annotation/json_annotation.dart';
 part 'unit_model.g.dart';
 
 @JsonSerializable()
-class UnitModel {
+class DepartmentModel {
   final String name;
   final String id;
 
-  UnitModel({
+  DepartmentModel({
     required this.id,
     required this.name,
   });
 
-  factory UnitModel.fromJson(Map<String, dynamic> data) =>
-      _$UnitModelFromJson(data);
+  factory DepartmentModel.fromJson(Map<String, dynamic> data) =>
+      _$DepartmentModelFromJson(data);
 
-  Map<String, dynamic> toJson() => _$UnitModelToJson(this);
+  Map<String, dynamic> toJson() => _$DepartmentModelToJson(this);
 }

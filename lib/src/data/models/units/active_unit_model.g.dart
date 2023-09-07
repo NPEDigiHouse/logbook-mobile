@@ -6,8 +6,9 @@ part of 'active_unit_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ActiveUnitModel _$ActiveUnitModelFromJson(Map<String, dynamic> json) =>
-    ActiveUnitModel(
+ActiveDepartmentModel _$ActiveDepartmentModelFromJson(
+        Map<String, dynamic> json) =>
+    ActiveDepartmentModel(
       checkInStatus: json['checkInStatus'] as String?,
       checkOutStatus: json['checkOutStatus'] as String?,
       unitId: json['unitId'] as String?,
@@ -17,7 +18,8 @@ ActiveUnitModel _$ActiveUnitModelFromJson(Map<String, dynamic> json) =>
       checkOutTime: json['checkOutTime'] as int?,
     );
 
-Map<String, dynamic> _$ActiveUnitModelToJson(ActiveUnitModel instance) =>
+Map<String, dynamic> _$ActiveDepartmentModelToJson(
+        ActiveDepartmentModel instance) =>
     <String, dynamic>{
       'checkInStatus': instance.checkInStatus,
       'checkOutStatus': instance.checkOutStatus,

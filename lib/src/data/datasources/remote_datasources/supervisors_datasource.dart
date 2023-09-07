@@ -11,7 +11,7 @@ import '../../../../core/services/api_service.dart';
 abstract class SupervisorsDataSource {
   Future<List<SupervisorModel>> getAllSupervisors();
   Future<List<SupervisorStudent>> getAllStudents();
-  Future<List<StudentUnitModel>> getAllStudentsByCeu();
+  Future<List<StudentDepartmentModel>> getAllStudentsByCeu();
 }
 
 class SupervisorsDataSourceImpl implements SupervisorsDataSource {
@@ -81,7 +81,7 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
   }
 
   @override
-  Future<List<StudentUnitModel>> getAllStudentsByCeu() async {
+  Future<List<StudentDepartmentModel>> getAllStudentsByCeu() async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
@@ -100,8 +100,9 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
       // print(response.data);
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
-      List<StudentUnitModel> students =
-          dataResponse.data.map((e) => StudentUnitModel.fromJson(e)).toList();
+      List<StudentDepartmentModel> students = dataResponse.data
+          .map((e) => StudentDepartmentModel.fromJson(e))
+          .toList();
 
       return students;
     } catch (e) {

@@ -6,12 +6,14 @@ part of 'unit_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-UnitModel _$UnitModelFromJson(Map<String, dynamic> json) => UnitModel(
+DepartmentModel _$DepartmentModelFromJson(Map<String, dynamic> json) =>
+    DepartmentModel(
       id: json['id'] as String,
       name: json['name'] as String,
     );
 
-Map<String, dynamic> _$UnitModelToJson(UnitModel instance) => <String, dynamic>{
+Map<String, dynamic> _$DepartmentModelToJson(DepartmentModel instance) =>
+    <String, dynamic>{
       'name': instance.name,
       'id': instance.id,
     };

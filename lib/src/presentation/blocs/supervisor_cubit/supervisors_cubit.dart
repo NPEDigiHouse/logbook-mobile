@@ -43,14 +43,13 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
     return image;
   }
 
-  
-  Future<void> getAllStudentUnit() async {
+  Future<void> getAllStudentDepartment() async {
     try {
       emit(Loading());
 
       final result = await dataSource.getAllStudentsByCeu();
 
-      emit(FetchStudentUnitSuccess(students: result));
+      emit(FetchStudentDepartmentSuccess(students: result));
     } catch (e) {
       print(e.toString());
       emit(

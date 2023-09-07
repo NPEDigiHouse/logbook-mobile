@@ -14,29 +14,30 @@ import 'package:elogbook/src/presentation/features/students/menu/profile/widgets
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/unit_statistics_section.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UnitStatisticsPage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+class DepartmentStatisticsPage extends StatefulWidget {
+  final ActiveDepartmentModel activeDepartmentModel;
   final Uint8List? profilePic;
   final UserCredential credential;
-  const UnitStatisticsPage(
+  const DepartmentStatisticsPage(
       {super.key,
       required this.credential,
       this.profilePic,
-      required this.activeUnitModel});
+      required this.activeDepartmentModel});
 
   @override
-  State<UnitStatisticsPage> createState() => _UnitStatisticsPageState();
+  State<DepartmentStatisticsPage> createState() =>
+      _DepartmentStatisticsPageState();
 }
 
-class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
+class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
       BlocProvider.of<StudentCubit>(context)..getStudentStatistic();
       BlocProvider.of<CompetenceCubit>(context)
-        ..getStudentCases(unitId: widget.activeUnitModel.unitId!)
-        ..getStudentSkills(unitId: widget.activeUnitModel.unitId!)
+        ..getStudentCases(unitId: widget.activeDepartmentModel.unitId!)
+        ..getStudentSkills(unitId: widget.activeDepartmentModel.unitId!)
         ..getListCases()
         ..getListSkills();
     });
@@ -47,7 +48,7 @@ class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text('Unit Statistics'),
+        title: const Text('Department Statistics'),
         backgroundColor: scaffoldBackgroundColor.withAlpha(200),
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
@@ -65,7 +66,7 @@ class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
         ),
         child: Column(
           children: <Widget>[
-            UnitStatisticsCard(
+            DepartmentStatisticsCard(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Theme(
                 data: Theme.of(context).copyWith(
@@ -119,19 +120,19 @@ class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
                       color: Color(0xFFEFF0F9),
                     ),
                     SizedBox(height: 8),
-                    UnitStatisticsField(
+                    DepartmentStatisticsField(
                       label: 'Student Id',
                       value: widget.credential.student!.studentId,
                     ),
-                    UnitStatisticsField(
+                    DepartmentStatisticsField(
                       label: 'Email',
                       value: widget.credential.email,
                     ),
-                    UnitStatisticsField(
+                    DepartmentStatisticsField(
                       label: 'Phone',
                       value: widget.credential.student!.phoneNumber,
                     ),
-                    UnitStatisticsField(
+                    DepartmentStatisticsField(
                       label: 'Address',
                       value: widget.credential.student!.address,
                     ),
@@ -155,18 +156,18 @@ class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
                         state1.studentSkillsModel != null &&
                         state.studentStatistic != null) {
                       final stData = state.studentStatistic!;
-                      return UnitStatisticsCard(
+                      return DepartmentStatisticsCard(
                         padding: const EdgeInsets.symmetric(vertical: 24),
                         child: Column(
                           children: <Widget>[
                             Text(
-                              'Current Unit',
+                              'Current Department',
                               style: textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: primaryColor,
                               ),
                             ),
-                            Text(widget.activeUnitModel.unitName ?? ''),
+                            Text(widget.activeDepartmentModel.unitName ?? ''),
                             const Padding(
                               padding: EdgeInsets.symmetric(vertical: 16),
                               child: Divider(
@@ -175,7 +176,7 @@ class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
                                 color: onDisableColor,
                               ),
                             ),
-                            UnitStatisticsSection(
+                            DepartmentStatisticsSection(
                               titleText: 'Diagnosis Skills',
                               titleIconPath: 'skill_outlined.svg',
                               percentage: (stData.verifiedSkills! /
@@ -208,7 +209,7 @@ class _UnitStatisticsPageState extends State<UnitStatisticsPage> {
                                 color: onDisableColor,
                               ),
                             ),
-                            UnitStatisticsSection(
+                            DepartmentStatisticsSection(
                               titleText: 'Acquired Cases',
                               titleIconPath: 'attach_resume_male_outlined.svg',
                               percentage: (stData.verifiedCases! /

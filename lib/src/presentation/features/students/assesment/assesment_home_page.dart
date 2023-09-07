@@ -12,11 +12,13 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 
 class AssesmentHomePage extends StatelessWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
   final UserCredential credential;
 
   const AssesmentHomePage(
-      {super.key, required this.activeUnitModel, required this.credential});
+      {super.key,
+      required this.activeDepartmentModel,
+      required this.credential});
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +33,14 @@ class AssesmentHomePage extends StatelessWidget {
           horizontalPadding: 16,
           spacing: 12,
           children: [
-            UnitHeader(
-              unitName: activeUnitModel.unitName!,
+            DepartmentHeader(
+              unitName: activeDepartmentModel.unitName!,
             ),
             SizedBox(
               height: 12,
             ),
             FinalGradeCard(
-              model: activeUnitModel,
+              model: activeDepartmentModel,
             ),
             Row(
               children: [
@@ -55,7 +57,7 @@ class AssesmentHomePage extends StatelessWidget {
                   title: 'Scientific Assignment Grade',
                   onTap: () =>
                       context.navigateTo(StudentScientificAssignmentPage(
-                    unitName: activeUnitModel.unitName!,
+                    unitName: activeDepartmentModel.unitName!,
                     isSupervisingDPKExist:
                         credential.student?.supervisingDPKId != null,
                   )),
@@ -70,7 +72,7 @@ class AssesmentHomePage extends StatelessWidget {
                     iconPath: 'icon_test.svg',
                     title: 'Mini Cex',
                     onTap: () => context.navigateTo(StudentTestGrade(
-                      unitName: activeUnitModel.unitName!,
+                      unitName: activeDepartmentModel.unitName!,
                       isExaminerDPKExist:
                           credential.student?.examinerDPKId != null,
                     )),
@@ -84,7 +86,7 @@ class AssesmentHomePage extends StatelessWidget {
                   title: 'Personal Behavior Grade',
                   onTap: () => context.navigateTo(
                     StudentPersonalBehaviorPage(
-                      unitName: activeUnitModel.unitName!,
+                      unitName: activeDepartmentModel.unitName!,
                     ),
                   ),
                 ),

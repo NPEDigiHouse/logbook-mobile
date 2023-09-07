@@ -13,7 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class FinalGradeCard extends StatefulWidget {
-  final ActiveUnitModel model;
+  final ActiveDepartmentModel model;
   const FinalGradeCard({required this.model});
 
   @override

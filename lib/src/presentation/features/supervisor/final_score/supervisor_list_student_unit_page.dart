@@ -6,22 +6,22 @@ import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SupervisorListStudentUnitPage extends StatefulWidget {
-  const SupervisorListStudentUnitPage({super.key});
+class SupervisorListStudentDepartmentPage extends StatefulWidget {
+  const SupervisorListStudentDepartmentPage({super.key});
 
   @override
-  State<SupervisorListStudentUnitPage> createState() =>
-      _SupervisorListStudentUnitPageState();
+  State<SupervisorListStudentDepartmentPage> createState() =>
+      _SupervisorListStudentDepartmentPageState();
 }
 
-class _SupervisorListStudentUnitPageState
-    extends State<SupervisorListStudentUnitPage> {
+class _SupervisorListStudentDepartmentPageState
+    extends State<SupervisorListStudentDepartmentPage> {
   bool isLoad = true;
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-        () => BlocProvider.of<SupervisorsCubit>(context)..getAllStudentUnit());
+    Future.microtask(() =>
+        BlocProvider.of<SupervisorsCubit>(context)..getAllStudentDepartment());
   }
 
   @override
@@ -34,18 +34,17 @@ class _SupervisorListStudentUnitPageState
         child: RefreshIndicator(
           onRefresh: () async {
             await Future.wait([
-              BlocProvider.of<SupervisorsCubit>(context).getAllStudentUnit(),
+              BlocProvider.of<SupervisorsCubit>(context)
+                  .getAllStudentDepartment(),
             ]);
           },
           child: BlocConsumer<SupervisorsCubit, SupervisorsState>(
-            listener: (context, state) {
-              
-            },
+            listener: (context, state) {},
             builder: (context, state) {
               if (state is Loading) {
                 return CustomLoading();
               }
-              if (state is FetchStudentUnitSuccess)
+              if (state is FetchStudentDepartmentSuccess)
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: CustomScrollView(
@@ -70,7 +69,7 @@ class _SupervisorListStudentUnitPageState
                       SliverList.separated(
                         itemCount: state.students.length,
                         itemBuilder: (context, index) {
-                          return StudentUnitCard(
+                          return StudentDepartmentCard(
                             data: state.students[index],
                           );
                         },

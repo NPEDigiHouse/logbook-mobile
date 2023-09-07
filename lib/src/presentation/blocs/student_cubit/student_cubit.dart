@@ -21,13 +21,14 @@ class StudentCubit extends Cubit<StudentState> {
   StudentCubit({required this.dataSource, required this.dataSourceSp})
       : super(StudentState());
 
-  Future<void> getStudentClinicalRecordOfActiveUnit() async {
+  Future<void> getStudentClinicalRecordOfActiveDepartment() async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result = await dataSource.getStudentClinicalRecordOfActiveUnit();
+      final result =
+          await dataSource.getStudentClinicalRecordOfActiveDepartment();
       try {
         emit(state.copyWith(
           clinicalRecordResponse: result,
@@ -46,13 +47,14 @@ class StudentCubit extends Cubit<StudentState> {
     }
   }
 
-  Future<void> getStudentScientificSessionOfActiveUnit() async {
+  Future<void> getStudentScientificSessionOfActiveDepartment() async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result = await dataSource.getStudentScientificSessionOfActiveUnit();
+      final result =
+          await dataSource.getStudentScientificSessionOfActiveDepartment();
       try {
         emit(state.copyWith(
           scientificSessionResponse: result,

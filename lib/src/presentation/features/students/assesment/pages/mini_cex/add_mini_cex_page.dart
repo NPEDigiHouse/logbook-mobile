@@ -53,7 +53,7 @@ class _AddMiniCexPageState extends State<AddMiniCexPage> {
                   SizedBox(
                     height: 16,
                   ),
-                  UnitHeader(unitName: widget.unitName),
+                  DepartmentHeader(unitName: widget.unitName),
                   SizedBox(
                     height: 16,
                   ),

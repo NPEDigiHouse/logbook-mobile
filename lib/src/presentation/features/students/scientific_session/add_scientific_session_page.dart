@@ -22,9 +22,10 @@ import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 
 class AddScientificSessionPage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
 
-  const AddScientificSessionPage({super.key, required this.activeUnitModel});
+  const AddScientificSessionPage(
+      {super.key, required this.activeDepartmentModel});
 
   @override
   State<AddScientificSessionPage> createState() =>
@@ -91,7 +92,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
         listener: (context, state) {
           if (state.postSuccess) {
             BlocProvider.of<StudentCubit>(context)
-              ..getStudentScientificSessionOfActiveUnit();
+              ..getStudentScientificSessionOfActiveDepartment();
             BlocProvider.of<ScientificSessionCubit>(context)..reset();
             Navigator.pop(context);
           }
@@ -131,10 +132,10 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                       ),
                       TextFormField(
                         decoration: InputDecoration(
-                          label: Text('Unit'),
+                          label: Text('Department'),
                           enabled: false,
                         ),
-                        initialValue: widget.activeUnitModel.unitName,
+                        initialValue: widget.activeDepartmentModel.unitName,
                       ),
                       BlocBuilder<SupervisorsCubit, SupervisorsState>(
                           builder: (context, state) {
@@ -176,8 +177,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                     spacing: 14,
                     children: [
                       DropdownButtonFormField(
-                      isExpanded: true,
-
+                        isExpanded: true,
                         hint: Text('Session Type'),
                         items: _sessionTypes
                             .map(
@@ -213,8 +213,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                         controller: referenceController,
                       ),
                       DropdownButtonFormField(
-                      isExpanded: true,
-
+                        isExpanded: true,
                         hint: Text('Role'),
                         items: _roles
                             .map(

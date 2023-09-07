@@ -136,7 +136,7 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
                               onlyPading: true,
                               horizontalPadding: 16,
                               children: [
-                                UnitHeader(unitName: widget.unitName),
+                                DepartmentHeader(unitName: widget.unitName),
                                 SizedBox(
                                   height: 12,
                                 ),

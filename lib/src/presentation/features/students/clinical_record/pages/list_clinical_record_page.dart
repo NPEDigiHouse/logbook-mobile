@@ -16,9 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ListClinicalRecordPage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
 
-  const ListClinicalRecordPage({super.key, required this.activeUnitModel});
+  const ListClinicalRecordPage(
+      {super.key, required this.activeDepartmentModel});
 
   @override
   State<ListClinicalRecordPage> createState() => _ListClinicalRecordPageState();
@@ -36,7 +37,7 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
     _selectedMenu = ValueNotifier('All');
     _dataFilters = ValueNotifier(null);
     BlocProvider.of<StudentCubit>(context)
-      ..getStudentClinicalRecordOfActiveUnit();
+      ..getStudentClinicalRecordOfActiveDepartment();
     super.initState();
   }
 
@@ -50,16 +51,16 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.activeUnitModel.countCheckIn);
+    print(widget.activeDepartmentModel.countCheckIn);
     return Scaffold(
       appBar: AppBar(
         title: Text("Clinical Records"),
       ),
-      floatingActionButton: widget.activeUnitModel.countCheckIn! == 0
+      floatingActionButton: widget.activeDepartmentModel.countCheckIn! == 0
           ? FloatingActionButton(
               onPressed: () {
                 context.navigateTo(CreateClinicalRecordFirstPage(
-                    activeUnitModel: widget.activeUnitModel));
+                    activeDepartmentModel: widget.activeDepartmentModel));
                 isMounted = false;
               },
               child: Icon(
@@ -73,7 +74,7 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
             isMounted = false;
             await Future.wait([
               BlocProvider.of<StudentCubit>(context)
-                  .getStudentClinicalRecordOfActiveUnit(),
+                  .getStudentClinicalRecordOfActiveDepartment(),
             ]);
           },
           child: ValueListenableBuilder(
@@ -116,9 +117,9 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                     onlyPading: true,
                                     horizontalPadding: 16,
                                     children: [
-                                      UnitHeader(
-                                          unitName:
-                                              widget.activeUnitModel.unitName!),
+                                      DepartmentHeader(
+                                          unitName: widget
+                                              .activeDepartmentModel.unitName!),
                                       SizedBox(
                                         height: 12,
                                       ),

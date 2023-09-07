@@ -19,7 +19,8 @@ class ReferenceCubit extends Cubit<ReferenceState> {
         requestState: RequestState.loading,
       ));
 
-      final result = await dataSource.getReferenceByUnitId(unitId: unitId);
+      final result =
+          await dataSource.getReferenceByDepartmentId(unitId: unitId);
       try {
         emit(state.copyWith(
           references: result,

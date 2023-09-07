@@ -9,14 +9,14 @@ class WeeklyGradeScoreDialog extends StatefulWidget {
   final int week;
   final double? score;
   final String id;
-  final String activeUnitId;
+  final String activeDepartmentId;
   final String studentId;
 
   const WeeklyGradeScoreDialog({
     super.key,
     required this.week,
     this.score,
-    required this.activeUnitId,
+    required this.activeDepartmentId,
     required this.studentId,
     required this.id,
   });
@@ -51,7 +51,7 @@ class _WeeklyGradeScoreDialogState extends State<WeeklyGradeScoreDialog> {
         if (state.isScoreWeeklyAssessment) {
           BlocProvider.of<AssesmentCubit>(context)
             ..getWeeklyAssesment(
-                studentId: widget.studentId, unitId: widget.activeUnitId);
+                studentId: widget.studentId, unitId: widget.activeDepartmentId);
           context.back();
         }
       },

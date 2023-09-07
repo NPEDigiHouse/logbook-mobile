@@ -36,8 +36,8 @@ class AssesmentStudentHomePage extends StatelessWidget {
           horizontalPadding: 16,
           spacing: 12,
           children: [
-            UnitHeader(
-              unitName: 'Unit Name',
+            DepartmentHeader(
+              unitName: 'Department Name',
             ),
             SizedBox(
               height: 12,

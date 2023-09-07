@@ -63,8 +63,8 @@ class _SupervisorDailyActivityPageState
                   horizontalPadding: 16,
                   spacing: 20,
                   children: [
-                    UnitHeader(
-                      unitName: 'Nama Unit',
+                    DepartmentHeader(
+                      unitName: 'Nama Department',
                     ),
                     ...List.generate(
                       state.studentDailyActivity!.dailyActivities!.length,

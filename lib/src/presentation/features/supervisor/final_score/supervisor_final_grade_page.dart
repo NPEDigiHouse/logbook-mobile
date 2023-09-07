@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SupervisorFinalGrade extends StatefulWidget {
-  final StudentUnitModel finalGrade;
+  final StudentDepartmentModel finalGrade;
   const SupervisorFinalGrade({super.key, required this.finalGrade});
 
   @override
@@ -27,7 +27,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
     super.initState();
     BlocProvider.of<AssesmentCubit>(context)
       ..getFinalScore(
-          unitId: widget.finalGrade.activeUnitId ?? '',
+          unitId: widget.finalGrade.activeDepartmentId ?? '',
           studentId: widget.finalGrade.studentId!);
   }
 
@@ -91,7 +91,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
         onRefresh: () async {
           await Future.wait([
             BlocProvider.of<AssesmentCubit>(context).getFinalScore(
-                unitId: widget.finalGrade.activeUnitId!,
+                unitId: widget.finalGrade.activeDepartmentId!,
                 studentId: widget.finalGrade.studentId!)
           ]);
         },
@@ -117,8 +117,10 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                           i++)
                         if (state.finalScore!.assesments![i].type!
                                 .contains('OSCE') &&
-                            (widget.finalGrade.activeUnitName == 'FORENSIK' ||
-                                widget.finalGrade.activeUnitName == 'IKM-IKK'))
+                            (widget.finalGrade.activeDepartmentName ==
+                                    'FORENSIK' ||
+                                widget.finalGrade.activeDepartmentName ==
+                                    'IKM-IKK'))
                           FinalGradeScoreCard(
                             type: mapTitle[
                                     state.finalScore!.assesments![i].type] ??
@@ -144,7 +146,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                               barrierDismissible: false,
                               builder: (_) => InputFinalScoreDialog(
                                 studentId: widget.finalGrade.studentId!,
-                                unitId: widget.finalGrade.activeUnitId!,
+                                unitId: widget.finalGrade.activeDepartmentId!,
                                 type: FinalScoreType.cbt,
                                 initScore: state.finalScore!.assesments!
                                             .indexWhere((element) => element
@@ -177,7 +179,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                               barrierDismissible: false,
                               builder: (_) => InputFinalScoreDialog(
                                 studentId: widget.finalGrade.studentId!,
-                                unitId: widget.finalGrade.activeUnitId!,
+                                unitId: widget.finalGrade.activeDepartmentId!,
                                 type: FinalScoreType.osce,
                                 initScore: state.finalScore!.assesments!
                                             .indexWhere((element) => element

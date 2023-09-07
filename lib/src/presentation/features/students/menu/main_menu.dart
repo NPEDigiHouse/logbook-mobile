@@ -41,7 +41,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _listPage(UserCredential credential) => [
-          UnitActivityPage(
+          DepartmentActivityPage(
             credential: credential,
           ),
           // const GlobalActivityPage(),
@@ -76,7 +76,7 @@ class _MainMenuState extends State<MainMenu> {
                       "icon_user.svg"
                     ],
                     listTitle: const [
-                      "Unit\nActivity",
+                      "Department\nActivity",
                       // "Global\nActivity",
                       "History",
                       "Profile"

@@ -22,7 +22,7 @@ abstract class SglCstDataSource {
   Future<void> addNewCstTopic(
       {required TopicPostModel topic, required String cstId});
   Future<List<TopicModel>> getTopics();
-  Future<List<TopicModel>> getTopicsByUnitId({required String unitId});
+  Future<List<TopicModel>> getTopicsByDepartmentId({required String unitId});
   Future<List<SglCstOnList>> getSglBySupervisor();
   Future<List<SglCstOnList>> getCstBySupervisor();
   Future<SglResponse> getSglByStudentId({required String studentId});
@@ -381,7 +381,8 @@ class SglCstDataSourceImpl implements SglCstDataSource {
   }
 
   @override
-  Future<List<TopicModel>> getTopicsByUnitId({required String unitId}) async {
+  Future<List<TopicModel>> getTopicsByDepartmentId(
+      {required String unitId}) async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(

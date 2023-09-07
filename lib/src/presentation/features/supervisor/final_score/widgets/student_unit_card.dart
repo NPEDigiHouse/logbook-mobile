@@ -6,9 +6,9 @@ import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/supervisor_final_grade_page.dart';
 import 'package:flutter/material.dart';
 
-class StudentUnitCard extends StatelessWidget {
-  final StudentUnitModel data;
-  const StudentUnitCard({super.key, required this.data});
+class StudentDepartmentCard extends StatelessWidget {
+  final StudentDepartmentModel data;
+  const StudentDepartmentCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +65,14 @@ class StudentUnitCard extends StatelessWidget {
                         ),
                         children: <TextSpan>[
                           const TextSpan(
-                            text: 'Active Unit:\t',
+                            text: 'Active Department:\t',
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           TextSpan(
-                            text: data.activeUnitName ?? 'No Active Unit',
+                            text: data.activeDepartmentName ??
+                                'No Active Department',
                           ),
                         ],
                       ),

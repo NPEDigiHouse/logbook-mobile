@@ -6,20 +6,22 @@ part of 'student_unit_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-StudentUnitModel _$StudentUnitModelFromJson(Map<String, dynamic> json) =>
-    StudentUnitModel(
+StudentDepartmentModel _$StudentDepartmentModelFromJson(
+        Map<String, dynamic> json) =>
+    StudentDepartmentModel(
       id: json['id'] as String?,
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
-      activeUnitId: json['activeUnitId'] as String?,
-      activeUnitName: json['activeUnitName'] as String?,
+      activeDepartmentId: json['activeDepartmentId'] as String?,
+      activeDepartmentName: json['activeDepartmentName'] as String?,
     );
 
-Map<String, dynamic> _$StudentUnitModelToJson(StudentUnitModel instance) =>
+Map<String, dynamic> _$StudentDepartmentModelToJson(
+        StudentDepartmentModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'studentId': instance.studentId,
       'studentName': instance.studentName,
-      'activeUnitId': instance.activeUnitId,
-      'activeUnitName': instance.activeUnitName,
+      'activeDepartmentId': instance.activeDepartmentId,
+      'activeDepartmentName': instance.activeDepartmentName,
     };

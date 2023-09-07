@@ -20,9 +20,10 @@ import 'package:elogbook/src/data/models/students/student_profile_post.dart';
 import 'package:elogbook/src/data/models/students/student_statistic.dart';
 
 abstract class StudentDataSource {
-  Future<StudentClinicalRecordResponse> getStudentClinicalRecordOfActiveUnit();
+  Future<StudentClinicalRecordResponse>
+      getStudentClinicalRecordOfActiveDepartment();
   Future<StudentScientificSessionResponse>
-      getStudentScientificSessionOfActiveUnit();
+      getStudentScientificSessionOfActiveDepartment();
   Future<StudentSelfReflectionModel> getStudentSelfReflection();
   Future<List<MiniCexListModel>> getStudentMiniCex();
   Future<List<StudentScientificAssignment>> getStudentScientificAssignment();
@@ -49,7 +50,7 @@ class StudentDataSourceImpl implements StudentDataSource {
 
   @override
   Future<StudentClinicalRecordResponse>
-      getStudentClinicalRecordOfActiveUnit() async {
+      getStudentClinicalRecordOfActiveDepartment() async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
@@ -81,7 +82,7 @@ class StudentDataSourceImpl implements StudentDataSource {
 
   @override
   Future<StudentScientificSessionResponse>
-      getStudentScientificSessionOfActiveUnit() async {
+      getStudentScientificSessionOfActiveDepartment() async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(

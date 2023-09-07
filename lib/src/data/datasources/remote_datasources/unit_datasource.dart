@@ -11,26 +11,26 @@ import 'package:elogbook/src/data/models/units/unit_model.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/helpers/handle_error_response.dart'
     as he;
 
-abstract class UnitDatasource {
-  Future<List<UnitModel>> fetchAllUnit();
-  Future<void> changeUnitActive({required String unitId});
-  Future<ActiveUnitModel> getActiveUnit();
-  Future<void> checkInActiveUnit();
-  Future<void> checkOutActiveUnit();
+abstract class DepartmentDatasource {
+  Future<List<DepartmentModel>> fetchAllDepartment();
+  Future<void> changeDepartmentActive({required String unitId});
+  Future<ActiveDepartmentModel> getActiveDepartment();
+  Future<void> checkInActiveDepartment();
+  Future<void> checkOutActiveDepartment();
 }
 
-class UnitDatasourceImpl implements UnitDatasource {
+class DepartmentDatasourceImpl implements DepartmentDatasource {
   final Dio dio;
   final AuthDataSource authDataSource;
   final AuthPreferenceHandler preferenceHandler;
 
-  UnitDatasourceImpl(
+  DepartmentDatasourceImpl(
       {required this.dio,
       required this.authDataSource,
       required this.preferenceHandler});
 
   @override
-  Future<List<UnitModel>> fetchAllUnit() async {
+  Future<List<DepartmentModel>> fetchAllDepartment() async {
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/units',
@@ -46,14 +46,14 @@ class UnitDatasourceImpl implements UnitDatasource {
         he.handleErrorResponse(
           response: response,
           refreshToken: authDataSource.refreshToken(),
-          retryOriginalRequest: this.fetchAllUnit(),
+          retryOriginalRequest: this.fetchAllDepartment(),
         );
       }
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
 
-      List<UnitModel> units =
-          dataResponse.data.map((e) => UnitModel.fromJson(e)).toList();
+      List<DepartmentModel> units =
+          dataResponse.data.map((e) => DepartmentModel.fromJson(e)).toList();
       // print(units);
       return units;
     } catch (e) {
@@ -63,7 +63,7 @@ class UnitDatasourceImpl implements UnitDatasource {
   }
 
   @override
-  Future<void> changeUnitActive({required String unitId}) async {
+  Future<void> changeDepartmentActive({required String unitId}) async {
     final credential = await preferenceHandler.getCredential();
 
     print(credential?.accessToken);
@@ -88,7 +88,7 @@ class UnitDatasourceImpl implements UnitDatasource {
         print("Faileddd");
         throw Exception();
         // await authDataSource.refreshToken();
-        // return changeUnitActive(unitId: unitId);
+        // return changeDepartmentActive(unitId: unitId);
       } else {
         print('success');
       }
@@ -99,7 +99,7 @@ class UnitDatasourceImpl implements UnitDatasource {
   }
 
   @override
-  Future<ActiveUnitModel> getActiveUnit() async {
+  Future<ActiveDepartmentModel> getActiveDepartment() async {
     try {
       final credential = await preferenceHandler.getCredential();
       // print(credential?.accessToken);
@@ -122,12 +122,13 @@ class UnitDatasourceImpl implements UnitDatasource {
       if (response.statusCode != 200) {
         print(response.statusCode);
         await authDataSource.refreshToken();
-        return getActiveUnit();
+        return getActiveDepartment();
       } else {
         print(response.data);
         final dataResponse = await DataResponse.fromJson(response.data);
-        final activeUnitModel = ActiveUnitModel.fromJson(dataResponse.data);
-        return activeUnitModel;
+        final activeDepartmentModel =
+            ActiveDepartmentModel.fromJson(dataResponse.data);
+        return activeDepartmentModel;
       }
     } catch (e) {
       print(e.toString());
@@ -136,7 +137,7 @@ class UnitDatasourceImpl implements UnitDatasource {
   }
 
   @override
-  Future<void> checkInActiveUnit() async {
+  Future<void> checkInActiveDepartment() async {
     try {
       final credential = await preferenceHandler.getCredential();
       // print(credential?.accessToken);
@@ -164,7 +165,7 @@ class UnitDatasourceImpl implements UnitDatasource {
   }
 
   @override
-  Future<void> checkOutActiveUnit() async {
+  Future<void> checkOutActiveDepartment() async {
     try {
       final credential = await preferenceHandler.getCredential();
       // print(credential?.accessToken);

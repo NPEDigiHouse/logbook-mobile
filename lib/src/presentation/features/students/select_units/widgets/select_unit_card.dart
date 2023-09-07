@@ -5,17 +5,17 @@ import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SelectUnitCard extends StatelessWidget {
-  const SelectUnitCard({
+class SelectDepartmentCard extends StatelessWidget {
+  const SelectDepartmentCard({
     super.key,
     required this.unitName,
     required this.unitId,
-    required this.activeUnitId,
+    required this.activeDepartmentId,
   });
 
   final String unitName;
   final String unitId;
-  final String activeUnitId;
+  final String activeDepartmentId;
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +56,13 @@ class SelectUnitCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (activeUnitId == unitId)
+                  if (activeDepartmentId == unitId)
                     Text(
                       "Currently selected",
                       style:
                           textTheme.labelSmall?.copyWith(color: primaryColor),
                     ),
-                  if (activeUnitId == unitId)
+                  if (activeDepartmentId == unitId)
                     SizedBox(
                       height: 2,
                     ),
@@ -82,11 +82,11 @@ class SelectUnitCard extends StatelessWidget {
             ),
             Radio.adaptive(
               value: unitId,
-              groupValue: activeUnitId,
+              groupValue: activeDepartmentId,
               onChanged: (v) {
                 final unitCubit =
-                    BlocProvider.of<UnitCubit>(context, listen: false);
-                unitCubit.changeUnitActive(unitId: unitId);
+                    BlocProvider.of<DepartmentCubit>(context, listen: false);
+                unitCubit.changeDepartmentActive(unitId: unitId);
               },
             ),
           ],

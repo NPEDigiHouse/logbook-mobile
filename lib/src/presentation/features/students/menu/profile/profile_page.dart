@@ -33,9 +33,9 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     Future.microtask(() {
       BlocProvider.of<ProfileCubit>(context)..getProfilePic();
-      BlocProvider.of<UnitCubit>(
+      BlocProvider.of<DepartmentCubit>(
         context,
-      )..getActiveUnit();
+      )..getActiveDepartment();
     });
   }
 
@@ -177,19 +177,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     )),
                   ),
                   const SizedBox(height: 14),
-                  BlocBuilder<UnitCubit, UnitState>(
+                  BlocBuilder<DepartmentCubit, DepartmentState>(
                     builder: (context, state1) {
-                      if (state1 is GetActiveUnitSuccess)
+                      if (state1 is GetActiveDepartmentSuccess)
                         return BlocBuilder<ProfileCubit, ProfileState>(
                           builder: (context, state) {
                             return ProfileItemMenuCard(
                               iconPath: 'stats_chart_filled.svg',
-                              title: 'Unit Statisics',
+                              title: 'Department Statisics',
                               onTap: () =>
-                                  context.navigateTo(UnitStatisticsPage(
+                                  context.navigateTo(DepartmentStatisticsPage(
                                 credential: widget.credential,
                                 profilePic: state.profilePic,
-                                activeUnitModel: state1.activeUnit,
+                                activeDepartmentModel: state1.activeDepartment,
                               )),
                             );
                           },

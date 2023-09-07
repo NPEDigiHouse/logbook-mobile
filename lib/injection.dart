@@ -93,8 +93,8 @@ void _injectRepository() {
       dataSource: locator(),
     ),
   );
-  locator.registerLazySingleton<UnitRepository>(
-    () => UnitReposityImpl(
+  locator.registerLazySingleton<DepartmentRepository>(
+    () => DepartmentReposityImpl(
       dataSource: locator(),
     ),
   );
@@ -127,8 +127,8 @@ void _injectDatasource() {
       preferenceHandler: locator(),
     ),
   );
-  locator.registerLazySingleton<UnitDatasource>(
-    () => UnitDatasourceImpl(
+  locator.registerLazySingleton<DepartmentDatasource>(
+    () => DepartmentDatasourceImpl(
       dio: locator(),
       authDataSource: locator<AuthDataSource>(),
       preferenceHandler: locator(),
@@ -259,17 +259,17 @@ void _injectUsecases() {
     ),
   );
   locator.registerLazySingleton(
-    () => FetchUnitsUsecase(
+    () => FetchDepartmentsUsecase(
       repository: locator(),
     ),
   );
   locator.registerLazySingleton(
-    () => GetActiveUnitUsecase(
+    () => GetActiveDepartmentUsecase(
       repository: locator(),
     ),
   );
   locator.registerLazySingleton(
-    () => ChangeActiveUnitUsecase(
+    () => ChangeActiveDepartmentUsecase(
       repository: locator(),
     ),
   );
@@ -279,7 +279,7 @@ void _injectUsecases() {
     ),
   );
   locator.registerLazySingleton(
-    () => CheckInActiveUnitUsecase(
+    () => CheckInActiveDepartmentUsecase(
       repository: locator(),
     ),
   );
@@ -365,11 +365,11 @@ void _injectStateManagement() {
   );
 
   locator.registerFactory(
-    () => UnitCubit(
-      fetchUnitsUsecase: locator(),
-      changeActiveUnitUsecase: locator(),
-      getActiveUnitUsecase: locator(),
-      checkInActiveUnitUsecase: locator(),
+    () => DepartmentCubit(
+      fetchDepartmentsUsecase: locator(),
+      changeActiveDepartmentUsecase: locator(),
+      getActiveDepartmentUsecase: locator(),
+      checkInActiveDepartmentUsecase: locator(),
       datasource: locator(),
     ),
   );

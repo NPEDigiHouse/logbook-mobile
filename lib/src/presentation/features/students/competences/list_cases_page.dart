@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ListCasesPage extends StatefulWidget {
-  final ActiveUnitModel model;
+  final ActiveDepartmentModel model;
 
   final String unitId;
   const ListCasesPage({super.key, required this.model, required this.unitId});
@@ -121,7 +121,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                   onlyPading: true,
                                   horizontalPadding: 16,
                                   children: [
-                                    UnitHeader(
+                                    DepartmentHeader(
                                         unitName: widget.model.unitName!),
                                     SizedBox(
                                       height: 12,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 
-class UnitStatisticsCard extends StatelessWidget {
+class DepartmentStatisticsCard extends StatelessWidget {
   final double width;
   final EdgeInsetsGeometry? padding;
   final Widget? child;
 
-  const UnitStatisticsCard({
+  const DepartmentStatisticsCard({
     super.key,
     this.width = double.infinity,
     this.padding,

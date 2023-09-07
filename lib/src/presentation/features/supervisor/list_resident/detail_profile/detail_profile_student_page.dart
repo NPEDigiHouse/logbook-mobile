@@ -159,12 +159,12 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
             //   sliver: SliverList(
             //     delegate: SliverChildListDelegate(
             //       [
-            //         UnitStatisticsCard(
+            //         DepartmentStatisticsCard(
             //           padding: const EdgeInsets.symmetric(vertical: 24),
             //           child: Column(
             //             children: <Widget>[
             //               Text(
-            //                 'Current Unit',
+            //                 'Current Department',
             //                 style: textTheme.titleMedium?.copyWith(
             //                   fontWeight: FontWeight.w600,
             //                   color: primaryColor,
@@ -179,7 +179,7 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
             //                   color: onDisableColor,
             //                 ),
             //               ),
-            //               const UnitStatisticsSection(
+            //               const DepartmentStatisticsSection(
             //                 titleText: 'Diagnosis Skills',
             //                 titleIconPath: 'skill_outlined.svg',
             //                 percentage: 73.0,
@@ -211,7 +211,7 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
             //                   color: onDisableColor,
             //                 ),
             //               ),
-            //               const UnitStatisticsSection(
+            //               const DepartmentStatisticsSection(
             //                 titleText: 'Acquired Cases',
             //                 titleIconPath: 'attach_resume_male_outlined.svg',
             //                 percentage: 45.0,

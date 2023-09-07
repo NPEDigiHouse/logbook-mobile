@@ -71,7 +71,7 @@ class _CreateClinicalRecordThirdPageState
         if (state.clinicalRecordPostSuccess) {
           context.read<ClinicalRecordDataNotifier2>()..reset();
           BlocProvider.of<StudentCubit>(context)
-            ..getStudentClinicalRecordOfActiveUnit();
+            ..getStudentClinicalRecordOfActiveDepartment();
 
           Navigator.pop(context);
           Navigator.pop(context);

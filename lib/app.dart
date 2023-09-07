@@ -51,7 +51,7 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         BlocProvider(create: (_) => di.locator<AuthCubit>()),
-        BlocProvider(create: (_) => di.locator<UnitCubit>()),
+        BlocProvider(create: (_) => di.locator<DepartmentCubit>()),
         BlocProvider(create: (_) => di.locator<SupervisorsCubit>()),
         BlocProvider(create: (_) => di.locator<ClinicalRecordCubit>()),
         BlocProvider(create: (_) => di.locator<ScientificSessionCubit>()),

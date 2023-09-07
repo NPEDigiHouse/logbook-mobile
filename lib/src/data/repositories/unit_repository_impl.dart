@@ -5,15 +5,15 @@ import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/units/unit_model.dart';
 import 'package:elogbook/src/domain/repositories/unit_repository.dart';
 
-class UnitReposityImpl implements UnitRepository {
-  final UnitDatasource dataSource;
+class DepartmentReposityImpl implements DepartmentRepository {
+  final DepartmentDatasource dataSource;
 
-  UnitReposityImpl({required this.dataSource});
+  DepartmentReposityImpl({required this.dataSource});
 
   @override
-  Future<Either<Failure, List<UnitModel>>> fetchUnits() async {
+  Future<Either<Failure, List<DepartmentModel>>> fetchDepartments() async {
     try {
-      final result = await dataSource.fetchAllUnit();
+      final result = await dataSource.fetchAllDepartment();
       return Right(result);
     } catch (e) {
       return Left(
@@ -23,10 +23,10 @@ class UnitReposityImpl implements UnitRepository {
   }
 
   @override
-  Future<Either<Failure, void>> changeUnitActive(
+  Future<Either<Failure, void>> changeDepartmentActive(
       {required String unitId}) async {
     try {
-      final result = await dataSource.changeUnitActive(unitId: unitId);
+      final result = await dataSource.changeDepartmentActive(unitId: unitId);
       return Right(result);
     } catch (e) {
       return Left(
@@ -36,9 +36,9 @@ class UnitReposityImpl implements UnitRepository {
   }
 
   @override
-  Future<Either<Failure, ActiveUnitModel>> getUnitActive() async {
+  Future<Either<Failure, ActiveDepartmentModel>> getDepartmentActive() async {
     try {
-      final result = await dataSource.getActiveUnit();
+      final result = await dataSource.getActiveDepartment();
       return Right(result);
     } catch (e) {
       return Left(ServerErrorFailure(e.toString()));
@@ -46,9 +46,9 @@ class UnitReposityImpl implements UnitRepository {
   }
 
   @override
-  Future<Either<Failure, void>> checkInActiveUnit() async {
+  Future<Either<Failure, void>> checkInActiveDepartment() async {
     try {
-      final result = await dataSource.checkInActiveUnit();
+      final result = await dataSource.checkInActiveDepartment();
       return Right(result);
     } catch (e) {
       return Left(

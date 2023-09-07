@@ -11,7 +11,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WeeklyGradeDetailPage extends StatefulWidget {
-  final StudentUnitModel student;
+  final StudentDepartmentModel student;
 
   const WeeklyGradeDetailPage({super.key, required this.student});
 
@@ -28,7 +28,7 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
     BlocProvider.of<AssesmentCubit>(context)
       ..getWeeklyAssesment(
           studentId: widget.student.studentId!,
-          unitId: widget.student.activeUnitId!);
+          unitId: widget.student.activeDepartmentId!);
     _menuList = ['None', 'Week'];
     _selectedMenu = ValueNotifier(_menuList[0]);
 
@@ -54,7 +54,7 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
           onRefresh: () => Future.wait([
             BlocProvider.of<AssesmentCubit>(context).getWeeklyAssesment(
                 studentId: widget.student.studentId!,
-                unitId: widget.student.activeUnitId!),
+                unitId: widget.student.activeDepartmentId!),
           ]),
           child: BlocBuilder<AssesmentCubit, AssesmentState>(
             builder: (context, state) {
@@ -221,7 +221,8 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                                 week: grades.weekNum ?? 0,
                                 score: grades.score!.toDouble(),
                                 id: grades.id!,
-                                activeUnitId: widget.student.activeUnitId!,
+                                activeDepartmentId:
+                                    widget.student.activeDepartmentId!,
                                 studentId: widget.student.studentId!,
                               ),
                             ),

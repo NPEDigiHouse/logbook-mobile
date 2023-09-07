@@ -13,10 +13,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SglCstHomePage extends StatefulWidget {
   final bool isCstHide;
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
 
   const SglCstHomePage(
-      {super.key, required this.activeUnitModel, required this.isCstHide});
+      {super.key,
+      required this.activeDepartmentModel,
+      required this.isCstHide});
 
   @override
   State<SglCstHomePage> createState() => _SglCstHomePageState();
@@ -39,15 +41,15 @@ class _SglCstHomePageState extends State<SglCstHomePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UnitHeader(
-                    unitName: widget.activeUnitModel.unitName!,
+                  DepartmentHeader(
+                    unitName: widget.activeDepartmentModel.unitName!,
                   ),
                   SizedBox(
                     height: 32,
                   ),
                   SglCstCard(
                     onTap: () => context.navigateTo(ListSglPage(
-                      activeUnitModel: widget.activeUnitModel,
+                      activeDepartmentModel: widget.activeDepartmentModel,
                     )),
                     title: 'Small Group Learning',
                     desc:
@@ -59,7 +61,7 @@ class _SglCstHomePageState extends State<SglCstHomePage> {
                     ),
                     SglCstCard(
                       onTap: () => context.navigateTo(ListCstPage(
-                        activeUnitModel: widget.activeUnitModel,
+                        activeDepartmentModel: widget.activeDepartmentModel,
                       )),
                       title: 'Clinical Skill Training',
                       desc:

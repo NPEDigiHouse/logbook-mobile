@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'active_unit_model.g.dart';
 
 @JsonSerializable()
-class ActiveUnitModel {
+class ActiveDepartmentModel {
   final String? checkInStatus;
   final String? checkOutStatus;
   final String? unitId;
@@ -13,7 +13,7 @@ class ActiveUnitModel {
   @JsonKey(name: 'countCheckIn')
   final int? countCheckIn;
 
-  ActiveUnitModel({
+  ActiveDepartmentModel({
     this.checkInStatus,
     this.checkOutStatus,
     this.unitId,
@@ -23,8 +23,8 @@ class ActiveUnitModel {
     this.checkOutTime,
   });
 
-  factory ActiveUnitModel.fromJson(Map<String, dynamic> data) =>
-      _$ActiveUnitModelFromJson(data);
+  factory ActiveDepartmentModel.fromJson(Map<String, dynamic> data) =>
+      _$ActiveDepartmentModelFromJson(data);
 
-  Map<String, dynamic> toJson() => _$ActiveUnitModelToJson(this);
+  Map<String, dynamic> toJson() => _$ActiveDepartmentModelToJson(this);
 }

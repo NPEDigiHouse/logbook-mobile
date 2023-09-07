@@ -17,11 +17,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SpecialReportHomePage extends StatefulWidget {
-  final ActiveUnitModel activeUnitModel;
+  final ActiveDepartmentModel activeDepartmentModel;
   final UserCredential credential;
 
   const SpecialReportHomePage(
-      {super.key, required this.activeUnitModel, required this.credential});
+      {super.key,
+      required this.activeDepartmentModel,
+      required this.credential});
 
   @override
   State<SpecialReportHomePage> createState() => _SpecialReportHomePageState();
@@ -58,8 +60,8 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                     onlyPading: true,
                     horizontalPadding: 16,
                     children: [
-                      UnitHeader(
-                        unitName: widget.activeUnitModel.unitName!,
+                      DepartmentHeader(
+                        unitName: widget.activeDepartmentModel.unitName!,
                       ),
                       SizedBox(
                         height: 12,
@@ -75,7 +77,7 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                           ),
                         ),
                       if (widget.credential.student?.supervisingDPKId != null)
-                        if (widget.activeUnitModel.countCheckIn! == 0)
+                        if (widget.activeDepartmentModel.countCheckIn! == 0)
                           AddNewConsultionCard(),
                       BlocBuilder<SpecialReportCubit, SpecialReportState>(
                         builder: (context, state) {
