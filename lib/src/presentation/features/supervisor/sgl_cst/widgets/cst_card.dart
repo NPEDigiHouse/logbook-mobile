@@ -10,8 +10,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CstOnListCard extends StatelessWidget {
   final SglCstOnList sglCst;
+  final String userId;
   final bool isCeu;
-  const CstOnListCard({super.key, required this.sglCst, required this.isCeu});
+  const CstOnListCard(
+      {super.key,
+      required this.sglCst,
+      required this.isCeu,
+      required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +27,7 @@ class CstOnListCard extends StatelessWidget {
           context.navigateTo(SupervisorCstDetailPage(
             studentId: sglCst.studentId!,
             isCeu: isCeu,
+            userId: userId,
           ));
         },
         child: Padding(
@@ -54,29 +60,19 @@ class CstOnListCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      sglCst.studentId ?? '-',
+                      'Clinical Skill Training',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          sglCst.studentName ?? '',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
                     RichText(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
                         style: textTheme.bodySmall?.copyWith(
-                          color: secondaryTextColor,
+                          color: onFormDisableColor,
                         ),
                         children: <TextSpan>[
                           const TextSpan(
@@ -91,6 +87,25 @@ class CstOnListCard extends StatelessWidget {
                           )),
                         ],
                       ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      sglCst.studentId ?? '-',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall
+                          ?.copyWith(height: 1, color: primaryTextColor),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          sglCst.studentName ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodySmall
+                              ?.copyWith(height: 1, color: primaryTextColor),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 4),
                   ],

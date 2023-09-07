@@ -9,7 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SupervisorListCstPage extends StatefulWidget {
   final bool isCeu;
-  const SupervisorListCstPage({super.key, required this.isCeu});
+  final String userId;
+  const SupervisorListCstPage(
+      {super.key, required this.isCeu, required this.userId});
 
   @override
   State<SupervisorListCstPage> createState() => _SupervisorListCstPageState();
@@ -102,6 +104,7 @@ class _SupervisorListCstPageState extends State<SupervisorListCstPage> {
                               return CstOnListCard(
                                 sglCst: s[index],
                                 isCeu: widget.isCeu,
+                                userId: widget.userId,
                               );
                             },
                             separatorBuilder: (context, index) {

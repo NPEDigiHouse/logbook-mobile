@@ -295,13 +295,13 @@ class SglCstCubit extends Cubit<SglCstState> {
     }
   }
 
-  Future<void> verifyCst({required String cstId}) async {
+  Future<void> verifyCst({required String cstId, required bool status}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      await dataSource.verifyCstByCeu(id: cstId, status: true);
+      await dataSource.verifyCstByCeu(id: cstId, status: status);
       try {
         emit(state.copyWith(isVerifyTopicSuccess: true));
       } catch (e) {
@@ -317,13 +317,13 @@ class SglCstCubit extends Cubit<SglCstState> {
     }
   }
 
-  Future<void> verifySgl({required String sglId}) async {
+  Future<void> verifySgl({required String sglId, required bool status}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      await dataSource.verifySglByCeu(id: sglId, status: true);
+      await dataSource.verifySglByCeu(id: sglId, status: status);
       try {
         emit(state.copyWith(isVerifyTopicSuccess: true));
       } catch (e) {
@@ -370,6 +370,52 @@ class SglCstCubit extends Cubit<SglCstState> {
       final result = await dataSource.getSglByStudentId(studentId: studentId);
       try {
         emit(state.copyWith(sglDetail: result));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> verifyAllSglTopic(
+      {required String topicId, required bool status}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.verifyAllSglBySupervisor(id: topicId, status: status);
+      try {
+        emit(state.copyWith(isVerifyAllSglCstSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> verifyAllCstTopic(
+      {required String topicId, required bool status}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.verifyAllCstBySupervisor(id: topicId, status: status);
+      try {
+        emit(state.copyWith(isVerifyAllSglCstSuccess: true));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

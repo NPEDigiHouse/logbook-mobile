@@ -41,6 +41,7 @@ class _SupervisorSglCstHomePageState extends State<SupervisorSglCstHomePage> {
                       isCeu: widget.credential.badges!
                               .indexWhere((element) => element.name == 'CEU') !=
                           -1,
+                      userId: widget.credential.supervisor!.supervisorId ?? '',
                     )),
                     title: 'Small Group Learning',
                     desc:
@@ -54,6 +55,7 @@ class _SupervisorSglCstHomePageState extends State<SupervisorSglCstHomePage> {
                       isCeu: widget.credential.badges!
                               .indexWhere((element) => element.name == 'CEU') !=
                           -1,
+                      userId: widget.credential.supervisor!.supervisorId ?? '',
                     )),
                     title: 'Clinical Skill Training',
                     desc:

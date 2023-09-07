@@ -14,9 +14,13 @@ import 'package:timeline_tile/timeline_tile.dart';
 
 class SupervisorSglDetailPage extends StatefulWidget {
   final String studentId;
+  final String userId;
   final bool isCeu;
   const SupervisorSglDetailPage(
-      {super.key, required this.studentId, required this.isCeu});
+      {super.key,
+      required this.studentId,
+      required this.isCeu,
+      required this.userId});
 
   @override
   State<SupervisorSglDetailPage> createState() =>
@@ -50,7 +54,9 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
             ),
             BlocConsumer<SglCstCubit, SglCstState>(
               listener: (context, state) {
-                if (state.isVerifyTopicSuccess || state.isVerifySglCstSuccess) {
+                if (state.isVerifyTopicSuccess ||
+                    state.isVerifySglCstSuccess ||
+                    state.isVerifyAllSglCstSuccess) {
                   BlocProvider.of<SglCstCubit>(context)
                     ..getStudentSglDetailById(studentId: widget.studentId);
                 }
@@ -85,39 +91,70 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                   children: [
                                     Row(
                                       children: [
-                                        Icon(
-                                          Icons.event_rounded,
-                                          color: primaryColor,
+                                        Text(
+                                          'SGL #${state.sglDetail!.sgls!.length - index}',
+                                          style:
+                                              textTheme.titleMedium?.copyWith(
+                                            color: primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        if (data.verificationStatus ==
+                                            'VERIFIED') ...[
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Icon(
+                                            Icons.verified,
+                                            color: successColor,
+                                            size: 16,
+                                          )
+                                        ]
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: RichText(
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        text: TextSpan(
+                                          style: textTheme.bodySmall?.copyWith(
+                                            color: secondaryTextColor,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: 'Supervisor:\t',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: data.supervisorName ?? '-',
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "(${ReusableFunctionHelper.epochToStringTime(startTime: data.startTime!, endTime: data.endTime)})",
+                                          style: textTheme.bodyMedium?.copyWith(
+                                              color: primaryTextColor),
                                         ),
                                         SizedBox(
-                                          width: 12,
+                                          width: 6,
                                         ),
-                                        Expanded(
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                ReusableFunctionHelper
-                                                    .datetimeToString(
-                                                        data.createdAt!),
-                                                style: textTheme.titleSmall
-                                                    ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              if (data.verificationStatus ==
-                                                  'VERIFIED') ...[
-                                                SizedBox(
-                                                  width: 4,
-                                                ),
-                                                Icon(
-                                                  Icons.verified,
-                                                  color: successColor,
-                                                  size: 16,
-                                                )
-                                              ]
-                                            ],
-                                          ),
-                                        )
+                                        Text(
+                                          ReusableFunctionHelper
+                                              .datetimeToString(data.createdAt!,
+                                                  format: 'EEEE, dd MMM yyyy'),
+                                          style: textTheme.bodyMedium?.copyWith(
+                                              color: primaryTextColor),
+                                        ),
                                       ],
                                     ),
                                     SizedBox(
@@ -182,55 +219,46 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                               SizedBox(
                                                 height: 4,
                                               ),
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.av_timer_rounded,
-                                                    color: onFormDisableColor,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 4,
-                                                  ),
-                                                  Text(
-                                                    ReusableFunctionHelper
-                                                        .epochToStringTime(
-                                                            startTime:
-                                                                data.startTime!,
-                                                            endTime:
-                                                                data.endTime),
-                                                    style: textTheme.bodyMedium
-                                                        ?.copyWith(
-                                                            color:
-                                                                onFormDisableColor),
-                                                  ),
-                                                ],
+                                              Builder(
+                                                builder: (context) {
+                                                  if (data.supervisorId ==
+                                                          widget.userId &&
+                                                      data.verificationStatus !=
+                                                          'VERIFIED') {
+                                                    if (data.topic![i]
+                                                            .verificationStatus !=
+                                                        'VERIFIED')
+                                                      return FilledButton(
+                                                        onPressed: () {
+                                                          BlocProvider.of<
+                                                                  SglCstCubit>(
+                                                              context)
+                                                            ..verifySglTopic(
+                                                                topicId: data
+                                                                    .topic![i]
+                                                                    .id!,
+                                                                status: true);
+                                                        },
+                                                        child: Text('Verify'),
+                                                      );
+                                                    else
+                                                      return OutlinedButton(
+                                                        onPressed: () {
+                                                          BlocProvider.of<
+                                                                  SglCstCubit>(
+                                                              context)
+                                                            ..verifySglTopic(
+                                                                topicId: data
+                                                                    .topic![i]
+                                                                    .id!,
+                                                                status: false);
+                                                        },
+                                                        child: Text('Cancel'),
+                                                      );
+                                                  }
+                                                  return SizedBox.shrink();
+                                                },
                                               ),
-                                              if (data.topic![i]
-                                                      .verificationStatus !=
-                                                  'VERIFIED')
-                                                FilledButton(
-                                                  onPressed: () {
-                                                    BlocProvider.of<
-                                                        SglCstCubit>(context)
-                                                      ..verifySglTopic(
-                                                          topicId: data
-                                                              .topic![i].id!,
-                                                          status: true);
-                                                  },
-                                                  child: Text('Verify'),
-                                                )
-                                              else
-                                                OutlinedButton(
-                                                  onPressed: () {
-                                                    BlocProvider.of<
-                                                        SglCstCubit>(context)
-                                                      ..verifySglTopic(
-                                                          topicId: data
-                                                              .topic![i].id!,
-                                                          status: false);
-                                                  },
-                                                  child: Text('Cancel'),
-                                                ),
                                               SizedBox(
                                                 height: 12,
                                               ),
@@ -242,17 +270,96 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                     SizedBox(
                                       height: 12,
                                     ),
-                                    if (data.verificationStatus != 'VERIFIED' &&
-                                        widget.isCeu)
-                                      FilledButton(
-                                        onPressed: () {
-                                          BlocProvider.of<SglCstCubit>(context)
-                                            ..verifySgl(
-                                              sglId: data.sglId!,
-                                            );
-                                        },
-                                        child: Text('Verify All Topics'),
-                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Builder(
+                                          builder: (context) {
+                                            if (data.supervisorId ==
+                                                    widget.userId &&
+                                                data.verificationStatus !=
+                                                    'VERIFIED') {
+                                              if (data.topic?.indexWhere(
+                                                      (element) =>
+                                                          element
+                                                              .verificationStatus !=
+                                                          'VERIFIED') !=
+                                                  -1) {
+                                                return FilledButton(
+                                                  onPressed: () {
+                                                    BlocProvider.of<
+                                                        SglCstCubit>(context)
+                                                      ..verifyAllSglTopic(
+                                                        topicId: data.sglId!,
+                                                        status: true,
+                                                      );
+                                                  },
+                                                  child: Text('Verify Topics'),
+                                                );
+                                              } else {
+                                                return OutlinedButton(
+                                                  onPressed: () {
+                                                    BlocProvider.of<
+                                                        SglCstCubit>(context)
+                                                      ..verifyAllSglTopic(
+                                                        topicId: data.sglId!,
+                                                        status: false,
+                                                      );
+                                                  },
+                                                  child: Text('Cancel All'),
+                                                );
+                                              }
+                                            }
+                                            return SizedBox.shrink();
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: 4,
+                                        ),
+                                        if (widget.isCeu &&
+                                            data.verificationStatus !=
+                                                'VERIFIED')
+                                          FilledButton(
+                                            style: FilledButton.styleFrom(
+                                              backgroundColor: secondaryColor,
+                                            ),
+                                            onPressed: (data.topic?.indexWhere(
+                                                        (element) =>
+                                                            element
+                                                                .verificationStatus !=
+                                                            'VERIFIED') ==
+                                                    -1)
+                                                ? () {
+                                                    BlocProvider.of<
+                                                        SglCstCubit>(context)
+                                                      ..verifySgl(
+                                                        status: true,
+                                                        sglId: data.sglId!,
+                                                      );
+                                                  }
+                                                : null,
+                                            child: Text('Verify SGL'),
+                                          ),
+                                        if (widget.isCeu &&
+                                            data.verificationStatus ==
+                                                'VERIFIED')
+                                          FilledButton(
+                                            style: FilledButton.styleFrom(
+                                              backgroundColor: errorColor,
+                                            ),
+                                            onPressed: () {
+                                              BlocProvider.of<SglCstCubit>(
+                                                  context)
+                                                ..verifySgl(
+                                                  status: false,
+                                                  sglId: data.sglId!,
+                                                );
+                                            },
+                                            child: Text('Unverify SGL'),
+                                          ),
+                                      ],
+                                    ),
+                                    
                                     SizedBox(
                                       height: 12,
                                     ),

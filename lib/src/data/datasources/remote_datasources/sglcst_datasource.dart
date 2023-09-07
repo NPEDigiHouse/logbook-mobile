@@ -31,6 +31,10 @@ abstract class SglCstDataSource {
       {required String id, required bool status});
   Future<void> verifyCstBySupervisor(
       {required String id, required bool status});
+  Future<void> verifyAllSglBySupervisor(
+      {required String id, required bool status});
+  Future<void> verifyAllCstBySupervisor(
+      {required String id, required bool status});
   Future<void> verifyCstByCeu({required String id, required bool status});
   Future<void> verifySglByCeu({required String id, required bool status});
 }
@@ -398,6 +402,54 @@ class SglCstDataSourceImpl implements SglCstDataSource {
       List<TopicModel> listData =
           dataResponse.data.map((e) => TopicModel.fromJson(e)).toList();
       return listData;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> verifyAllCstBySupervisor(
+      {required String id, required bool status}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response =
+          await dio.put(ApiService.baseUrl + '/csts/$id/topics/verify',
+              options: Options(
+                headers: {
+                  "content-type": 'application/json',
+                  "authorization": 'Bearer ${credential?.accessToken}'
+                },
+              ),
+              data: {'verified': status});
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> verifyAllSglBySupervisor(
+      {required String id, required bool status}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response =
+          await dio.put(ApiService.baseUrl + '/sgls/$id/topics/verify',
+              options: Options(
+                headers: {
+                  "content-type": 'application/json',
+                  "authorization": 'Bearer ${credential?.accessToken}'
+                },
+              ),
+              data: {'verified': status});
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

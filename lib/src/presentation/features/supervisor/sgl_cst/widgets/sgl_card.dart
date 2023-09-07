@@ -4,15 +4,19 @@ import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
-import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/supervisor_cst_detail_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/supervisor_sgl_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SglOnListCard extends StatelessWidget {
   final SglCstOnList sglCst;
+  final String userId;
   final bool isCeu;
-  const SglOnListCard({super.key, required this.sglCst, required this.isCeu});
+  const SglOnListCard(
+      {super.key,
+      required this.sglCst,
+      required this.isCeu,
+      required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,7 @@ class SglOnListCard extends StatelessWidget {
         onTap: () {
           context.navigateTo(SupervisorSglDetailPage(
             studentId: sglCst.studentId!,
+            userId: userId,
             isCeu: isCeu,
           ));
         },
@@ -55,29 +60,19 @@ class SglOnListCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      sglCst.studentId ?? '-',
+                      'Small Group Learning',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          sglCst.studentName ?? '',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
                     RichText(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
                         style: textTheme.bodySmall?.copyWith(
-                          color: secondaryTextColor,
+                          color: onFormDisableColor,
                         ),
                         children: <TextSpan>[
                           const TextSpan(
@@ -94,6 +89,25 @@ class SglOnListCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
+                    Text(
+                      sglCst.studentId ?? '-',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall
+                          ?.copyWith(height: 1, color: primaryTextColor),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          sglCst.studentName ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodySmall
+                              ?.copyWith(height: 1, color: primaryTextColor),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),

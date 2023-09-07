@@ -1,5 +1,6 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/widgets/sgl_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -9,7 +10,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SupervisorListSglPage extends StatefulWidget {
   final bool isCeu;
-  const SupervisorListSglPage({super.key, required this.isCeu});
+  final String userId;
+  const SupervisorListSglPage(
+      {super.key, required this.isCeu, required this.userId});
 
   @override
   State<SupervisorListSglPage> createState() => _SupervisorListSglPageState();
@@ -94,6 +97,7 @@ class _SupervisorListSglPageState extends State<SupervisorListSglPage> {
                               return SglOnListCard(
                                 sglCst: s[index],
                                 isCeu: widget.isCeu,
+                                userId: widget.userId,
                               );
                             },
                             separatorBuilder: (context, index) {

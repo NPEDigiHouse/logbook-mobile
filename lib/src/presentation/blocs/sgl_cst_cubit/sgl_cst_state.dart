@@ -8,6 +8,7 @@ class SglCstState {
   final List<SglCstOnList>? cstStudents;
   final bool isVerifyTopicSuccess;
   final bool isVerifySglCstSuccess;
+  final bool isVerifyAllSglCstSuccess;
   final SglResponse? sglDetail;
   final CstResponse? cstDetail;
   final RequestState requestState;
@@ -22,6 +23,7 @@ class SglCstState {
       this.cstStudents,
       this.isVerifySglCstSuccess = false,
       this.isVerifyTopicSuccess = false,
+      this.isVerifyAllSglCstSuccess = false,
       this.topics,
       this.sglDetail,
       this.cstDetail});
@@ -35,6 +37,7 @@ class SglCstState {
     List<SglCstOnList>? cstStudents,
     bool isVerifyTopicSuccess = false,
     bool isVerifySglCstSuccess = false,
+    bool isVerifyAllSglCstSuccess = false,
     SglResponse? sglDetail,
     CstResponse? cstDetail,
     List<TopicModel>? topics,
@@ -50,6 +53,7 @@ class SglCstState {
       sglStudents: sglStudents ?? this.sglStudents,
       isVerifySglCstSuccess: isVerifySglCstSuccess,
       isVerifyTopicSuccess: isVerifyTopicSuccess,
+      isVerifyAllSglCstSuccess: isVerifyAllSglCstSuccess,
       requestState: requestState,
     );
   }
