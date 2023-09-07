@@ -189,11 +189,29 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                     SizedBox(
                       height: 12,
                     ),
-                    FinalGradeTopStatCard(
-                      title: 'Final Grade Statistic',
-                      totalGrade:
-                          getTotalGrades(state.finalScore!.finalScore ?? 0),
-                    ),
+                    Builder(builder: (context) {
+                      double score = 0;
+                      int typeCount = 0;
+                      for (var element in state.finalScore!.assesments!) {
+                        if (element.score != null) {
+                          score += element.score!;
+                        }
+                        if (element.type == 'OSCE' &&
+                            (widget.finalGrade.activeDepartmentName!
+                                    .toUpperCase()
+                                    .contains('FORENSIK') ||
+                                widget.finalGrade.activeDepartmentName!
+                                        .toUpperCase() ==
+                                    'IKM-IKK')) {
+                        } else {
+                          typeCount++;
+                        }
+                      }
+                      return FinalGradeTopStatCard(
+                        title: 'Final Grade Statistic',
+                        totalGrade: getTotalGrades(score / typeCount ?? 0),
+                      );
+                    }),
                     if (state.finalScore!.assesments != null) ...[
                       for (int i = 0;
                           i < state.finalScore!.assesments!.length;
