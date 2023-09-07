@@ -19,6 +19,12 @@ class ListScientificAssignment {
   List<Score>? scores;
   @JsonKey(name: "grade")
   double? grade;
+  @JsonKey(name: "academicSupervisorId")
+  String? academicSupervisorId;
+  @JsonKey(name: "examinerDPKId")
+  String? examinerDPKId;
+  @JsonKey(name: "supervisingDPKId")
+  String? supervisingDPKId;
 
   ListScientificAssignment({
     this.id,
@@ -28,6 +34,9 @@ class ListScientificAssignment {
     this.scores,
     this.grade,
     this.location,
+    this.academicSupervisorId,
+    this.examinerDPKId,
+    this.supervisingDPKId,
   });
 
   factory ListScientificAssignment.fromJson(Map<String, dynamic> json) =>

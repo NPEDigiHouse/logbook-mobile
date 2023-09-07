@@ -1,4 +1,5 @@
 import 'package:elogbook/src/data/models/assessment/list_scientific_assignment.dart';
+import 'package:elogbook/src/data/models/assessment/scientific_grade_item.dart';
 import 'package:flutter/material.dart';
 
 class ItemRatingSA {
@@ -154,61 +155,6 @@ class ScientificAssignmentProvider extends ChangeNotifier {
     presentationList.clear();
     presentationStyleList.clear();
     discussionList.clear();
-    // if (scores.isEmpty) {
-    //   List<String> presentationData = [
-    //     'Systematic Arrangement',
-    //     'Coherence of Thought Flow',
-    //     'Proper and Correct Language Usage',
-    //     'Writing Style and Reference Usage'
-    //   ];
-    //   List<String> presentationStyleData = [
-    //     'Timeliness of Presentation',
-    //     'Presentation Method and Techniques',
-    //     'Visualization Techniques (Delivery/Transparency)',
-    //   ];
-    //   List<String> discussionData = [
-    //     'Mastery of Material',
-    //     'Relevance of Answers and Questions',
-    //     'Clear, Concise, and Directed Answering Techniques',
-    //   ];
-
-    //   int index = 1;
-
-    //   for (var element in presentationData) {
-    //     presentationList.add(
-    //       ItemRatingSA(
-    //           indicator: element,
-    //           score: 0,
-    //           id: index,
-    //           scoreController: TextEditingController(text: '0')),
-    //     );
-    //     index++;
-    //   }
-
-    //   for (var element in presentationStyleData) {
-    //     presentationStyleList.add(
-    //       ItemRatingSA(
-    //           indicator: element,
-    //           score: 0,
-    //           id: index,
-    //           scoreController: TextEditingController(text: '0')),
-    //     );
-    //     index++;
-    //   }
-
-    //   for (var element in discussionData) {
-    //     discussionList.add(
-    //       ItemRatingSA(
-    //           indicator: element,
-    //           score: 0,
-    //           id: index,
-    //           scoreController: TextEditingController(text: '0')),
-    //     );
-    //     index++;
-    //   }
-    // }
-
-    //  else {
     for (var s in scores) {
       switch (s.type) {
         case ScientificAssignmentType.CARA_PENYAJIAN:
@@ -238,7 +184,40 @@ class ScientificAssignmentProvider extends ChangeNotifier {
         default:
       }
     }
-    // }
+    isAlreadyInit = true;
+  }
+
+  void firstInit(List<ScientificGradeItem> grades) {
+    presentationList.clear();
+    presentationStyleList.clear();
+    discussionList.clear();
+
+    for (var s in grades) {
+      switch (s.scientificGradeType) {
+        case 'CARA_PENYAJIAN':
+          presentationStyleList.add(ItemRatingSA(
+              indicator: s.name!,
+              score: 0,
+              id: s.id!,
+              scoreController: TextEditingController(text: '0.0')));
+          break;
+        case 'DISKUSI':
+          discussionList.add(ItemRatingSA(
+              indicator: s.name!,
+              score: 0,
+              id: s.id!,
+              scoreController: TextEditingController(text: '0.0')));
+          break;
+        case 'SAJIAN':
+          presentationList.add(ItemRatingSA(
+              indicator: s.name!,
+              score: 0,
+              id: s.id!,
+              scoreController: TextEditingController(text: '0.0')));
+          break;
+        default:
+      }
+    }
     isAlreadyInit = true;
   }
 }

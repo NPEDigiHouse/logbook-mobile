@@ -8,6 +8,7 @@ import 'package:elogbook/src/data/models/assessment/list_scientific_assignment.d
 import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_post_model.dart';
 import 'package:elogbook/src/data/models/assessment/personal_behavior_detail.dart';
+import 'package:elogbook/src/data/models/assessment/scientific_grade_item.dart';
 import 'package:elogbook/src/data/models/assessment/student_mini_cex.dart';
 import 'package:elogbook/src/data/models/assessment/student_scientific_assignment.dart';
 import 'package:elogbook/src/data/models/assessment/weekly_assesment_response.dart';
@@ -46,6 +47,7 @@ abstract class AssesmentDataSource {
       {required String studentId,
       required String unitId,
       required bool status});
+  Future<List<ScientificGradeItem>> getListScientificGradeItems();
 }
 
 class AssesmentDataSourceImpl implements AssesmentDataSource {
@@ -173,6 +175,10 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! <= 500;
+          },
         ),
         data: score,
       );
@@ -257,10 +263,14 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! <= 500;
+          },
         ),
         data: model.toJson(),
       );
-      print(response);
+      print(response.data);
       if (response.statusCode != 201) {
         throw Exception();
       }
@@ -507,6 +517,35 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
       if (response.statusCode != 200) {
         throw Exception();
       }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<ScientificGradeItem>> getListScientificGradeItems() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/scientific-assesment-grade-items',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<ScientificGradeItem> listData = dataResponse.data
+          .map((e) => ScientificGradeItem.fromJson(e))
+          .toList();
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

@@ -17,6 +17,9 @@ MiniCexStudentDetailModel _$MiniCexStudentDetailModelFromJson(
       scores: (json['scores'] as List<dynamic>?)
           ?.map((e) => Score.fromJson(e as Map<String, dynamic>))
           .toList(),
+      academicSupervisorId: json['academicSupervisorId'] as String?,
+      examinerDPKId: json['examinerDPKId'] as String?,
+      supervisingDPKId: json['supervisingDPKId'] as String?,
       grade: (json['grade'] as num?)?.toDouble(),
     );
 
@@ -26,6 +29,9 @@ Map<String, dynamic> _$MiniCexStudentDetailModelToJson(
       'case': instance.dataCase,
       'id': instance.id,
       'location': instance.location,
+      'academicSupervisorId': instance.academicSupervisorId,
+      'examinerDPKId': instance.examinerDPKId,
+      'supervisingDPKId': instance.supervisingDPKId,
       'studentId': instance.studentId,
       'studentName': instance.studentName,
       'scores': instance.scores,

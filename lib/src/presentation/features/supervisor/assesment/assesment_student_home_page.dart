@@ -53,8 +53,11 @@ class AssesmentStudentHomePage extends StatelessWidget {
                   iconPath: 'icon_test.svg',
                   title: 'Mini Cex',
                   desc: 'Mini Clinical Evaluation Exercise',
-                  onTap: () => context.navigateTo(
-                      ListMiniCexPage(unitName: '', studentId: studentId, supervisorId: credential.username!,)),
+                  onTap: () => context.navigateTo(ListMiniCexPage(
+                    unitName: '',
+                    studentId: studentId,
+                    supervisorId: credential.supervisor!.id!,
+                  )),
                 ),
                 SizedBox(
                   width: 12,
@@ -65,6 +68,7 @@ class AssesmentStudentHomePage extends StatelessWidget {
                   onTap: () => context.navigateTo(ListScientificAssignmentPage(
                     unitName: '',
                     studentId: studentId,
+                    supervisorId: credential.supervisor!.id!,
                   )),
                   desc: 'Scientific assessment or assignment',
                 ),

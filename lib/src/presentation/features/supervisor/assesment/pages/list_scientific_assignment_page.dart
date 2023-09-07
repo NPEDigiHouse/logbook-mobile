@@ -9,8 +9,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ListScientificAssignmentPage extends StatefulWidget {
   final String studentId;
   final String unitName;
-  const ListScientificAssignmentPage(
-      {super.key, required this.unitName, required this.studentId});
+  final String supervisorId;
+
+  const ListScientificAssignmentPage({
+    super.key,
+    required this.unitName,
+    required this.studentId,
+    required this.supervisorId,
+  });
 
   @override
   State<ListScientificAssignmentPage> createState() =>
@@ -45,7 +51,8 @@ class _ListScientificAssignmentPageState
                 state.scientificAssignmentStudents!.isNotEmpty) {
               context.replace(SupervisorScientificAssignmentDetailPage(
                   unitName: '',
-                  id: state.scientificAssignmentStudents!.first.id!));
+                  id: state.scientificAssignmentStudents!.first.id!,
+                  supervisorId: widget.supervisorId));
             }
           },
           builder: (context, state) {

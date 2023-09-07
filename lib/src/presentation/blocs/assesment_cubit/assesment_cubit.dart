@@ -7,6 +7,7 @@ import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_list_model.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_post_model.dart';
 import 'package:elogbook/src/data/models/assessment/personal_behavior_detail.dart';
+import 'package:elogbook/src/data/models/assessment/scientific_grade_item.dart';
 import 'package:elogbook/src/data/models/assessment/student_mini_cex.dart';
 import 'package:elogbook/src/data/models/assessment/student_scientific_assignment.dart';
 import 'package:elogbook/src/data/models/assessment/weekly_assesment_response.dart';
@@ -142,6 +143,32 @@ class AssesmentCubit extends Cubit<AssesmentState> {
         emit(
           state.copyWith(
               miniCexStudentDetail: data, requestState: RequestState.data),
+        );
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getScientificGradeItems() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final data = await dataSource.getListScientificGradeItems();
+      try {
+        emit(
+          state.copyWith(
+            scientificGradeItems: data,
+          ),
         );
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));

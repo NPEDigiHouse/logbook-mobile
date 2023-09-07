@@ -20,9 +20,14 @@ import 'package:semicircle_indicator/semicircle_indicator.dart';
 
 class SupervisorScientificAssignmentDetailPage extends StatefulWidget {
   final String id;
+  final String supervisorId;
+
   final String unitName;
   const SupervisorScientificAssignmentDetailPage(
-      {super.key, required this.unitName, required this.id});
+      {super.key,
+      required this.unitName,
+      required this.id,
+      required this.supervisorId});
 
   @override
   State<SupervisorScientificAssignmentDetailPage> createState() =>
@@ -38,7 +43,9 @@ class _SupervisorScientificAssignmentDetailPageState
         BlocProvider.of<AssesmentCubit>(context)
           ..getScientiicAssignmentDetail(
             id: widget.id,
-          );
+          )
+          ..getScientificGradeItems();
+
         context.read<ScientificAssignmentProvider>()..reset();
       },
     );
@@ -52,21 +59,29 @@ class _SupervisorScientificAssignmentDetailPageState
       appBar: AppBar(
         title: Text("Scientific Assignment"),
       ).variant(),
-      floatingActionButton: SizedBox(
-        width: AppSize.getAppWidth(context) - 32,
-        child: FilledButton.icon(
-          onPressed: () {
-            BlocProvider.of<AssesmentCubit>(context)
-              ..assesmentScientificAssignment(
-                id: widget.id,
-                sa: {
-                  'scores': provider.getScientificAssignmentData(),
+      floatingActionButton: BlocBuilder<AssesmentCubit, AssesmentState>(
+        builder: (context, state) {
+          if (state.scientificAssignmentDetail != null &&
+              state.scientificAssignmentDetail!.supervisingDPKId ==
+                  widget.supervisorId)
+            return SizedBox(
+              width: AppSize.getAppWidth(context) - 32,
+              child: FilledButton.icon(
+                onPressed: () {
+                  BlocProvider.of<AssesmentCubit>(context)
+                    ..assesmentScientificAssignment(
+                      id: widget.id,
+                      sa: {
+                        'scores': provider.getScientificAssignmentData(),
+                      },
+                    );
                 },
-              );
-          },
-          icon: Icon(Icons.check_circle),
-          label: Text('Update Changed'),
-        ),
+                icon: Icon(Icons.check_circle),
+                label: Text('Update Changed'),
+              ),
+            );
+          return SizedBox.shrink();
+        },
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -91,7 +106,6 @@ class _SupervisorScientificAssignmentDetailPageState
                   listener: (context, state) {
                     if (state.isAssementScientificAssignmentSuccess) {
                       provider.reset();
-
                       BlocProvider.of<AssesmentCubit>(context)
                         ..getScientiicAssignmentDetail(
                           id: widget.id,
@@ -99,54 +113,74 @@ class _SupervisorScientificAssignmentDetailPageState
                       setState(() {});
                     }
                     if (state.scientificAssignmentDetail != null &&
-                        state.stateSa == RequestState.data) {
+                        state.stateSa == RequestState.data &&
+                        state.scientificGradeItems != null) {
                       if (!provider.isAlreadyInit) {
-                        provider
-                            .init(state.scientificAssignmentDetail!.scores!);
+                        if (state
+                            .scientificAssignmentDetail!.scores!.isNotEmpty) {
+                          provider
+                              .init(state.scientificAssignmentDetail!.scores!);
+                        } else {
+                          provider.firstInit(state.scientificGradeItems!);
+                        }
                       }
                     }
                   },
                   builder: (context, state) {
-                    if (state.scientificAssignmentDetail != null &&
-                        state.stateSa == RequestState.data) {
-                      if (provider.discussionList.isNotEmpty)
-                        return SpacingColumn(
-                          spacing: 12,
-                          children: [
-                            ScientificAssignmentHeadCard(
-                                scientificAssignment:
-                                    state.scientificAssignmentDetail!),
-                            TopStatCard(
-                                totalGrade: provider.getTotalGrades(),
-                                title: 'Total Grades'),
-                            ScientificGradeCard(
-                              title: 'Presentation',
-                              iconPath: 'assets/icons/presentation_icon.svg',
-                              saScores: provider.presentationList,
-                              type: ScientificType.presentation,
-                            ),
-                            ScientificGradeCard(
-                              title: 'Presentation Style',
-                              iconPath:
-                                  'assets/icons/presentation_style_icon.svg',
-                              saScores: provider.presentationStyleList,
-                              type: ScientificType.presentation_style,
-                            ),
-                            ScientificGradeCard(
-                              title: 'Discussion',
-                              iconPath: 'assets/icons/discussion_icon.svg',
-                              saScores: provider.discussionList,
-                              type: ScientificType.discussion,
-                            ),
-                            SizedBox(
-                              height: 60,
-                            ),
-                          ],
-                        );
-                      return EmptyData(
-                        title: 'No Assesment Items',
-                        subtitle: 'No Assesment Items',
-                      );
+                    if (state.scientificAssignmentDetail != null) {
+                      return Builder(builder: (context) {
+                        if (state.scientificGradeItems != null) {
+                          if (state.scientificGradeItems!.isNotEmpty)
+                            return SpacingColumn(
+                              spacing: 12,
+                              children: [
+                                ScientificAssignmentHeadCard(
+                                    scientificAssignment:
+                                        state.scientificAssignmentDetail!),
+                                TopStatCard(
+                                    totalGrade: provider.getTotalGrades(),
+                                    title: 'Total Grades'),
+                                ScientificGradeCard(
+                                  title: 'Presentation',
+                                  iconPath:
+                                      'assets/icons/presentation_icon.svg',
+                                  saScores: provider.presentationList,
+                                  type: ScientificType.presentation,
+                                  canAccess: state.scientificAssignmentDetail!
+                                          .supervisingDPKId ==
+                                      widget.supervisorId,
+                                ),
+                                ScientificGradeCard(
+                                  title: 'Presentation Style',
+                                  iconPath:
+                                      'assets/icons/presentation_style_icon.svg',
+                                  saScores: provider.presentationStyleList,
+                                  type: ScientificType.presentation_style,
+                                  canAccess: state.scientificAssignmentDetail!
+                                          .supervisingDPKId ==
+                                      widget.supervisorId,
+                                ),
+                                ScientificGradeCard(
+                                  title: 'Discussion',
+                                  iconPath: 'assets/icons/discussion_icon.svg',
+                                  saScores: provider.discussionList,
+                                  type: ScientificType.discussion,
+                                  canAccess: state.scientificAssignmentDetail!
+                                          .supervisingDPKId ==
+                                      widget.supervisorId,
+                                ),
+                                SizedBox(
+                                  height: 60,
+                                ),
+                              ],
+                            );
+                          return EmptyData(
+                            title: 'No Assesment Items',
+                            subtitle: 'No Assesment Items',
+                          );
+                        }
+                        return CustomLoading();
+                      });
                     } else {
                       return CustomLoading();
                     }
@@ -166,12 +200,14 @@ class ScientificGradeCard extends StatelessWidget {
     required this.iconPath,
     required this.saScores,
     required this.type,
+    required this.canAccess,
   });
 
   final ScientificType type;
   final List<ItemRatingSA> saScores;
   final String title;
   final String iconPath;
+  final bool canAccess;
 
   @override
   Widget build(BuildContext context) {
@@ -246,6 +282,7 @@ class ScientificGradeCard extends StatelessWidget {
                           SizedBox(
                             width: 50,
                             child: TextField(
+                              readOnly: !canAccess,
                               textAlign: TextAlign.center,
                               controller: data.scoreController,
                               keyboardType: TextInputType.number,
@@ -340,37 +377,40 @@ class TopStatCard extends StatelessWidget {
                 SizedBox(
                   height: 12,
                 ),
-                SemicircularIndicator(
-                  contain: true,
-                  radius: 100,
-                  progress: totalGrade != null ? totalGrade!.value : 0,
-                  strokeCap: StrokeCap.round,
-                  color: totalGrade != null
-                      ? totalGrade!.gradientScore.color
-                      : onDisableColor,
-                  bottomPadding: 0,
-                  backgroundColor: Color(0xFFB0EAFC),
-                  child: Column(
-                    children: [
-                      Text(
-                        totalGrade != null
-                            ? totalGrade!.gradientScore.title
-                            : 'Unknown',
-                        style: textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                if (totalGrade != null)
+                  SemicircularIndicator(
+                    contain: true,
+                    radius: 100,
+                    progress: totalGrade != null && !totalGrade!.value.isNaN
+                        ? totalGrade!.value
+                        : 0,
+                    strokeCap: StrokeCap.round,
+                    color: totalGrade != null
+                        ? totalGrade!.gradientScore.color
+                        : onDisableColor,
+                    bottomPadding: 0,
+                    backgroundColor: Color(0xFFB0EAFC),
+                    child: Column(
+                      children: [
+                        Text(
+                          totalGrade != null
+                              ? totalGrade!.gradientScore.title
+                              : 'Unknown',
+                          style: textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        totalGrade != null
-                            ? 'Avg : ${(totalGrade!.value * 100).toInt().toString()}'
-                            : '-',
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: secondaryColor,
-                        ),
-                      )
-                    ],
+                        Text(
+                          totalGrade != null && !totalGrade!.value.isNaN
+                              ? 'Avg : ${((totalGrade?.value ?? 0) * 100).toInt().toString()}'
+                              : '-',
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: secondaryColor,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
                 SizedBox(
                   height: 16,
                 ),
@@ -437,9 +477,6 @@ class ScientificAssignmentHeadCard extends StatelessWidget {
             style: textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
-          ),
-          SizedBox(
-            height: 12,
           ),
         ],
       ),

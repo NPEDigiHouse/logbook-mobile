@@ -15,6 +15,7 @@ class AssesmentState {
   final bool isScoreWeeklyAssessment;
   final WeeklyAssesmentResponse? weeklyAssesment;
   final bool isAssementScientificAssignmentSuccess;
+  final List<ScientificGradeItem>? scientificGradeItems;
   final StudentMiniCex? studentMiniCex;
   final bool isAssesmentMiniCexSuccess;
   final RequestState stateSa;
@@ -25,6 +26,7 @@ class AssesmentState {
     this.isScoreWeeklyAssessment = false,
     this.isUploadMiniCexSuccess = false,
     this.studentMiniCexs,
+    this.scientificGradeItems,
     this.miniCexStudentDetail,
     this.studentMiniCex,
     this.isFinalScoreUpdate = false,
@@ -59,6 +61,7 @@ class AssesmentState {
     List<StudentScientificAssignment>? scientificAssignmentStudents,
     bool isAssementScientificAssignmentSuccess = false,
     RequestState stateSa = RequestState.init,
+    List<ScientificGradeItem>? scientificGradeItems,
     FinalScoreResponse? finalScore,
     List<StudentScientificAssignment>? personalBehaviorStudent,
     PersonalBehaviorDetailModel? personalBehaviorDetail,
@@ -77,6 +80,7 @@ class AssesmentState {
       finalScore: finalScore ?? this.finalScore,
       scientificAssignmentStudents:
           scientificAssignmentStudents ?? this.scientificAssignmentStudents,
+      scientificGradeItems: scientificGradeItems ?? this.scientificGradeItems,
       isAssementScientificAssignmentSuccess:
           isAssementScientificAssignmentSuccess,
       isUploadAssignmentSuccess: isUploadAssignmentSuccess,
