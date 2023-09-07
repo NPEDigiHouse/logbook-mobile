@@ -65,12 +65,12 @@ class ScientificAssignmentProvider extends ChangeNotifier {
 
     Map<String, int> scoreColors = {
       'A': 0xFF56B9A1,
-      'B+': 0xFF7AB28C,
-      'B': 0xFF9FAE78,
-      'B-': 0xFFC4A763,
-      'C+': 0xFFE8A04E,
-      'C': 0xFFFFCB51,
-      'C-': 0xFFE79D6B,
+      'A-': 0xFF7AB28C,
+      'B+': 0xFF9FAE78,
+      'B': 0xFFC4A763,
+      'B-': 0xFFE8A04E,
+      'C+': 0xFFFFCB51,
+      'C': 0xFFE79D6B,
       'D': 0xFFC28B86,
       'E': 0xFFD1495B,
     };

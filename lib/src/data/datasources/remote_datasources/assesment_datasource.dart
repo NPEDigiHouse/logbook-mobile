@@ -140,6 +140,10 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
         ),
         data: listItemRating,
       );

@@ -41,31 +41,31 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
   TotalGradeHelper? getTotalGrades(double grades) {
     Map<String, int> scoreColors = {
       'A': 0xFF56B9A1,
-      'B+': 0xFF7AB28C,
-      'B': 0xFF9FAE78,
-      'B-': 0xFFC4A763,
-      'C+': 0xFFE8A04E,
-      'C': 0xFFFFCB51,
-      'C-': 0xFFE79D6B,
+      'A-': 0xFF7AB28C,
+      'B+': 0xFF9FAE78,
+      'B': 0xFFC4A763,
+      'B-': 0xFFE8A04E,
+      'C+': 0xFFFFCB51,
+      'C': 0xFFE79D6B,
       'D': 0xFFC28B86,
       'E': 0xFFD1495B,
     };
     String scoreLevel;
-    if (grades * 100 >= 90) {
+    if (grades * 100 >= 85) {
       scoreLevel = 'A';
-    } else if (grades * 100 >= 85) {
-      scoreLevel = 'B+';
     } else if (grades * 100 >= 80) {
+      scoreLevel = 'A-';
+    } else if (grades * 100 > 75) {
+      scoreLevel = 'B+';
+    } else if (grades * 100 > 70) {
       scoreLevel = 'B';
-    } else if (grades * 100 >= 75) {
+    } else if (grades * 100 > 65) {
       scoreLevel = 'B-';
-    } else if (grades * 100 >= 70) {
-      scoreLevel = 'C+';
-    } else if (grades * 100 >= 65) {
-      scoreLevel = 'C';
     } else if (grades * 100 >= 60) {
-      scoreLevel = 'C-';
-    } else if (grades * 100 >= 55) {
+      scoreLevel = 'C+';
+    } else if (grades * 100 >= 50) {
+      scoreLevel = 'C';
+    } else if (grades * 100 >= 40) {
       scoreLevel = 'D';
     } else {
       scoreLevel = 'E';
@@ -132,7 +132,6 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
                                         0,
                               ),
                         ],
-                        
                         SizedBox(
                           height: 12,
                         ),

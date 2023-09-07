@@ -65,12 +65,12 @@ class MiniCexProvider extends ChangeNotifier {
 
     Map<String, int> scoreColors = {
       'A': 0xFF56B9A1,
-      'B+': 0xFF7AB28C,
-      'B': 0xFF9FAE78,
-      'B-': 0xFFC4A763,
-      'C+': 0xFFE8A04E,
-      'C': 0xFFFFCB51,
-      'C-': 0xFFE79D6B,
+      'A-': 0xFF7AB28C,
+      'B+': 0xFF9FAE78,
+      'B': 0xFFC4A763,
+      'B-': 0xFFE8A04E,
+      'C+': 0xFFFFCB51,
+      'C': 0xFFE79D6B,
       'D': 0xFFC28B86,
       'E': 0xFFD1495B,
     };
@@ -95,6 +95,8 @@ class MiniCexProvider extends ChangeNotifier {
     } else {
       scoreLevel = 'E';
     }
+
+    print(scoreLevel);
 
     return items.isEmpty
         ? null
@@ -142,17 +144,35 @@ class MiniCexProvider extends ChangeNotifier {
   }
 
   void init(List<Score> scores) {
-    if (scores.length > items.length)
-      for (var s in scores) {
-        items.add(
-          ItemRatingModel(
-            gradeItem: s.name!,
-            grade: s.score!.toDouble(),
-            id: s.id.toString(),
-            scoreController: TextEditingController(text: s.score.toString()),
-            titleController: TextEditingController(text: s.name!),
-          ),
-        );
+    List<String> assesmentItem = [
+      'Identity and Anamnesis',
+      'Physical Examination and Support',
+      'Definite and Differential Diagnosis',
+      'Initial and Advanced Management',
+      'Consultation, Education, Counseling, Delivery',
+    ];
+    if (scores.isEmpty) {
+      for (var element in assesmentItem) {
+        items.add(ItemRatingModel(
+            gradeItem: element,
+            grade: 0.0,
+            id: Uuid().v4(),
+            scoreController: TextEditingController(text: '0'),
+            titleController: TextEditingController(text: element)));
       }
+    } else {
+      if (scores.length > items.length)
+        for (var s in scores) {
+          items.add(
+            ItemRatingModel(
+              gradeItem: s.name!,
+              grade: s.score!.toDouble(),
+              id: s.id.toString(),
+              scoreController: TextEditingController(text: s.score.toString()),
+              titleController: TextEditingController(text: s.name!),
+            ),
+          );
+        }
+    }
   }
 }
