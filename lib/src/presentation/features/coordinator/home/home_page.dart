@@ -2,6 +2,8 @@ import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/features/coordinator/daily_activity/daily_activity_page.dart';
+import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -94,11 +96,28 @@ class CoordinatorHomePage extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    MenuItem(
-                      isVerification: false,
-                      name: 'Weekly Grades',
-                      iconPath: 'exam_filled.svg',
-                      onTap: () => context.navigateTo(const WeeklyGradePage()),
+                    Expanded(
+                      child: MenuItem(
+                        isVerification: false,
+                        name: 'Daily Activity',
+                        iconPath: 'icon_training.svg',
+                        onTap: () =>
+                            context.navigateTo(CoordinatorDailyActivityPage()),
+                        status: 'Add Week',
+                      ),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Expanded(
+                      child: MenuItem(
+                        isVerification: false,
+                        name: 'Weekly Grades',
+                        iconPath: 'exam_filled.svg',
+                        onTap: () =>
+                            context.navigateTo(const WeeklyGradePage()),
+                        status: 'Input Score',
+                      ),
                     ),
                   ],
                 ),

@@ -9,10 +9,12 @@ class DailyActivityState {
   final StudentActivityPerweekResponse? activityPerweekBySupervisor;
   final bool isDailyActivityUpdated;
   final bool isDailyActivityVerifiedById;
+  final bool isAddWeekSuccess;
 
   DailyActivityState({
     this.studentDailyActivity,
     this.requestState,
+    this.isAddWeekSuccess = false,
     this.studentActivityPerweek,
     this.activityPerweekBySupervisor,
     this.isDailyActivityUpdated = false,
@@ -29,6 +31,7 @@ class DailyActivityState {
     StudentActivityPerweekResponse? activityPerweekBySupervisor,
     bool isDailyActivityUpdated = false,
     bool isDailyActivityVerifiedById = false,
+    bool isAddWeekSuccess = false,
     RequestState stateVerifyDailyActivity = RequestState.init,
   }) {
     return DailyActivityState(
@@ -38,6 +41,7 @@ class DailyActivityState {
       dailyActivityBySupervisor:
           dailyActivityBySupervisor ?? this.dailyActivityBySupervisor,
       requestState: requestState ?? RequestState.init,
+      isAddWeekSuccess: isAddWeekSuccess,
       isDailyActivityUpdated: isDailyActivityUpdated,
       studentActivityPerweek:
           studentActivityPerweek ?? this.studentActivityPerweek,

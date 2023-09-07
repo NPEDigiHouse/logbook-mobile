@@ -137,6 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 return Text(
                                   state.userCredential!.supervisor!.locations!
                                       .join(','),
+                                  style: textTheme.bodyLarge,
                                 );
                               }
                             }
@@ -149,8 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               if (state.userCredential!.supervisor!.units!
                                   .isNotEmpty) {
                                 return Text(
-                                  state.userCredential!.supervisor!.units!
-                                      .join(','),
+                                  "${state.userCredential!.supervisor!.units!.join(',').toUpperCase()}",
                                 );
                               }
                             }
@@ -200,6 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       )
                       .toList()
                 ]),
+
                 const SizedBox(height: 12),
                 ProfileItemMenuCard(
                   iconPath: 'person_filled.svg',

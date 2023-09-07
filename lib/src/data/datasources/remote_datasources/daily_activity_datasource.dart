@@ -4,11 +4,13 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/daily_activity/daily_activity_post_model.dart';
+import 'package:elogbook/src/data/models/daily_activity/post_week_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_activity_perweek_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
 
 abstract class DailyActivityDataSource {
   Future<StudentDailyActivityResponse> getStudentDailyActivities();
+  Future<void> addWeekByCoordinator({required PostWeek postWeek});
   Future<StudentDailyActivityResponse> getDailyActivityBySupervisor(
       {required String studentId});
   Future<StudentActivityPerweekResponse> getStudentActivityPerweek(
@@ -194,6 +196,33 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       print(response);
       // print(response.statusCode);
       if (response.statusCode != 200) {
+        throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> addWeekByCoordinator({required PostWeek postWeek}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.post(ApiService.baseUrl + '/weeks',
+          options: Options(
+            headers: {
+              "content-type": 'application/json',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            },
+          ),
+          data: postWeek.toJson());
+      print(response.statusCode);
+      // print(response.statusCode);
+      if (response.statusCode != 201) {
         throw Exception();
       }
     } catch (e) {

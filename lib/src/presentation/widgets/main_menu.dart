@@ -136,9 +136,11 @@ class MenuItem extends StatelessWidget {
   final String iconPath;
   final VoidCallback onTap;
   final bool isVerification;
+  final String status;
 
   const MenuItem({
     super.key,
+    required this.status,
     required this.name,
     required this.iconPath,
     required this.onTap,
@@ -173,11 +175,12 @@ class MenuItem extends StatelessWidget {
             ),
             child: SvgPicture.asset(
               AssetPath.getIcon(iconPath),
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 6),
           Text(
-            isVerification ? 'Verification' : 'Input Score',
+            status,
             style: textTheme.bodySmall?.copyWith(
               color: const Color(0xFF848FA9),
             ),

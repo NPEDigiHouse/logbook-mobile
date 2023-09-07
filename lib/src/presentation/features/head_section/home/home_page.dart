@@ -18,6 +18,7 @@ class HeadSectionHomePage extends StatelessWidget {
         //   onTap: () {},
         // ),
         MenuItem(
+          status: '',
           name: 'In-Out Reporting',
           iconPath: 'file_arrow_up_down_filled.svg',
           onTap: () => context.navigateTo(const InOutReportingPage()),
