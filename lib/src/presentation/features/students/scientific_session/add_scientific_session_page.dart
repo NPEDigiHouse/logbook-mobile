@@ -14,6 +14,7 @@ import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart'
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/build_text_field.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -144,22 +145,42 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                           _supervisors.clear();
                           _supervisors.addAll(state.supervisors);
                         }
-                        return DropdownButtonFormField(
-                          hint: Text('Supervisor'),
-                          items: _supervisors
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  child: Text(e.fullName!),
-                                  value: e,
+                        return CustomDropdown<SupervisorModel>(
+                            onSubmit: (text, controller) {
+                              if (_supervisors.indexWhere((element) =>
+                                      element.fullName == text.trim()) ==
+                                  -1) {
+                                controller.clear();
+                                supervisorId = '';
+                              }
+                            },
+                            hint: 'Supervisor',
+                            onCallback: (pattern) {
+                              final temp = _supervisors
+                                  .where((competence) =>
+                                      (competence.fullName ?? 'unknown')
+                                          .toLowerCase()
+                                          .trim()
+                                          .startsWith(pattern.toLowerCase()))
+                                  .toList();
+
+                              return pattern.isEmpty ? _supervisors : temp;
+                            },
+                            child: (suggestion) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 16,
                                 ),
-                              )
-                              .toList(),
-                          onChanged: (v) {
-                            if (v != null) supervisorId = v.id!;
-                            ;
-                          },
-                          value: null,
-                        );
+                                child: Text(suggestion?.fullName ?? ''),
+                              );
+                            },
+                            onItemSelect: (v, controller) {
+                              if (v != null) {
+                                supervisorId = v.id!;
+                                controller.text = v.fullName!;
+                              }
+                            });
                       }),
                     ],
                   ),

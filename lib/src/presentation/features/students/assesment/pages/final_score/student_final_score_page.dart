@@ -8,6 +8,7 @@ import 'package:elogbook/src/presentation/features/supervisor/assesment/provider
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/top_stat_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -98,45 +99,54 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
               builder: (context, state) {
                 if (state.finalScore != null) {
                   return SliverToBoxAdapter(
-                    child: SpacingColumn(
-                      horizontalPadding: 16,
-                      spacing: 12,
-                      children: [
-                        SizedBox(
-                          height: 16,
-                        ),
-                        FinalGradeTopStatCard(
-                          title: 'Final Grade Statistic',
-                          totalGrade:
-                              getTotalGrades(state.finalScore!.finalScore ?? 0),
-                        ),
-                        if (state.finalScore!.assesments != null) ...[
-                          for (int i = 0;
-                              i < state.finalScore!.assesments!.length;
-                              i++)
-                            if (state.finalScore!.assesments![i].type!
-                                    .contains('OSCE') &&
-                                (widget.model.unitName!
-                                        .toUpperCase()
-                                        .contains('FORENSIK') ||
-                                    widget.model.unitName?.toUpperCase() ==
-                                        'IKM-IKK'))
-                              FinalGradeScoreCard(
-                                type: mapTitle[state
-                                        .finalScore!.assesments![i].type] ??
-                                    '-',
-                                score:
-                                    state.finalScore!.assesments![i].score ?? 0,
-                                proportion:
-                                    state.finalScore!.assesments![i].weight ??
+                    child: Builder(builder: (context) {
+                      if (state.finalScore?.finalScore != null) {
+                        return SpacingColumn(
+                          horizontalPadding: 16,
+                          spacing: 12,
+                          children: [
+                            SizedBox(
+                              height: 16,
+                            ),
+                            FinalGradeTopStatCard(
+                              title: 'Final Grade Statistic',
+                              totalGrade: getTotalGrades(
+                                  state.finalScore!.finalScore ?? 0),
+                            ),
+                            if (state.finalScore!.assesments != null) ...[
+                              for (int i = 0;
+                                  i < state.finalScore!.assesments!.length;
+                                  i++)
+                                if (state.finalScore!.assesments![i].type!
+                                        .contains('OSCE') &&
+                                    (widget.model.unitName!
+                                            .toUpperCase()
+                                            .contains('FORENSIK') ||
+                                        widget.model.unitName?.toUpperCase() ==
+                                            'IKM-IKK'))
+                                  FinalGradeScoreCard(
+                                    type: mapTitle[state
+                                            .finalScore!.assesments![i].type] ??
+                                        '-',
+                                    score: state
+                                            .finalScore!.assesments![i].score ??
                                         0,
-                              ),
-                        ],
-                        SizedBox(
-                          height: 12,
-                        ),
-                      ],
-                    ),
+                                    proportion: state.finalScore!.assesments![i]
+                                            .weight ??
+                                        0,
+                                  ),
+                            ],
+                            SizedBox(
+                              height: 12,
+                            ),
+                          ],
+                        );
+                      }
+                      return EmptyData(
+                          title: 'No Final Score Data',
+                          subtitle:
+                              'Final score has not been processed by CEU');
+                    }),
                   );
                 }
                 return CustomLoading();
