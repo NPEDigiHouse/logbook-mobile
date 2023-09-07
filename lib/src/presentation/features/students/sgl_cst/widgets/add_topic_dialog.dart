@@ -1,12 +1,9 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
-import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
+import 'package:elogbook/src/data/models/sglcst/topic_post_model.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
-import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
-import 'package:elogbook/src/presentation/widgets/inputs/input_date_time_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,15 +32,11 @@ class AddTopicDialog extends StatefulWidget {
 
 class _AddTopicDialogState extends State<AddTopicDialog> {
   late final TextEditingController _controller;
-  final TextEditingController startTimeController = TextEditingController();
-  final TextEditingController endTimeController = TextEditingController();
 
   @override
   void initState() {
     _controller = TextEditingController();
     BlocProvider.of<SglCstCubit>(context, listen: false)..getTopics();
-    BlocProvider.of<SupervisorsCubit>(context, listen: false)
-      ..getAllSupervisors();
     super.initState();
   }
 
@@ -156,51 +149,6 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                       value: null,
                     );
                   }),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InputDateTimeField(
-                            action: (d) {},
-                            initialDate: widget.date,
-                            controller: startTimeController,
-                            hintText: 'Start Time'),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Expanded(
-                        child: InputDateTimeField(
-                            action: (d) {},
-                            initialDate: widget.date,
-                            controller: endTimeController,
-                            hintText: 'End Time'),
-                      ),
-                    ],
-                  ),
-                  BlocBuilder<SupervisorsCubit, SupervisorsState>(
-                      builder: (context, state) {
-                    List<SupervisorModel> _supervisors = [];
-                    if (state is FetchSuccess) {
-                      _supervisors.clear();
-                      _supervisors.addAll(state.supervisors);
-                    }
-                    return DropdownButtonFormField(
-                      isExpanded: true,
-                      hint: Text('Supervisor'),
-                      items: _supervisors
-                          .map(
-                            (e) => DropdownMenuItem(
-                              child: Text(e.fullName!),
-                              value: e,
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (v) {
-                        if (v != null) supervisorId = v.id!;
-                      },
-                      value: null,
-                    );
-                  }),
                   TextFormField(
                     maxLines: 4,
                     minLines: 4,
@@ -219,37 +167,21 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: FilledButton(
                   onPressed: () {
-                    if (supervisorId != null &&
-                        topicId.isNotEmpty &&
-                        startTimeController.text.isNotEmpty &&
-                        endTimeController.text.isNotEmpty) {
-                      final date = widget.date;
-                      final start = startTimeController.text.split(':');
-                      final end = endTimeController.text.split(':');
-                      final startTime = DateTime(date.year, date.month,
-                          date.day, int.parse(start[0]), int.parse(start[1]));
-                      final endTime = DateTime(date.year, date.month, date.day,
-                          int.parse(end[0]), int.parse(end[1]));
+                    if (topicId.isNotEmpty) {
                       if (widget.type == TopicDialogType.sgl) {
                         BlocProvider.of<SglCstCubit>(context)
                           ..addNewSglTopic(
                             sglId: widget.id,
-                            topicModel: SglCstPostModel(
-                              supervisorId: supervisorId,
+                            topicModel: TopicPostModel(
                               topicId: topicId,
-                              startTime: startTime.millisecondsSinceEpoch,
-                              endTime: endTime.millisecondsSinceEpoch,
                             ),
                           );
                       } else {
                         BlocProvider.of<SglCstCubit>(context)
                           ..addNewCstTopic(
                             cstId: widget.id,
-                            topicModel: SglCstPostModel(
-                              supervisorId: supervisorId,
+                            topicModel: TopicPostModel(
                               topicId: topicId,
-                              startTime: startTime.millisecondsSinceEpoch,
-                              endTime: endTime.millisecondsSinceEpoch,
                             ),
                           );
                       }

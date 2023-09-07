@@ -30,12 +30,20 @@ Sgl _$SglFromJson(Map<String, dynamic> json) => Sgl(
       topic: (json['topic'] as List<dynamic>?)
           ?.map((e) => Topic.fromJson(e as Map<String, dynamic>))
           .toList(),
+      supervisorId: json['supervisorId'] as String?,
+      supervisorName: json['supervisorName'] as String?,
+      endTime: json['endTime'] as int?,
+      startTime: json['startTime'] as int?,
     );
 
 Map<String, dynamic> _$SglToJson(Sgl instance) => <String, dynamic>{
       'createdAt': instance.createdAt?.toIso8601String(),
       'verificationStatus': instance.verificationStatus,
       'sglId': instance.sglId,
+      'startTime': instance.startTime,
+      'endTime': instance.endTime,
+      'supervisorId': instance.supervisorId,
+      'supervisorName': instance.supervisorName,
       'topic': instance.topic,
     };
 
@@ -44,17 +52,13 @@ Topic _$TopicFromJson(Map<String, dynamic> json) => Topic(
           ?.map((e) => e as String)
           .toList(),
       verificationStatus: json['verificationStatus'] as String?,
-      endTime: json['endTime'] as int?,
       notes: json['notes'],
-      startTime: json['startTime'] as int?,
       id: json['id'] as String?,
     );
 
 Map<String, dynamic> _$TopicToJson(Topic instance) => <String, dynamic>{
       'topicName': instance.topicName,
       'verificationStatus': instance.verificationStatus,
-      'endTime': instance.endTime,
       'notes': instance.notes,
-      'startTime': instance.startTime,
       'id': instance.id,
     };

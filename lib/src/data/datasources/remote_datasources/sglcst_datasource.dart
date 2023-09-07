@@ -8,6 +8,7 @@ import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
+import 'package:elogbook/src/data/models/sglcst/topic_post_model.dart';
 
 abstract class SglCstDataSource {
   Future<void> uploadSgl({
@@ -17,10 +18,11 @@ abstract class SglCstDataSource {
     required SglCstPostModel postModel,
   });
   Future<void> addNewSglTopic(
-      {required SglCstPostModel topic, required String sglId});
+      {required TopicPostModel topic, required String sglId});
   Future<void> addNewCstTopic(
-      {required SglCstPostModel topic, required String cstId});
+      {required TopicPostModel topic, required String cstId});
   Future<List<TopicModel>> getTopics();
+  Future<List<TopicModel>> getTopicsByUnitId({required String unitId});
   Future<List<SglCstOnList>> getSglBySupervisor();
   Future<List<SglCstOnList>> getCstBySupervisor();
   Future<SglResponse> getSglByStudentId({required String studentId});
@@ -326,7 +328,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
 
   @override
   Future<void> addNewCstTopic(
-      {required SglCstPostModel topic, required String cstId}) async {
+      {required TopicPostModel topic, required String cstId}) async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.put(
@@ -351,7 +353,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
 
   @override
   Future<void> addNewSglTopic(
-      {required SglCstPostModel topic, required String sglId}) async {
+      {required TopicPostModel topic, required String sglId}) async {
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.put(
@@ -368,6 +370,34 @@ class SglCstDataSourceImpl implements SglCstDataSource {
       if (response.statusCode != 200) {
         throw Exception();
       }
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<TopicModel>> getTopicsByUnitId({required String unitId}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/topics/units/$unitId',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      // print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<TopicModel> listData =
+          dataResponse.data.map((e) => TopicModel.fromJson(e)).toList();
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

@@ -4,17 +4,20 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/input_date_time_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateSglPage extends StatefulWidget {
-  const CreateSglPage({super.key});
+  final ActiveUnitModel model;
+  const CreateSglPage({super.key, required this.model});
 
   @override
   State<CreateSglPage> createState() => _CreateSglPageState();
@@ -33,7 +36,8 @@ class _CreateSglPageState extends State<CreateSglPage> {
     super.initState();
     BlocProvider.of<SupervisorsCubit>(context, listen: false)
       ..getAllSupervisors();
-    BlocProvider.of<SglCstCubit>(context, listen: false)..getTopics();
+    BlocProvider.of<SglCstCubit>(context, listen: false)
+      ..getTopicsByUnitId(unitId: widget.model.unitId!);
     dateController.text =
         ReusableFunctionHelper.datetimeToString(DateTime.now());
   }
@@ -75,22 +79,42 @@ class _CreateSglPageState extends State<CreateSglPage> {
                       _supervisors.clear();
                       _supervisors.addAll(state.supervisors);
                     }
-                    return DropdownButtonFormField(
-                      hint: Text('Supervisor'),
-                      isExpanded: true,
-                      items: _supervisors
-                          .map(
-                            (e) => DropdownMenuItem(
-                              child: Text(e.fullName!),
-                              value: e,
+                    return CustomDropdown<SupervisorModel>(
+                        onSubmit: (text, controller) {
+                          if (_supervisors.indexWhere((element) =>
+                                  element.fullName == text.trim()) ==
+                              -1) {
+                            controller.clear();
+                            supervisorId = '';
+                          }
+                        },
+                        hint: 'Supervisor',
+                        onCallback: (pattern) {
+                          final temp = _supervisors
+                              .where((competence) =>
+                                  (competence.fullName ?? 'unknown')
+                                      .toLowerCase()
+                                      .trim()
+                                      .startsWith(pattern.toLowerCase()))
+                              .toList();
+
+                          return pattern.isEmpty ? _supervisors : temp;
+                        },
+                        child: (suggestion) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 16,
                             ),
-                          )
-                          .toList(),
-                      onChanged: (v) {
-                        if (v != null) supervisorId = v.id!;
-                      },
-                      value: null,
-                    );
+                            child: Text(suggestion?.fullName ?? ''),
+                          );
+                        },
+                        onItemSelect: (v, controller) {
+                          if (v != null) {
+                            supervisorId = v.id!;
+                            controller.text = v.fullName!;
+                          }
+                        });
                   }),
                 ],
               ),
@@ -153,7 +177,6 @@ class _CreateSglPageState extends State<CreateSglPage> {
                                 children: [
                                   for (int i = 0; i < value.length; i++) ...[
                                     DropdownButtonFormField(
-                                      
                                       hint: Text('Topics'),
                                       isExpanded: true,
                                       items: _topics

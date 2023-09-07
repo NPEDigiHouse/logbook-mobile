@@ -31,6 +31,14 @@ class Sgl {
   String? verificationStatus;
   @JsonKey(name: "sglId")
   String? sglId;
+  @JsonKey(name: "startTime")
+  int? startTime;
+  @JsonKey(name: "endTime")
+  int? endTime;
+  @JsonKey(name: "supervisorId")
+  String? supervisorId;
+  @JsonKey(name: "supervisorName")
+  String? supervisorName;
   @JsonKey(name: "topic")
   List<Topic>? topic;
 
@@ -39,6 +47,10 @@ class Sgl {
     this.verificationStatus,
     this.sglId,
     this.topic,
+    this.supervisorId,
+    this.supervisorName,
+    this.endTime,
+    this.startTime,
   });
 
   factory Sgl.fromJson(Map<String, dynamic> json) => _$SglFromJson(json);
@@ -52,21 +64,17 @@ class Topic {
   List<String>? topicName;
   @JsonKey(name: "verificationStatus")
   String? verificationStatus;
-  @JsonKey(name: "endTime")
-  int? endTime;
+
   @JsonKey(name: "notes")
   dynamic notes;
-  @JsonKey(name: "startTime")
-  int? startTime;
+
   @JsonKey(name: "id")
   String? id;
 
   Topic({
     this.topicName,
     this.verificationStatus,
-    this.endTime,
     this.notes,
-    this.startTime,
     this.id,
   });
 

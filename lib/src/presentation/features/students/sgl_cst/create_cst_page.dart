@@ -8,6 +8,7 @@ import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/input_date_time_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -75,23 +76,42 @@ class _CreateCstPageState extends State<CreateCstPage> {
                       _supervisors.clear();
                       _supervisors.addAll(state.supervisors);
                     }
-                    return DropdownButtonFormField(
-                      isExpanded: true,
+                    return CustomDropdown<SupervisorModel>(
+                        onSubmit: (text, controller) {
+                          if (_supervisors.indexWhere((element) =>
+                                  element.fullName == text.trim()) ==
+                              -1) {
+                            controller.clear();
+                            supervisorId = '';
+                          }
+                        },
+                        hint: 'Supervisor',
+                        onCallback: (pattern) {
+                          final temp = _supervisors
+                              .where((competence) =>
+                                  (competence.fullName ?? 'unknown')
+                                      .toLowerCase()
+                                      .trim()
+                                      .startsWith(pattern.toLowerCase()))
+                              .toList();
 
-                      hint: Text('Supervisor'),
-                      items: _supervisors
-                          .map(
-                            (e) => DropdownMenuItem(
-                              child: Text(e.fullName!),
-                              value: e,
+                          return pattern.isEmpty ? _supervisors : temp;
+                        },
+                        child: (suggestion) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 16,
                             ),
-                          )
-                          .toList(),
-                      onChanged: (v) {
-                        if (v != null) supervisorId = v.id!;
-                      },
-                      value: null,
-                    );
+                            child: Text(suggestion?.fullName ?? ''),
+                          );
+                        },
+                        onItemSelect: (v, controller) {
+                          if (v != null) {
+                            supervisorId = v.id!;
+                            controller.text = v.fullName!;
+                          }
+                        });
                   }),
                 ],
               ),
@@ -154,8 +174,7 @@ class _CreateCstPageState extends State<CreateCstPage> {
                                 children: [
                                   for (int i = 0; i < value.length; i++) ...[
                                     DropdownButtonFormField(
-                      isExpanded: true,
-
+                                      isExpanded: true,
                                       hint: Text('Topics'),
                                       items: _topics
                                           .map(

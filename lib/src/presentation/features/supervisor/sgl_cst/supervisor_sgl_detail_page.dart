@@ -53,7 +53,6 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                 if (state.isVerifyTopicSuccess || state.isVerifySglCstSuccess) {
                   BlocProvider.of<SglCstCubit>(context)
                     ..getStudentSglDetailById(studentId: widget.studentId);
-                  
                 }
               },
               builder: (context, state) {
@@ -195,12 +194,10 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                                   Text(
                                                     ReusableFunctionHelper
                                                         .epochToStringTime(
-                                                            startTime: data
-                                                                .topic![i]
-                                                                .startTime!,
-                                                            endTime: data
-                                                                .topic![i]
-                                                                .endTime),
+                                                            startTime:
+                                                                data.startTime!,
+                                                            endTime:
+                                                                data.endTime),
                                                     style: textTheme.bodyMedium
                                                         ?.copyWith(
                                                             color:

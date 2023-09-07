@@ -261,51 +261,6 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                             }
                                           });
                                     });
-                                    return BlocBuilder<SupervisorsCubit,
-                                            SupervisorsState>(
-                                        builder: (context, state) {
-                                      List<SupervisorModel> _supervisors = [];
-                                      if (state is FetchSuccess) {
-                                        _supervisors.clear();
-                                        _supervisors.addAll(state.supervisors);
-                                        print(values[i]);
-                                        if (values[i] != null)
-                                          editingControllers[i].text =
-                                              _supervisors
-                                                  .where((element) =>
-                                                      element.fullName ==
-                                                      values[i])
-                                                  .first
-                                                  .id!;
-                                      }
-                                      return DropdownButtonFormField(
-                                        isExpanded: true,
-                                        hint: Text(labels[i]),
-                                        items: _supervisors
-                                            .map(
-                                              (e) => DropdownMenuItem(
-                                                child: Text(e.fullName!),
-                                                value: e,
-                                              ),
-                                            )
-                                            .toList(),
-                                        onChanged: (v) {
-                                          if (v != null)
-                                            editingControllers[i].text =
-                                                (v).id!;
-                                        },
-                                        value: _supervisors
-                                                .map((e) => e.fullName)
-                                                .toList()
-                                                .contains(values[i])
-                                            ? _supervisors
-                                                .where((element) =>
-                                                    element.fullName ==
-                                                    values[i])
-                                                .first
-                                            : null,
-                                      );
-                                    });
                                   }
                                   if (widget.section == 4 && i != 0) {
                                     return BlocBuilder<ActivityCubit,

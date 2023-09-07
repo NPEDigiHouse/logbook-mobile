@@ -30,6 +30,10 @@ Cst _$CstFromJson(Map<String, dynamic> json) => Cst(
       topic: (json['topic'] as List<dynamic>?)
           ?.map((e) => Topic.fromJson(e as Map<String, dynamic>))
           .toList(),
+      supervisorId: json['supervisorId'] as String?,
+      supervisorName: json['supervisorName'] as String?,
+      endTime: json['endTime'] as int?,
+      startTime: json['startTime'] as int?,
     );
 
 Map<String, dynamic> _$CstToJson(Cst instance) => <String, dynamic>{
@@ -37,6 +41,10 @@ Map<String, dynamic> _$CstToJson(Cst instance) => <String, dynamic>{
       'verificationStatus': instance.verificationStatus,
       'cstId': instance.cstId,
       'topic': instance.topic,
+      'startTime': instance.startTime,
+      'endTime': instance.endTime,
+      'supervisorId': instance.supervisorId,
+      'supervisorName': instance.supervisorName,
     };
 
 Topic _$TopicFromJson(Map<String, dynamic> json) => Topic(
@@ -44,17 +52,13 @@ Topic _$TopicFromJson(Map<String, dynamic> json) => Topic(
           ?.map((e) => e as String)
           .toList(),
       verificationStatus: json['verificationStatus'] as String?,
-      endTime: json['endTime'] as int?,
       notes: json['notes'],
-      startTime: json['startTime'] as int?,
       id: json['id'] as String?,
     );
 
 Map<String, dynamic> _$TopicToJson(Topic instance) => <String, dynamic>{
       'topicName': instance.topicName,
       'verificationStatus': instance.verificationStatus,
-      'endTime': instance.endTime,
       'notes': instance.notes,
-      'startTime': instance.startTime,
       'id': instance.id,
     };

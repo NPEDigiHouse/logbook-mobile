@@ -197,10 +197,8 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
                                                     ReusableFunctionHelper
                                                         .epochToStringTime(
                                                             startTime: data
-                                                                .topic![i]
                                                                 .startTime!,
                                                             endTime: data
-                                                                .topic![i]
                                                                 .endTime),
                                                     style: textTheme.bodyMedium
                                                         ?.copyWith(

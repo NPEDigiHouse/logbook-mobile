@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
+import 'package:elogbook/src/data/models/sglcst/topic_post_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
 part 'sgl_cst_state.dart';
@@ -90,6 +91,30 @@ class SglCstCubit extends Cubit<SglCstState> {
     }
   }
 
+  Future<void> getTopicsByUnitId({required String unitId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getTopicsByUnitId(unitId: unitId);
+      try {
+        emit(state.copyWith(
+          topics: result,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getStudentSglDetail() async {
     try {
       emit(state.copyWith(
@@ -114,7 +139,7 @@ class SglCstCubit extends Cubit<SglCstState> {
   }
 
   Future<void> addNewSglTopic(
-      {required String sglId, required SglCstPostModel topicModel}) async {
+      {required String sglId, required TopicPostModel topicModel}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
@@ -159,7 +184,7 @@ class SglCstCubit extends Cubit<SglCstState> {
   }
 
   Future<void> addNewCstTopic(
-      {required String cstId, required SglCstPostModel topicModel}) async {
+      {required String cstId, required TopicPostModel topicModel}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
