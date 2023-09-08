@@ -10,6 +10,7 @@ import 'package:elogbook/src/presentation/features/supervisor/final_score/widget
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,7 +88,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Final Grade"),
+        title: Text("Detail"),
       ).variant(),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -116,76 +117,10 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                     SizedBox(
                       height: 16,
                     ),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(0, 0),
-                              spreadRadius: 0,
-                              blurRadius: 6,
-                              color: Color(0xFFD4D4D4).withOpacity(.25)),
-                          BoxShadow(
-                              offset: Offset(0, 4),
-                              spreadRadius: 0,
-                              blurRadius: 24,
-                              color: Color(0xFFD4D4D4).withOpacity(.25)),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Student Name',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            widget.finalGrade.studentName ?? '',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Student Id',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            widget.finalGrade.studentId ?? '',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Department',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            widget.finalGrade.activeDepartmentName ?? '',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                        ],
-                      ),
-                    ),
+                    StudentDepartmentHeader(
+                        unitName: widget.finalGrade.activeDepartmentName ?? '',
+                        studentName: widget.finalGrade.studentName ?? '',
+                        studentId: widget.finalGrade.studentId ?? ''),
                     SizedBox(
                       height: 12,
                     ),
@@ -205,7 +140,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                         }
                       }
                       return FinalGradeTopStatCard(
-                        title: 'Final Grade Statistic',
+                        title: 'Final Score',
                         totalGrade: getTotalGrades(score),
                       );
                     }),
@@ -237,81 +172,83 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                     SizedBox(
                       height: 12,
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                  backgroundColor: primaryColor),
-                              onPressed: () {
-                                print(state.finalScore!.assesments.toString());
-                                showDialog(
-                                  context: context,
-                                  barrierLabel: '',
-                                  barrierDismissible: false,
-                                  builder: (_) => InputFinalScoreDialog(
-                                    studentId: widget.finalGrade.studentId!,
-                                    unitId:
-                                        widget.finalGrade.activeDepartmentId!,
-                                    type: FinalScoreType.cbt,
-                                    initScore: state.finalScore!.assesments!
-                                                .indexWhere((element) => element
-                                                    .type!
-                                                    .contains("CBT")) !=
-                                            -1
-                                        ? state.finalScore!.assesments!
-                                                .firstWhere((element) => element
-                                                    .type!
-                                                    .contains("CBT"))
-                                                .score ??
-                                            0
-                                        : 0,
-                                  ),
-                                );
-                              },
-                              child: Text('Update CBT')),
-                        ),
-                        if (!(widget.finalGrade.activeDepartmentName!
-                                .toUpperCase()
-                                .contains('FORENSIK') ||
-                            widget.finalGrade.activeDepartmentName!
-                                    .toUpperCase() ==
-                                'IKM-IKK')) ...[
-                          SizedBox(
-                            width: 4,
+                    if (!state.finalScore!.verified!)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: FilledButton(
+                                style: FilledButton.styleFrom(
+                                    backgroundColor: primaryColor),
+                                onPressed: () {
+                                  print(
+                                      state.finalScore!.assesments.toString());
+                                  showDialog(
+                                    context: context,
+                                    barrierLabel: '',
+                                    barrierDismissible: false,
+                                    builder: (_) => InputFinalScoreDialog(
+                                      studentId: widget.finalGrade.studentId!,
+                                      unitId:
+                                          widget.finalGrade.activeDepartmentId!,
+                                      type: FinalScoreType.cbt,
+                                      initScore: state.finalScore!.assesments!
+                                                  .indexWhere((element) =>
+                                                      element.type!
+                                                          .contains("CBT")) !=
+                                              -1
+                                          ? state.finalScore!.assesments!
+                                                  .firstWhere((element) =>
+                                                      element.type!
+                                                          .contains("CBT"))
+                                                  .score ??
+                                              0
+                                          : 0,
+                                    ),
+                                  );
+                                },
+                                child: Text('Update CBT')),
                           ),
-                          FilledButton(
-                              style: FilledButton.styleFrom(
-                                  backgroundColor: primaryColor),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  barrierLabel: '',
-                                  barrierDismissible: false,
-                                  builder: (_) => InputFinalScoreDialog(
-                                    studentId: widget.finalGrade.studentId!,
-                                    unitId:
-                                        widget.finalGrade.activeDepartmentId!,
-                                    type: FinalScoreType.osce,
-                                    initScore: state.finalScore!.assesments!
-                                                .indexWhere((element) => element
-                                                    .type!
-                                                    .contains("OSCE")) !=
-                                            -1
-                                        ? state.finalScore!.assesments!
-                                                .firstWhere((element) => element
-                                                    .type!
-                                                    .contains("OSCE"))
-                                                .score ??
-                                            0
-                                        : 0,
-                                  ),
-                                );
-                              },
-                              child: Text('Update OSCE')),
+                          if (!(widget.finalGrade.activeDepartmentName!
+                                  .toUpperCase()
+                                  .contains('FORENSIK') ||
+                              widget.finalGrade.activeDepartmentName!
+                                      .toUpperCase() ==
+                                  'IKM-IKK')) ...[
+                            SizedBox(
+                              width: 4,
+                            ),
+                            FilledButton(
+                                style: FilledButton.styleFrom(
+                                    backgroundColor: primaryColor),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    barrierLabel: '',
+                                    barrierDismissible: false,
+                                    builder: (_) => InputFinalScoreDialog(
+                                      studentId: widget.finalGrade.studentId!,
+                                      unitId:
+                                          widget.finalGrade.activeDepartmentId!,
+                                      type: FinalScoreType.osce,
+                                      initScore: state.finalScore!.assesments!
+                                                  .indexWhere((element) =>
+                                                      element.type!
+                                                          .contains("OSCE")) !=
+                                              -1
+                                          ? state.finalScore!.assesments!
+                                                  .firstWhere((element) =>
+                                                      element.type!
+                                                          .contains("OSCE"))
+                                                  .score ??
+                                              0
+                                          : 0,
+                                    ),
+                                  );
+                                },
+                                child: Text('Update OSCE')),
+                          ],
                         ],
-                      ],
-                    ),
+                      ),
                     if (state.finalScore!.assesments
                             ?.indexWhere((element) => element.score == null) ==
                         -1)
