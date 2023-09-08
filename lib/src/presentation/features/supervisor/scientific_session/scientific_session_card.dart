@@ -53,18 +53,26 @@ class ScientificSessionCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      scientificSession.studentId ?? '-',
+                      'Scientific Session',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: onFormDisableColor,
+                        height: 1.2,
+                      ),
                     ),
                     Row(
-                      children: <Widget>[
+                      children: [
                         Text(
-                          scientificSession.studentName ?? '',
+                          ReusableFunctionHelper.datetimeToString(
+                              scientificSession.time!,
+                              format: 'EEE, dd MMM'),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
+                            color: primaryTextColor,
+                            height: 1.2,
                           ),
                         ),
                         const SizedBox(width: 4),
@@ -76,29 +84,21 @@ class ScientificSessionCard extends StatelessWidget {
                           ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.bodySmall?.copyWith(
-                          color: secondaryTextColor,
-                        ),
-                        children: <TextSpan>[
-                          const TextSpan(
-                            text: 'Date:\t',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          TextSpan(
-                              text: ReusableFunctionHelper.datetimeToString(
-                            scientificSession.time!,
-                          )),
-                        ],
-                      ),
-                    ),
                     const SizedBox(height: 4),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          scientificSession.studentName ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodyMedium?.copyWith(
+                            height: 1,
+                            color: secondaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
                     RichText(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

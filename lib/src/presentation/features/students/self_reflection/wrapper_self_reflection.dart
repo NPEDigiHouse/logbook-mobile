@@ -27,13 +27,13 @@ class _WrapperSelfReflectionState extends State<WrapperSelfReflection> {
       appBar: AppBar(
         title: Text("Entry Detail"),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.more_vert_rounded,
-              color: Colors.white,
-            ),
-          )
+          // IconButton(
+          //   onPressed: () {},
+          //   icon: Icon(
+          //     Icons.more_vert_rounded,
+          //     color: Colors.white,
+          //   ),
+          // )
         ],
       ),
       body: BlocListener<StudentCubit, StudentState>(

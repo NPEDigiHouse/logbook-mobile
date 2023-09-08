@@ -6,19 +6,19 @@ class ReusableFunctionHelper {
   static String datetimeToString(DateTime date,
       {bool isShowTime = false, String? format}) {
     return isShowTime
-        ? DateFormat(format ?? 'dd MMMM yyyy, HH:mm', "id_ID").format(date)
-        : DateFormat(format ?? 'EEEE, dd MMMM yyyy', "id_ID").format(date);
+        ? DateFormat(format ?? 'dd MMMM yyyy, HH:mm', "en_EN").format(date)
+        : DateFormat(format ?? 'EEEE, dd MMMM yyyy', "en_EN").format(date);
   }
 
   static String datetimeToStringTime(DateTime date, {String? format}) {
-    return DateFormat(format ?? 'HH:mm', "id_ID").format(date);
+    return DateFormat(format ?? 'HH:mm', "en_EN").format(date);
   }
 
   /// Convert String to DateTime
   static DateTime stringToDateTime(String date, {bool isShowTime = false}) {
     return isShowTime
-        ? DateFormat('HH:mm, dd MMMM yyyy', "id_ID").parse(date)
-        : DateFormat("EEEE, dd MMMM yyyy", "id_ID").parse(date);
+        ? DateFormat('HH:mm, dd MMMM yyyy', "en_EN").parse(date)
+        : DateFormat("EEEE, dd MMMM yyyy", "en_EN").parse(date);
   }
 
   static String epochToStringTime({required int startTime, int? endTime}) {

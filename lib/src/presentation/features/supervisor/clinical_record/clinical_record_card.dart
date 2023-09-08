@@ -54,18 +54,26 @@ class ClinicalRecordCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      clinicalRecord.studentId ?? '-',
+                      'Clinical Record',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: onFormDisableColor,
+                        height: 1.2,
+                      ),
                     ),
                     Row(
-                      children: <Widget>[
+                      children: [
                         Text(
-                          clinicalRecord.studentName ?? '',
+                          ReusableFunctionHelper.datetimeToString(
+                              clinicalRecord.time!,
+                              format: 'EEE, dd MMM'),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
+                            color: primaryTextColor,
+                            height: 1.2,
                           ),
                         ),
                         const SizedBox(width: 4),
@@ -75,6 +83,20 @@ class ClinicalRecordCard extends StatelessWidget {
                             size: 16,
                             color: primaryColor,
                           ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          clinicalRecord.studentName ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodyMedium?.copyWith(
+                            height: 1,
+                            color: secondaryColor,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -94,28 +116,6 @@ class ClinicalRecordCard extends StatelessWidget {
                           ),
                           TextSpan(
                               text: clinicalRecord.activeDepartmentName ?? '-'),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.bodySmall?.copyWith(
-                          color: secondaryTextColor,
-                        ),
-                        children: <TextSpan>[
-                          const TextSpan(
-                            text: 'Date:\t',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          TextSpan(
-                              text: ReusableFunctionHelper.datetimeToString(
-                            clinicalRecord.time!,
-                          )),
                         ],
                       ),
                     ),

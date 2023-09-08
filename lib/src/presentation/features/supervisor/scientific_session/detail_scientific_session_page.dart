@@ -38,13 +38,13 @@ class _DetailScientificSessionPageState
       appBar: AppBar(
         title: Text("Entry Detail"),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.more_vert_rounded,
-              color: Colors.white,
-            ),
-          )
+          // IconButton(
+          //   onPressed: () {},
+          //   icon: Icon(
+          //     Icons.more_vert_rounded,
+          //     color: Colors.white,
+          //   ),
+          // )
         ],
       ).variant(),
       body: SafeArea(

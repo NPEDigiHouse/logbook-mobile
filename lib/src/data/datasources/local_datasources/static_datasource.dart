@@ -76,39 +76,40 @@ final List<MenuModel> listSupervisorMenu = [
   MenuModel(
     iconPath: 'diversity_3_rounded.svg',
     labels: 'SGL and CST',
+    desc: 'Small Group Learning and Clinical Education Department',
   ),
   MenuModel(
-    iconPath: 'summarize_rounded.svg',
-    labels: 'Daily Activity',
-  ),
+      iconPath: 'summarize_rounded.svg',
+      labels: 'Daily Activity',
+      desc: 'Contains the daily activities of students'),
   MenuModel(
-    iconPath: 'clinical_notes_rounded.svg',
-    labels: 'Clinical Record',
-  ),
+      iconPath: 'clinical_notes_rounded.svg',
+      labels: 'Clinical Record',
+      desc: 'Clinical records uploaded by students'),
   MenuModel(
-    iconPath: 'biotech_rounded.svg',
-    labels: 'Scientific Session',
-  ),
+      iconPath: 'biotech_rounded.svg',
+      labels: 'Scientific Session',
+      desc: 'Scientific session uploaded by students'),
   MenuModel(
-    iconPath: 'emoji_objects_rounded.svg',
-    labels: 'Self Reflection',
-  ),
+      iconPath: 'emoji_objects_rounded.svg',
+      labels: 'Self Reflection',
+      desc: 'Self reflection sent by students'),
   MenuModel(
-    iconPath: 'school_rounded.svg',
-    labels: 'Competency',
-  ),
+      iconPath: 'school_rounded.svg',
+      labels: 'Competency',
+      desc: 'Skills and cases reported by students'),
   MenuModel(
-    iconPath: 'feed_rounded.svg',
-    labels: 'Assessment',
-  ),
+      iconPath: 'feed_rounded.svg',
+      labels: 'Assessment',
+      desc: 'Assessment for students'),
   MenuModel(
-    iconPath: 'consultation_icon.svg',
-    labels: 'Problem Consultations',
-  ),
+      iconPath: 'consultation_icon.svg',
+      labels: 'Problem Consultations',
+      desc: 'Consulting on problems and obstacles faced by students'),
   MenuModel(
-    iconPath: 'icon_final.svg',
-    labels: 'Final Score',
-  ),
+      iconPath: 'icon_final.svg',
+      labels: 'Final Score',
+      desc: 'Management of student final grades'),
 ];
 
 // final List<Widget> pagesStudent = [

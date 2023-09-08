@@ -158,7 +158,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 1.3,
+                  childAspectRatio: 1.15,
                   crossAxisSpacing: 16,
                 ),
                 itemBuilder: (context, index) {
@@ -223,6 +223,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
             title,
             style: textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.bold,
+              height: 1.2,
             ),
           ),
           Text(

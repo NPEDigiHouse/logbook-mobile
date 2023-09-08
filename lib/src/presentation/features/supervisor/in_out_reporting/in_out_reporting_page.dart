@@ -7,7 +7,6 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 
 class InOutReportingPage extends StatefulWidget {
   const InOutReportingPage({super.key});
@@ -72,16 +71,7 @@ class _InOutReportingPageState extends State<InOutReportingPage>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SafeArea(
-                            child: GestureDetector(
-                              onTap: () => context.back(),
-                              child: const Icon(
-                                Icons.arrow_back_rounded,
-                                color: primaryColor,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 14),
+                          const SizedBox(height: 24),
                           Text(
                             'Verification',
                             style: textTheme.bodyLarge?.copyWith(
