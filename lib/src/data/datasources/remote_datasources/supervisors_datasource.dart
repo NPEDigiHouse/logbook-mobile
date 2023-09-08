@@ -1,17 +1,18 @@
 import 'package:dio/dio.dart';
+import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
+import 'package:elogbook/src/data/models/students/student_statistic.dart';
 import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
-
-import '../../../../core/services/api_service.dart';
 
 abstract class SupervisorsDataSource {
   Future<List<SupervisorModel>> getAllSupervisors();
   Future<List<SupervisorStudent>> getAllStudents();
   Future<List<StudentDepartmentModel>> getAllStudentsByCeu();
+  Future<StudentStatistic> getStatisticByStudentId({required String studentId});
 }
 
 class SupervisorsDataSourceImpl implements SupervisorsDataSource {
@@ -105,6 +106,34 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
           .toList();
 
       return students;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<StudentStatistic> getStatisticByStudentId(
+      {required String studentId}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/supervisors/students/$studentId/statistics',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+
+      final result = StudentStatistic.fromJson(dataResponse.data);
+      return result;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

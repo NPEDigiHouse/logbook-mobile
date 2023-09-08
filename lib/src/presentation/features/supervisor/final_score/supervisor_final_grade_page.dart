@@ -191,25 +191,22 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                     ),
                     Builder(builder: (context) {
                       double score = 0;
-                      int typeCount = 0;
+
                       for (var element in state.finalScore!.assesments!) {
-                        if (element.score != null) {
-                          score += element.score!;
-                        }
-                        if (element.type == 'OSCE' &&
-                            (widget.finalGrade.activeDepartmentName!
-                                    .toUpperCase()
-                                    .contains('FORENSIK') ||
-                                widget.finalGrade.activeDepartmentName!
-                                        .toUpperCase() ==
-                                    'IKM-IKK')) {
-                        } else {
-                          typeCount++;
+                        if (element.score != null &&
+                            !((element.type == 'OSCE' &&
+                                (widget.finalGrade.activeDepartmentName!
+                                        .toUpperCase()
+                                        .contains('FORENSIK') ||
+                                    widget.finalGrade.activeDepartmentName!
+                                            .toUpperCase() ==
+                                        'IKM-IKK')))) {
+                          score += element.score! * element.weight!;
                         }
                       }
                       return FinalGradeTopStatCard(
                         title: 'Final Grade Statistic',
-                        totalGrade: getTotalGrades(score / typeCount ?? 0),
+                        totalGrade: getTotalGrades(score),
                       );
                     }),
                     if (state.finalScore!.assesments != null) ...[

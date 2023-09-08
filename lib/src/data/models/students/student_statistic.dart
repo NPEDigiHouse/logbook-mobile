@@ -4,38 +4,29 @@ part 'student_statistic.g.dart';
 
 @JsonSerializable()
 class StudentStatistic {
-  @JsonKey(name: "discussedCases")
-  int? discussedCases;
-  @JsonKey(name: "obtainedCases")
-  int? obtainedCases;
-  @JsonKey(name: "observedCases")
-  int? observedCases;
-  @JsonKey(name: "discussedSkills")
-  int? discussedSkills;
-  @JsonKey(name: "obtainedSkills")
-  int? obtainedSkills;
-  @JsonKey(name: "observedSkills")
-  int? observedSkills;
+  @JsonKey(name: "totalCases")
+  final int? totalCases;
+  @JsonKey(name: "totalSkills")
+  final int? totalSkills;
   @JsonKey(name: "verifiedCases")
-  int? verifiedCases;
+  final int? verifiedCases;
   @JsonKey(name: "verifiedSkills")
-  int? verifiedSkills;
+  final int? verifiedSkills;
   @JsonKey(name: "cases")
-  List<Case>? cases;
+  final List<Case>? cases;
   @JsonKey(name: "skills")
-  List<Skill>? skills;
+  final List<dynamic>? skills;
+  @JsonKey(name: "finalScore")
+  final dynamic finalScore;
 
   StudentStatistic({
-    this.discussedCases,
-    this.obtainedCases,
-    this.observedCases,
-    this.discussedSkills,
-    this.obtainedSkills,
-    this.observedSkills,
+    this.totalCases,
+    this.totalSkills,
     this.verifiedCases,
     this.verifiedSkills,
     this.cases,
     this.skills,
+    this.finalScore,
   });
 
   factory StudentStatistic.fromJson(Map<String, dynamic> json) =>
@@ -47,45 +38,25 @@ class StudentStatistic {
 @JsonSerializable()
 class Case {
   @JsonKey(name: "caseId")
-  String? caseId;
+  final String? caseId;
   @JsonKey(name: "caseName")
-  dynamic caseName;
+  final String? caseName;
   @JsonKey(name: "caseType")
-  String? caseType;
+  final String? caseType;
+  @JsonKey(name: "caseTypeId")
+  final int? caseTypeId;
   @JsonKey(name: "verificationStatus")
-  String? verificationStatus;
+  final String? verificationStatus;
 
   Case({
     this.caseId,
     this.caseName,
     this.caseType,
+    this.caseTypeId,
     this.verificationStatus,
   });
 
   factory Case.fromJson(Map<String, dynamic> json) => _$CaseFromJson(json);
 
   Map<String, dynamic> toJson() => _$CaseToJson(this);
-}
-
-@JsonSerializable()
-class Skill {
-  @JsonKey(name: "skillId")
-  String? skillId;
-  @JsonKey(name: "skillName")
-  dynamic skillName;
-  @JsonKey(name: "skillType")
-  String? skillType;
-  @JsonKey(name: "verificationStatus")
-  String? verificationStatus;
-
-  Skill({
-    this.skillId,
-    this.skillName,
-    this.skillType,
-    this.verificationStatus,
-  });
-
-  factory Skill.fromJson(Map<String, dynamic> json) => _$SkillFromJson(json);
-
-  Map<String, dynamic> toJson() => _$SkillToJson(this);
 }

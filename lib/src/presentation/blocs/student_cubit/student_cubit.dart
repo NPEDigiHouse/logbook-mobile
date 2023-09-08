@@ -94,6 +94,25 @@ class StudentCubit extends Cubit<StudentState> {
     }
   }
 
+  Future<void> getStatisticByStudentId({required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result =
+          await dataSourceSp.getStatisticByStudentId(studentId: studentId);
+      emit(state.copyWith(studentStatistic: result));
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getStudentSelfReflections() async {
     try {
       emit(state.copyWith(

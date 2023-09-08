@@ -1,3 +1,4 @@
+import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
@@ -9,6 +10,7 @@ import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DetailProfileStudentPage extends StatefulWidget {
   final SupervisorStudent student;
@@ -27,7 +29,8 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
   void initState() {
     super.initState();
     BlocProvider.of<StudentCubit>(context)
-      ..getStudentDetailById(studentId: widget.student.studentId!);
+      ..getStudentDetailById(studentId: widget.student.studentId!)
+      ..getStatisticByStudentId(studentId: widget.student.studentId!);
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels < 160) {
@@ -154,91 +157,140 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                 height: 16,
               ),
             ),
-            // SliverPadding(
-            //   padding: EdgeInsets.symmetric(horizontal: 16),
-            //   sliver: SliverList(
-            //     delegate: SliverChildListDelegate(
-            //       [
-            //         DepartmentStatisticsCard(
-            //           padding: const EdgeInsets.symmetric(vertical: 24),
-            //           child: Column(
-            //             children: <Widget>[
-            //               Text(
-            //                 'Current Department',
-            //                 style: textTheme.titleMedium?.copyWith(
-            //                   fontWeight: FontWeight.w600,
-            //                   color: primaryColor,
-            //                 ),
-            //               ),
-            //               const Text('Obstetrics and Gynecology'),
-            //               const Padding(
-            //                 padding: EdgeInsets.symmetric(vertical: 16),
-            //                 child: Divider(
-            //                   height: 6,
-            //                   thickness: 6,
-            //                   color: onDisableColor,
-            //                 ),
-            //               ),
-            //               const DepartmentStatisticsSection(
-            //                 titleText: 'Diagnosis Skills',
-            //                 titleIconPath: 'skill_outlined.svg',
-            //                 percentage: 73.0,
-            //                 statistics: {
-            //                   'Total Diagnosis Skill': 169,
-            //                   'Performed': 108,
-            //                   'Not Performed': 51,
-            //                 },
-            //                 detailStatistics: {
-            //                   1: [
-            //                     'Corneal reflex (4A)',
-            //                     'Dolorit Sit Amet (4A)',
-            //                     'Assessment of Pain Sensation (4A)',
-            //                     'Lorem Ipsum (4A)',
-            //                   ],
-            //                   2: [
-            //                     'Corneal reflex (4A)',
-            //                     'Dolorit Sit Amet (4A)',
-            //                     'Assessment of Pain Sensation (4A)',
-            //                     'Lorem Ipsum (4A)',
-            //                   ],
-            //                 },
-            //               ),
-            //               const Padding(
-            //                 padding: EdgeInsets.symmetric(vertical: 16),
-            //                 child: Divider(
-            //                   height: 6,
-            //                   thickness: 6,
-            //                   color: onDisableColor,
-            //                 ),
-            //               ),
-            //               const DepartmentStatisticsSection(
-            //                 titleText: 'Acquired Cases',
-            //                 titleIconPath: 'attach_resume_male_outlined.svg',
-            //                 percentage: 45.0,
-            //                 statistics: {
-            //                   'Total Acquired Case': 169,
-            //                   'Identified Case': 96,
-            //                   'Unidentified Case': 40,
-            //                 },
-            //                 detailStatistics: {
-            //                   3: [
-            //                     'Corneal reflex (4A)',
-            //                     'Dolorit Sit Amet (4A)',
-            //                     'Assessment of Pain Sensation (4A)',
-            //                     'Lorem Ipsum (4A)',
-            //                   ],
-            //                 },
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //         SizedBox(
-            //           height: 16,
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              sliver: SliverToBoxAdapter(
+                child: BlocBuilder<StudentCubit, StudentState>(
+                    builder: (context, state) {
+                  if (state.studentStatistic != null) {
+                    final stData = state.studentStatistic!;
+                    return DepartmentStatisticsCard(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          // Text(
+                          //   'Current Department',
+                          //   style: textTheme.titleMedium?.copyWith(
+                          //     fontWeight: FontWeight.w600,
+                          //     color: primaryColor,
+                          //   ),
+                          // ),
+                          // Text(widget.activeDepartmentModel.unitName ?? ''),
+                          // const Padding(
+                          //   padding: EdgeInsets.symmetric(vertical: 16),
+                          //   child: Divider(
+                          //     height: 6,
+                          //     thickness: 6,
+                          //     color: onDisableColor,
+                          //   ),
+                          // ),
+                          if (stData.finalScore != null) ...[
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24.0),
+                              child: Row(
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    AssetPath.getIcon('icon_final_grade.svg'),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      'Final Score',
+                                      style: textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Container(
+                              width: double.infinity,
+                              margin: EdgeInsets.symmetric(horizontal: 24),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: primaryColor,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  (stData.finalScore ?? 100).toString(),
+                                  style: textTheme.titleLarge?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: Divider(
+                                height: 6,
+                                thickness: 6,
+                                color: onDisableColor,
+                              ),
+                            ),
+                          ],
+                          DepartmentStatisticsSection(
+                            titleText: 'Diagnosis Skills',
+                            titleIconPath: 'skill_outlined.svg',
+                            percentage:
+                                (stData.verifiedSkills! / stData.totalSkills!) *
+                                    100,
+                            statistics: {
+                              'Total Diagnosis Skill': stData.totalSkills!,
+                              'Performed': stData.verifiedSkills,
+                              'Not Performed':
+                                  stData.totalSkills! - stData.verifiedSkills!,
+                            },
+                            detailStatistics: {
+                              1: [
+                                ...stData.skills!
+                                    .map((e) => e.skillName ?? '')
+                                    .toList(),
+                              ],
+                            },
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Divider(
+                              height: 6,
+                              thickness: 6,
+                              color: onDisableColor,
+                            ),
+                          ),
+                          DepartmentStatisticsSection(
+                            titleText: 'Acquired Cases',
+                            titleIconPath: 'attach_resume_male_outlined.svg',
+                            percentage:
+                                (stData.verifiedCases! / stData.totalCases!) *
+                                    100,
+                            statistics: {
+                              'Total Acquired Case': stData.totalCases,
+                              'Identified Case': stData.verifiedCases,
+                              'Unidentified Case':
+                                  stData.totalCases! - stData.verifiedCases!,
+                            },
+                            detailStatistics: {
+                              1: [
+                                ...stData.cases!
+                                    .map((e) => e.caseName ?? '')
+                                    .toList(),
+                              ],
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return CustomLoading();
+                }),
+              ),
+            ),
           ],
         ),
       ),
