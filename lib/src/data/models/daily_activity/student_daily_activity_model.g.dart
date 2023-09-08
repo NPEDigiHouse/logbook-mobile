@@ -9,59 +9,79 @@ part of 'student_daily_activity_model.dart';
 StudentDailyActivityResponse _$StudentDailyActivityResponseFromJson(
         Map<String, dynamic> json) =>
     StudentDailyActivityResponse(
-      dailyActivities: (json['dailyActivities'] as List<dynamic>?)
-          ?.map((e) =>
-              StudentDailyActivityModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      inprocessDailyActivity: json['inprocessDailyActivity'] as int?,
-      verifiedDailyActivity: json['verifiedDailyActivity'] as int?,
-      unverifiedDailyActivity: json['unverifiedDailyActivity'] as int?,
       unitName: json['unitName'] as String?,
+      weeks: (json['weeks'] as List<dynamic>?)
+          ?.map((e) => Week.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      dailyActivities: (json['dailyActivities'] as List<dynamic>?)
+          ?.map((e) => DailyActivity.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$StudentDailyActivityResponseToJson(
         StudentDailyActivityResponse instance) =>
     <String, dynamic>{
       'unitName': instance.unitName,
-      'inprocessDailyActivity': instance.inprocessDailyActivity,
-      'verifiedDailyActivity': instance.verifiedDailyActivity,
-      'unverifiedDailyActivity': instance.unverifiedDailyActivity,
+      'weeks': instance.weeks,
       'dailyActivities': instance.dailyActivities,
     };
 
-StudentDailyActivityModel _$StudentDailyActivityModelFromJson(
-        Map<String, dynamic> json) =>
-    StudentDailyActivityModel(
-      activitiesStatus: (json['activitiesStatus'] as List<dynamic>?)
-          ?.map((e) => ActivityStatusModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      dailyActivityId: json['dailyActivityId'] as String?,
-      verificationStatus: json['verificationStatus'] as String?,
+DailyActivity _$DailyActivityFromJson(Map<String, dynamic> json) =>
+    DailyActivity(
       weekName: json['weekName'] as int?,
+      attendNum: json['attendNum'] as int?,
+      notAttendNum: json['notAttendNum'] as int?,
+      sickNum: json['sickNum'] as int?,
+      activitiesStatus: (json['activitiesStatus'] as List<dynamic>?)
+          ?.map((e) => ActivitiesStatus.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
-Map<String, dynamic> _$StudentDailyActivityModelToJson(
-        StudentDailyActivityModel instance) =>
+Map<String, dynamic> _$DailyActivityToJson(DailyActivity instance) =>
     <String, dynamic>{
-      'verificationStatus': instance.verificationStatus,
       'weekName': instance.weekName,
-      'dailyActivityId': instance.dailyActivityId,
+      'attendNum': instance.attendNum,
+      'notAttendNum': instance.notAttendNum,
+      'sickNum': instance.sickNum,
       'activitiesStatus': instance.activitiesStatus,
     };
 
-ActivityStatusModel _$ActivityStatusModelFromJson(Map<String, dynamic> json) =>
-    ActivityStatusModel(
-      activityStatus: json['activityStatus'] as String?,
-      detail: json['detail'] as String?,
+ActivitiesStatus _$ActivitiesStatusFromJson(Map<String, dynamic> json) =>
+    ActivitiesStatus(
+      id: json['id'] as String?,
       day: json['day'] as String?,
+      location: json['location'] as String?,
+      detail: json['detail'] as String?,
+      activityStatus: json['activityStatus'] as String?,
+      activityName: json['activityName'] as String?,
       verificationStatus: json['verificationStatus'] as String?,
     );
 
-Map<String, dynamic> _$ActivityStatusModelToJson(
-        ActivityStatusModel instance) =>
+Map<String, dynamic> _$ActivitiesStatusToJson(ActivitiesStatus instance) =>
     <String, dynamic>{
-      'activityStatus': instance.activityStatus,
+      'id': instance.id,
       'day': instance.day,
-      'verificationStatus': instance.verificationStatus,
+      'location': instance.location,
       'detail': instance.detail,
+      'activityStatus': instance.activityStatus,
+      'activityName': instance.activityName,
+      'verificationStatus': instance.verificationStatus,
+    };
+
+Week _$WeekFromJson(Map<String, dynamic> json) => Week(
+      endDate: json['endDate'] as int?,
+      startDate: json['startDate'] as int?,
+      unitId: json['unitId'] as String?,
+      unitName: json['unitName'] as String?,
+      weekName: json['weekName'] as int?,
+      id: json['id'] as String?,
+    );
+
+Map<String, dynamic> _$WeekToJson(Week instance) => <String, dynamic>{
+      'endDate': instance.endDate,
+      'startDate': instance.startDate,
+      'unitId': instance.unitId,
+      'unitName': instance.unitName,
+      'weekName': instance.weekName,
+      'id': instance.id,
     };

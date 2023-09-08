@@ -126,6 +126,7 @@ class _CreateClinicalRecordFirstPageState
                             }
                           });
                     }),
+                    
                     BuildTextField(
                       onChanged: (v) {},
                       controller: recordIdController,

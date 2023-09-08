@@ -5,6 +5,7 @@ import 'package:elogbook/src/data/models/daily_activity/list_week_item.dart';
 import 'package:elogbook/src/data/models/daily_activity/post_week_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_activity_perweek_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
+import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_per_days.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
 part 'daily_activity_state.dart';
@@ -60,6 +61,30 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
+  Future<void> getDailyActivityDays({required String weekId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result =
+          await dataSource.getStudentDailyPerDaysActivities(weekId: weekId);
+
+      try {
+        emit(state.copyWith(activityPerDays: result));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getStudentDailyActivities() async {
     try {
       emit(state.copyWith(
@@ -67,6 +92,11 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       ));
 
       final result = await dataSource.getStudentDailyActivities();
+      result.weeks?.sort(
+        (a, b) {
+          return a.weekName!.compareTo(b.weekName!);
+        },
+      );
       try {
         emit(state.copyWith(
           studentDailyActivity: result,
@@ -167,7 +197,7 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
         requestState: RequestState.loading,
       ));
 
-      await dataSource.updateDailyActiviy(id: id, model: model);
+      await dataSource.updateDailyActiviy(dayId: id, model: model);
       try {
         emit(state.copyWith(isDailyActivityUpdated: true));
       } catch (e) {

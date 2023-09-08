@@ -8,9 +8,12 @@ import 'package:elogbook/src/data/models/daily_activity/list_week_item.dart';
 import 'package:elogbook/src/data/models/daily_activity/post_week_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_activity_perweek_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
+import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_per_days.dart';
 
 abstract class DailyActivityDataSource {
   Future<StudentDailyActivityResponse> getStudentDailyActivities();
+  Future<StudentDailyActivityPerDays> getStudentDailyPerDaysActivities(
+      {required String weekId});
   Future<void> addWeekByCoordinator({required PostWeek postWeek});
   Future<List<ListWeekItem>> getWeekByCoordinator({required String unitId});
   Future<StudentDailyActivityResponse> getDailyActivityBySupervisor(
@@ -20,7 +23,7 @@ abstract class DailyActivityDataSource {
   Future<StudentActivityPerweekResponse> getActivityOfDailyActivity(
       {required String id});
   Future<void> updateDailyActiviy(
-      {required String id, required DailyActivityPostModel model});
+      {required String dayId, required DailyActivityPostModel model});
   Future<void> verifiyDailyActivityById(
       {required String id, required bool verifiedStatus});
 }
@@ -43,8 +46,13 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
         ),
       );
+      print(response.data);
       if (response.statusCode != 200) {
         throw Exception();
       }
@@ -92,12 +100,12 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
 
   @override
   Future<void> updateDailyActiviy(
-      {required String id, required DailyActivityPostModel model}) async {
+      {required String dayId, required DailyActivityPostModel model}) async {
     final credential = await preferenceHandler.getCredential();
 
     try {
       final response =
-          await dio.put(ApiService.baseUrl + '/daily-activities/activities/$id',
+          await dio.put(ApiService.baseUrl + '/daily-activities/days/$dayId',
               options: Options(
                 headers: {
                   "content-type": 'application/json',
@@ -109,6 +117,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
                 },
               ),
               data: model.toJson());
+      print(response.data);
       if (response.statusCode != 200) {
         throw Exception();
       }
@@ -260,6 +269,38 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
           dataResponse.data.map((e) => ListWeekItem.fromJson(e)).toList();
 
       return listData;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<StudentDailyActivityPerDays> getStudentDailyPerDaysActivities(
+      {required String weekId}) async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/students/daily-activities/weeks/$weekId',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+
+      final result = StudentDailyActivityPerDays.fromJson(dataResponse.data);
+      return result;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

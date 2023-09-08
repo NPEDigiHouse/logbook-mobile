@@ -34,14 +34,15 @@ class ReusableFunctionHelper {
   }
 
   static String epochToStringDate(
-      {required int startTime, required int endTime}) {
+      {required int startTime, int? endTime, String? format}) {
     String time = '';
     DateTime startDate = DateTime.fromMillisecondsSinceEpoch(startTime * 1000);
-    time += datetimeToString(startDate, format: 'dd MMM yyyy');
-
-    DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endTime * 1000);
-    time += ' - ';
-    time += datetimeToString(endDate, format: 'dd MMM yyyy');
+    time += datetimeToString(startDate, format: format ?? 'dd MMM yyyy');
+    if (endTime != null) {
+      DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endTime * 1000);
+      time += ' - ';
+      time += datetimeToString(endDate, format: 'dd MMM yyyy');
+    }
 
     return time;
   }
@@ -55,5 +56,12 @@ class ReusableFunctionHelper {
       5: '\"Perfect\"',
     };
     return ratingMap[i] ?? 'Unknown';
+  }
+
+  static int getIntervalOfData(int? startDate, int? endDate) {
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(startDate! * 1000);
+    DateTime end = DateTime.fromMillisecondsSinceEpoch(endDate! * 1000);
+    Duration interval = end.difference(start);
+    return interval.inDays;
   }
 }

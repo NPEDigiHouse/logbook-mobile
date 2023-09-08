@@ -4,10 +4,15 @@ part 'daily_activity_post_model.g.dart';
 
 @JsonSerializable()
 class DailyActivityPostModel {
+  @JsonKey(name: "activityStatus")
   final String? activityStatus;
+  @JsonKey(name: "detail")
   final String? detail;
+  @JsonKey(name: "supervisorId")
   final String? supervisorId;
+  @JsonKey(name: "locationId")
   final int? locationId;
+  @JsonKey(name: "activityNameId")
   final int? activityNameId;
 
   DailyActivityPostModel({

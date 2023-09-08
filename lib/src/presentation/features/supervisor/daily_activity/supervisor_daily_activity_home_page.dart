@@ -6,6 +6,7 @@ class SupervisorDailyActivityHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DailyActivityListStudentPage();
+    // return DailyActivityListStudentPage();
+    return Scaffold();
   }
 }

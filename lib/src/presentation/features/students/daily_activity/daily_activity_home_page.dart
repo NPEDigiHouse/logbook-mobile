@@ -1,11 +1,10 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
-import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/pages/daily_activity_week_status_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -18,16 +17,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class DailyActivityTempModel {
-  final int week;
-  final String startDate;
-  final String endDate;
-  final List<int> listAttendance;
+  final String day;
+  final String? id;
+  final ActivitiesStatus? dailyActivity;
 
-  DailyActivityTempModel(
-      {required this.week,
-      required this.startDate,
-      required this.endDate,
-      required this.listAttendance});
+  DailyActivityTempModel({required this.day, this.dailyActivity, this.id});
 }
 
 class DailyActivityPage extends StatefulWidget {
@@ -55,8 +49,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
       body: RefreshIndicator(
         onRefresh: () async {
           await Future.wait([
-            BlocProvider.of<DailyActivityCubit>(context)
-                .getStudentDailyActivities(),
+             BlocProvider.of<DailyActivityCubit>(context).getStudentDailyActivities(),
           ]);
         },
         child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
@@ -72,216 +65,224 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                     DepartmentHeader(
                       unitName: widget.activeDepartmentModel.unitName!,
                     ),
-                    Container(
-                      width: AppSize.getAppWidth(context),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(.12),
-                            offset: Offset(0, 2),
-                            blurRadius: 20,
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                        color: scaffoldBackgroundColor,
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF6F7F8),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  height: 84,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                          color: primaryColor.withOpacity(
-                                            .2,
-                                          ),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        padding: EdgeInsets.all(2),
-                                        child: Icon(
-                                          Icons.summarize,
-                                          size: 18,
-                                          color: primaryColor,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        '${state.studentDailyActivity!.inprocessDailyActivity! + state.studentDailyActivity!.unverifiedDailyActivity! + state.studentDailyActivity!.verifiedDailyActivity!}',
-                                        style: textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          height: 1,
-                                        ),
-                                      ),
-                                      Text('Total'),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF6F7F8),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  height: 84,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                          color: variant2Color.withOpacity(
-                                            .2,
-                                          ),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        padding: EdgeInsets.all(2),
-                                        child: Icon(
-                                          Icons.radio_button_unchecked_rounded,
-                                          size: 18,
-                                          color: variant2Color,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        '${state.studentDailyActivity!.inprocessDailyActivity!}',
-                                        style: textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          height: 1,
-                                        ),
-                                      ),
-                                      Text('Uncompleted'),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF6F7F8),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  height: 84,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                          color: successColor.withOpacity(
-                                            .2,
-                                          ),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        padding: EdgeInsets.all(2),
-                                        child: Icon(
-                                          Icons.verified_rounded,
-                                          size: 18,
-                                          color: successColor,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        '${state.studentDailyActivity!.verifiedDailyActivity!}',
-                                        style: textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          height: 1,
-                                        ),
-                                      ),
-                                      Text('Verified'),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF6F7F8),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  height: 84,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                          color: errorColor.withOpacity(
-                                            .2,
-                                          ),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        padding: EdgeInsets.all(2),
-                                        child: Icon(
-                                          Icons.hourglass_bottom_rounded,
-                                          size: 18,
-                                          color: errorColor,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        '${state.studentDailyActivity!.unverifiedDailyActivity!}',
-                                        style: textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          height: 1,
-                                        ),
-                                      ),
-                                      Text('Unverified'),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    ...List.generate(
-                      state.studentDailyActivity!.dailyActivities!.length,
-                      (index) => DailyActivityHomeCard(
-                        dailyActivity:
-                            state.studentDailyActivity!.dailyActivities![index],
+                    // Container(
+                    //   width: AppSize.getAppWidth(context),
+                    //   padding:
+                    //       EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                    //   decoration: BoxDecoration(
+                    //     boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.black.withOpacity(.12),
+                    //         offset: Offset(0, 2),
+                    //         blurRadius: 20,
+                    //       )
+                    //     ],
+                    //     borderRadius: BorderRadius.circular(12),
+                    //     color: scaffoldBackgroundColor,
+                    //   ),
+                    //   child: Column(
+                    //     children: [
+                    //       Row(
+                    //         children: [
+                    //           Expanded(
+                    //             child: Container(
+                    //               decoration: BoxDecoration(
+                    //                 color: Color(0xFFF6F7F8),
+                    //                 borderRadius: BorderRadius.circular(8),
+                    //               ),
+                    //               height: 84,
+                    //               child: Column(
+                    //                 mainAxisAlignment: MainAxisAlignment.center,
+                    //                 children: [
+                    //                   Container(
+                    //                     width: 24,
+                    //                     height: 24,
+                    //                     decoration: BoxDecoration(
+                    //                       color: primaryColor.withOpacity(
+                    //                         .2,
+                    //                       ),
+                    //                       shape: BoxShape.circle,
+                    //                     ),
+                    //                     padding: EdgeInsets.all(2),
+                    //                     child: Icon(
+                    //                       Icons.summarize,
+                    //                       size: 18,
+                    //                       color: primaryColor,
+                    //                     ),
+                    //                   ),
+                    //                   SizedBox(
+                    //                     height: 8,
+                    //                   ),
+                    //                   Text(
+                    //                     '${state.studentDailyActivity!.inprocessDailyActivity! + state.studentDailyActivity!.unverifiedDailyActivity! + state.studentDailyActivity!.verifiedDailyActivity!}',
+                    //                     style: textTheme.titleMedium?.copyWith(
+                    //                       fontWeight: FontWeight.bold,
+                    //                       height: 1,
+                    //                     ),
+                    //                   ),
+                    //                   Text('Total'),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           SizedBox(
+                    //             width: 8,
+                    //           ),
+                    //           Expanded(
+                    //             child: Container(
+                    //               decoration: BoxDecoration(
+                    //                 color: Color(0xFFF6F7F8),
+                    //                 borderRadius: BorderRadius.circular(8),
+                    //               ),
+                    //               height: 84,
+                    //               child: Column(
+                    //                 mainAxisAlignment: MainAxisAlignment.center,
+                    //                 children: [
+                    //                   Container(
+                    //                     width: 24,
+                    //                     height: 24,
+                    //                     decoration: BoxDecoration(
+                    //                       color: variant2Color.withOpacity(
+                    //                         .2,
+                    //                       ),
+                    //                       shape: BoxShape.circle,
+                    //                     ),
+                    //                     padding: EdgeInsets.all(2),
+                    //                     child: Icon(
+                    //                       Icons.radio_button_unchecked_rounded,
+                    //                       size: 18,
+                    //                       color: variant2Color,
+                    //                     ),
+                    //                   ),
+                    //                   SizedBox(
+                    //                     height: 8,
+                    //                   ),
+                    //                   Text(
+                    //                     '${state.studentDailyActivity!.inprocessDailyActivity!}',
+                    //                     style: textTheme.titleMedium?.copyWith(
+                    //                       fontWeight: FontWeight.bold,
+                    //                       height: 1,
+                    //                     ),
+                    //                   ),
+                    //                   Text('Uncompleted'),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       SizedBox(
+                    //         height: 8,
+                    //       ),
+                    //       Row(
+                    //         children: [
+                    //           Expanded(
+                    //             child: Container(
+                    //               decoration: BoxDecoration(
+                    //                 color: Color(0xFFF6F7F8),
+                    //                 borderRadius: BorderRadius.circular(8),
+                    //               ),
+                    //               height: 84,
+                    //               child: Column(
+                    //                 mainAxisAlignment: MainAxisAlignment.center,
+                    //                 children: [
+                    //                   Container(
+                    //                     width: 24,
+                    //                     height: 24,
+                    //                     decoration: BoxDecoration(
+                    //                       color: successColor.withOpacity(
+                    //                         .2,
+                    //                       ),
+                    //                       shape: BoxShape.circle,
+                    //                     ),
+                    //                     padding: EdgeInsets.all(2),
+                    //                     child: Icon(
+                    //                       Icons.verified_rounded,
+                    //                       size: 18,
+                    //                       color: successColor,
+                    //                     ),
+                    //                   ),
+                    //                   SizedBox(
+                    //                     height: 8,
+                    //                   ),
+                    //                   Text(
+                    //                     '${state.studentDailyActivity!.verifiedDailyActivity!}',
+                    //                     style: textTheme.titleMedium?.copyWith(
+                    //                       fontWeight: FontWeight.bold,
+                    //                       height: 1,
+                    //                     ),
+                    //                   ),
+                    //                   Text('Verified'),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           SizedBox(
+                    //             width: 8,
+                    //           ),
+                    //           Expanded(
+                    //             child: Container(
+                    //               decoration: BoxDecoration(
+                    //                 color: Color(0xFFF6F7F8),
+                    //                 borderRadius: BorderRadius.circular(8),
+                    //               ),
+                    //               height: 84,
+                    //               child: Column(
+                    //                 mainAxisAlignment: MainAxisAlignment.center,
+                    //                 children: [
+                    //                   Container(
+                    //                     width: 24,
+                    //                     height: 24,
+                    //                     decoration: BoxDecoration(
+                    //                       color: errorColor.withOpacity(
+                    //                         .2,
+                    //                       ),
+                    //                       shape: BoxShape.circle,
+                    //                     ),
+                    //                     padding: EdgeInsets.all(2),
+                    //                     child: Icon(
+                    //                       Icons.hourglass_bottom_rounded,
+                    //                       size: 18,
+                    //                       color: errorColor,
+                    //                     ),
+                    //                   ),
+                    //                   SizedBox(
+                    //                     height: 8,
+                    //                   ),
+                    //                   Text(
+                    //                     '${state.studentDailyActivity!.unverifiedDailyActivity!}',
+                    //                     style: textTheme.titleMedium?.copyWith(
+                    //                       fontWeight: FontWeight.bold,
+                    //                       height: 1,
+                    //                     ),
+                    //                   ),
+                    //                   Text('Unverified'),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    ...List.generate(state.studentDailyActivity!.weeks!.length,
+                        (index) {
+                      final i = state.studentDailyActivity!.dailyActivities!
+                          .indexWhere((element) =>
+                              element.weekName ==
+                              state.studentDailyActivity!.weeks![index]
+                                  .weekName);
+                      print(i);
+                      return DailyActivityHomeCard(
+                        week: state.studentDailyActivity!.weeks![index],
                         checkInCount:
                             widget.activeDepartmentModel.countCheckIn!,
-                      ),
-                    )
+                        dailyActivity: i == -1
+                            ? null
+                            : state.studentDailyActivity!.dailyActivities![i],
+                      );
+                    })
                   ],
                 ),
               );
@@ -295,20 +296,26 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
 
 class DailyActivityHomeCard extends StatelessWidget {
   final int checkInCount;
-  final StudentDailyActivityModel dailyActivity;
+  final Week week;
+  final DailyActivity? dailyActivity;
   const DailyActivityHomeCard(
-      {super.key, required this.dailyActivity, required this.checkInCount});
+      {super.key,
+      required this.week,
+      required this.checkInCount,
+      this.dailyActivity});
 
   @override
   Widget build(BuildContext context) {
     return InkWellContainer(
       padding: EdgeInsets.all(16),
       radius: 12,
-      onTap: () => context.navigateTo(DailyActivityWeekStatusPage(
-        dailyActivityId: dailyActivity.dailyActivityId!,
-        weekName: dailyActivity.weekName!,
-        checkInCount: checkInCount,
-      )),
+      onTap: () => context.navigateTo(
+        DailyActivityWeekStatusPage(
+          week: week,
+          weekName: week.weekName!,
+          checkInCount: checkInCount,
+        ),
+      ),
       color: Colors.white,
       boxShadow: [
         BoxShadow(
@@ -325,109 +332,153 @@ class DailyActivityHomeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: dailyActivity.verificationStatus == 'VERIFIED'
-                      ? successColor
-                      : dailyActivity.verificationStatus == 'UNVERIFIED'
-                          ? errorColor
-                          : onFormDisableColor,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      dailyActivity.verificationStatus == 'VERIFIED'
-                          ? Icons.verified_rounded
-                          : dailyActivity.verificationStatus == 'UNVERIFIED'
-                              ? Icons.close_rounded
-                              : Icons.hourglass_bottom_rounded,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    Text(
-                      '${dailyActivity.verificationStatus}',
-                      style: textTheme.bodySmall?.copyWith(
+          Builder(builder: (context) {
+            String status = 'PENDING';
+            if (ReusableFunctionHelper.getIntervalOfData(
+                        week.endDate, week.startDate) +
+                    1 ==
+                (dailyActivity == null
+                    ? 0
+                    : dailyActivity!.activitiesStatus!.length)) {
+              status = 'UNVERIFIED';
+              if (dailyActivity!.activitiesStatus!.indexWhere(
+                      (element) => element.verificationStatus != 'VERIFIED') ==
+                  -1) {
+                status = 'VERIFIED';
+              }
+            }
+            return Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: status == 'VERIFIED'
+                        ? successColor
+                        : status == 'UNVERIFIED'
+                            ? errorColor
+                            : onFormDisableColor,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        status == 'VERIFIED'
+                            ? Icons.verified_rounded
+                            : status == 'UNVERIFIED'
+                                ? Icons.close_rounded
+                                : Icons.hourglass_bottom_rounded,
                         color: Colors.white,
+                        size: 16,
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Text(
+                        '${status}',
+                        style: textTheme.bodySmall?.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Spacer(),
-              Icon(
-                Icons.arrow_forward_ios_rounded,
-              )
-            ],
-          ),
+                
+                Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                )
+              ],
+            );
+          }),
           SizedBox(
             height: 16,
           ),
           Text(
-            'Week ${dailyActivity.weekName}',
+            'Week ${week.weekName}',
             style: textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          // Text(
-          //   '${dailyActivity.} - ${dailyActivity.endDate}',
-          //   style: textTheme.bodyMedium?.copyWith(
-          //     color: secondaryTextColor,
-          //   ),
-          // ),
-          // SizedBox(
-          //   height: 16,
-          // ),
+          Text(
+            '${ReusableFunctionHelper.epochToStringDate(startTime: week.startDate!, endTime: week.endDate)}',
+            style: textTheme.bodyMedium?.copyWith(
+              color: secondaryTextColor,
+            ),
+          ),
+          SizedBox(
+            height: 16,
+          ),
           Builder(builder: (context) {
             Map<String, String> emoji = {
               'ATTEND': 'emoji_hadir.svg',
               'SICK': 'sakit_emoji.svg',
               'NOT_ATTEND': 'emoji_alfa.svg',
             };
-            dailyActivity.activitiesStatus!.sort(
-              (a, b) {
-                // Urutkan berdasarkan urutan hari dalam seminggu
-                final daysOfWeek = [
-                  'SUNDAY',
-                  'MONDAY',
-                  'TUESDAY',
-                  'WEDNESDAY',
-                  'THURSDAY',
-                  'FRIDAY',
-                  'SATURDAY'
-                ];
-                return daysOfWeek
-                    .indexOf(a.day!)
-                    .compareTo(daysOfWeek.indexOf(b.day!));
-              },
+            final List<DailyActivityTempModel> listDays = [];
+            final List<ActivitiesStatus> temp =
+                dailyActivity != null ? dailyActivity!.activitiesStatus! : [];
+            print("yakin ${temp.length}");
+            String firstDayName = ReusableFunctionHelper.epochToStringDate(
+              startTime: week.startDate!,
+              format: 'EEEE',
             );
+            int interval = ReusableFunctionHelper.getIntervalOfData(
+                week.startDate, week.endDate);
+            print(interval);
+
+            final daysOfWeek = [
+              'MONDAY',
+              'TUESDAY',
+              'WEDNESDAY',
+              'THURSDAY',
+              'FRIDAY',
+              'SATURDAY',
+              'SUNDAY',
+            ];
+            int startIndex = daysOfWeek.indexOf(firstDayName.toUpperCase());
+
+            for (var i = 0; i < interval + 1; i++) {
+              ActivitiesStatus? tempD;
+              if (temp.indexWhere(
+                      (element) => element.day == daysOfWeek[startIndex % 7]) !=
+                  -1) {
+                tempD = temp.firstWhere(
+                    (element) => element.day == daysOfWeek[startIndex % 7]);
+                print("terisi");
+              }
+              listDays.add(
+                DailyActivityTempModel(
+                  day: daysOfWeek[startIndex % 7],
+                  dailyActivity: tempD,
+                ),
+              );
+              startIndex += 1;
+            }
+
             return SpacingRow(
               onlyPading: true,
               spacing: 0,
               horizontalPadding: 12,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: dailyActivity.activitiesStatus!
+              children: listDays
                   .map(
                     (e) => Column(
                       children: [
-                        Text(e.day!.substring(0, 3)),
+                        Text(
+                          e.day.substring(0, 3),
+                          style: textTheme.bodySmall,
+                        ),
                         SizedBox(
                           height: 4,
                         ),
-                        if (e.activityStatus == 'NOT_ATTEND')
+                        if (e.dailyActivity == null)
                           Container(
-                            width: 42,
-                            height: 42,
+                            width: 38,
+                            height: 38,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: dividerColor,
@@ -437,10 +488,11 @@ class DailyActivityHomeCard extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                             ),
-                          ),
-                        if (e.activityStatus != 'NOT_ATTEND')
+                          )
+                        else
                           SvgPicture.asset(
-                            AssetPath.getIcon(emoji[e.activityStatus!]!),
+                            AssetPath.getIcon(
+                                emoji[e.dailyActivity!.activityStatus!]!),
                             width: 50,
                             height: 50,
                             fit: BoxFit.cover,

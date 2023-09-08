@@ -11,6 +11,7 @@ class DailyActivityState {
   final bool isDailyActivityVerifiedById;
   final bool isAddWeekSuccess;
   final List<ListWeekItem>? weekItems;
+  final StudentDailyActivityPerDays? activityPerDays;
 
   DailyActivityState({
     this.studentDailyActivity,
@@ -22,6 +23,7 @@ class DailyActivityState {
     this.isDailyActivityUpdated = false,
     this.isDailyActivityVerifiedById = false,
     this.dailyActivityBySupervisor,
+    this.activityPerDays,
     this.stateVerifyDailyActivity = RequestState.init,
   });
 
@@ -31,6 +33,7 @@ class DailyActivityState {
     StudentDailyActivityResponse? dailyActivityBySupervisor,
     StudentActivityPerweekResponse? studentActivityPerweek,
     StudentActivityPerweekResponse? activityPerweekBySupervisor,
+    StudentDailyActivityPerDays? activityPerDays,
     bool isDailyActivityUpdated = false,
     bool isDailyActivityVerifiedById = false,
     List<ListWeekItem>? weekItems,
@@ -38,6 +41,7 @@ class DailyActivityState {
     RequestState stateVerifyDailyActivity = RequestState.init,
   }) {
     return DailyActivityState(
+      activityPerDays: activityPerDays ?? this.activityPerDays,
       studentDailyActivity: studentDailyActivity ?? this.studentDailyActivity,
       activityPerweekBySupervisor:
           activityPerweekBySupervisor ?? this.activityPerweekBySupervisor,

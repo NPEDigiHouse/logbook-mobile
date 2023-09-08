@@ -8,15 +8,16 @@ import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activ
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
+import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateDailyActivityPage extends StatefulWidget {
   final String id;
-  final String modelId;
+  final String dayId;
   const CreateDailyActivityPage(
-      {super.key, required this.modelId, required this.id});
+      {super.key, required this.dayId, required this.id});
 
   @override
   State<CreateDailyActivityPage> createState() =>
@@ -59,7 +60,8 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
             Future.microtask(
               () {
                 BlocProvider.of<DailyActivityCubit>(context)
-                  ..getStudentActivityPerweek(id: widget.id)..getStudentDailyActivities();
+                  ..getStudentActivityPerweek(id: widget.id)
+                  ..getStudentDailyActivities();
               },
             );
           }
@@ -93,24 +95,42 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                       _supervisors.clear();
                       _supervisors.addAll(state.supervisors);
                     }
-                    return DropdownButtonFormField(
-                      isExpanded: true,
+                    return CustomDropdown<SupervisorModel>(
+                        onSubmit: (text, controller) {
+                          if (_supervisors.indexWhere((element) =>
+                                  element.fullName == text.trim()) ==
+                              -1) {
+                            controller.clear();
+                            supervisorId = '';
+                          }
+                        },
+                        hint: 'Supervisor',
+                        onCallback: (pattern) {
+                          final temp = _supervisors
+                              .where((competence) =>
+                                  (competence.fullName ?? 'unknown')
+                                      .toLowerCase()
+                                      .trim()
+                                      .startsWith(pattern.toLowerCase()))
+                              .toList();
 
-                      hint: Text('Supervisor'),
-                      items: _supervisors
-                          .map(
-                            (e) => DropdownMenuItem(
-                              child: Text(e.fullName!),
-                              value: e,
+                          return pattern.isEmpty ? _supervisors : temp;
+                        },
+                        child: (suggestion) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 16,
                             ),
-                          )
-                          .toList(),
-                      onChanged: (v) {
-                        if (v != null) supervisorId = v.id!;
-                        ;
-                      },
-                      value: null,
-                    );
+                            child: Text(suggestion?.fullName ?? ''),
+                          );
+                        },
+                        onItemSelect: (v, controller) {
+                          if (v != null) {
+                            supervisorId = v.id!;
+                            controller.text = v.fullName!;
+                          }
+                        });
                   }),
                   SizedBox(
                     height: 12,
@@ -131,7 +151,6 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                     List<String> _type = ['Attend', 'Sick'];
                     return DropdownButtonFormField(
                       isExpanded: true,
-
                       hint: Text('Status'),
                       items: _type
                           .map(
@@ -194,8 +213,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                         _activityLocations.addAll(state.activityNames!);
                       }
                       return DropdownButtonFormField(
-                      isExpanded: true,
-
+                        isExpanded: true,
                         hint: Text('Activity'),
                         items: _activityLocations
                             .map(
@@ -235,7 +253,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                           detailController.text.isNotEmpty) {
                         BlocProvider.of<DailyActivityCubit>(context)
                           ..updateDailyActivity(
-                            id: widget.modelId!,
+                            id: widget.dayId,
                             model: DailyActivityPostModel(
                               activityNameId: activityNameId!,
                               activityStatus: status,
