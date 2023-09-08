@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/daily_activity_datasource.dart';
 import 'package:elogbook/src/data/models/daily_activity/daily_activity_post_model.dart';
+import 'package:elogbook/src/data/models/daily_activity/daily_activity_student.dart';
 import 'package:elogbook/src/data/models/daily_activity/list_week_item.dart';
 import 'package:elogbook/src/data/models/daily_activity/post_week_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_activity_perweek_model.dart';
@@ -72,6 +73,29 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
 
       try {
         emit(state.copyWith(activityPerDays: result));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getDailyActivityStudentBySupervisor() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getDailyActivitiesBySupervisor();
+
+      try {
+        emit(state.copyWith(dailyActivityStudents: result));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

@@ -12,6 +12,7 @@ import 'package:elogbook/src/presentation/features/supervisor/assesment/assesmen
 import 'package:elogbook/src/presentation/features/supervisor/clinical_record/list_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/competence/supervisor_competence_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/daily_activity/supervisor_daily_activity_home_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/daily_activity/supervisor_list_daily_activity_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/supervisor_list_student_unit_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/scientific_session/list_scientific_session_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/list_self_reflection_page.dart';
@@ -173,7 +174,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
               () => context.navigateTo(SupervisorSglCstHomePage(
                     credential: widget.credential,
                   )),
-              () => context.navigateTo(SupervisorDailyActivityHomePage()),
+              () => context.navigateTo(SupervisorStudentsDailyActivityPage()),
               () => context.navigateTo(SupervisorListClinicalRecord()),
               () => context.navigateTo(SupervisorListScientificSessionPage()),
             ]),
@@ -216,7 +217,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
             () => context.navigateTo(SupervisorSglCstHomePage(
                   credential: widget.credential,
                 )),
-            () => context.navigateTo(SupervisorDailyActivityHomePage()),
+            () => context.navigateTo(SupervisorStudentsDailyActivityPage()),
             () => context.navigateTo(SupervisorListClinicalRecord()),
             () => context.navigateTo(SupervisorListScientificSessionPage()),
           ],

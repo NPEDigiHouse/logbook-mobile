@@ -11,12 +11,14 @@ class DailyActivityState {
   final bool isDailyActivityVerifiedById;
   final bool isAddWeekSuccess;
   final List<ListWeekItem>? weekItems;
+  final List<DailyActivityStudent>? dailyActivityStudents;
   final StudentDailyActivityPerDays? activityPerDays;
 
   DailyActivityState({
     this.studentDailyActivity,
     this.requestState,
     this.weekItems,
+    this.dailyActivityStudents,
     this.isAddWeekSuccess = false,
     this.studentActivityPerweek,
     this.activityPerweekBySupervisor,
@@ -38,23 +40,25 @@ class DailyActivityState {
     bool isDailyActivityVerifiedById = false,
     List<ListWeekItem>? weekItems,
     bool isAddWeekSuccess = false,
+    List<DailyActivityStudent>? dailyActivityStudents,
     RequestState stateVerifyDailyActivity = RequestState.init,
   }) {
     return DailyActivityState(
-      activityPerDays: activityPerDays ?? this.activityPerDays,
-      studentDailyActivity: studentDailyActivity ?? this.studentDailyActivity,
-      activityPerweekBySupervisor:
-          activityPerweekBySupervisor ?? this.activityPerweekBySupervisor,
-      dailyActivityBySupervisor:
-          dailyActivityBySupervisor ?? this.dailyActivityBySupervisor,
-      requestState: requestState ?? RequestState.init,
-      isAddWeekSuccess: isAddWeekSuccess,
-      isDailyActivityUpdated: isDailyActivityUpdated,
-      weekItems: weekItems ?? this.weekItems,
-      studentActivityPerweek:
-          studentActivityPerweek ?? this.studentActivityPerweek,
-      isDailyActivityVerifiedById: isDailyActivityVerifiedById,
-      stateVerifyDailyActivity: stateVerifyDailyActivity,
-    );
+        activityPerDays: activityPerDays ?? this.activityPerDays,
+        studentDailyActivity: studentDailyActivity ?? this.studentDailyActivity,
+        activityPerweekBySupervisor:
+            activityPerweekBySupervisor ?? this.activityPerweekBySupervisor,
+        dailyActivityBySupervisor:
+            dailyActivityBySupervisor ?? this.dailyActivityBySupervisor,
+        requestState: requestState ?? RequestState.init,
+        isAddWeekSuccess: isAddWeekSuccess,
+        isDailyActivityUpdated: isDailyActivityUpdated,
+        weekItems: weekItems ?? this.weekItems,
+        studentActivityPerweek:
+            studentActivityPerweek ?? this.studentActivityPerweek,
+        isDailyActivityVerifiedById: isDailyActivityVerifiedById,
+        stateVerifyDailyActivity: stateVerifyDailyActivity,
+        dailyActivityStudents:
+            dailyActivityStudents ?? this.dailyActivityStudents);
   }
 }

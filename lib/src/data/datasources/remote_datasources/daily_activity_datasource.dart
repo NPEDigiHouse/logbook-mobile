@@ -4,6 +4,7 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/daily_activity/daily_activity_post_model.dart';
+import 'package:elogbook/src/data/models/daily_activity/daily_activity_student.dart';
 import 'package:elogbook/src/data/models/daily_activity/list_week_item.dart';
 import 'package:elogbook/src/data/models/daily_activity/post_week_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_activity_perweek_model.dart';
@@ -16,6 +17,7 @@ abstract class DailyActivityDataSource {
       {required String weekId});
   Future<void> addWeekByCoordinator({required PostWeek postWeek});
   Future<List<ListWeekItem>> getWeekByCoordinator({required String unitId});
+  Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor();
   Future<StudentDailyActivityResponse> getDailyActivityBySupervisor(
       {required String studentId});
   Future<StudentActivityPerweekResponse> getStudentActivityPerweek(
@@ -301,6 +303,36 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
 
       final result = StudentDailyActivityPerDays.fromJson(dataResponse.data);
       return result;
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl + '/daily-activities/',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+        ),
+      );
+      print(response);
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      final dataResponse =
+          await DataResponse<List<dynamic>>.fromJson(response.data);
+      List<DailyActivityStudent> listData = dataResponse.data
+          .map((e) => DailyActivityStudent.fromJson(e))
+          .toList();
+
+      return listData;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

@@ -124,6 +124,7 @@ class _SupervisorDetailClinicalRecordPageState
                         ],
                       ),
                     ),
+                    
                     SectionDivider(),
                     SizedBox(
                       height: 24,
