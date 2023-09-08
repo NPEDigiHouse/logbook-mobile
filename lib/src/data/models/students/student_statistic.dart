@@ -15,7 +15,7 @@ class StudentStatistic {
   @JsonKey(name: "cases")
   final List<Case>? cases;
   @JsonKey(name: "skills")
-  final List<dynamic>? skills;
+  final List<Skill>? skills;
   @JsonKey(name: "finalScore")
   final dynamic finalScore;
 
@@ -59,4 +59,30 @@ class Case {
   factory Case.fromJson(Map<String, dynamic> json) => _$CaseFromJson(json);
 
   Map<String, dynamic> toJson() => _$CaseToJson(this);
+}
+
+@JsonSerializable()
+class Skill {
+  @JsonKey(name: "skillId")
+  final String? skillId;
+  @JsonKey(name: "skillName")
+  final String? skillName;
+  @JsonKey(name: "skillType")
+  final String? skillType;
+  @JsonKey(name: "skillTypeId")
+  final int? skillTypeId;
+  @JsonKey(name: "verificationStatus")
+  final String? verificationStatus;
+
+  Skill({
+    this.skillId,
+    this.skillName,
+    this.skillType,
+    this.skillTypeId,
+    this.verificationStatus,
+  });
+
+  factory Skill.fromJson(Map<String, dynamic> json) => _$SkillFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SkillToJson(this);
 }

@@ -95,7 +95,7 @@ final List<MenuModel> listSupervisorMenu = [
   ),
   MenuModel(
     iconPath: 'school_rounded.svg',
-    labels: 'Competence',
+    labels: 'Competency',
   ),
   MenuModel(
     iconPath: 'feed_rounded.svg',

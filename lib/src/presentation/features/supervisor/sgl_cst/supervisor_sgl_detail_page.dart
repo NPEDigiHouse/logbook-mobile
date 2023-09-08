@@ -6,7 +6,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
-import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,10 +16,12 @@ import 'package:timeline_tile/timeline_tile.dart';
 class SupervisorSglDetailPage extends StatefulWidget {
   final String studentId;
   final String userId;
+  final String studentName;
   final bool isCeu;
   final String? unitName;
   const SupervisorSglDetailPage(
       {super.key,
+      required this.studentName,
       required this.studentId,
       required this.isCeu,
       this.unitName,
@@ -71,14 +73,14 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       horizontalPadding: 16,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: DepartmentHeader(
-                            unitName: widget.unitName ?? '...',
-                          ),
+                        StudentDepartmentHeader(
+                          unitName: widget.unitName ?? '...',
+                          studentId: widget.studentId,
+                          studentName: widget.studentName,
                         ),
                         ListView.separated(
                             shrinkWrap: true,
+                            padding: EdgeInsets.only(top: 12),
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               final data = state.sglDetail!.sgls![index];
@@ -131,7 +133,7 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         text: TextSpan(
-                                          style: textTheme.bodySmall?.copyWith(
+                                          style: textTheme.bodyMedium?.copyWith(
                                             color: secondaryTextColor,
                                           ),
                                           children: <TextSpan>[

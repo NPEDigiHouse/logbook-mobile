@@ -6,6 +6,6 @@ import 'package:intl/date_symbol_data_local.dart';
 Future<void> main() async {
   di.init();
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('id_ID', null)
+  await initializeDateFormatting('en_EN', null)
       .then((_) => runApp(const App()));
 }

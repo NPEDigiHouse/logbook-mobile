@@ -15,7 +15,9 @@ StudentStatistic _$StudentStatisticFromJson(Map<String, dynamic> json) =>
       cases: (json['cases'] as List<dynamic>?)
           ?.map((e) => Case.fromJson(e as Map<String, dynamic>))
           .toList(),
-      skills: json['skills'] as List<dynamic>?,
+      skills: (json['skills'] as List<dynamic>?)
+          ?.map((e) => Skill.fromJson(e as Map<String, dynamic>))
+          .toList(),
       finalScore: json['finalScore'],
     );
 
@@ -43,5 +45,21 @@ Map<String, dynamic> _$CaseToJson(Case instance) => <String, dynamic>{
       'caseName': instance.caseName,
       'caseType': instance.caseType,
       'caseTypeId': instance.caseTypeId,
+      'verificationStatus': instance.verificationStatus,
+    };
+
+Skill _$SkillFromJson(Map<String, dynamic> json) => Skill(
+      skillId: json['skillId'] as String?,
+      skillName: json['skillName'] as String?,
+      skillType: json['skillType'] as String?,
+      skillTypeId: json['skillTypeId'] as int?,
+      verificationStatus: json['verificationStatus'] as String?,
+    );
+
+Map<String, dynamic> _$SkillToJson(Skill instance) => <String, dynamic>{
+      'skillId': instance.skillId,
+      'skillName': instance.skillName,
+      'skillType': instance.skillType,
+      'skillTypeId': instance.skillTypeId,
       'verificationStatus': instance.verificationStatus,
     };

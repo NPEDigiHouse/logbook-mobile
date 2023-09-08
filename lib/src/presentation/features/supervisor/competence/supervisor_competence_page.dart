@@ -29,7 +29,7 @@ class _SupervisorCompetenceHomePageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Competence"),
+        title: Text("Competency"),
       ),
       body: SafeArea(
         child: SingleChildScrollView(

@@ -7,6 +7,8 @@ import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
+import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,12 +18,14 @@ class SupervisorCstDetailPage extends StatefulWidget {
   final String studentId;
   final String? unitName;
   final String userId;
+  final String studentName;
 
   final bool isCeu;
   const SupervisorCstDetailPage(
       {super.key,
       required this.studentId,
       required this.isCeu,
+      required this.studentName,
       this.unitName,
       required this.userId});
 
@@ -67,21 +71,18 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
               builder: (context, state) {
                 if (state.cstDetail != null)
                   return SliverToBoxAdapter(
-                    child: Column(
+                    child: SpacingColumn(
+                      horizontalPadding: 16,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: DepartmentHeader(
-                            unitName: widget.unitName??'...',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
+                        StudentDepartmentHeader(
+                          unitName: widget.unitName ?? '...',
+                          studentId: widget.studentId,
+                          studentName: widget.studentName,
                         ),
                         ListView.separated(
                             shrinkWrap: true,
-                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            padding: EdgeInsets.only(top: 12),
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               final data = state.cstDetail!.csts![index];

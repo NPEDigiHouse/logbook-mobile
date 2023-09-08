@@ -30,6 +30,7 @@ class SglOnListCard extends StatelessWidget {
             userId: userId,
             isCeu: isCeu,
             unitName: sglCst.activeDepartmentName,
+            studentName: sglCst.studentName ?? '...',
           ));
         },
         child: Padding(
@@ -37,7 +38,7 @@ class SglOnListCard extends StatelessWidget {
             vertical: 12,
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -65,69 +66,36 @@ class SglOnListCard extends StatelessWidget {
                       'Small Group Learning',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: onFormDisableColor,
+                        height: 1.2,
+                      ),
+                    ),
+                    Text(
+                      ReusableFunctionHelper.datetimeToString(sglCst.latest!,
+                          format: 'EEE, dd MMM'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.bodySmall?.copyWith(
-                          color: onFormDisableColor,
-                        ),
-                        children: <TextSpan>[
-                          const TextSpan(
-                            text: 'Latest:\t',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          TextSpan(
-                              text: ReusableFunctionHelper.datetimeToString(
-                            sglCst.latest!,
-                          )),
-                        ],
-                      ),
-                    ),
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.bodySmall?.copyWith(
-                          color: onFormDisableColor,
-                        ),
-                        children: <TextSpan>[
-                          const TextSpan(
-                            text: 'Unit:\t',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          TextSpan(text: sglCst.activeDepartmentName ?? ''),
-                        ],
+                        color: primaryTextColor,
+                        height: 1.2,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      sglCst.studentId ?? '-',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme.bodySmall
-                          ?.copyWith(height: 1, color: primaryTextColor),
-                    ),
                     Row(
                       children: <Widget>[
                         Text(
                           sglCst.studentName ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: textTheme.bodySmall
-                              ?.copyWith(height: 1, color: primaryTextColor),
+                          style: textTheme.bodyMedium?.copyWith(
+                            height: 1,
+                            color: secondaryColor,
+                          ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
                   ],
                 ),
               ),

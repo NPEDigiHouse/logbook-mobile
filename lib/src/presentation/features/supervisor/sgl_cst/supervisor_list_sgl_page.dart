@@ -32,7 +32,7 @@ class _SupervisorListSglPageState extends State<SupervisorListSglPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Small Group Learing'),
+        title: Text('Small Group Learning'),
       ).variant(),
       body: SafeArea(
         child: RefreshIndicator(
