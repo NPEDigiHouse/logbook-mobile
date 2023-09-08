@@ -6,7 +6,6 @@ import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/list_mini_cex_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/list_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/list_scientific_assignment_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/assesment/widgets/final_grade_card.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -15,10 +14,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class AssesmentStudentHomePage extends StatelessWidget {
   final String studentId;
+  final String? unitName;
   final UserCredential credential;
 
   const AssesmentStudentHomePage({
     super.key,
+    this.unitName,
     required this.credential,
     required this.studentId,
   });
@@ -37,7 +38,7 @@ class AssesmentStudentHomePage extends StatelessWidget {
           spacing: 12,
           children: [
             DepartmentHeader(
-              unitName: 'Department Name',
+              unitName: unitName ?? '-',
             ),
             SizedBox(
               height: 12,
@@ -54,7 +55,7 @@ class AssesmentStudentHomePage extends StatelessWidget {
                   title: 'Mini Cex',
                   desc: 'Mini Clinical Evaluation Exercise',
                   onTap: () => context.navigateTo(ListMiniCexPage(
-                    unitName: '',
+                    unitName: unitName ?? '',
                     studentId: studentId,
                     supervisorId: credential.supervisor!.id!,
                   )),
@@ -66,7 +67,7 @@ class AssesmentStudentHomePage extends StatelessWidget {
                   iconPath: 'icon_scientific_assignment.svg',
                   title: 'Scientific Assignment Grade',
                   onTap: () => context.navigateTo(ListScientificAssignmentPage(
-                    unitName: '',
+                    unitName: unitName ?? '',
                     studentId: studentId,
                     supervisorId: credential.supervisor!.id!,
                   )),
@@ -81,7 +82,7 @@ class AssesmentStudentHomePage extends StatelessWidget {
                   title: 'Personal Behavior Grade',
                   desc: 'Assessment given to personal behavior or behavior',
                   onTap: () => context.navigateTo(ListPersonalBehaviorPage(
-                      unitName: '', studentId: studentId)),
+                      unitName: unitName ?? '', studentId: studentId)),
                 ),
                 SizedBox(
                   width: 12,

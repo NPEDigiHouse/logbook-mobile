@@ -64,7 +64,7 @@ class _SupervisorPersonalBehaviorDetailPageState
                 SizedBox(
                   height: 16,
                 ),
-                DepartmentHeader(unitName: 'Department Name'),
+                DepartmentHeader(unitName: widget.unitName),
                 BlocConsumer<AssesmentCubit, AssesmentState>(
                   listener: (context, state) {
                     if (state.isPersonalBehaviorVerify) {

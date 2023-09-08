@@ -137,7 +137,9 @@ class _ListStudentTasksPageState extends State<ListStudentTasksPage> {
     return InkWellContainer(
       color: Colors.white,
       onTap: () => context.navigateTo(
-        SupervisorListSkillsPage(unitName: '', studentId: student.studentId!),
+        SupervisorListSkillsPage(
+            unitName: student.activeDepartmentName ?? '',
+            studentId: student.studentId!),
       ),
       child: Row(
         children: [
@@ -171,6 +173,12 @@ class _ListStudentTasksPageState extends State<ListStudentTasksPage> {
               ),
               Text(
                 student.studentId ?? '',
+                style: textTheme.bodyMedium?.copyWith(
+                  color: secondaryTextColor,
+                ),
+              ),
+              Text(
+                student.activeDepartmentName ?? '',
                 style: textTheme.bodyMedium?.copyWith(
                   color: secondaryTextColor,
                 ),

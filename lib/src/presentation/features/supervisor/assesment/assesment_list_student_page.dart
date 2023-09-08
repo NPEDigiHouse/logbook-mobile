@@ -127,6 +127,7 @@ class _SupervisorAssesmentStudentPageState
       onTap: () => context.navigateTo(AssesmentStudentHomePage(
         credential: widget.credential,
         studentId: student.studentId!,
+        unitName: student.activeDepartmentName,
       )),
       child: Row(
         children: [
@@ -198,6 +199,28 @@ class _SupervisorAssesmentStudentPageState
                   color: secondaryTextColor,
                 ),
               ),
+              const SizedBox(height: 8),
+              RichText(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                text: TextSpan(
+                  style: textTheme.bodySmall?.copyWith(
+                    color: secondaryTextColor,
+                  ),
+                  children: <TextSpan>[
+                    const TextSpan(
+                      text: 'Active Department:\t',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    TextSpan(
+                      text: student.activeDepartmentName ?? 'No Active Department',
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 4),
             ],
           )
         ],

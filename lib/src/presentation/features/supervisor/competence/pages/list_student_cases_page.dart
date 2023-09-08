@@ -1,5 +1,4 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/competences/student_competence_model.dart';
@@ -12,7 +11,6 @@ import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ListStudentCasesPage extends StatefulWidget {
   const ListStudentCasesPage({
@@ -138,7 +136,9 @@ class _ListStudentCasesPageState extends State<ListStudentCasesPage> {
     return InkWellContainer(
       color: Colors.white,
       onTap: () => context.navigateTo(
-        SupervisorListCasesPage(unitName: '', studentId: student.studentId!),
+        SupervisorListCasesPage(
+            unitName: student.activeDepartmentName ?? '',
+            studentId: student.studentId!),
       ),
       child: Row(
         children: [
@@ -172,6 +172,12 @@ class _ListStudentCasesPageState extends State<ListStudentCasesPage> {
               ),
               Text(
                 student.studentId ?? '',
+                style: textTheme.bodyMedium?.copyWith(
+                  color: secondaryTextColor,
+                ),
+              ),
+              Text(
+                student.activeDepartmentName ?? '',
                 style: textTheme.bodyMedium?.copyWith(
                   color: secondaryTextColor,
                 ),

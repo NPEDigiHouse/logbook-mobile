@@ -50,7 +50,7 @@ class _ListScientificAssignmentPageState
             if (state.scientificAssignmentStudents != null &&
                 state.scientificAssignmentStudents!.isNotEmpty) {
               context.replace(SupervisorScientificAssignmentDetailPage(
-                  unitName: '',
+                  unitName: widget.unitName,
                   id: state.scientificAssignmentStudents!.first.id!,
                   supervisorId: widget.supervisorId));
             }
