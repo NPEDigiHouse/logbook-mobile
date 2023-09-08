@@ -41,6 +41,8 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
     return BlocListener<DailyActivityCubit, DailyActivityState>(
       listener: (context, state) {
         if (state.isAddWeekSuccess) {
+          BlocProvider.of<DailyActivityCubit>(context)
+            ..getListWeek(unitId: widget.departmentId);
           Navigator.pop(context);
         }
       },
@@ -126,7 +128,7 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
                                   .millisecondsSinceEpoch ~/
                               1000,
                           unitId: widget.departmentId,
-                          weekNum: 1,
+                          weekNum: (widget.weekNum + 1),
                         ),
                       );
                   }

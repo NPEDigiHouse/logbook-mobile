@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/daily_activity_datasource.dart';
 import 'package:elogbook/src/data/models/daily_activity/daily_activity_post_model.dart';
+import 'package:elogbook/src/data/models/daily_activity/list_week_item.dart';
 import 'package:elogbook/src/data/models/daily_activity/post_week_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_activity_perweek_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
@@ -21,6 +22,31 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       await dataSource.addWeekByCoordinator(postWeek: postWeek);
       try {
         emit(state.copyWith(isAddWeekSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getListWeek({required String unitId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getWeekByCoordinator(unitId: unitId);
+      result.sort(
+        (a, b) => a.weekName!.compareTo(b.weekName!),
+      );
+      try {
+        emit(state.copyWith(weekItems: result));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }
@@ -158,7 +184,8 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
   }
 
   void reset() {
-    emit(state.copyWith(stateVerifyDailyActivity: RequestState.init));
+    emit(state.copyWith(
+        stateVerifyDailyActivity: RequestState.init, weekItems: null));
   }
 
   Future<void> verifiyDailyActivityById(

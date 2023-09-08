@@ -10,10 +10,12 @@ class DailyActivityState {
   final bool isDailyActivityUpdated;
   final bool isDailyActivityVerifiedById;
   final bool isAddWeekSuccess;
+  final List<ListWeekItem>? weekItems;
 
   DailyActivityState({
     this.studentDailyActivity,
     this.requestState,
+    this.weekItems,
     this.isAddWeekSuccess = false,
     this.studentActivityPerweek,
     this.activityPerweekBySupervisor,
@@ -31,6 +33,7 @@ class DailyActivityState {
     StudentActivityPerweekResponse? activityPerweekBySupervisor,
     bool isDailyActivityUpdated = false,
     bool isDailyActivityVerifiedById = false,
+    List<ListWeekItem>? weekItems,
     bool isAddWeekSuccess = false,
     RequestState stateVerifyDailyActivity = RequestState.init,
   }) {
@@ -43,6 +46,7 @@ class DailyActivityState {
       requestState: requestState ?? RequestState.init,
       isAddWeekSuccess: isAddWeekSuccess,
       isDailyActivityUpdated: isDailyActivityUpdated,
+      weekItems: weekItems ?? this.weekItems,
       studentActivityPerweek:
           studentActivityPerweek ?? this.studentActivityPerweek,
       isDailyActivityVerifiedById: isDailyActivityVerifiedById,

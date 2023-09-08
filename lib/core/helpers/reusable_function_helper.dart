@@ -33,6 +33,19 @@ class ReusableFunctionHelper {
     return time;
   }
 
+  static String epochToStringDate(
+      {required int startTime, required int endTime}) {
+    String time = '';
+    DateTime startDate = DateTime.fromMillisecondsSinceEpoch(startTime * 1000);
+    time += datetimeToString(startDate, format: 'dd MMM yyyy');
+
+    DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endTime * 1000);
+    time += ' - ';
+    time += datetimeToString(endDate, format: 'dd MMM yyyy');
+
+    return time;
+  }
+
   static String rateToText(int i) {
     final ratingMap = {
       1: '\"Bad\"',

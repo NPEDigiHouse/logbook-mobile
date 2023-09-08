@@ -1,17 +1,36 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/units/unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/coordinator/daily_activity/add_week_dialog.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class DailyActivityAddWeekPage extends StatelessWidget {
+class DailyActivityAddWeekPage extends StatefulWidget {
   final DepartmentModel unit;
   const DailyActivityAddWeekPage({super.key, required this.unit});
+
+  @override
+  State<DailyActivityAddWeekPage> createState() =>
+      _DailyActivityAddWeekPageState();
+}
+
+class _DailyActivityAddWeekPageState extends State<DailyActivityAddWeekPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => BlocProvider.of<DailyActivityCubit>(context)
+      ..getListWeek(unitId: widget.unit.id));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +39,10 @@ class DailyActivityAddWeekPage extends StatelessWidget {
         title: Text('Week of Deparment'),
       ).variant(),
       body: RefreshIndicator(
-        onRefresh: () => Future.wait([]),
+        onRefresh: () => Future.wait([
+          Future.microtask(() => BlocProvider.of<DailyActivityCubit>(context)
+            ..getListWeek(unitId: widget.unit.id)),
+        ]),
         child: SafeArea(
           child: CustomScrollView(
             slivers: [
@@ -32,7 +54,7 @@ class DailyActivityAddWeekPage extends StatelessWidget {
               SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 sliver: SliverToBoxAdapter(
-                  child: DepartmentHeader(unitName: unit.name),
+                  child: DepartmentHeader(unitName: widget.unit.name),
                 ),
               ),
               SliverToBoxAdapter(
@@ -40,67 +62,151 @@ class DailyActivityAddWeekPage extends StatelessWidget {
                   height: 16,
                 ),
               ),
-              SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverToBoxAdapter(
-                  child: AddWeeksCard(
-                    unitId: unit.id,
-                    index: 5,
-                  ),
-                ),
+              BlocBuilder<DailyActivityCubit, DailyActivityState>(
+                builder: (context, state) {
+                  if (state.weekItems != null)
+                    return SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverToBoxAdapter(
+                        child: AddWeeksCard(
+                          unitId: widget.unit.id,
+                          index: state.weekItems!.length,
+                        ),
+                      ),
+                    );
+                  return SliverToBoxAdapter(child: SizedBox.shrink());
+                },
               ),
               SliverToBoxAdapter(
                 child: SizedBox(
                   height: 16,
                 ),
               ),
-              SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverList.separated(
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(0, 0),
-                              spreadRadius: 0,
-                              blurRadius: 6,
-                              color: Color(0xFFD4D4D4).withOpacity(.25)),
-                          BoxShadow(
-                              offset: Offset(0, 4),
-                              spreadRadius: 0,
-                              blurRadius: 24,
-                              color: Color(0xFFD4D4D4).withOpacity(.25)),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Week #${index + 1}',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: secondaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text('Sen, 07 Jan 2023 - Min, 08 Jan 2023'),
-                        ],
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: 12,
-                    );
-                  },
-                ),
+              BlocBuilder<DailyActivityCubit, DailyActivityState>(
+                builder: (context, state) {
+                  if (state.weekItems != null) {
+                    if (state.weekItems!.isNotEmpty) {
+                      return SliverPadding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        sliver: SliverList.separated(
+                          itemCount: state.weekItems!.length,
+                          itemBuilder: (context, index) {
+                            final data = state.weekItems![index].days;
+                            for (var element in data!) {
+                              print(element.day);
+                            }
+                            data!.sort(
+                              (a, b) {
+                                // Urutkan berdasarkan urutan hari dalam seminggu
+                                final daysOfWeek = [
+                                  'MONDAY',
+                                  'TUESDAY',
+                                  'WEDNESDAY',
+                                  'THURSDAY',
+                                  'FRIDAY',
+                                  'SATURDAY',
+                                  'SUNDAY'
+                                ];
+                                return daysOfWeek
+                                    .indexOf(a.day!)
+                                    .compareTo(daysOfWeek.indexOf(b.day!));
+                              },
+                            );
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 0),
+                                      spreadRadius: 0,
+                                      blurRadius: 6,
+                                      color:
+                                          Color(0xFFD4D4D4).withOpacity(.25)),
+                                  BoxShadow(
+                                      offset: Offset(0, 4),
+                                      spreadRadius: 0,
+                                      blurRadius: 24,
+                                      color:
+                                          Color(0xFFD4D4D4).withOpacity(.25)),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Week #${state.weekItems![index].weekName}',
+                                    style: textTheme.titleMedium?.copyWith(
+                                      color: secondaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    ReusableFunctionHelper.epochToStringDate(
+                                        startTime: state
+                                                .weekItems![index].startDate ??
+                                            DateTime.now()
+                                                    .millisecondsSinceEpoch ~/
+                                                1000,
+                                        endTime: state
+                                                .weekItems![index].endDate ??
+                                            DateTime.now()
+                                                    .millisecondsSinceEpoch ~/
+                                                1000),
+                                  ),
+                                  SizedBox(
+                                    height: 6,
+                                  ),
+                                  SizedBox(
+                                    height: 6,
+                                  ),
+                                  ItemDivider(),
+                                  SizedBox(
+                                    height: 6,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      for (int i = 0; i < data.length; i++)
+                                        Text(
+                                          data[i].day!.substring(0, 3),
+                                          style: textTheme.bodySmall?.copyWith(
+                                            color: onFormDisableColor,
+                                          ),
+                                        )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 6,
+                                  ),
+                                  ItemDivider(),
+                                ],
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(
+                              height: 12,
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      return SliverToBoxAdapter(
+                        child: EmptyData(
+                            title: 'No Weeks Added',
+                            subtitle: 'Please add week before'),
+                      );
+                    }
+                  }
+
+                  return SliverToBoxAdapter(child: CustomLoading());
+                },
               )
             ],
           ),
@@ -113,6 +219,7 @@ class DailyActivityAddWeekPage extends StatelessWidget {
 class AddWeeksCard extends StatelessWidget {
   final String unitId;
   final int index;
+
   const AddWeeksCard({super.key, required this.unitId, required this.index});
 
   @override
@@ -120,15 +227,16 @@ class AddWeeksCard extends StatelessWidget {
     return InkWellContainer(
       radius: 12,
       onTap: () {
-        showDialog(
-          context: context,
-          barrierLabel: '',
-          barrierDismissible: false,
-          builder: (_) => AddWeekDialog(
-            departmentId: unitId,
-            weekNum: index,
-          ),
-        );
+        if (index != -1)
+          showDialog(
+            context: context,
+            barrierLabel: '',
+            barrierDismissible: false,
+            builder: (_) => AddWeekDialog(
+              departmentId: unitId,
+              weekNum: index,
+            ),
+          );
       },
       color: primaryColor,
       boxShadow: [
