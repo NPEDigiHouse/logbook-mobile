@@ -82,32 +82,7 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
                   collapsedIconColor: primaryTextColor,
                   tilePadding: const EdgeInsets.fromLTRB(4, 4, 10, 4),
                   childrenPadding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-                  leading: (widget.profilePic != null &&
-                          widget.stateProfilePic == RequestState.data)
-                      ? Column(
-                          children: [
-                            Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: MemoryImage(
-                                    widget.profilePic!,
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : CircleAvatar(
-                          radius: 50,
-                          foregroundImage: AssetImage(
-                            AssetPath.getImage('profile_default.png'),
-                          ),
-                        ),
+                  clipBehavior: Clip.hardEdge,
                   title: Text(
                     widget.credential.fullname ?? '',
                     style: textTheme.titleLarge?.copyWith(

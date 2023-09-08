@@ -52,21 +52,21 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
       'E': 0xFFD1495B,
     };
     String scoreLevel;
-    if (grades * 100 >= 85) {
+    if (grades >= 85) {
       scoreLevel = 'A';
-    } else if (grades * 100 >= 80) {
+    } else if (grades >= 80) {
       scoreLevel = 'A-';
-    } else if (grades * 100 > 75) {
+    } else if (grades > 75) {
       scoreLevel = 'B+';
-    } else if (grades * 100 > 70) {
+    } else if (grades > 70) {
       scoreLevel = 'B';
-    } else if (grades * 100 > 65) {
+    } else if (grades > 65) {
       scoreLevel = 'B-';
-    } else if (grades * 100 >= 60) {
+    } else if (grades >= 60) {
       scoreLevel = 'C+';
-    } else if (grades * 100 >= 50) {
+    } else if (grades >= 50) {
       scoreLevel = 'C';
-    } else if (grades * 100 >= 40) {
+    } else if (grades >= 40) {
       scoreLevel = 'D';
     } else {
       scoreLevel = 'E';
@@ -117,24 +117,31 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
                               for (int i = 0;
                                   i < state.finalScore!.assesments!.length;
                                   i++)
-                                if (state.finalScore!.assesments![i].type!
-                                        .contains('OSCE') &&
-                                    (widget.model.unitName!
-                                            .toUpperCase()
-                                            .contains('FORENSIK') ||
-                                        widget.model.unitName?.toUpperCase() ==
-                                            'IKM-IKK'))
-                                  FinalGradeScoreCard(
-                                    type: mapTitle[state
-                                            .finalScore!.assesments![i].type] ??
-                                        '-',
-                                    score: state
-                                            .finalScore!.assesments![i].score ??
-                                        0,
-                                    proportion: state.finalScore!.assesments![i]
-                                            .weight ??
-                                        0,
-                                  ),
+                                Builder(
+                                  builder: (context) {
+                                    if (state.finalScore!.assesments![i].type!
+                                            .contains('OSCE') &&
+                                        (widget.model.unitName!
+                                                .toUpperCase()
+                                                .contains('FORENSIK') ||
+                                            widget.model.unitName
+                                                    ?.toUpperCase() ==
+                                                'IKM-IKK')) {
+                                      return SizedBox.shrink();
+                                    }
+                                    return FinalGradeScoreCard(
+                                      type: mapTitle[state.finalScore!
+                                              .assesments![i].type] ??
+                                          '-',
+                                      score: state.finalScore!.assesments![i]
+                                              .score ??
+                                          0,
+                                      proportion: state.finalScore!
+                                              .assesments![i].weight ??
+                                          0,
+                                    );
+                                  },
+                                ),
                             ],
                             SizedBox(
                               height: 12,
