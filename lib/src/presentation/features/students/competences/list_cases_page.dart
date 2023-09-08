@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/competences/widgets/add_competence_dialog.dart';
+import 'package:elogbook/src/presentation/widgets/chip_verified.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -335,37 +336,30 @@ class TestGradeScoreCard extends StatelessWidget {
               SizedBox(
                 width: 12,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        caseName,
-                        style: textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      caseName,
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
-                      if (isVerified) ...[
-                        SizedBox(
-                          width: 4,
-                        ),
-                        Icon(
-                          Icons.verified,
-                          size: 18,
-                          color: primaryColor,
-                        ),
-                      ]
-                    ],
-                  ),
-                  Text(
-                    caseType,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: secondaryTextColor,
                     ),
-                  ),
-                ],
+                    Text(
+                      caseType,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: secondaryTextColor,
+                      ),
+                    ),
+                    if (isVerified) ...[
+                      SizedBox(
+                        height: 4,
+                      ),
+                      ChipVerified(),
+                    ]
+                  ],
+                ),
               ),
             ],
           ),
