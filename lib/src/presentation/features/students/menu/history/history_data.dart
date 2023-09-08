@@ -148,7 +148,7 @@ class HistoryHelper {
               dateTime: ReusableFunctionHelper.datetimeToString(date!,
                   isShowTime: true),
               date: DateTime(date.year, date.month, date.day, date.hour),
-              title: 'Special Report',
+              title: 'Problem Constultation',
               iconPath: AssetPath.getIcon('consultation_icon.svg'),
               supervisor: element.supervisorName,
               studentId: element.studentId!,

@@ -38,7 +38,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
 
   final List<String> titleList = [
     'Detail Profile',
-    'Special Report',
+    'Problem Consultation',
     // 'History',
     'Self Reflection',
     'Daily Activity'

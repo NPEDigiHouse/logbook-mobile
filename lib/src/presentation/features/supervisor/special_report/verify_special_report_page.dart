@@ -33,7 +33,7 @@ class _VerifySpecialReportPageState extends State<VerifySpecialReportPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Add Special Report"),
+          title: Text("Add Problem Consultation"),
         ).variant(),
         body: SafeArea(
           child: CustomScrollView(slivers: [

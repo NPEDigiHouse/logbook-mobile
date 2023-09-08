@@ -31,7 +31,7 @@ class _SupervisorListSpecialReportPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Special Reports'),
+        title: Text('Problem Consultations'),
       ).variant(),
       body: SafeArea(
         child: RefreshIndicator(

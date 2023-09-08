@@ -31,7 +31,7 @@ class _SpecialReportDetailPageState extends State<SpecialReportDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Special Reports"),
+        title: Text("Problem Consultations"),
       ),
       body: SafeArea(
         child: RefreshIndicator(

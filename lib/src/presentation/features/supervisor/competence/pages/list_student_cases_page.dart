@@ -1,4 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/competences/student_competence_model.dart';
@@ -137,8 +138,10 @@ class _ListStudentCasesPageState extends State<ListStudentCasesPage> {
       color: Colors.white,
       onTap: () => context.navigateTo(
         SupervisorListCasesPage(
-            unitName: student.activeDepartmentName ?? '',
-            studentId: student.studentId!),
+          unitName: student.activeDepartmentName ?? '',
+          studentId: student.studentId!,
+          studentName: student.studentName??'...',
+        ),
       ),
       child: Row(
         children: [
@@ -160,30 +163,49 @@ class _ListStudentCasesPageState extends State<ListStudentCasesPage> {
           SizedBox(
             width: 12,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                student.studentName ?? '',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: primaryTextColor,
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Case',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: onFormDisableColor,
+                    height: 1.2,
+                  ),
                 ),
-              ),
-              Text(
-                student.studentId ?? '',
-                style: textTheme.bodyMedium?.copyWith(
-                  color: secondaryTextColor,
+                Text(
+                  ReusableFunctionHelper.datetimeToString(student.latest!,
+                      format: 'EEE, dd MMM'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: primaryTextColor,
+                    height: 1.2,
+                  ),
                 ),
-              ),
-              Text(
-                student.activeDepartmentName ?? '',
-                style: textTheme.bodyMedium?.copyWith(
-                  color: secondaryTextColor,
+                const SizedBox(height: 4),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      student.studentName ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodyMedium?.copyWith(
+                        height: 1,
+                        color: secondaryColor,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          )
+              ],
+            ),
+          ),
         ],
       ),
     );

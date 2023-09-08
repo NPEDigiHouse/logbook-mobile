@@ -58,7 +58,7 @@ class _SpecialReportStudentPageState extends State<SpecialReportStudentPage> {
           slivers: [
             ...getHeadSection(
                 title: title,
-                subtitle: 'Special Reports',
+                subtitle: 'Problem Consultations',
                 student: widget.student),
             SliverToBoxAdapter(
               child: BlocBuilder<SpecialReportCubit, SpecialReportState>(

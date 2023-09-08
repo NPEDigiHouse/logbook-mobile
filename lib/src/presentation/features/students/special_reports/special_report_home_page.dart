@@ -40,7 +40,7 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Special Reports"),
+        title: Text("Problem Constultation"),
       ),
       body: SafeArea(
         child: RefreshIndicator(
@@ -85,9 +85,9 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                             if (state.specialReport!.listProblemConsultations!
                                 .isEmpty) {
                               return EmptyData(
-                                  title: 'No Special Report Data',
+                                  title: 'No Problem Consultation Data',
                                   subtitle:
-                                      'Please upload the special report first');
+                                      'Please upload the problem consultation first');
                             }
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

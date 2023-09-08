@@ -64,7 +64,7 @@ List<MenuModel> listStudentMenu(bool isSglCstShow) => [
               'Weekly assessments, science assessments, mini-cex, personal behavior'),
       MenuModel(
           iconPath: 'consultation_icon.svg',
-          labels: 'Special Reports',
+          labels: 'Problem Consultations',
           desc: 'Problem consultation with the supervisor'),
       MenuModel(
           iconPath: 'auto_stories_rounded.svg',
@@ -103,7 +103,7 @@ final List<MenuModel> listSupervisorMenu = [
   ),
   MenuModel(
     iconPath: 'consultation_icon.svg',
-    labels: 'Special Reports',
+    labels: 'Problem Consultations',
   ),
   MenuModel(
     iconPath: 'icon_final.svg',

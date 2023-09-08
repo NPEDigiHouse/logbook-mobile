@@ -5,9 +5,12 @@ import 'package:elogbook/src/data/models/competences/list_cases_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/competence/pages/widgets/verify_case_dialog.dart';
+import 'package:elogbook/src/presentation/widgets/chip_verified.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
+import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
-import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +18,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SupervisorListCasesPage extends StatefulWidget {
   final String studentId;
+  final String studentName;
   final String unitName;
-  const SupervisorListCasesPage(
-      {super.key, required this.unitName, required this.studentId});
+  const SupervisorListCasesPage({
+    super.key,
+    required this.studentName,
+    required this.unitName,
+    required this.studentId,
+  });
 
   @override
   State<SupervisorListCasesPage> createState() =>
@@ -135,19 +143,27 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
                               onlyPading: true,
                               horizontalPadding: 16,
                               children: [
-                                DepartmentHeader(unitName: widget.unitName),
+                                StudentDepartmentHeader(
+                                    unitName: widget.unitName,
+                                    studentId: widget.studentId,
+                                    studentName: widget.studentName),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                ItemDivider(),
                                 SizedBox(
                                   height: 12,
                                 ),
                                 buildSearchFilterSection(),
-                                SizedBox(
-                                  height: 24,
-                                ),
-                                if (s.isEmpty)
+                                if (s.isEmpty) ...[
+                                  SizedBox(
+                                    height: 24,
+                                  ),
                                   EmptyData(
                                     subtitle: 'Please add case data first!',
                                     title: 'Data Still Empty',
                                   ),
+                                ],
                                 if (s.isNotEmpty)
                                   ListView.separated(
                                     physics: NeverScrollableScrollPhysics(),
@@ -165,6 +181,9 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
                                         SizedBox(height: 12),
                                     itemCount: s.length,
                                   ),
+                                SizedBox(
+                                  height: 48,
+                                ),
                               ],
                             ),
                           );
@@ -348,26 +367,12 @@ class TestGradeScoreCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          caseName,
-                          style: textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (isVerified) ...[
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Icon(
-                            Icons.verified,
-                            size: 18,
-                            color: primaryColor,
-                          ),
-                        ]
-                      ],
+                    Text(
+                      caseName,
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
                     ),
                     Text(
                       caseType,
@@ -375,6 +380,12 @@ class TestGradeScoreCard extends StatelessWidget {
                         color: secondaryTextColor,
                       ),
                     ),
+                    if (isVerified) ...[
+                      SizedBox(
+                        height: 4,
+                      ),
+                      ChipVerified(),
+                    ],
                     if (!isVerified) ...[
                       SizedBox(
                         height: 4,
