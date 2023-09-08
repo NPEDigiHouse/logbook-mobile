@@ -61,6 +61,9 @@ class _SupervisorScientificAssignmentDetailPageState
       ).variant(),
       floatingActionButton: BlocBuilder<AssesmentCubit, AssesmentState>(
         builder: (context, state) {
+          print(state.scientificAssignmentDetail!.supervisingDPKId ==
+              widget.supervisorId);
+
           if (state.scientificAssignmentDetail != null &&
               state.scientificAssignmentDetail!.supervisingDPKId ==
                   widget.supervisorId)

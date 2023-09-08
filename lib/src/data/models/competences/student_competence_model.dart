@@ -10,11 +10,14 @@ class StudentCompetenceModel {
   String? studentId;
   @JsonKey(name: "studentName")
   String? studentName;
+  @JsonKey(name: "unitName")
+  String? activeDepartmentName;
 
   StudentCompetenceModel({
     this.latest,
     this.studentId,
     this.studentName,
+    this.activeDepartmentName,
   });
 
   factory StudentCompetenceModel.fromJson(Map<String, dynamic> json) =>

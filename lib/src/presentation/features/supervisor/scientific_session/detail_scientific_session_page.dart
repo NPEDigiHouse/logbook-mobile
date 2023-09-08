@@ -13,7 +13,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class DetailScientificSessionPage extends StatefulWidget {
   final String id;
-  const DetailScientificSessionPage({super.key, required this.id});
+  final String? unitName;
+  const DetailScientificSessionPage(
+      {super.key, required this.id, this.unitName});
 
   @override
   State<DetailScientificSessionPage> createState() =>
@@ -153,6 +155,21 @@ class _DetailScientificSessionPageState
                             height: 8,
                           ),
                           Text(
+                            'Unit',
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: secondaryTextColor,
+                            ),
+                          ),
+                          Text(
+                            widget.unitName ?? '-',
+                            style: textTheme.titleMedium?.copyWith(
+                              color: primaryTextColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
                             'Supervisor',
                             style: textTheme.bodyMedium?.copyWith(
                               color: secondaryTextColor,
@@ -165,7 +182,7 @@ class _DetailScientificSessionPageState
                             ),
                           ),
                           SizedBox(
-                            height: 16,
+                            height: 8,
                           ),
                           Text(
                             'Role',

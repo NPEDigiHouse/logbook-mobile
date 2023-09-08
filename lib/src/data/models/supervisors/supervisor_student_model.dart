@@ -16,6 +16,10 @@ class SupervisorStudent {
   String? studentId;
   @JsonKey(name: "studentName")
   String? studentName;
+  @JsonKey(name: "activeUnitId")
+  String? activeDepartmentId;
+  @JsonKey(name: "activeUnitName")
+  String? activeDepartmentName;
 
   SupervisorStudent({
     this.id,
@@ -23,6 +27,8 @@ class SupervisorStudent {
     this.studentId,
     this.userId,
     this.studentName,
+    this.activeDepartmentId,
+    this.activeDepartmentName,
   });
 
   factory SupervisorStudent.fromJson(Map<String, dynamic> json) =>

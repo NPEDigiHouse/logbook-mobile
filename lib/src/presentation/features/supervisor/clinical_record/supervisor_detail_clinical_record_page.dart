@@ -17,7 +17,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 class SupervisorDetailClinicalRecordPage extends StatefulWidget {
   final String id;
-  const SupervisorDetailClinicalRecordPage({super.key, required this.id});
+  final String? unitName;
+  const SupervisorDetailClinicalRecordPage(
+      {super.key, required this.id, this.unitName});
 
   @override
   State<SupervisorDetailClinicalRecordPage> createState() =>
@@ -177,9 +179,24 @@ class _SupervisorDetailClinicalRecordPageState
                             ),
                           ),
                           SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Unit',
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: secondaryTextColor,
+                            ),
+                          ),
+                          Text(
+                            widget.unitName ?? '',
+                            style: textTheme.titleMedium?.copyWith(
+                              color: primaryTextColor,
+                            ),
+                          ),
+                          SizedBox(
                             height: 16,
                           ),
-                          ItemDivider(),
+                          SectionDivider(),
                           FormSectionHeader(
                               label: 'Patient',
                               pathPrefix: 'icon_patient.svg',

@@ -11,12 +11,15 @@ class ClinicalRecordListModel {
   final String? attachment;
   final String? id;
   final String? status;
+  @JsonKey(name: "unitName")
+  String? activeDepartmentName;
 
   ClinicalRecordListModel(
       {this.attachment,
       this.id,
       this.patientName,
       this.studentId,
+      this.activeDepartmentName,
       this.studentName,
       this.time,
       this.status});

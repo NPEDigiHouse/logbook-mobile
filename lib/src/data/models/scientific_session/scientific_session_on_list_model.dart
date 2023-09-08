@@ -10,6 +10,8 @@ class ScientificSessionOnListModel {
   final String? attachment;
   final String? id;
   final String? status;
+  @JsonKey(name: "unitName")
+  String? activeDepartmentName;
 
   ScientificSessionOnListModel(
       {this.attachment,
@@ -17,6 +19,7 @@ class ScientificSessionOnListModel {
       this.status,
       this.studentId,
       this.studentName,
+      this.activeDepartmentName,
       this.time});
 
   factory ScientificSessionOnListModel.fromJson(Map<String, dynamic> json) =>

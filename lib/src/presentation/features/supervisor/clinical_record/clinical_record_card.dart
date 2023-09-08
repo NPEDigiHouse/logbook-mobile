@@ -21,6 +21,7 @@ class ClinicalRecordCard extends StatelessWidget {
         onTap: () => context.navigateTo(
           SupervisorDetailClinicalRecordPage(
             id: clinicalRecord.id!,
+            unitName: clinicalRecord.activeDepartmentName,
           ),
         ),
         child: Padding(
@@ -77,6 +78,26 @@ class ClinicalRecordCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 12),
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: textTheme.bodySmall?.copyWith(
+                          color: secondaryTextColor,
+                        ),
+                        children: <TextSpan>[
+                          const TextSpan(
+                            text: 'Unit:\t',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          TextSpan(
+                              text: clinicalRecord.activeDepartmentName ?? '-'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
                     RichText(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

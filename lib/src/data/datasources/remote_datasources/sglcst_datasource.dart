@@ -272,6 +272,10 @@ class SglCstDataSourceImpl implements SglCstDataSource {
               "content-type": 'application/json',
               "authorization": 'Bearer ${credential?.accessToken}'
             },
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            },
           ),
           data: {'verified': status});
       print(response);

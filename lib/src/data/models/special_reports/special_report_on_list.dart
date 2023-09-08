@@ -10,11 +10,14 @@ class SpecialReportOnList {
   String? studentId;
   @JsonKey(name: "latest")
   DateTime? latest;
+  @JsonKey(name: "unitName")
+  String? activeDepartmentName;
 
   SpecialReportOnList({
     this.studentName,
     this.studentId,
     this.latest,
+    this.activeDepartmentName,
   });
 
   factory SpecialReportOnList.fromJson(Map<String, dynamic> json) =>

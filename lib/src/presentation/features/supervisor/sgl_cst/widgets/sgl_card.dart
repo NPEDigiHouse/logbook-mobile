@@ -12,6 +12,7 @@ class SglOnListCard extends StatelessWidget {
   final SglCstOnList sglCst;
   final String userId;
   final bool isCeu;
+
   const SglOnListCard(
       {super.key,
       required this.sglCst,
@@ -28,6 +29,7 @@ class SglOnListCard extends StatelessWidget {
             studentId: sglCst.studentId!,
             userId: userId,
             isCeu: isCeu,
+            unitName: sglCst.activeDepartmentName,
           ));
         },
         child: Padding(
@@ -85,6 +87,24 @@ class SglOnListCard extends StatelessWidget {
                               text: ReusableFunctionHelper.datetimeToString(
                             sglCst.latest!,
                           )),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: textTheme.bodySmall?.copyWith(
+                          color: onFormDisableColor,
+                        ),
+                        children: <TextSpan>[
+                          const TextSpan(
+                            text: 'Unit:\t',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          TextSpan(text: sglCst.activeDepartmentName ?? ''),
                         ],
                       ),
                     ),

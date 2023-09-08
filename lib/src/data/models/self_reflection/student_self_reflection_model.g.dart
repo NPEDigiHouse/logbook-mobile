@@ -14,6 +14,7 @@ StudentSelfReflectionModel _$StudentSelfReflectionModelFromJson(
       listSelfReflections: (json['listSelfReflections'] as List<dynamic>?)
           ?.map(SelfReflectionData.fromJson)
           .toList(),
+      activeDepartmentName: json['unitName'] as String?,
     );
 
 Map<String, dynamic> _$StudentSelfReflectionModelToJson(
@@ -21,6 +22,7 @@ Map<String, dynamic> _$StudentSelfReflectionModelToJson(
     <String, dynamic>{
       'studentName': instance.studentName,
       'studentId': instance.studentId,
+      'unitName': instance.activeDepartmentName,
       'listSelfReflections': instance.listSelfReflections,
     };
 

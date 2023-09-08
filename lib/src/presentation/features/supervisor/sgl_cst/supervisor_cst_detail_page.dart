@@ -6,6 +6,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,6 +14,7 @@ import 'package:timeline_tile/timeline_tile.dart';
 
 class SupervisorCstDetailPage extends StatefulWidget {
   final String studentId;
+  final String? unitName;
   final String userId;
 
   final bool isCeu;
@@ -20,6 +22,7 @@ class SupervisorCstDetailPage extends StatefulWidget {
       {super.key,
       required this.studentId,
       required this.isCeu,
+      this.unitName,
       required this.userId});
 
   @override
@@ -65,7 +68,14 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
                 if (state.cstDetail != null)
                   return SliverToBoxAdapter(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: DepartmentHeader(
+                            unitName: widget.unitName??'...',
+                          ),
+                        ),
                         SizedBox(
                           height: 16,
                         ),

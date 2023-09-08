@@ -12,6 +12,8 @@ SupervisorStudent _$SupervisorStudentFromJson(Map<String, dynamic> json) =>
       studentId: json['studentId'] as String?,
       userId: json['userId'] as String?,
       studentName: json['studentName'] as String?,
+      activeDepartmentId: json['activeUnitId'] as String?,
+      activeDepartmentName: json['activeUnitName'] as String?,
     );
 
 Map<String, dynamic> _$SupervisorStudentToJson(SupervisorStudent instance) =>
@@ -20,4 +22,6 @@ Map<String, dynamic> _$SupervisorStudentToJson(SupervisorStudent instance) =>
       'userId': instance.userId,
       'studentId': instance.studentId,
       'studentName': instance.studentName,
+      'activeUnitId': instance.activeDepartmentId,
+      'activeUnitName': instance.activeDepartmentName,
     };

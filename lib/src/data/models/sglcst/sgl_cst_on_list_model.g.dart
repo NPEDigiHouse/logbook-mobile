@@ -12,6 +12,7 @@ SglCstOnList _$SglCstOnListFromJson(Map<String, dynamic> json) => SglCstOnList(
           : DateTime.parse(json['latest'] as String),
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
+      activeDepartmentName: json['unitName'] as String?,
     );
 
 Map<String, dynamic> _$SglCstOnListToJson(SglCstOnList instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$SglCstOnListToJson(SglCstOnList instance) =>
       'latest': instance.latest?.toIso8601String(),
       'studentId': instance.studentId,
       'studentName': instance.studentName,
+      'unitName': instance.activeDepartmentName,
     };

@@ -13,6 +13,7 @@ SpecialReportOnList _$SpecialReportOnListFromJson(Map<String, dynamic> json) =>
       latest: json['latest'] == null
           ? null
           : DateTime.parse(json['latest'] as String),
+      activeDepartmentName: json['unitName'] as String?,
     );
 
 Map<String, dynamic> _$SpecialReportOnListToJson(
@@ -21,4 +22,5 @@ Map<String, dynamic> _$SpecialReportOnListToJson(
       'studentName': instance.studentName,
       'studentId': instance.studentId,
       'latest': instance.latest?.toIso8601String(),
+      'unitName': instance.activeDepartmentName,
     };

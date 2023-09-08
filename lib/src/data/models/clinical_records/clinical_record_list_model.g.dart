@@ -13,6 +13,7 @@ ClinicalRecordListModel _$ClinicalRecordListModelFromJson(
       id: json['id'] as String?,
       patientName: json['patientName'] as String?,
       studentId: json['studentId'] as String?,
+      activeDepartmentName: json['unitName'] as String?,
       studentName: json['studentName'] as String?,
       time:
           json['time'] == null ? null : DateTime.parse(json['time'] as String),
@@ -29,4 +30,5 @@ Map<String, dynamic> _$ClinicalRecordListModelToJson(
       'attachment': instance.attachment,
       'id': instance.id,
       'status': instance.status,
+      'unitName': instance.activeDepartmentName,
     };

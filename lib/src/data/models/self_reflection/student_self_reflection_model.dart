@@ -5,10 +5,15 @@ part 'student_self_reflection_model.g.dart';
 class StudentSelfReflectionModel {
   final String? studentName;
   final String? studentId;
+  @JsonKey(name: "unitName")
+  String? activeDepartmentName;
   final List<SelfReflectionData>? listSelfReflections;
 
   StudentSelfReflectionModel(
-      {this.studentName, this.studentId, this.listSelfReflections});
+      {this.studentName,
+      this.studentId,
+      this.listSelfReflections,
+      this.activeDepartmentName});
 
   factory StudentSelfReflectionModel.fromJson(json) =>
       _$StudentSelfReflectionModelFromJson(json);

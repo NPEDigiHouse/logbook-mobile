@@ -14,6 +14,7 @@ ScientificSessionOnListModel _$ScientificSessionOnListModelFromJson(
       status: json['status'] as String?,
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
+      activeDepartmentName: json['unitName'] as String?,
       time:
           json['time'] == null ? null : DateTime.parse(json['time'] as String),
     );
@@ -27,4 +28,5 @@ Map<String, dynamic> _$ScientificSessionOnListModelToJson(
       'attachment': instance.attachment,
       'id': instance.id,
       'status': instance.status,
+      'unitName': instance.activeDepartmentName,
     };

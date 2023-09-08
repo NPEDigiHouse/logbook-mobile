@@ -6,6 +6,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,10 +17,12 @@ class SupervisorSglDetailPage extends StatefulWidget {
   final String studentId;
   final String userId;
   final bool isCeu;
+  final String? unitName;
   const SupervisorSglDetailPage(
       {super.key,
       required this.studentId,
       required this.isCeu,
+      this.unitName,
       required this.userId});
 
   @override
@@ -65,8 +68,15 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                 if (state.sglDetail != null)
                   return SliverToBoxAdapter(
                     child: SpacingColumn(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       horizontalPadding: 16,
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: DepartmentHeader(
+                            unitName: widget.unitName ?? '...',
+                          ),
+                        ),
                         ListView.separated(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
@@ -359,7 +369,6 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                           ),
                                       ],
                                     ),
-                                    
                                     SizedBox(
                                       height: 12,
                                     ),
