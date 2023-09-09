@@ -1,6 +1,7 @@
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,7 +10,6 @@ import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/features/students/assesment/pages/widgets/top_stat_card.dart';
 import 'package:elogbook/src/presentation/widgets/cards/weekly_grade_card.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:semicircle_indicator/semicircle_indicator.dart';
@@ -99,43 +99,48 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
           child: BlocBuilder<AssesmentCubit, AssesmentState>(
             builder: (context, state) {
               if (state.weeklyAssesment != null) {
-                double avg = 0;
-                state.weeklyAssesment!.assesments!
-                    .forEach((e) => avg += e.score!);
-                avg /= state.weeklyAssesment!.assesments!.length;
-                return CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SpacingColumn(
-                        horizontalPadding: 16,
-                        spacing: 12,
-                        children: [
-                          SizedBox(
-                            height: 16,
-                          ),
-                          // _buildAttendanceOverview(context),
-                          if (state.weeklyAssesment!.assesments!.isNotEmpty)
-                            TopStatCard(
-                              title: 'Total Grades',
-                              totalGrade: getTotalGrades(avg / 100),
+                if (state.weeklyAssesment!.assesments!.isNotEmpty) {
+                  double avg = 0;
+                  state.weeklyAssesment!.assesments!
+                      .forEach((e) => avg += e.score!);
+                  avg /= state.weeklyAssesment!.assesments!.length;
+                  return CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: SpacingColumn(
+                          horizontalPadding: 16,
+                          spacing: 12,
+                          children: [
+                            SizedBox(
+                              height: 16,
                             ),
-                          ...state.weeklyAssesment!.assesments!.map((element) {
-                            return WeeklyGradeCard(
-                              week: element.weekNum ?? 0,
-                              // date: 'Senin, 27 Mar 2023',
-                              // place: 'RS Unhas',
-                              status: element.verificationStatus!,
-                              score: element.score!.toDouble(),
-                            );
-                          }).toList(),
-                          SizedBox(
-                            height: 16,
-                          ),
-                        ],
+                            // _buildAttendanceOverview(context),
+                            if (state.weeklyAssesment!.assesments!.isNotEmpty)
+                              TopStatCard(
+                                title: 'Total Grades',
+                                totalGrade: getTotalGrades(avg / 100),
+                              ),
+                            ...state.weeklyAssesment!.assesments!
+                                .map((element) {
+                              return WeeklyGradeCard(
+                                week: element.weekNum ?? 0,
+                                // date: 'Senin, 27 Mar 2023',
+                                // place: 'RS Unhas',
+                                status: element.verificationStatus!,
+                                score: element.score!.toDouble(),
+                              );
+                            }).toList(),
+                            SizedBox(
+                              height: 16,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                );
+                    ],
+                  );
+                }
+                return EmptyData(
+                    title: 'No Data', subtitle: 'no daily activity verified');
               }
               return CustomLoading();
             },

@@ -575,4 +575,12 @@ class AssesmentCubit extends Cubit<AssesmentState> {
       );
     }
   }
+
+  Future<void> reset() async {
+    emit(
+      state.copyWith(
+        weeklyAssesment: null,
+      ),
+    );
+  }
 }

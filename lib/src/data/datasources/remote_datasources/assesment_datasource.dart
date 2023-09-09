@@ -446,6 +446,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
           },
         ),
       );
+      print('/weekly-assesments/students/$studentId/units/$unitId');
       print(response);
       if (response.statusCode != 200) {
         throw Exception();

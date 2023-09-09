@@ -1,5 +1,7 @@
+import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/custom_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,28 +21,30 @@ class WeeklyGradePage extends StatefulWidget {
 }
 
 class _WeeklyGradePageState extends State<WeeklyGradePage> {
-  late final List<String> _menuList;
-  late final ValueNotifier<String> _query, _selectedMenu;
+  ValueNotifier<List<StudentDepartmentModel>> listStudent = ValueNotifier([]);
+  bool isMounted = false;
+  // late final List<String> _menuList;
+  // late final ValueNotifier<String> _query, _selectedMenu;
 
   @override
   void initState() {
     BlocProvider.of<SupervisorsCubit>(context)..getAllStudentDepartment();
-    _menuList = [
-      'All',
-      'Inputed',
-      'Uninputed',
-    ];
+    // _menuList = [
+    //   'All',
+    //   'Inputed',
+    //   'Uninputed',
+    // ];
 
-    _query = ValueNotifier('');
-    _selectedMenu = ValueNotifier(_menuList[0]);
+    // _query = ValueNotifier('');
+    // _selectedMenu = ValueNotifier(_menuList[0]);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _query.dispose();
-    _selectedMenu.dispose();
+    // _query.dispose();
+    // _selectedMenu.dispose();
 
     super.dispose();
   }
@@ -59,7 +63,7 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
               SliverAppBar(
                 floating: true,
                 automaticallyImplyLeading: false,
-                toolbarHeight: kToolbarHeight + 190,
+                toolbarHeight: kToolbarHeight + 120,
                 backgroundColor: Colors.transparent,
                 surfaceTintColor: Colors.transparent,
                 systemOverlayStyle: const SystemUiOverlayStyle(
@@ -69,7 +73,7 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     buildTitleSection(),
-                    buildFilterSection(),
+                    // buildFilterSection(),
                   ],
                 ),
                 bottom: const PreferredSize(
@@ -83,54 +87,96 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
               ),
             ];
           },
-          body: BlocBuilder<SupervisorsCubit, SupervisorsState>(
-            builder: (context, state) {
-              if (state is Loading) {
-                return CustomLoading();
-              }
-              if (state is FetchStudentDepartmentSuccess)
-                return CustomScrollView(
-                  slivers: <Widget>[
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      sliver: SliverList.separated(
-                        itemCount: state.students.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: CircleAvatar(
-                              radius: 32,
-                              foregroundImage: AssetImage(
-                                AssetPath.getImage('profile_default.png'),
-                              ),
+          body: ValueListenableBuilder(
+              valueListenable: listStudent,
+              builder: (context, s, _) {
+                return BlocConsumer<SupervisorsCubit, SupervisorsState>(
+                  listener: (context, state) {
+                    if (state is FetchStudentDepartmentSuccess) {
+                      if (!isMounted) {
+                        Future.microtask(() {
+                          listStudent.value = [...state.students];
+                        });
+                        isMounted = true;
+                      }
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is Loading) {
+                      return CustomLoading();
+                    }
+                    if (state is FetchStudentDepartmentSuccess)
+                      return CustomScrollView(
+                        slivers: <Widget>[
+                          SliverPadding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            sliver: SliverList.separated(
+                              itemCount: s.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  leading: FutureBuilder(
+                                    future: BlocProvider.of<SupervisorsCubit>(
+                                            context)
+                                        .getImageProfile(
+                                            id: s[index].userId ?? ''),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return CustomShimmer(
+                                            child: Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white,
+                                          ),
+                                          width: 50,
+                                          height: 50,
+                                        ));
+                                      } else if (snapshot.hasError) {
+                                        return CircleAvatar(
+                                          radius: 25,
+                                          foregroundImage: AssetImage(
+                                            AssetPath.getImage(
+                                                'profile_default.png'),
+                                          ),
+                                        );
+                                      } else {
+                                        s[index].profileImage = snapshot.data;
+                                        return CircleAvatar(
+                                          radius: 25,
+                                          foregroundImage:
+                                              MemoryImage(snapshot.data!),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  title: Text(
+                                    s[index].studentName ?? '',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    s[index].studentId ?? '',
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: borderColor,
+                                    ),
+                                  ),
+                                  onTap: () => context.navigateTo(
+                                    WeeklyGradeDetailPage(student: s[index]),
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return const SizedBox(height: 8);
+                              },
                             ),
-                            title: Text(
-                              state.students[index].studentName ?? '',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            subtitle: Text(
-                              state.students[index].studentId ?? '',
-                              style: textTheme.bodySmall?.copyWith(
-                                color: borderColor,
-                              ),
-                            ),
-                            onTap: () => context.navigateTo(
-                              WeeklyGradeDetailPage(
-                                  student: state.students[index]),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(height: 8);
-                        },
-                      ),
-                    ),
-                  ],
+                          ),
+                        ],
+                      );
+                    return SizedBox.shrink();
+                  },
                 );
-              return SizedBox.shrink();
-            },
-          ),
+              }),
         ),
       ),
     );
@@ -146,88 +192,102 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
             AssetPath.getVector('circle_bg4.svg'),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SafeArea(
-                child: GestureDetector(
-                  onTap: () => context.back(),
-                  child: const Icon(
-                    Icons.arrow_back_rounded,
-                    color: primaryColor,
-                  ),
+        BlocBuilder<SupervisorsCubit, SupervisorsState>(
+          builder: (context, state) {
+            if (state is FetchStudentDepartmentSuccess)
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SafeArea(
+                      child: GestureDetector(
+                        onTap: () => context.back(),
+                        child: const Icon(
+                          Icons.arrow_back_rounded,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Text(
+                      'Input Score',
+                      style: textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: primaryColor,
+                      ),
+                    ),
+                    Text(
+                      'Weekly Grades',
+                      style: textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    SearchField(
+                      onChanged: (value) {
+                        final data = state.students
+                            .where((element) => element.studentName!
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
+                        if (value.isEmpty) {
+                          listStudent.value.clear();
+                          listStudent.value = [...state.students];
+                        } else {
+                          listStudent.value = [...data];
+                        }
+                      },
+                      text: '',
+                      hint: 'Search for student',
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                'Input Score',
-                style: textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: primaryColor,
-                ),
-              ),
-              Text(
-                'Weekly Grades',
-                style: textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 14),
-              ValueListenableBuilder(
-                valueListenable: _query,
-                builder: (context, query, child) {
-                  return SearchField(
-                    text: query,
-                    onChanged: (value) => _query.value = value,
-                  );
-                },
-              ),
-            ],
-          ),
+              );
+            return SizedBox.shrink();
+          },
         ),
       ],
     );
   }
 
-  SizedBox buildFilterSection() {
-    return SizedBox(
-      height: 64,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        scrollDirection: Axis.horizontal,
-        itemCount: _menuList.length,
-        itemBuilder: (context, index) {
-          return ValueListenableBuilder(
-            valueListenable: _selectedMenu,
-            builder: (context, value, child) {
-              final selected = value == _menuList[index];
+  // SizedBox buildFilterSection() {
+  //   return SizedBox(
+  //     height: 64,
+  //     child: ListView.separated(
+  //       padding: const EdgeInsets.symmetric(horizontal: 20),
+  //       scrollDirection: Axis.horizontal,
+  //       itemCount: _menuList.length,
+  //       itemBuilder: (context, index) {
+  //         return ValueListenableBuilder(
+  //           valueListenable: _selectedMenu,
+  //           builder: (context, value, child) {
+  //             final selected = value == _menuList[index];
 
-              return RawChip(
-                pressElevation: 0,
-                clipBehavior: Clip.antiAlias,
-                label: Text(_menuList[index]),
-                labelPadding: const EdgeInsets.symmetric(horizontal: 6),
-                labelStyle: textTheme.bodyMedium?.copyWith(
-                  color: selected ? primaryColor : primaryTextColor,
-                ),
-                side: BorderSide(
-                  color: selected ? Colors.transparent : borderColor,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                selected: selected,
-                selectedColor: primaryColor.withOpacity(.2),
-                checkmarkColor: primaryColor,
-                onSelected: (_) => _selectedMenu.value = _menuList[index],
-              );
-            },
-          );
-        },
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-      ),
-    );
-  }
+  //             return RawChip(
+  //               pressElevation: 0,
+  //               clipBehavior: Clip.antiAlias,
+  //               label: Text(_menuList[index]),
+  //               labelPadding: const EdgeInsets.symmetric(horizontal: 6),
+  //               labelStyle: textTheme.bodyMedium?.copyWith(
+  //                 color: selected ? primaryColor : primaryTextColor,
+  //               ),
+  //               side: BorderSide(
+  //                 color: selected ? Colors.transparent : borderColor,
+  //               ),
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(10),
+  //               ),
+  //               selected: selected,
+  //               selectedColor: primaryColor.withOpacity(.2),
+  //               checkmarkColor: primaryColor,
+  //               onSelected: (_) => _selectedMenu.value = _menuList[index],
+  //             );
+  //           },
+  //         );
+  //       },
+  //       separatorBuilder: (_, __) => const SizedBox(width: 8),
+  //     ),
+  //   );
+  // }
 }

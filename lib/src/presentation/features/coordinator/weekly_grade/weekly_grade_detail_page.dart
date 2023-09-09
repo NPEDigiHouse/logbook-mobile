@@ -26,6 +26,7 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
   @override
   void initState() {
     BlocProvider.of<AssesmentCubit>(context)
+    ..reset()
       ..getWeeklyAssesment(
           studentId: widget.student.studentId!,
           unitId: widget.student.activeDepartmentId!);
@@ -209,7 +210,6 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                         padding: EdgeInsets.zero,
                         itemBuilder: (_, i) {
                           final grades = state.weeklyAssesment!.assesments![i];
-
                           return WeeklyGradeCard(
                             week: grades.weekNum ?? 0,
                             score: grades.score!.toDouble(),
