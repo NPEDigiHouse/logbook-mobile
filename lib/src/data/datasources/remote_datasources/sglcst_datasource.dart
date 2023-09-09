@@ -88,7 +88,12 @@ class SglCstDataSourceImpl implements SglCstDataSource {
               return status! < 500;
             },
           ),
-          data: postModel.toJson());
+          data: {
+            'supervisorId': postModel.supervisorId,
+            'startTime': postModel.startTime,
+            'endTime': postModel.endTime,
+            'topicId': postModel.topicId,
+          });
       print(response);
       if (response.statusCode != 201) {
         throw Exception();
@@ -168,7 +173,6 @@ class SglCstDataSourceImpl implements SglCstDataSource {
           },
         ),
       );
-      print(response);
       if (response.statusCode != 200) {
         throw Exception();
       }

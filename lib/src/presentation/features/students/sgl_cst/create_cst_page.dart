@@ -217,6 +217,9 @@ class _CreateCstPageState extends State<CreateCstPage> {
                                             controller.text = v.name!;
                                           }
                                         }),
+                                    SizedBox(
+                                      height: 12,
+                                    )
                                   ],
                                 ],
                               );

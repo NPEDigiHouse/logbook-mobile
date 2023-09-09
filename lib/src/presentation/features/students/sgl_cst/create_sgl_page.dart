@@ -216,6 +216,9 @@ class _CreateSglPageState extends State<CreateSglPage> {
                                             controller.text = v.name!;
                                           }
                                         }),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
                                   ],
                                 ],
                               );
