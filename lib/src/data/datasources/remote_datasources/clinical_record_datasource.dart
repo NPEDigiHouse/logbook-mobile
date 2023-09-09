@@ -64,7 +64,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           },
           followRedirects: false,
           validateStatus: (status) {
-            return status! < 500;
+            return status! < 1000;
           },
         ),
         data: {
@@ -84,7 +84,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           'managements': clinicalRecordPostModel.managements,
         },
       );
-      print(response);
       print(response.data);
       if (response.statusCode != 201) {
         throw Exception();

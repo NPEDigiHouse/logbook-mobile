@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_roles.dart';
@@ -46,7 +47,13 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
   List<SessionTypesModel> _sessionTypes = [];
 
   Future<void> uploadFile(BuildContext context) async {
-    final status = await Permission.storage.request();
+    final plugin = DeviceInfoPlugin();
+    final android = await plugin.androidInfo;
+
+    final status = android.version.sdkInt < 33
+        ? await Permission.storage.request()
+        : PermissionStatus.granted;
+
     if (status.isGranted) {
       // Izin diberikan, lanjutkan dengan tindakan yang diperlukan
       FilePickerResult? result = await FilePicker.platform.pickFiles(

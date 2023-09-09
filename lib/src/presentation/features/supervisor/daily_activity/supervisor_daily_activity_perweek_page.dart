@@ -289,6 +289,7 @@ class DailyActivityStatusCard extends StatelessWidget {
       'ATTEND': 'emoji_hadir.svg',
       'SICK': 'sakit_emoji.svg',
       'NOT_ATTEND': 'emoji_alfa.svg',
+      'HOLIDAY': 'icon_holiday.svg',
     };
     return InkWellContainer(
       padding: EdgeInsets.all(16),

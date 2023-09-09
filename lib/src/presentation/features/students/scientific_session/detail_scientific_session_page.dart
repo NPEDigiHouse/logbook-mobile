@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
@@ -27,10 +28,13 @@ class DetailScientificSessionPage extends StatefulWidget {
 class _DetailScientificSessionPageState
     extends State<DetailScientificSessionPage> {
   Future<bool> checkAndRequestPermission() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      status = await Permission.storage.request();
-    }
+    final plugin = DeviceInfoPlugin();
+    final android = await plugin.androidInfo;
+
+    final status = android.version.sdkInt < 33
+        ? await Permission.storage.request()
+        : PermissionStatus.granted;
+
     return status.isGranted;
   }
 

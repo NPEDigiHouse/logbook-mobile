@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
@@ -27,7 +28,12 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
   final TextEditingController userIdController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   Future<void> uploadFile(BuildContext context) async {
-    final status = await Permission.storage.request();
+    final plugin = DeviceInfoPlugin();
+    final android = await plugin.androidInfo;
+
+    final status = android.version.sdkInt < 33
+        ? await Permission.storage.request()
+        : PermissionStatus.granted;
     if (status.isGranted) {
       // Izin diberikan, lanjutkan dengan tindakan yang diperlukan
       FilePickerResult? result =
@@ -43,6 +49,7 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
         }
       }
     } else if (status.isDenied) {
+      await Permission.storage.request();
       // Pengguna menolak izin, Anda dapat memberi tahu pengguna untuk mengaktifkannya di pengaturan
       print('Storage permission is denied');
     } else if (status.isPermanentlyDenied) {

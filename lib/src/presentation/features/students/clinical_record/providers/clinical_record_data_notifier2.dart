@@ -111,25 +111,30 @@ class ClinicalRecordDataNotifier2 extends ChangeNotifier {
 
   List<ExaminationsPostModel> getExaminationPost() {
     final List<ExaminationsPostModel> examinationPost = [];
-    examinationPost.addAll(examinations
-        .map((e) => ExaminationsPostModel(examinationTypeId: [e.typeId!])));
+    if (examinations.isNotEmpty) {
+      examinationPost.addAll(examinations
+          .map((e) => ExaminationsPostModel(examinationTypeId: [e.typeId!])));
+    }
     return examinationPost;
   }
 
   List<DiagnosisPostModel> getDiagnosticsPost() {
     final List<DiagnosisPostModel> posts = [];
-    posts.addAll(diagnostics
-        .map((e) => DiagnosisPostModel(diagnosesTypeId: [e.typeId!])));
-    print(diagnostics.length);
+    if (diagnostics.isNotEmpty) {
+      posts.addAll(diagnostics
+          .map((e) => DiagnosisPostModel(diagnosesTypeId: [e.typeId!])));
+    }
     return posts;
   }
 
   List<ManagementPostModel> getManagementsPost() {
     final List<ManagementPostModel> posts = [];
-    posts.addAll(managements.map((e) => ManagementPostModel(management: [
-          ManagementTypeRole(
-              managementRoleId: e.roleId, managementTypeId: e.typeId)
-        ])));
+    if (managements.isNotEmpty) {
+      posts.addAll(managements.map((e) => ManagementPostModel(management: [
+            ManagementTypeRole(
+                managementRoleId: e.roleId, managementTypeId: e.typeId)
+          ])));
+    }
     return posts;
   }
 }

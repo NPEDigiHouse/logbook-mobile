@@ -45,6 +45,7 @@ dependencies:
   uuid: ^3.0.5
   cool_alert: ^2.0.1
   file_saver: ^0.2.8
+  device_info_plus: ^9.0.3
   pdf: ^3.10.4
 
 dev_dependencies:

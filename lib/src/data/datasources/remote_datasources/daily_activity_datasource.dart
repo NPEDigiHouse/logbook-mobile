@@ -118,7 +118,14 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
                   return status! < 500;
                 },
               ),
-              data: model.toJson());
+              data: {
+            'activityStatus': model.activityStatus,
+            if (model.detail != null) 'detail': model.detail,
+            'supervisorId': model.supervisorId,
+            if (model.locationId != null) 'locationId': model.locationId,
+            if (model.activityNameId != null)
+              'activityNameId': model.activityNameId,
+          });
       print(response.data);
       if (response.statusCode != 200) {
         throw Exception();

@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
@@ -27,7 +28,12 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
   final TextEditingController fController = TextEditingController();
 
   Future<bool> checkAndRequestPermission() async {
-    var status = await Permission.storage.status;
+    final plugin = DeviceInfoPlugin();
+    final android = await plugin.androidInfo;
+
+    var status = android.version.sdkInt < 33
+        ? await Permission.storage.request()
+        : PermissionStatus.granted;
     if (!status.isGranted) {
       status = await Permission.storage.request();
     }

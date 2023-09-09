@@ -148,7 +148,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Builder(builder: (context) {
-                    List<String> _type = ['Attend', 'Sick'];
+                    List<String> _type = ['Attend', 'Sick', 'Holiday'];
                     return DropdownButtonFormField(
                       isExpanded: true,
                       hint: Text('Status'),
@@ -166,6 +166,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                           .toList(),
                       onChanged: (v) {
                         if (v != null) status = v.toUpperCase();
+                        setState(() {});
                       },
                     );
                   }),
@@ -177,65 +178,68 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                   spacing: 16,
                   horizontalPadding: 16,
                   children: [
-                    BlocBuilder<ActivityCubit, ActivityState>(
-                        builder: (context, state) {
-                      List<ActivityModel> _activityLocations = [];
-                      if (state.activityLocations != null) {
-                        _activityLocations.clear();
-                        _activityLocations.addAll(state.activityLocations!);
-                      }
-                      return DropdownButtonFormField(
-                        isExpanded: true,
-                        hint: Text('Location'),
-                        items: _activityLocations
-                            .map(
-                              (e) => DropdownMenuItem(
-                                child: Text(
-                                  e.name!,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                    if (status != 'HOLIDAY') ...[
+                      BlocBuilder<ActivityCubit, ActivityState>(
+                          builder: (context, state) {
+                        List<ActivityModel> _activityLocations = [];
+                        if (state.activityLocations != null) {
+                          _activityLocations.clear();
+                          _activityLocations.addAll(state.activityLocations!);
+                        }
+                        return DropdownButtonFormField(
+                          isExpanded: true,
+                          hint: Text('Location'),
+                          items: _activityLocations
+                              .map(
+                                (e) => DropdownMenuItem(
+                                  child: Text(
+                                    e.name!,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  value: e,
                                 ),
-                                value: e,
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (v) {
-                          if (v != null) locationId = v.id!;
-                        },
-                        value: null,
-                      );
-                    }),
-                    BlocBuilder<ActivityCubit, ActivityState>(
-                        builder: (context, state) {
-                      List<ActivityModel> _activityLocations = [];
-                      if (state.activityNames != null) {
-                        _activityLocations.clear();
-                        _activityLocations.addAll(state.activityNames!);
-                      }
-                      return DropdownButtonFormField(
-                        isExpanded: true,
-                        hint: Text('Activity'),
-                        items: _activityLocations
-                            .map(
-                              (e) => DropdownMenuItem(
-                                child: Text(e.name!),
-                                value: e,
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (v) {
-                          if (v != null) activityNameId = v.id!;
-                          ;
-                        },
-                        value: null,
-                      );
-                    }),
+                              )
+                              .toList(),
+                          onChanged: (v) {
+                            if (v != null) locationId = v.id!;
+                          },
+                          value: null,
+                        );
+                      }),
+                      BlocBuilder<ActivityCubit, ActivityState>(
+                          builder: (context, state) {
+                        List<ActivityModel> _activityLocations = [];
+                        if (state.activityNames != null) {
+                          _activityLocations.clear();
+                          _activityLocations.addAll(state.activityNames!);
+                        }
+                        return DropdownButtonFormField(
+                          isExpanded: true,
+                          hint: Text('Activity'),
+                          items: _activityLocations
+                              .map(
+                                (e) => DropdownMenuItem(
+                                  child: Text(e.name!),
+                                  value: e,
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (v) {
+                            if (v != null) activityNameId = v.id!;
+                            ;
+                          },
+                          value: null,
+                        );
+                      }),
+                    ],
                     TextFormField(
                       maxLines: 5,
                       controller: detailController,
                       minLines: 5,
                       decoration: InputDecoration(
-                        label: Text('Detail Activity'),
+                        label: Text(
+                            status != 'HOLIDAY' ? 'Detail Activity' : 'Notes'),
                       ),
                     ),
                   ],
@@ -247,15 +251,15 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: FilledButton(
                     onPressed: () {
-                      if (locationId != null &&
-                          activityNameId != null &&
+                      if (((locationId != null && activityNameId != null) ||
+                              status == 'HOLIDAY') &&
                           supervisorId != null &&
                           detailController.text.isNotEmpty) {
                         BlocProvider.of<DailyActivityCubit>(context)
                           ..updateDailyActivity(
                             id: widget.dayId,
                             model: DailyActivityPostModel(
-                              activityNameId: activityNameId!,
+                              activityNameId: activityNameId,
                               activityStatus: status,
                               detail: detailController.text,
                               locationId: locationId,

@@ -43,6 +43,7 @@ class _SupervisorDailyActivityDetailPageState
   Map<String, String> emoji = {
     'ATTEND': 'emoji_hadir.svg',
     'SICK': 'sakit_emoji.svg',
+    'HOLIDAY': 'icon_holiday.svg',
     'NOT_ATTEND': 'emoji_alfa.svg',
   };
 
