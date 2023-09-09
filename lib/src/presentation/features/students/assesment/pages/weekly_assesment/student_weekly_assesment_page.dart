@@ -28,9 +28,12 @@ class StudentWeeklyAssementPage extends StatefulWidget {
 class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
   @override
   void initState() {
+    print("object");
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<AssesmentCubit>(context)..getStudentWeeklyAssesment();
+
+    Future.microtask(() =>
+        BlocProvider.of<AssesmentCubit>(context)..getStudentWeeklyAssesment());
   }
 
   final Map<String, String> mapTitle = {
@@ -98,6 +101,7 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
           },
           child: BlocBuilder<AssesmentCubit, AssesmentState>(
             builder: (context, state) {
+              print(state.weeklyAssesment);
               if (state.weeklyAssesment != null) {
                 if (state.weeklyAssesment!.assesments!.isNotEmpty) {
                   double avg = 0;

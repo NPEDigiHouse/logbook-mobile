@@ -444,6 +444,10 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 1000;
+          },
         ),
       );
       print('/weekly-assesments/students/$studentId/units/$unitId');

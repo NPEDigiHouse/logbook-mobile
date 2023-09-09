@@ -95,7 +95,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                                   (competence.fullName ?? 'unknown')
                                       .toLowerCase()
                                       .trim()
-                                      .startsWith(pattern.toLowerCase()))
+                                      .contains(pattern.toLowerCase()))
                               .toList();
 
                           return pattern.isEmpty ? _supervisors : temp;
@@ -193,7 +193,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                                                       'unknown')
                                                   .toLowerCase()
                                                   .trim()
-                                                  .startsWith(
+                                                  .contains(
                                                       pattern.toLowerCase()))
                                               .toList();
 

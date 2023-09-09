@@ -96,7 +96,7 @@ class _CreateCstPageState extends State<CreateCstPage> {
                                   (competence.fullName ?? 'unknown')
                                       .toLowerCase()
                                       .trim()
-                                      .startsWith(pattern.toLowerCase()))
+                                      .contains(pattern.toLowerCase()))
                               .toList();
 
                           return pattern.isEmpty ? _supervisors : temp;
@@ -194,7 +194,7 @@ class _CreateCstPageState extends State<CreateCstPage> {
                                                       'unknown')
                                                   .toLowerCase()
                                                   .trim()
-                                                  .startsWith(
+                                                  .contains(
                                                       pattern.toLowerCase()))
                                               .toList();
 

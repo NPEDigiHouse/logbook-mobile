@@ -49,7 +49,8 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
       body: RefreshIndicator(
         onRefresh: () async {
           await Future.wait([
-             BlocProvider.of<DailyActivityCubit>(context).getStudentDailyActivities(),
+            BlocProvider.of<DailyActivityCubit>(context)
+                .getStudentDailyActivities(),
           ]);
         },
         child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
@@ -386,7 +387,6 @@ class DailyActivityHomeCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                
                 Spacer(),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
@@ -477,8 +477,8 @@ class DailyActivityHomeCard extends StatelessWidget {
                         ),
                         if (e.dailyActivity == null)
                           Container(
-                            width: 38,
-                            height: 38,
+                            width: 24,
+                            height: 24,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: dividerColor,
@@ -493,8 +493,8 @@ class DailyActivityHomeCard extends StatelessWidget {
                           SvgPicture.asset(
                             AssetPath.getIcon(
                                 emoji[e.dailyActivity!.activityStatus!]!),
-                            width: 50,
-                            height: 50,
+                            width: 30,
+                            height: 30,
                             fit: BoxFit.cover,
                           ),
                       ],

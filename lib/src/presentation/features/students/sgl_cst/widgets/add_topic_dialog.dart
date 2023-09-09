@@ -146,7 +146,7 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                                   (competence.name ?? 'unknown')
                                       .toLowerCase()
                                       .trim()
-                                      .startsWith(pattern.toLowerCase()))
+                                      .contains(pattern.toLowerCase()))
                               .toList();
 
                           return pattern.isEmpty ? _topics : temp;

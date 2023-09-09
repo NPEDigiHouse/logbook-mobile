@@ -476,6 +476,7 @@ class StudentDataSourceImpl implements StudentDataSource {
 
   @override
   Future<WeeklyAssesmentResponse> getStudentWeeklyAssesment() async {
+    print("dasd");
     final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
@@ -485,8 +486,13 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 1000;
+          },
         ),
       );
+      print("aoapajfap");
       print(response);
       if (response.statusCode != 200) {
         throw Exception();
@@ -496,6 +502,7 @@ class StudentDataSourceImpl implements StudentDataSource {
       final result = WeeklyAssesmentResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print("Errr");
       print(e.toString());
       throw ClientFailure(e.toString());
     }

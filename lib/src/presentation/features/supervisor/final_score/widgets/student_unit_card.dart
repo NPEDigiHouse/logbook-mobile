@@ -32,7 +32,7 @@ class StudentDepartmentCard extends StatelessWidget {
             children: <Widget>[
               FutureBuilder(
                 future: BlocProvider.of<SupervisorsCubit>(context)
-                    .getImageProfile(id: data.userId??''),
+                    .getImageProfile(id: data.userId ?? ''),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CustomShimmer(

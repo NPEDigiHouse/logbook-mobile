@@ -161,7 +161,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                                       (competence.fullName ?? 'unknown')
                                           .toLowerCase()
                                           .trim()
-                                          .startsWith(pattern.toLowerCase()))
+                                          .contains(pattern.toLowerCase()))
                                   .toList();
 
                               return pattern.isEmpty ? _supervisors : temp;

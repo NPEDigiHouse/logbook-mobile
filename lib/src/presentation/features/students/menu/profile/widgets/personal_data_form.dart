@@ -234,7 +234,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                                             'unknown')
                                                         .toLowerCase()
                                                         .trim()
-                                                        .startsWith(pattern
+                                                        .contains(pattern
                                                             .toLowerCase()))
                                                 .toList();
 
