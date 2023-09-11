@@ -55,8 +55,6 @@ class AuthDataSourceImpl implements AuthDataSource {
         firstName = splitName.first;
         if (splitName.length > 1) {
           lastName = fullname.substring(firstName.length + 1, fullname.length);
-        } else {
-          lastName = '-';
         }
       }
       final response = await dio.post(ApiService.baseUrl + '/students',
@@ -65,10 +63,6 @@ class AuthDataSourceImpl implements AuthDataSource {
               "content-type": 'application/json',
               "authorization":
                   'Basic ${base64Encode(utf8.encode('admin:admin'))}'
-            },
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
             },
           ),
           data: {
@@ -82,8 +76,8 @@ class AuthDataSourceImpl implements AuthDataSource {
       he.handleErrorResponse(
         response: response,
       );
-      print(response);
     } catch (e) {
+      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

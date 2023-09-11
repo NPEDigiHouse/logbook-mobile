@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                                   FormBuilderTextField(
                                     name: 'username',
                                     decoration: const InputDecoration(
-                                      label: Text('Username'),
+                                      label: Text('Username or ID'),
                                     ),
                                     validator: FormBuilderValidators.compose([
                                       FormBuilderValidators.required(

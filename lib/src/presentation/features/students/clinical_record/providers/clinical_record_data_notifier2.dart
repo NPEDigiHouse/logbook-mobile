@@ -122,7 +122,7 @@ class ClinicalRecordDataNotifier2 extends ChangeNotifier {
     final List<DiagnosisPostModel> posts = [];
     if (diagnostics.isNotEmpty) {
       posts.addAll(diagnostics
-          .map((e) => DiagnosisPostModel(diagnosesTypeId: [e.typeId!])));
+          .map((e) => DiagnosisPostModel(diagnosisTypeId: [e.typeId!])));
     }
     return posts;
   }

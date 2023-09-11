@@ -63,6 +63,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       final result = StudentDailyActivityResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print("error");
       print(e.toString());
       throw ClientFailure(e.toString());
     }

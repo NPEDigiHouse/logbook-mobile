@@ -48,10 +48,10 @@ class ExaminationsPostModel {
 
 @JsonSerializable()
 class DiagnosisPostModel {
-  List<String>? diagnosesTypeId;
+  List<String>? diagnosisTypeId;
 
   DiagnosisPostModel({
-    this.diagnosesTypeId,
+    this.diagnosisTypeId,
   });
 
   Map<String, dynamic> toJson() => _$DiagnosisPostModelToJson(this);

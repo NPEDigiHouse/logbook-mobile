@@ -84,7 +84,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           'managements': clinicalRecordPostModel.managements,
         },
       );
-      print(response.data);
+      print(response.statusCode);
       if (response.statusCode != 201) {
         throw Exception();
       }

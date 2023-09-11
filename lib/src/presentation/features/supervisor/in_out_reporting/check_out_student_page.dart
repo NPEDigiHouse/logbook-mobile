@@ -3,7 +3,6 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/students/student_check_in_model.dart';
 import 'package:elogbook/src/data/models/students/student_check_out_model.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -296,29 +295,36 @@ class InOutReportingItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 2),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      student.fullname ?? "",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    if (student.checkInStatus == 'VERIFIED')
-                      const Icon(
-                        Icons.verified_rounded,
-                        size: 16,
-                        color: primaryColor,
-                      ),
-                  ],
+                Text(
+                  student.fullname ?? "",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   student.studentId ?? '-',
                   style: textTheme.bodySmall?.copyWith(
                     color: primaryColor,
+                  ),
+                ),
+                RichText(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    style: textTheme.bodySmall?.copyWith(
+                      color: secondaryTextColor,
+                    ),
+                    children: <TextSpan>[
+                      const TextSpan(
+                        text: 'Department:\t',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      TextSpan(text: student.unitName),
+                    ],
                   ),
                 ),
               ],

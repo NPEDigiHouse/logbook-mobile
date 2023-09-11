@@ -61,14 +61,14 @@ Map<String, dynamic> _$ExaminationsPostModelToJson(
 
 DiagnosisPostModel _$DiagnosisPostModelFromJson(Map<String, dynamic> json) =>
     DiagnosisPostModel(
-      diagnosesTypeId: (json['diagnosesTypeId'] as List<dynamic>?)
+      diagnosisTypeId: (json['diagnosisTypeId'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
     );
 
 Map<String, dynamic> _$DiagnosisPostModelToJson(DiagnosisPostModel instance) =>
     <String, dynamic>{
-      'diagnosesTypeId': instance.diagnosesTypeId,
+      'diagnosisTypeId': instance.diagnosisTypeId,
     };
 
 ManagementPostModel _$ManagementPostModelFromJson(Map<String, dynamic> json) =>

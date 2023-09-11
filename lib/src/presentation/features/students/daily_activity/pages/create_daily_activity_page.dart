@@ -178,7 +178,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                   spacing: 16,
                   horizontalPadding: 16,
                   children: [
-                    if (status != 'HOLIDAY') ...[
+                    if (status == 'ATTEND') ...[
                       BlocBuilder<ActivityCubit, ActivityState>(
                           builder: (context, state) {
                         List<ActivityModel> _activityLocations = [];
@@ -239,7 +239,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                       minLines: 5,
                       decoration: InputDecoration(
                         label: Text(
-                            status != 'HOLIDAY' ? 'Detail Activity' : 'Notes'),
+                            status == 'ATTEND' ? 'Detail Activity' : 'Notes'),
                       ),
                     ),
                   ],
@@ -252,7 +252,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                   child: FilledButton(
                     onPressed: () {
                       if (((locationId != null && activityNameId != null) ||
-                              status == 'HOLIDAY') &&
+                              status != 'ATTEND') &&
                           supervisorId != null &&
                           detailController.text.isNotEmpty) {
                         BlocProvider.of<DailyActivityCubit>(context)

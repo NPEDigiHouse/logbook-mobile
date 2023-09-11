@@ -210,11 +210,12 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   ),
                                                 ),
                                                 const SizedBox(width: 4),
-                                                const Icon(
-                                                  Icons.verified_rounded,
-                                                  size: 16,
-                                                  color: primaryColor,
-                                                ),
+                                                if (activity.isVerified)
+                                                  const Icon(
+                                                    Icons.verified_rounded,
+                                                    size: 16,
+                                                    color: primaryColor,
+                                                  ),
                                               ],
                                             ),
                                             const SizedBox(height: 12),

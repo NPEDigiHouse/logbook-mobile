@@ -107,40 +107,74 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                 switch (widget.section) {
                                   case 1:
                                     data = StudentProfile(
-                                      clinicId: editingControllers[1].text,
-                                      preclinicId: editingControllers[2].text,
-                                      graduationDate: (ReusableFunctionHelper
-                                                  .stringToDateTime(
-                                                      editingControllers[3]
-                                                          .text)
-                                              .millisecondsSinceEpoch) ~/
-                                          1000,
+                                      clinicId:
+                                          editingControllers[1].text.isEmpty
+                                              ? null
+                                              : editingControllers[1].text,
+                                      preclinicId:
+                                          editingControllers[2].text.isEmpty
+                                              ? null
+                                              : editingControllers[2].text,
+                                      graduationDate: editingControllers[3]
+                                              .text
+                                              .isEmpty
+                                          ? null
+                                          : (ReusableFunctionHelper
+                                                      .stringToDateTime(
+                                                          editingControllers[3]
+                                                              .text)
+                                                  .millisecondsSinceEpoch) ~/
+                                              1000,
                                     );
-                                    BlocProvider.of<ProfileCubit>(context)
-                                      ..updateFullName(
-                                          fullname: editingControllers[0].text);
+                                    if (editingControllers[0].text.isNotEmpty)
+                                      BlocProvider.of<ProfileCubit>(context)
+                                        ..updateFullName(
+                                            fullname:
+                                                editingControllers[0].text);
                                     break;
                                   case 2:
                                     data = StudentProfile(
-                                      phoneNumber: editingControllers[0].text,
-                                      address: editingControllers[2].text,
+                                      phoneNumber:
+                                          editingControllers[0].text.isEmpty
+                                              ? null
+                                              : editingControllers[0].text,
+                                      address:
+                                          editingControllers[2].text.isEmpty
+                                              ? null
+                                              : editingControllers[2].text,
                                     );
                                     break;
                                   case 3:
                                     data = StudentProfile(
                                       academicSupervisor:
-                                          editingControllers[0].text,
+                                          editingControllers[0].text.isEmpty
+                                              ? null
+                                              : editingControllers[0].text,
                                       supervisingDpk:
-                                          editingControllers[1].text,
-                                      examinerDpk: editingControllers[2].text,
+                                          editingControllers[1].text.isEmpty
+                                              ? null
+                                              : editingControllers[1].text,
+                                      examinerDpk:
+                                          editingControllers[2].text.isEmpty
+                                              ? null
+                                              : editingControllers[2].text,
                                     );
                                     break;
                                   case 4:
                                     data = StudentProfile(
                                       periodLengthStation:
-                                          int.parse(editingControllers[0].text),
-                                      rsStation: editingControllers[1].text,
-                                      pkmStation: editingControllers[2].text,
+                                          editingControllers[0].text.isEmpty
+                                              ? null
+                                              : int.parse(
+                                                  editingControllers[0].text),
+                                      rsStation:
+                                          editingControllers[1].text.isEmpty
+                                              ? null
+                                              : editingControllers[1].text,
+                                      pkmStation:
+                                          editingControllers[2].text.isEmpty
+                                              ? null
+                                              : editingControllers[2].text,
                                     );
                                     break;
                                   default:
@@ -187,6 +221,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                       initialValue: values[i],
                                     );
                                   }
+
                                   if (widget.section == 3) {
                                     return BlocBuilder<SupervisorsCubit,
                                             SupervisorsState>(
@@ -226,7 +261,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                                   .first
                                                   .fullName
                                               : null,
-                                          hint: 'Supervisor',
+                                          hint: labels[i],
                                           onCallback: (pattern) {
                                             final temp = _supervisors
                                                 .where((competence) =>
