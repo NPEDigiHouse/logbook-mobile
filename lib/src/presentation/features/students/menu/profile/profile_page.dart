@@ -5,7 +5,11 @@ import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/change_password_page.dart';
+import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/export_data_page.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
+import 'package:elogbook/src/presentation/widgets/profile_pic_placeholder.dart';
+import 'package:elogbook/src/presentation/widgets/spacing_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -53,20 +57,22 @@ class _ProfilePageState extends State<ProfilePage> {
       },
       child: CustomScrollView(
         slivers: <Widget>[
-          const MainAppBar(),
+          MainAppBar(
+            withLogout: false,
+          ),
           SliverFillRemaining(
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(bottom: 24),
               child: Column(
                 children: <Widget>[
                   Container(
-                    height: 120,
+                    height: 200,
                     width: double.infinity,
                     decoration: const BoxDecoration(
                       color: primaryColor,
-                      borderRadius: BorderRadius.vertical(
-                        bottom: Radius.circular(16),
-                      ),
+                      // borderRadius: BorderRadius.vertical(
+                      //   bottom: Radius.circular(16),
+                      // ),
                     ),
                     child: Stack(
                       clipBehavior: Clip.none,
@@ -88,9 +94,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         Positioned(
                           right: 0,
                           left: 0,
-                          bottom: -40,
-                          child: Stack(
-                            alignment: Alignment.center,
+                          top: 16,
+                          child: Column(
                             children: <Widget>[
                               BlocBuilder<ProfileCubit, ProfileState>(
                                 builder: (context, state) {
@@ -103,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           height: 100,
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                                width: 5,
+                                                width: 2,
                                                 color: scaffoldBackgroundColor,
                                                 strokeAlign: BorderSide
                                                     .strokeAlignOutside),
@@ -120,57 +125,60 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ],
                                     );
                                   } else {
-                                    return CircleAvatar(
-                                      radius: 50,
-                                      foregroundImage: AssetImage(
-                                        AssetPath.getImage(
-                                            'profile_default.png'),
-                                      ),
-                                    );
+                                    return ProfilePicPlaceholder(
+                                        height: 100,
+                                        name: widget.credential.fullname ?? 'U',
+                                        width: 100);
                                   }
                                 },
                               ),
-                              // Positioned(
-                              //   right: (AppSize.getAppWidth(context) / 2) - 54,
-                              //   bottom: 5,
-                              //   child: Container(
-                              //     width: 32,
-                              //     height: 32,
-                              //     decoration: BoxDecoration(
-                              //       color: primaryColor,
-                              //       shape: BoxShape.circle,
-                              //       border: Border.all(
-                              //         color: scaffoldBackgroundColor,
-                              //       ),
-                              //     ),
-                              //     child: Center(
-                              //       child: SvgPicture.asset(
-                              //         AssetPath.getIcon('camera_filled.svg'),
-                              //         width: 16,
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
+                              const SizedBox(height: 12),
+                              Text(
+                                widget.credential?.fullname ?? '-',
+                                style: textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                'NIM. ${widget.credential.student?.studentId}',
+                                style: textTheme.bodyLarge?.copyWith(
+                                  color: onDisableColor,
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 56),
-                  Text(
-                    widget.credential?.fullname ?? '-',
-                    style: textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: secondaryColor,
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: Text(
+                              'Ilmu Kesehatan Anak',
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                    'Student',
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: secondaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 14),
                   ProfileItemMenuCard(
                     iconPath: 'person_filled.svg',
                     title: 'Personal Data',
@@ -178,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       userId: widget.credential!.id!,
                     )),
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 8),
                   BlocBuilder<DepartmentCubit, DepartmentState>(
                     builder: (context, state1) {
                       if (state1 is GetActiveDepartmentSuccess)
@@ -201,25 +209,80 @@ class _ProfilePageState extends State<ProfilePage> {
                         return SizedBox.shrink();
                     },
                   ),
-                  // const SizedBox(height: 14),
-                  // BlocBuilder<ProfileCubit, ProfileState>(
-                  //   builder: (context, state) {
-                  //     if (state.requestState == RequestState.data) {
-                  //       return ProfileItemMenuCard(
-                  //         iconPath: 'file_export_filled.svg',
-                  //         title: 'Export Data',
-                  //         onTap: () => context.navigateTo(ExportDataPage(
-                  //           memoryImage: state.profilePic,
-                  //         )),
-                  //       );
-                  //     } else {
-                  //       return SizedBox.shrink();
-                  //     }
-                  //   },
-                  // ),
-
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 8),
                   ProfileItemMenuCard(
+                    iconPath: 'lock_filled.svg',
+                    title: 'Change Password',
+                    onTap: () => context.navigateTo(const ChangePasswordPage()),
+                  ),
+                  const SizedBox(height: 8),
+                  BlocBuilder<ProfileCubit, ProfileState>(
+                    builder: (context, state) {
+                      return ProfileItemMenuCard(
+                        iconPath: 'file_export_filled.svg',
+                        title: 'Export Data',
+                        onTap: () => context.navigateTo(ExportDataPage(
+                          memoryImage: state.requestState == RequestState.data
+                              ? state.profilePic
+                              : null,
+                        )),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                    ),
+                    child: Align(
+                      child: Text(
+                        'About',
+                        style: textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ProfileItemMenuCard(
+                    iconPath: 'lock_filled.svg',
+                    title: 'Term and Conditions',
+                    onTap: () => context.navigateTo(const ChangePasswordPage()),
+                  ),
+                  const SizedBox(height: 12),
+                  ProfileItemMenuCard(
+                    iconPath: 'lock_filled.svg',
+                    title: 'About E-Logbook',
+                    onTap: () => context.navigateTo(const ChangePasswordPage()),
+                  ),
+                  const SizedBox(height: 12),
+                  ProfileItemMenuCard(
+                    iconPath: 'lock_filled.svg',
+                    title: 'Help',
+                    onTap: () => context.navigateTo(const ChangePasswordPage()),
+                  ),
+                  const SizedBox(height: 12),
+                  ProfileItemMenuCard(
+                    iconPath: 'lock_filled.svg',
+                    title: 'Rate Us',
+                    onTap: () => context.navigateTo(const ChangePasswordPage()),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'E-Logbook FK UMI Versi 1.9.0',
+                    style: textTheme.titleSmall?.copyWith(
+                      color: onFormDisableColor,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ProfileItemMenuCardVariant(
+                    iconPath: 'delete_icon.svg',
+                    title: 'Log Out',
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 8),
+                  ProfileItemMenuCardVariant2(
                     iconPath: 'delete_icon.svg',
                     title: 'Delete Account',
                     onTap: () {
@@ -231,13 +294,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                     },
                   ),
-
-                  // const SizedBox(height: 14),
-                  // ProfileItemMenuCard(
-                  //   iconPath: 'lock_filled.svg',
-                  //   title: 'Change Password',
-                  //   onTap: () => context.navigateTo(const ChangePasswordPage()),
-                  // ),
                 ],
               ),
             ),

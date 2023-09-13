@@ -23,19 +23,23 @@ class ProfileItemMenuCard extends StatelessWidget {
       onTap: onTap,
       color: scaffoldBackgroundColor,
       radius: 12,
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.fromLTRB(16, 10, 8, 10),
-      boxShadow: <BoxShadow>[
-        BoxShadow(
-          offset: const Offset(0, 1),
-          blurRadius: 16,
-          color: Colors.black.withOpacity(.1),
-        ),
-      ],
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(12, 4, 6, 4),
+      border: Border.all(
+        width: 1,
+        color: onFormDisableColor.withOpacity(.5),
+      ),
+      // boxShadow: <BoxShadow>[
+      //   BoxShadow(
+      //     offset: const Offset(0, 1),
+      //     blurRadius: 8,
+      //     color: Colors.black.withOpacity(.1),
+      //   ),
+      // ],
       child: Row(
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(8),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: Color(0xFFE1F8FF),
@@ -45,8 +49,8 @@ class ProfileItemMenuCard extends StatelessWidget {
                 iconPath,
               ),
               color: secondaryColor,
-              width: 20,
-              height: 20,
+              width: 16,
+              height: 16,
             ),
           ),
           const SizedBox(width: 16),
@@ -62,6 +66,89 @@ class ProfileItemMenuCard extends StatelessWidget {
           IconButton(
             onPressed: onTap,
             icon: const Icon(Icons.chevron_right_rounded),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileItemMenuCardVariant extends StatelessWidget {
+  final String iconPath;
+  final String title;
+  final VoidCallback onTap;
+
+  const ProfileItemMenuCardVariant({
+    super.key,
+    required this.iconPath,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWellContainer(
+      onTap: onTap,
+      color: scaffoldBackgroundColor,
+      radius: 12,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(12, 16, 6, 16),
+      border: Border.all(
+        width: 1,
+        color: errorColor,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            title,
+            style: textTheme.bodyLarge
+                ?.copyWith(fontWeight: FontWeight.bold, color: errorColor),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileItemMenuCardVariant2 extends StatelessWidget {
+  final String iconPath;
+  final String title;
+  final VoidCallback onTap;
+
+  const ProfileItemMenuCardVariant2({
+    super.key,
+    required this.iconPath,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWellContainer(
+      onTap: onTap,
+      color: errorColor,
+      radius: 12,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(12, 16, 6, 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SvgPicture.asset(
+            AssetPath.getIcon(
+              iconPath,
+            ),
+            color: Colors.white,
+            width: 16,
+            height: 16,
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          Text(
+            title,
+            style: textTheme.bodyLarge
+                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ],
       ),

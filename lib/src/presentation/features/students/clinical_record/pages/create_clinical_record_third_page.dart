@@ -4,7 +4,6 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier2.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_temp.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
@@ -197,6 +196,12 @@ class _CreateClinicalRecordThirdPageState
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: FilledButton(
                         onPressed: () {
+                          if (state.pathAttachment != null)
+                            widget.clinicalRecordData
+                                .addAttachment(state.pathAttachment!);
+                          if (notesController.text.isNotEmpty)
+                            widget.clinicalRecordData
+                                .addNotes(notesController.text);
                           BlocProvider.of<ClinicalRecordCubit>(context)
                             ..uploadClinicalRecord(
                               model: widget

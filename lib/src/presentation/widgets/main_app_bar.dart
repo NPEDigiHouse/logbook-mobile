@@ -9,7 +9,8 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 
 class MainAppBar extends StatelessWidget {
-  const MainAppBar({super.key});
+  final bool withLogout;
+  const MainAppBar({super.key, this.withLogout = true});
 
   @override
   Widget build(BuildContext context) {
@@ -34,31 +35,32 @@ class MainAppBar extends StatelessWidget {
       ),
       leadingWidth: 56,
       actions: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 6),
-          child: IconButton(
-            onPressed: () async {
-              CoolAlert.show(
-                context: context,
-                type: CoolAlertType.confirm,
-                title: 'Confirm Logout',
-                confirmBtnText: 'Confirm',
-                text: "Are you sure to sign out?",
-                onConfirmBtnTap: () async {
-                  await BlocProvider.of<ProfileCubit>(context).reset();
-                  await BlocProvider.of<AuthCubit>(context).logout();
-                },
-                confirmBtnColor: primaryColor,
-              );
-            },
-            icon: const Icon(
-              Icons.logout_rounded,
-              color: primaryColor,
-              size: 30,
+        if (withLogout)
+          Padding(
+            padding: const EdgeInsets.only(right: 6),
+            child: IconButton(
+              onPressed: () async {
+                CoolAlert.show(
+                  context: context,
+                  type: CoolAlertType.confirm,
+                  title: 'Confirm Logout',
+                  confirmBtnText: 'Confirm',
+                  text: "Are you sure to sign out?",
+                  onConfirmBtnTap: () async {
+                    await BlocProvider.of<ProfileCubit>(context).reset();
+                    await BlocProvider.of<AuthCubit>(context).logout();
+                  },
+                  confirmBtnColor: primaryColor,
+                );
+              },
+              icon: const Icon(
+                Icons.logout_rounded,
+                color: primaryColor,
+                size: 30,
+              ),
+              tooltip: 'Keluar',
             ),
-            tooltip: 'Keluar',
           ),
-        ),
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),

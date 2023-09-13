@@ -64,6 +64,10 @@ class AuthDataSourceImpl implements AuthDataSource {
               "authorization":
                   'Basic ${base64Encode(utf8.encode('admin:admin'))}'
             },
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            },
           ),
           data: {
             "username": username,
@@ -73,6 +77,9 @@ class AuthDataSourceImpl implements AuthDataSource {
             if (firstName != null) "firstName": firstName,
             if (lastName != null) "lastName": lastName,
           });
+      if (response.statusCode != 200) {
+        throw Exception(response.statusMessage);
+      }
       he.handleErrorResponse(
         response: response,
       );
@@ -94,6 +101,10 @@ class AuthDataSourceImpl implements AuthDataSource {
             "authorization":
                 'Basic ${base64Encode(utf8.encode('$username:$password'))}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
         ),
       );
       if (response.statusCode == 200) {
@@ -101,11 +112,14 @@ class AuthDataSourceImpl implements AuthDataSource {
 
         UserToken credential = await UserToken.fromJson(dataResponse.data);
         await preferenceHandler.setUserData(credential);
+      } else {
+        throw Exception(response.statusMessage);
       }
       he.handleErrorResponse(
         response: response,
       );
     } catch (e) {
+      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

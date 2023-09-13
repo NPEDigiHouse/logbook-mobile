@@ -13,6 +13,7 @@ DetailClinicalRecordModel _$DetailClinicalRecordModelFromJson(
       diagnosess: (json['diagnosess'] as List<dynamic>?)
           ?.map((e) => DiagnosisModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      notes: json['notes'] as String?,
       examinations: (json['examinations'] as List<dynamic>?)
           ?.map((e) => ExaminationsModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -48,6 +49,7 @@ Map<String, dynamic> _$DetailClinicalRecordModelToJson(
       'verificationStatus': instance.verificationStatus,
       'recordId': instance.recordId,
       'unit': instance.unit,
+      'notes': instance.notes,
     };
 
 ExaminationsModel _$ExaminationsModelFromJson(Map<String, dynamic> json) =>

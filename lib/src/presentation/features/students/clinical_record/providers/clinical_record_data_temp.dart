@@ -14,13 +14,17 @@ class ClinicalRecordData {
     _clinicalRecordPostModel.attachment = path;
   }
 
+  void addNotes(String notes) {
+    _clinicalRecordPostModel.notes = notes;
+  }
+
   void tempAddSecondData(
       List<ManagementPostModel> managements,
       List<DiagnosisPostModel> diagnosis,
       List<ExaminationsPostModel> examinations) {
     _clinicalRecordPostModel.managements = managements;
     _clinicalRecordPostModel.diagnosess = diagnosis;
-    _clinicalRecordPostModel.examinations =examinations;
+    _clinicalRecordPostModel.examinations = examinations;
   }
 
   // void updateAffectedPart(

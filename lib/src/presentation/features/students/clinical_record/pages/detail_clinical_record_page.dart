@@ -585,66 +585,66 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                         height: 24,
                       ),
                     ],
-                    // Container(
-                    //   margin: EdgeInsets.symmetric(horizontal: 24),
-                    //   padding: EdgeInsets.only(
-                    //     bottom: 20,
-                    //     left: 20,
-                    //     right: 20,
-                    //   ),
-                    //   decoration: BoxDecoration(
-                    //     color: scaffoldBackgroundColor,
-                    //     borderRadius: BorderRadius.circular(12),
-                    //     boxShadow: [
-                    //       BoxShadow(
-                    //           offset: Offset(0, 0),
-                    //           spreadRadius: 0,
-                    //           blurRadius: 6,
-                    //           color: Color(0xFFD4D4D4).withOpacity(.25)),
-                    //       BoxShadow(
-                    //           offset: Offset(0, 4),
-                    //           spreadRadius: 0,
-                    //           blurRadius: 24,
-                    //           color: Color(0xFFD4D4D4).withOpacity(.25)),
-                    //     ],
-                    //   ),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       FormSectionHeader(
-                    //           label: 'Notes',
-                    //           pathPrefix: 'icon_note.svg',
-                    //           padding: 0),
-                    //       ItemDivider(),
-                    //       SizedBox(
-                    //         height: 16,
-                    //       ),
-                    //       Text(
-                    //           state.detailClinicalRecordModel.su),
-                    //       SizedBox(
-                    //         height: 8,
-                    //       ),
-                    //       Row(
-                    //         crossAxisAlignment: CrossAxisAlignment.center,
-                    //         children: [
-                    //           SizedBox(
-                    //             height: 24,
-                    //             child: Text(
-                    //               'Show more',
-                    //               style: textTheme.bodyMedium?.copyWith(
-                    //                 color: primaryColor,
-                    //               ),
-                    //             ),
-                    //           ),
-                    //           Icon(
-                    //             Icons.keyboard_arrow_down_rounded,
-                    //             color: primaryColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 24),
+                      padding: EdgeInsets.only(
+                        bottom: 20,
+                        left: 20,
+                        right: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: scaffoldBackgroundColor,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                              offset: Offset(0, 0),
+                              spreadRadius: 0,
+                              blurRadius: 6,
+                              color: Color(0xFFD4D4D4).withOpacity(.25)),
+                          BoxShadow(
+                              offset: Offset(0, 4),
+                              spreadRadius: 0,
+                              blurRadius: 24,
+                              color: Color(0xFFD4D4D4).withOpacity(.25)),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FormSectionHeader(
+                              label: 'Notes',
+                              pathPrefix: 'icon_note.svg',
+                              padding: 0),
+                          ItemDivider(),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Text(state.detailClinicalRecordModel?.notes ?? '-'),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          // if(state.detailClinicalRecordModel?.notes.)
+                          // Row(
+                          //   crossAxisAlignment: CrossAxisAlignment.center,
+                          //   children: [
+                          //     SizedBox(
+                          //       height: 24,
+                          //       child: Text(
+                          //         'Show more',
+                          //         style: textTheme.bodyMedium?.copyWith(
+                          //           color: primaryColor,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     Icon(
+                          //       Icons.keyboard_arrow_down_rounded,
+                          //       color: primaryColor,
+                          //     ),
+                          //   ],
+                          // ),
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       height: 24,
                     ),
