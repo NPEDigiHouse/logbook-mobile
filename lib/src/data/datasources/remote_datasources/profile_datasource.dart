@@ -10,6 +10,7 @@ import 'package:elogbook/src/data/models/user/user_profile_post_model.dart';
 abstract class ProfileDataSource {
   Future<void> updateUserProfile(
       {required UserProfilePostModel userProfilePostModel});
+      
   Future<void> updateStudentData(
       {required StudentPostModel studentDataPostModel});
   Future<void> updateUserProfilePicture({required String path});

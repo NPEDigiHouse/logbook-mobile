@@ -12,6 +12,9 @@ abstract class UserDataSource {
   Future<void> removeProfilePicture();
   Future<void> updateFullName({required String fullname});
   Future<void> deleteUser();
+  Future<void> changePassword({
+    required String newPassword,
+  });
 }
 
 class UserDataSourceImpl implements UserDataSource {
@@ -174,6 +177,32 @@ class UserDataSourceImpl implements UserDataSource {
       }
       await preferenceHandler.removeCredential();
     } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> changePassword({required String newPassword}) async {
+    final credential = await preferenceHandler.getCredential();
+
+    try {
+      final response = await dio.put(ApiService.baseUrl + '/users',
+          options: Options(
+            headers: {
+              "content-type": 'application/json',
+              "authorization": 'Bearer ${credential?.accessToken}'
+            },
+          ),
+          data: {
+            'password': newPassword,
+          });
+      print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw Exception(response.statusMessage);
+      }
+    } catch (e) {
+      print("here");
       print(e.toString());
       throw ClientFailure(e.toString());
     }

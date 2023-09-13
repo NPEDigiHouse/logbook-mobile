@@ -126,6 +126,29 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<void> resetPassword({required String password}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await userDataSource.changePassword(newPassword: password);
+      try {
+        emit(state.copyWith(
+            isResetPasswordSuccess: true, requestState: RequestState.data));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> removeProfilePic() async {
     try {
       emit(state.copyWith(

@@ -10,10 +10,12 @@ class ProfileState {
   final bool removeProfileImage;
   final bool successUpdateProfile;
   final bool successDeleteAccount;
+  final bool isResetPasswordSuccess;
 
   ProfileState({
     this.profilePic,
     this.userCredential,
+    this.isResetPasswordSuccess = false,
     this.removeProfileImage = false,
     this.stateProfilePic = RequestState.init,
     this.requestState = RequestState.init,
@@ -26,6 +28,7 @@ class ProfileState {
   ProfileState copyWith(
       {RequestState stateProfilePic = RequestState.init,
       Uint8List? profilePic,
+      bool isResetPasswordSuccess = false,
       bool successUploadProfilePic = false,
       bool successUpdateProfile = false,
       bool successDeleteAccount = false,
@@ -37,6 +40,7 @@ class ProfileState {
         profilePic: profilePic ?? this.profilePic,
         stateProfilePic: stateProfilePic,
         requestState: requestState,
+        isResetPasswordSuccess: isResetPasswordSuccess,
         rspp: rsPP,
         removeProfileImage: removeProfileImage,
         successDeleteAccount: successDeleteAccount,
