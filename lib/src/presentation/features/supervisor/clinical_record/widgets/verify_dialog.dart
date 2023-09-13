@@ -16,7 +16,7 @@ class VerifyClinicalRecordDialog extends StatefulWidget {
 }
 
 class _AddTopicDialogState extends State<VerifyClinicalRecordDialog> {
-  int? rating;
+  double? rating;
   final TextEditingController feedbackController = TextEditingController();
 
   @override
@@ -114,7 +114,7 @@ class _AddTopicDialogState extends State<VerifyClinicalRecordDialog> {
                     color: primaryColor,
                   ),
                   onRatingUpdate: (rating) {
-                    this.rating = rating.toInt();
+                    this.rating = rating;
                   },
                 ),
                 SizedBox(
@@ -154,7 +154,7 @@ class _AddTopicDialogState extends State<VerifyClinicalRecordDialog> {
                 width: MediaQuery.of(context).size.width,
                 child: FilledButton.icon(
                   onPressed: () {
-                    if (rating != null && feedbackController.text.isNotEmpty) {
+                    if (rating != null) {
                       BlocProvider.of<ClinicalRecordSupervisorCubit>(context)
                         ..verifyClinicalRecord(
                           id: widget.id,

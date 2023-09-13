@@ -333,67 +333,6 @@ class DailyActivityHomeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Builder(builder: (context) {
-            String status = 'PENDING';
-            if (ReusableFunctionHelper.getIntervalOfData(
-                        week.endDate, week.startDate) +
-                    1 ==
-                (dailyActivity == null
-                    ? 0
-                    : dailyActivity!.activitiesStatus!.length)) {
-              status = 'UNVERIFIED';
-              if (dailyActivity!.activitiesStatus!.indexWhere(
-                      (element) => element.verificationStatus != 'VERIFIED') ==
-                  -1) {
-                status = 'VERIFIED';
-              }
-            }
-            return Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: status == 'VERIFIED'
-                        ? successColor
-                        : status == 'UNVERIFIED'
-                            ? errorColor
-                            : onFormDisableColor,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        status == 'VERIFIED'
-                            ? Icons.verified_rounded
-                            : status == 'UNVERIFIED'
-                                ? Icons.close_rounded
-                                : Icons.hourglass_bottom_rounded,
-                        color: Colors.white,
-                        size: 16,
-                      ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Text(
-                        '${status}',
-                        style: textTheme.bodySmall?.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Spacer(),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                )
-              ],
-            );
-          }),
           SizedBox(
             height: 16,
           ),

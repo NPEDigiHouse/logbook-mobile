@@ -384,7 +384,12 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
             return status! < 500;
           },
         ),
-        data: model.toJson(),
+        data: {
+          'verified': model.verified,
+          'rating': model.rating,
+          if (model.supervisorFeedback!.isNotEmpty)
+            'supervisorFeedback': model.supervisorFeedback,
+        },
       );
       print(response);
       // print(response.statusCode);

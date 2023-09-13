@@ -1,6 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
-import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
@@ -164,87 +163,87 @@ class _CreateSglPageState extends State<CreateSglPage> {
                     if (state.topics != null) {
                       _topics.clear();
                       _topics.addAll(state.topics!);
-                    }
-                    if (_topics.isNotEmpty)
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ValueListenableBuilder(
-                            valueListenable: topics,
-                            builder: (context, value, child) {
-                              return Column(
-                                children: [
-                                  for (int i = 0; i < value.length; i++) ...[
-                                    CustomDropdown<TopicModel>(
-                                        onSubmit: (text, controller) {
-                                          if (_topics.indexWhere((element) =>
-                                                  element.name ==
-                                                  text.trim()) ==
-                                              -1) {
-                                            controller.clear();
-                                            topics.value[i] = -1;
-                                          }
-                                        },
-                                        hint: 'Topics',
-                                        onCallback: (pattern) {
-                                          final temp = _topics
-                                              .where((competence) => (competence
-                                                          .name ??
-                                                      'unknown')
-                                                  .toLowerCase()
-                                                  .trim()
-                                                  .contains(
-                                                      pattern.toLowerCase()))
-                                              .toList();
+                      if (_topics.isNotEmpty)
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ValueListenableBuilder(
+                              valueListenable: topics,
+                              builder: (context, value, child) {
+                                return Column(
+                                  children: [
+                                    for (int i = 0; i < value.length; i++) ...[
+                                      CustomDropdown<TopicModel>(
+                                          onSubmit: (text, controller) {
+                                            if (_topics.indexWhere((element) =>
+                                                    element.name ==
+                                                    text.trim()) ==
+                                                -1) {
+                                              controller.clear();
+                                              topics.value[i] = -1;
+                                            }
+                                          },
+                                          hint: 'Topics',
+                                          onCallback: (pattern) {
+                                            final temp = _topics
+                                                .where((competence) =>
+                                                    (competence.name ??
+                                                            'unknown')
+                                                        .toLowerCase()
+                                                        .trim()
+                                                        .contains(pattern
+                                                            .toLowerCase()))
+                                                .toList();
 
-                                          return pattern.isEmpty
-                                              ? _topics
-                                              : temp;
-                                        },
-                                        child: (suggestion) {
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 12.0,
-                                              vertical: 16,
-                                            ),
-                                            child: Text(suggestion?.name ?? ''),
-                                          );
-                                        },
-                                        onItemSelect: (v, controller) {
-                                          if (v != null) {
-                                            topics.value[i] = v.id!;
-                                            controller.text = v.name!;
-                                          }
-                                        }),
-                                    SizedBox(
-                                      height: 12,
-                                    ),
+                                            return pattern.isEmpty
+                                                ? _topics
+                                                : temp;
+                                          },
+                                          child: (suggestion) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 12.0,
+                                                vertical: 16,
+                                              ),
+                                              child:
+                                                  Text(suggestion?.name ?? ''),
+                                            );
+                                          },
+                                          onItemSelect: (v, controller) {
+                                            if (v != null) {
+                                              topics.value[i] = v.id!;
+                                              controller.text = v.name!;
+                                            }
+                                          }),
+                                    ],
                                   ],
-                                ],
-                              );
-                            },
-                          ),
-                          FilledButton.icon(
-                            onPressed: () {
-                              if (topics.value.last != -1 &&
-                                  _topics.isNotEmpty) {
-                                topics.value = [...topics.value, -1];
-                              }
-                            },
-                            style: FilledButton.styleFrom(
-                              backgroundColor:
-                                  Color(0xFF29C5F6).withOpacity(.2),
-                              foregroundColor: primaryColor,
+                                );
+                              },
                             ),
-                            icon: Icon(
-                              Icons.add_rounded,
-                              color: primaryColor,
-                            ),
-                            label: Text('Add another topic'),
-                          ),
-                        ],
-                      );
-                    return SizedBox.shrink();
+                            // FilledButton.icon(
+                            //   onPressed: () {
+                            //     if (topics.value.last != -1 &&
+                            //         _topics.isNotEmpty) {
+                            //       topics.value = [...topics.value, -1];
+                            //     }
+                            //   },
+                            //   style: FilledButton.styleFrom(
+                            //     backgroundColor:
+                            //         Color(0xFF29C5F6).withOpacity(.2),
+                            //     foregroundColor: primaryColor,
+                            //   ),
+                            //   icon: Icon(
+                            //     Icons.add_rounded,
+                            //     color: primaryColor,
+                            //   ),
+                            //   label: Text('Add another topic'),
+                            // ),
+                          ],
+                        );
+                      return SizedBox.shrink();
+                    }
+                    return CircularProgressIndicator();
                   }),
                   TextFormField(
                     maxLines: 4,

@@ -796,7 +796,8 @@ class _SupervisorDetailClinicalRecordPageState
                               height: 8,
                             ),
                             RatingBar.builder(
-                              initialRating: 3,
+                              initialRating:
+                                  state.detailClinicalRecordModel?.rating ?? 0,
                               minRating: 1,
                               direction: Axis.horizontal,
                               allowHalfRating: false,
@@ -814,7 +815,9 @@ class _SupervisorDetailClinicalRecordPageState
                               },
                             ),
                             Text(
-                              ReusableFunctionHelper.rateToText(3),
+                              ReusableFunctionHelper.rateToText(state
+                                  .detailClinicalRecordModel!.rating!
+                                  .toInt()),
                               style: textTheme.bodyLarge
                                   ?.copyWith(color: primaryColor),
                             ),
@@ -853,7 +856,8 @@ class _SupervisorDetailClinicalRecordPageState
                                     ),
                                     TextSpan(
                                         text: state.detailClinicalRecordModel!
-                                            .supervisorFeedback),
+                                                .supervisorFeedback ??
+                                            '-'),
                                   ],
                                 ),
                               ),

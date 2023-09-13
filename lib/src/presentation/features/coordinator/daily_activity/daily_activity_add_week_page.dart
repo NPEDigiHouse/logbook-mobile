@@ -145,19 +145,21 @@ class _DailyActivityAddWeekPageState extends State<DailyActivityAddWeekPage> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text(
-                                    ReusableFunctionHelper.epochToStringDate(
-                                        startTime: state
-                                                .weekItems![index].startDate ??
-                                            DateTime.now()
-                                                    .millisecondsSinceEpoch ~/
-                                                1000,
-                                        endTime: state
-                                                .weekItems![index].endDate ??
-                                            DateTime.now()
-                                                    .millisecondsSinceEpoch ~/
-                                                1000),
-                                  ),
+                                  Builder(builder: (context) {
+                                    return Text(
+                                      ReusableFunctionHelper.epochToStringDate(
+                                          startTime: state.weekItems![index]
+                                                  .startDate ??
+                                              DateTime.now()
+                                                      .millisecondsSinceEpoch ~/
+                                                  1000,
+                                          endTime: state
+                                                  .weekItems![index].endDate ??
+                                              DateTime.now()
+                                                      .millisecondsSinceEpoch ~/
+                                                  1000),
+                                    );
+                                  }),
                                   SizedBox(
                                     height: 6,
                                   ),

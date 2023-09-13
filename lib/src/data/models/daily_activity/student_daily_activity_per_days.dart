@@ -36,10 +36,24 @@ class Day {
   final String? day;
   @JsonKey(name: "id")
   final String? id;
+  final String? activityStatus;
+  final String? verificationStatus;
+  final String? activityName;
+  final String? detail;
+  final String? location;
+  final String? supervisorId;
+  final String? supervisorName;
 
   Day({
     this.day,
     this.id,
+    this.activityName,
+    this.activityStatus,
+    this.detail,
+    this.location,
+    this.supervisorId,
+    this.supervisorName,
+    this.verificationStatus,
   });
 
   factory Day.fromJson(Map<String, dynamic> json) => _$DayFromJson(json);

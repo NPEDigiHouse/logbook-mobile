@@ -5,7 +5,7 @@ part 'verify_clinical_record_model.g.dart';
 @JsonSerializable()
 class VerifyClinicalRecordModel {
   final bool verified;
-  final int? rating;
+  final double? rating;
   final String? supervisorFeedback;
 
   VerifyClinicalRecordModel(

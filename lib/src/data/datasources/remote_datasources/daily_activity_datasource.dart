@@ -121,7 +121,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
               ),
               data: {
             'activityStatus': model.activityStatus,
-            if (model.detail != null) 'detail': model.detail,
+            if (model.detail!.isNotEmpty) 'detail': model.detail,
             'supervisorId': model.supervisorId,
             if (model.locationId != null) 'locationId': model.locationId,
             if (model.activityNameId != null)

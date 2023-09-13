@@ -19,11 +19,13 @@ class DetailClinicalRecordModel {
   final String? verificationStatus;
   final String? recordId;
   final String? unit;
+  final double? rating;
   final String? notes;
 
   DetailClinicalRecordModel({
     this.attachments,
     this.diagnosess,
+    this.rating,
     this.notes,
     this.examinations,
     this.managements,

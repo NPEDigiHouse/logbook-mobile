@@ -129,43 +129,44 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                     if (state.topics != null) {
                       _topics.clear();
                       _topics.addAll(state.topics!);
-                    }
-                    return CustomDropdown<TopicModel>(
-                        onSubmit: (text, controller) {
-                          if (_topics.indexWhere(
-                                  (element) => element.name == text.trim()) ==
-                              -1) {
-                            controller.clear();
-                            topicId.clear();
-                          }
-                        },
-                        hint: 'Topics',
-                        onCallback: (pattern) {
-                          final temp = _topics
-                              .where((competence) =>
-                                  (competence.name ?? 'unknown')
-                                      .toLowerCase()
-                                      .trim()
-                                      .contains(pattern.toLowerCase()))
-                              .toList();
+                      return CustomDropdown<TopicModel>(
+                          onSubmit: (text, controller) {
+                            if (_topics.indexWhere(
+                                    (element) => element.name == text.trim()) ==
+                                -1) {
+                              controller.clear();
+                              topicId.clear();
+                            }
+                          },
+                          hint: 'Topics',
+                          onCallback: (pattern) {
+                            final temp = _topics
+                                .where((competence) =>
+                                    (competence.name ?? 'unknown')
+                                        .toLowerCase()
+                                        .trim()
+                                        .contains(pattern.toLowerCase()))
+                                .toList();
 
-                          return pattern.isEmpty ? _topics : temp;
-                        },
-                        child: (suggestion) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0,
-                              vertical: 16,
-                            ),
-                            child: Text(suggestion?.name ?? ''),
-                          );
-                        },
-                        onItemSelect: (v, controller) {
-                          if (v != null) {
-                            topicId = [v.id!];
-                            controller.text = v.name!;
-                          }
-                        });
+                            return pattern.isEmpty ? _topics : temp;
+                          },
+                          child: (suggestion) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16,
+                              ),
+                              child: Text(suggestion?.name ?? ''),
+                            );
+                          },
+                          onItemSelect: (v, controller) {
+                            if (v != null) {
+                              topicId = [v.id!];
+                              controller.text = v.name!;
+                            }
+                          });
+                    }
+                    return CircularProgressIndicator();
                   }),
                   TextFormField(
                     maxLines: 4,

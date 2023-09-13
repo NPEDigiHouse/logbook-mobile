@@ -238,63 +238,64 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                                       values[i])
                                                   .first
                                                   .id!;
-                                      }
-                                      return CustomDropdown<SupervisorModel>(
-                                          onSubmit: (text, controller) {
-                                            if (_supervisors.indexWhere(
-                                                    (element) =>
-                                                        element.fullName ==
-                                                        text.trim()) ==
-                                                -1) {
-                                              controller.clear();
-                                              editingControllers[i].text = '';
-                                            }
-                                          },
-                                          init: _supervisors
-                                                  .map((e) => e.fullName)
-                                                  .toList()
-                                                  .contains(values[i])
-                                              ? _supervisors
-                                                  .where((element) =>
-                                                      element.fullName ==
-                                                      values[i])
-                                                  .first
-                                                  .fullName
-                                              : null,
-                                          hint: labels[i],
-                                          onCallback: (pattern) {
-                                            final temp = _supervisors
-                                                .where((competence) =>
-                                                    (competence.fullName ??
-                                                            'unknown')
-                                                        .toLowerCase()
-                                                        .trim()
-                                                        .contains(pattern
-                                                            .toLowerCase()))
-                                                .toList();
-
-                                            return pattern.isEmpty
+                                        return CustomDropdown<SupervisorModel>(
+                                            onSubmit: (text, controller) {
+                                              if (_supervisors.indexWhere(
+                                                      (element) =>
+                                                          element.fullName ==
+                                                          text.trim()) ==
+                                                  -1) {
+                                                controller.clear();
+                                                editingControllers[i].text = '';
+                                              }
+                                            },
+                                            init: _supervisors
+                                                    .map((e) => e.fullName)
+                                                    .toList()
+                                                    .contains(values[i])
                                                 ? _supervisors
-                                                : temp;
-                                          },
-                                          child: (suggestion) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 12.0,
-                                                vertical: 16,
-                                              ),
-                                              child: Text(
-                                                  suggestion?.fullName ?? ''),
-                                            );
-                                          },
-                                          onItemSelect: (v, controller) {
-                                            if (v != null) {
-                                              editingControllers[i].text =
-                                                  v.id!;
-                                              controller.text = v.fullName!;
-                                            }
-                                          });
+                                                    .where((element) =>
+                                                        element.fullName ==
+                                                        values[i])
+                                                    .first
+                                                    .fullName
+                                                : null,
+                                            hint: labels[i],
+                                            onCallback: (pattern) {
+                                              final temp = _supervisors
+                                                  .where((competence) =>
+                                                      (competence.fullName ??
+                                                              'unknown')
+                                                          .toLowerCase()
+                                                          .trim()
+                                                          .contains(pattern
+                                                              .toLowerCase()))
+                                                  .toList();
+
+                                              return pattern.isEmpty
+                                                  ? _supervisors
+                                                  : temp;
+                                            },
+                                            child: (suggestion) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 12.0,
+                                                  vertical: 16,
+                                                ),
+                                                child: Text(
+                                                    suggestion?.fullName ?? ''),
+                                              );
+                                            },
+                                            onItemSelect: (v, controller) {
+                                              if (v != null) {
+                                                editingControllers[i].text =
+                                                    v.id!;
+                                                controller.text = v.fullName!;
+                                              }
+                                            });
+                                      }
+                                      return CircularProgressIndicator();
                                     });
                                   }
                                   if (widget.section == 4 && i != 0) {

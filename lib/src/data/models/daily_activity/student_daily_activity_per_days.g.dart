@@ -33,9 +33,23 @@ Map<String, dynamic> _$StudentDailyActivityPerDaysToJson(
 Day _$DayFromJson(Map<String, dynamic> json) => Day(
       day: json['day'] as String?,
       id: json['id'] as String?,
+      activityName: json['activityName'] as String?,
+      activityStatus: json['activityStatus'] as String?,
+      detail: json['detail'] as String?,
+      location: json['location'] as String?,
+      supervisorId: json['supervisorId'] as String?,
+      supervisorName: json['supervisorName'] as String?,
+      verificationStatus: json['verificationStatus'] as String?,
     );
 
 Map<String, dynamic> _$DayToJson(Day instance) => <String, dynamic>{
       'day': instance.day,
       'id': instance.id,
+      'activityStatus': instance.activityStatus,
+      'verificationStatus': instance.verificationStatus,
+      'activityName': instance.activityName,
+      'detail': instance.detail,
+      'location': instance.location,
+      'supervisorId': instance.supervisorId,
+      'supervisorName': instance.supervisorName,
     };

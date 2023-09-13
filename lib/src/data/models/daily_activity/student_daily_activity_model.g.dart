@@ -55,6 +55,8 @@ ActivitiesStatus _$ActivitiesStatusFromJson(Map<String, dynamic> json) =>
       activityStatus: json['activityStatus'] as String?,
       activityName: json['activityName'] as String?,
       verificationStatus: json['verificationStatus'] as String?,
+      supervisorId: json['supervisorId'] as String?,
+      supervisorName: json['supervisorName'] as String?,
     );
 
 Map<String, dynamic> _$ActivitiesStatusToJson(ActivitiesStatus instance) =>
@@ -66,6 +68,8 @@ Map<String, dynamic> _$ActivitiesStatusToJson(ActivitiesStatus instance) =>
       'activityStatus': instance.activityStatus,
       'activityName': instance.activityName,
       'verificationStatus': instance.verificationStatus,
+      'supervisorId': instance.supervisorId,
+      'supervisorName': instance.supervisorName,
     };
 
 Week _$WeekFromJson(Map<String, dynamic> json) => Week(

@@ -10,7 +10,7 @@ VerifyClinicalRecordModel _$VerifyClinicalRecordModelFromJson(
         Map<String, dynamic> json) =>
     VerifyClinicalRecordModel(
       verified: json['verified'] as bool,
-      rating: json['rating'] as int?,
+      rating: (json['rating'] as num?)?.toDouble(),
       supervisorFeedback: json['supervisorFeedback'] as String?,
     );
 

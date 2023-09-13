@@ -116,17 +116,21 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
                 onPressed: () {
                   if (startDateController.text.isNotEmpty &&
                       endDateController.text.isNotEmpty) {
+                    final start = ReusableFunctionHelper.stringToDateTime(
+                        startDateController.text);
+                    final end = ReusableFunctionHelper.stringToDateTime(
+                        endDateController.text);
                     BlocProvider.of<DailyActivityCubit>(context)
                       ..addWeekByCoordinator(
                         postWeek: PostWeek(
-                          startDate: ReusableFunctionHelper.stringToDateTime(
-                                      startDateController.text)
+                          startDate: DateTime(start.year, start.month,
+                                      start.day, 13, 0, 0)
                                   .millisecondsSinceEpoch ~/
                               1000,
-                          endDate: ReusableFunctionHelper.stringToDateTime(
-                                      endDateController.text)
-                                  .millisecondsSinceEpoch ~/
-                              1000,
+                          endDate:
+                              DateTime(end.year, end.month, end.day, 13, 0, 0)
+                                      .millisecondsSinceEpoch ~/
+                                  1000,
                           unitId: widget.departmentId,
                           weekNum: (widget.weekNum + 1),
                         ),

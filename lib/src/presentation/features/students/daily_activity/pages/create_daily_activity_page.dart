@@ -2,6 +2,7 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/src/data/models/activity/activity_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/daily_activity_post_model.dart';
+import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/presentation/blocs/activity_cubit/activity_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
@@ -16,8 +17,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CreateDailyActivityPage extends StatefulWidget {
   final String id;
   final String dayId;
+  final ActivitiesStatus? activityStatus;
   const CreateDailyActivityPage(
-      {super.key, required this.dayId, required this.id});
+      {super.key, required this.dayId, required this.id, this.activityStatus});
 
   @override
   State<CreateDailyActivityPage> createState() =>
@@ -27,8 +29,11 @@ class CreateDailyActivityPage extends StatefulWidget {
 class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
   String? supervisorId;
   int? locationId;
+  String? locationName;
+  String? activityName;
   String? status;
   int? activityNameId;
+  String? supervisorName;
   final TextEditingController detailController = TextEditingController();
   @override
   void initState() {
@@ -39,6 +44,13 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
         ..getActivityLocations()
         ..getActivityNames();
     });
+    status = widget.activityStatus?.activityStatus;
+    detailController.text = widget.activityStatus?.detail ?? '';
+    if (status == 'ATTEND') {
+      locationName = widget.activityStatus?.location ?? '';
+      activityName = widget.activityStatus?.activityName ?? '';
+    }
+    supervisorName = widget.activityStatus?.supervisorName;
   }
 
   @override
@@ -94,43 +106,45 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                     if (state is FetchSuccess) {
                       _supervisors.clear();
                       _supervisors.addAll(state.supervisors);
-                    }
-                    return CustomDropdown<SupervisorModel>(
-                        onSubmit: (text, controller) {
-                          if (_supervisors.indexWhere((element) =>
-                                  element.fullName == text.trim()) ==
-                              -1) {
-                            controller.clear();
-                            supervisorId = '';
-                          }
-                        },
-                        hint: 'Supervisor',
-                        onCallback: (pattern) {
-                          final temp = _supervisors
-                              .where((competence) =>
-                                  (competence.fullName ?? 'unknown')
-                                      .toLowerCase()
-                                      .trim()
-                                      .contains(pattern.toLowerCase()))
-                              .toList();
+                      return CustomDropdown<SupervisorModel>(
+                          onSubmit: (text, controller) {
+                            if (_supervisors.indexWhere((element) =>
+                                    element.fullName == text.trim()) ==
+                                -1) {
+                              controller.clear();
+                              supervisorId = '';
+                            }
+                          },
+                          hint: 'Supervisor',
+                          init: supervisorName,
+                          onCallback: (pattern) {
+                            final temp = _supervisors
+                                .where((competence) =>
+                                    (competence.fullName ?? 'unknown')
+                                        .toLowerCase()
+                                        .trim()
+                                        .contains(pattern.toLowerCase()))
+                                .toList();
 
-                          return pattern.isEmpty ? _supervisors : temp;
-                        },
-                        child: (suggestion) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0,
-                              vertical: 16,
-                            ),
-                            child: Text(suggestion?.fullName ?? ''),
-                          );
-                        },
-                        onItemSelect: (v, controller) {
-                          if (v != null) {
-                            supervisorId = v.id!;
-                            controller.text = v.fullName!;
-                          }
-                        });
+                            return pattern.isEmpty ? _supervisors : temp;
+                          },
+                          child: (suggestion) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16,
+                              ),
+                              child: Text(suggestion?.fullName ?? ''),
+                            );
+                          },
+                          onItemSelect: (v, controller) {
+                            if (v != null) {
+                              supervisorId = v.id!;
+                              controller.text = v.fullName!;
+                            }
+                          });
+                    }
+                    return CircularProgressIndicator();
                   }),
                   SizedBox(
                     height: 12,
@@ -152,6 +166,12 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                     return DropdownButtonFormField(
                       isExpanded: true,
                       hint: Text('Status'),
+                      value: status != null
+                          ? status!.isNotEmpty
+                              ? status![0].toUpperCase() +
+                                  status!.substring(1).toLowerCase()
+                              : null
+                          : null,
                       items: _type
                           .map(
                             (e) => DropdownMenuItem(
@@ -204,7 +224,12 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                           onChanged: (v) {
                             if (v != null) locationId = v.id!;
                           },
-                          value: null,
+                          value: _activityLocations.indexWhere((element) =>
+                                      element.name == locationName) !=
+                                  -1
+                              ? _activityLocations.firstWhere(
+                                  (element) => element.name == locationName)
+                              : null,
                         );
                       }),
                       BlocBuilder<ActivityCubit, ActivityState>(
@@ -227,9 +252,13 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                               .toList(),
                           onChanged: (v) {
                             if (v != null) activityNameId = v.id!;
-                            ;
                           },
-                          value: null,
+                          value: _activityLocations.indexWhere((element) =>
+                                      element.name == activityName) !=
+                                  -1
+                              ? _activityLocations.firstWhere(
+                                  (element) => element.name == activityName)
+                              : null,
                         );
                       }),
                     ],
@@ -253,8 +282,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                     onPressed: () {
                       if (((locationId != null && activityNameId != null) ||
                               status != 'ATTEND') &&
-                          supervisorId != null &&
-                          detailController.text.isNotEmpty) {
+                          supervisorId != null) {
                         BlocProvider.of<DailyActivityCubit>(context)
                           ..updateDailyActivity(
                             id: widget.dayId,

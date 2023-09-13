@@ -176,42 +176,44 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                         if (state.studentSkillsModel != null) {
                           _competences.clear();
                           _competences.addAll(state.studentSkillsModel!);
-                        }
-                        return CustomDropdown<dynamic>(
-                            onSubmit: (text, controller) {
-                              if (_competences.indexWhere((element) =>
-                                      element.name?.trim() == text.trim()) ==
-                                  -1) {
-                                controller.clear();
-                                caseId = null;
-                              }
-                            },
-                            hint: 'Skills',
-                            onCallback: (pattern) {
-                              final temp = _competences
-                                  .where((competence) => (competence.name ?? '')
-                                      .toLowerCase()
-                                      .trim()
-                                      .contains(pattern.toLowerCase()))
-                                  .toList();
+                          return CustomDropdown<dynamic>(
+                              onSubmit: (text, controller) {
+                                if (_competences.indexWhere((element) =>
+                                        element.name?.trim() == text.trim()) ==
+                                    -1) {
+                                  controller.clear();
+                                  caseId = null;
+                                }
+                              },
+                              hint: 'Skills',
+                              onCallback: (pattern) {
+                                final temp = _competences
+                                    .where((competence) =>
+                                        (competence.name ?? '')
+                                            .toLowerCase()
+                                            .trim()
+                                            .contains(pattern.toLowerCase()))
+                                    .toList();
 
-                              return pattern.isEmpty ? _competences : temp;
-                            },
-                            child: (suggestion) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0,
-                                  vertical: 16,
-                                ),
-                                child: Text(suggestion.name),
-                              );
-                            },
-                            onItemSelect: (v, controller) {
-                              if (v != null) {
-                                caseId = v.id;
-                                controller.text = v.name!;
-                              }
-                            });
+                                return pattern.isEmpty ? _competences : temp;
+                              },
+                              child: (suggestion) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 16,
+                                  ),
+                                  child: Text(suggestion.name),
+                                );
+                              },
+                              onItemSelect: (v, controller) {
+                                if (v != null) {
+                                  caseId = v.id;
+                                  controller.text = v.name!;
+                                }
+                              });
+                        }
+                        return CircularProgressIndicator();
                       },
                     )
                   else
@@ -221,42 +223,44 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                         if (state.studentCasesModel != null) {
                           _competences.clear();
                           _competences.addAll(state.studentCasesModel!);
-                        }
-                        return CustomDropdown<dynamic>(
-                            onSubmit: (text, controller) {
-                              if (_competences.indexWhere((element) =>
-                                      element.name?.trim() == text.trim()) ==
-                                  -1) {
-                                controller.clear();
-                                caseId = null;
-                              }
-                            },
-                            hint: 'Cases',
-                            onCallback: (pattern) {
-                              final temp = _competences
-                                  .where((competence) => (competence.name ?? '')
-                                      .toLowerCase()
-                                      .trim()
-                                      .contains(pattern.toLowerCase()))
-                                  .toList();
+                          return CustomDropdown<dynamic>(
+                              onSubmit: (text, controller) {
+                                if (_competences.indexWhere((element) =>
+                                        element.name?.trim() == text.trim()) ==
+                                    -1) {
+                                  controller.clear();
+                                  caseId = null;
+                                }
+                              },
+                              hint: 'Cases',
+                              onCallback: (pattern) {
+                                final temp = _competences
+                                    .where((competence) =>
+                                        (competence.name ?? '')
+                                            .toLowerCase()
+                                            .trim()
+                                            .contains(pattern.toLowerCase()))
+                                    .toList();
 
-                              return pattern.isEmpty ? _competences : temp;
-                            },
-                            child: (suggestion) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0,
-                                  vertical: 16,
-                                ),
-                                child: Text(suggestion.name),
-                              );
-                            },
-                            onItemSelect: (v, controller) {
-                              if (v != null) {
-                                caseId = v.id;
-                                controller.text = v.name!;
-                              }
-                            });
+                                return pattern.isEmpty ? _competences : temp;
+                              },
+                              child: (suggestion) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 16,
+                                  ),
+                                  child: Text(suggestion.name),
+                                );
+                              },
+                              onItemSelect: (v, controller) {
+                                if (v != null) {
+                                  caseId = v.id;
+                                  controller.text = v.name!;
+                                }
+                              });
+                        }
+                        return CircularProgressIndicator();
                       },
                     ),
                   Builder(

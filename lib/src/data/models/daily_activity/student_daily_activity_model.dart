@@ -66,6 +66,8 @@ class ActivitiesStatus {
   final String? activityName;
   @JsonKey(name: "verificationStatus")
   final String? verificationStatus;
+  final String? supervisorId;
+  final String? supervisorName;
 
   ActivitiesStatus({
     this.id,
@@ -75,6 +77,8 @@ class ActivitiesStatus {
     this.activityStatus,
     this.activityName,
     this.verificationStatus,
+    this.supervisorId,
+    this.supervisorName,
   });
 
   factory ActivitiesStatus.fromJson(Map<String, dynamic> json) =>

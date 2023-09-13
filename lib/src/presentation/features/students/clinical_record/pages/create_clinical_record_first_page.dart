@@ -88,45 +88,45 @@ class _CreateClinicalRecordFirstPageState
                       if (state is FetchSuccess) {
                         _supervisors.clear();
                         _supervisors.addAll(state.supervisors);
-                      }
-                      return CustomDropdown<SupervisorModel>(
-                          onSubmit: (text, controller) {
-                            if (_supervisors.indexWhere((element) =>
-                                    element.fullName == text.trim()) ==
-                                -1) {
-                              controller.clear();
-                              supervisorId = '';
-                            }
-                          },
-                          hint: 'Supervisor',
-                          onCallback: (pattern) {
-                            final temp = _supervisors
-                                .where((competence) =>
-                                    (competence.fullName ?? 'unknown')
-                                        .toLowerCase()
-                                        .trim()
-                                        .contains(pattern.toLowerCase()))
-                                .toList();
+                        return CustomDropdown<SupervisorModel>(
+                            onSubmit: (text, controller) {
+                              if (_supervisors.indexWhere((element) =>
+                                      element.fullName == text.trim()) ==
+                                  -1) {
+                                controller.clear();
+                                supervisorId = '';
+                              }
+                            },
+                            hint: 'Supervisor',
+                            onCallback: (pattern) {
+                              final temp = _supervisors
+                                  .where((competence) =>
+                                      (competence.fullName ?? 'unknown')
+                                          .toLowerCase()
+                                          .trim()
+                                          .contains(pattern.toLowerCase()))
+                                  .toList();
 
-                            return pattern.isEmpty ? _supervisors : temp;
-                          },
-                          child: (suggestion) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 16,
-                              ),
-                              child: Text(suggestion?.fullName ?? ''),
-                            );
-                          },
-                          onItemSelect: (v, controller) {
-                            if (v != null) {
-                              supervisorId = v.id!;
-                              controller.text = v.fullName!;
-                            }
-                          });
+                              return pattern.isEmpty ? _supervisors : temp;
+                            },
+                            child: (suggestion) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 16,
+                                ),
+                                child: Text(suggestion?.fullName ?? ''),
+                              );
+                            },
+                            onItemSelect: (v, controller) {
+                              if (v != null) {
+                                supervisorId = v.id!;
+                                controller.text = v.fullName!;
+                              }
+                            });
+                      }
+                      return CircularProgressIndicator();
                     }),
-                    
                     BuildTextField(
                       onChanged: (v) {},
                       controller: recordIdController,
