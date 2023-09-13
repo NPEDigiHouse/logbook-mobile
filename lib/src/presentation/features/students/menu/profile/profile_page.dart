@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cool_alert/cool_alert.dart';
 import 'package:elogbook/core/app/app_settings.dart';
+import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
@@ -30,7 +31,10 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class ProfilePage extends StatefulWidget {
   final UserCredential credential;
-  const ProfilePage({super.key, required this.credential});
+  const ProfilePage({
+    super.key,
+    required this.credential,
+  });
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -76,9 +80,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: double.infinity,
                     decoration: const BoxDecoration(
                       color: primaryColor,
-                      // borderRadius: BorderRadius.vertical(
-                      //   bottom: Radius.circular(16),
-                      // ),
                     ),
                     child: Stack(
                       clipBehavior: Clip.none,
@@ -168,6 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ),
+                  
                   const SizedBox(height: 12),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -181,13 +183,20 @@ class _ProfilePageState extends State<ProfilePage> {
                               color: secondaryColor,
                               borderRadius: BorderRadius.circular(50),
                             ),
-                            child: Text(
-                              'Ilmu Kesehatan Anak',
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: Colors.white,
-                              ),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
+                            child:
+                                BlocBuilder<DepartmentCubit, DepartmentState>(
+                              builder: (context, state) {
+                                return Text(
+                                  state is GetActiveDepartmentSuccess
+                                      ? state.activeDepartment.unitName!
+                                      : '...',
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                );
+                              },
                             ),
                           ),
                         ),

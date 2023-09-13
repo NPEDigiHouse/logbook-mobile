@@ -218,7 +218,9 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                               ),
                               child: Center(
                                 child: Text(
-                                  (stData.finalScore ?? 100).toString(),
+                                  ((stData.finalScore ?? 100.0))
+                                      .toInt()
+                                      .toString(),
                                   style: textTheme.titleLarge?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

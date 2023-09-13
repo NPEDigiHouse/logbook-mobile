@@ -18,7 +18,7 @@ StudentStatistic _$StudentStatisticFromJson(Map<String, dynamic> json) =>
       skills: (json['skills'] as List<dynamic>?)
           ?.map((e) => Skill.fromJson(e as Map<String, dynamic>))
           .toList(),
-      finalScore: json['finalScore'],
+      finalScore: (json['finalScore'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$StudentStatisticToJson(StudentStatistic instance) =>

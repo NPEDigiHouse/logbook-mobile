@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/change_profile_photo.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:file_picker/file_picker.dart';
@@ -110,7 +111,17 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
                     child: Stack(
                       children: <Widget>[
                         InkWell(
-                          onTap: () => uploadFile(context),
+                          onTap: () => showModalBottomSheet(
+                              context: context,
+                              isDismissible: true,
+                              builder: (ctx) => ChangeProfilePhotoSheet(
+                                  onTap: () {
+                                    uploadFile(context);
+                                    Navigator.of(context).pop();
+                                  },
+                                  isProfilePhotoExist:
+                                      state.profilePic != null &&
+                                          state.rspp == RequestState.data)),
                           child: BlocBuilder<ProfileCubit, ProfileState>(
                             builder: (context, state) {
                               if (state.stateProfilePic ==
