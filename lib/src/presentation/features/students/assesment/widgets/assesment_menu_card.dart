@@ -9,8 +9,10 @@ class AssementMenuCard extends StatelessWidget {
   final String iconPath;
   final String title;
   final VoidCallback onTap;
+  final String desc;
   const AssementMenuCard({
     super.key,
+    required this.desc,
     required this.iconPath,
     required this.title,
     required this.onTap,
@@ -65,7 +67,7 @@ class AssementMenuCard extends StatelessWidget {
                 height: 4,
               ),
               Text(
-                'Lorem ipsum dolor sit amet consectetur.',
+                desc,
                 maxLines: 2,
                 style: textTheme.bodySmall?.copyWith(
                   height: 1.2,

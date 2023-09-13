@@ -9,6 +9,7 @@ import 'package:path/path.dart';
 abstract class UserDataSource {
   Future<UserCredential> getUserCredential();
   Future<String> uploadProfilePicture(String path);
+  Future<void> removeProfilePicture();
   Future<void> updateFullName({required String fullname});
   Future<void> deleteUser();
 }
@@ -128,6 +129,34 @@ class UserDataSourceImpl implements UserDataSource {
     try {
       final response = await dio.delete(
         ApiService.baseUrl + '/users',
+        options: Options(
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Bearer ${credential?.accessToken}'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception();
+      }
+      await preferenceHandler.removeCredential();
+    } catch (e) {
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> removeProfilePicture() async {
+    final credential = await preferenceHandler.getCredential();
+    try {
+      final response = await dio.delete(
+        ApiService.baseUrl + '/users/pic',
         options: Options(
           headers: {
             "content-type": 'application/json',

@@ -48,6 +48,7 @@ class AssesmentHomePage extends StatelessWidget {
                   iconPath: 'icon_weekly.svg',
                   title: 'Weekly Grades',
                   onTap: () => context.navigateTo(StudentWeeklyAssementPage()),
+                  desc: 'Weekly assessment from kordik team',
                 ),
                 SizedBox(
                   width: 12,
@@ -61,6 +62,7 @@ class AssesmentHomePage extends StatelessWidget {
                     isSupervisingDPKExist:
                         credential.student?.supervisingDPKId != null,
                   )),
+                  desc: 'Scientific assessment data',
                 ),
               ],
             ),
@@ -76,6 +78,7 @@ class AssesmentHomePage extends StatelessWidget {
                       isExaminerDPKExist:
                           credential.student?.examinerDPKId != null,
                     )),
+                    desc: 'Mini Clinical Evaluation Exercise',
                   );
                 }),
                 SizedBox(
@@ -89,6 +92,7 @@ class AssesmentHomePage extends StatelessWidget {
                       unitName: activeDepartmentModel.unitName!,
                     ),
                   ),
+                  desc: 'Assessment given to personal behavior or behavior',
                 ),
               ],
             ),

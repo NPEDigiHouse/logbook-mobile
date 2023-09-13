@@ -121,7 +121,9 @@ class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
       ]),
       child: CustomScrollView(
         slivers: <Widget>[
-          const MainAppBar(),
+          const MainAppBar(
+            withLogout: false,
+          ),
           SliverFillRemaining(
             child: BlocListener<DepartmentCubit, DepartmentState>(
               listener: (context, state) {

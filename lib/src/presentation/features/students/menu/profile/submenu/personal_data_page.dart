@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/change_profile_photo.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/custom_shimmer.dart';
 import 'package:file_picker/file_picker.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/personal_data_form.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PersonalDataPage extends StatefulWidget {
@@ -37,10 +39,32 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
           await FilePicker.platform.pickFiles(type: FileType.image);
 
       if (result != null) {
-        File file = File(result.files.single.path!);
+        CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: result.files.single.path!,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio3x2,
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9
+          ],
+          uiSettings: [
+            AndroidUiSettings(
+                toolbarTitle: 'Crop Profile Image',
+                toolbarColor: primaryColor,
+                toolbarWidgetColor: Colors.white,
+                statusBarColor: secondaryColor,
+                activeControlsWidgetColor: primaryColor,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false),
+            IOSUiSettings(
+              title: 'Crop Profile Image',
+            ),
+          ],
+        );
         try {
           BlocProvider.of<ProfileCubit>(context)
-            ..uploadProfilePic(path: file.path);
+            ..uploadProfilePic(path: croppedFile!.path);
         } catch (e) {
           print('Error uploading file: $e');
         }
@@ -93,63 +117,78 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
                 children: <Widget>[
                   const SizedBox(height: 40),
                   Center(
-                    child: Stack(
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () => uploadFile(context),
-                          child: BlocBuilder<ProfileCubit, ProfileState>(
-                            builder: (context, state) {
-                              if (state.stateProfilePic ==
-                                  RequestState.loading) {
-                                return CustomShimmer(
-                                    child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white,
-                                  ),
-                                  width: 100,
-                                  height: 100,
-                                ));
-                              }
-                              if (state.profilePic != null &&
-                                  state.rspp == RequestState.data) {
-                                return CircleAvatar(
-                                  radius: 50,
-                                  foregroundImage:
-                                      MemoryImage(state.profilePic!),
-                                );
-                              } else {
-                                return CircleAvatar(
-                                  radius: 50,
-                                  foregroundImage: AssetImage(
-                                    AssetPath.getImage('profile_default.png'),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: primaryColor,
-                              shape: BoxShape.circle,
-                              border:
-                                  Border.all(color: scaffoldBackgroundColor),
-                            ),
-                            child: Center(
-                              child: SvgPicture.asset(
-                                AssetPath.getIcon('camera_filled.svg'),
-                                width: 16,
+                    child: BlocBuilder<ProfileCubit, ProfileState>(
+                      builder: (context, state) {
+                        return InkWell(
+                          onTap: () => showModalBottomSheet(
+                              context: context,
+                              isDismissible: true,
+                              builder: (ctx) => ChangeProfilePhotoSheet(
+                                  onTap: () {
+                                    uploadFile(context);
+                                    Navigator.of(context).pop();
+                                  },
+                                  isProfilePhotoExist:
+                                      state.profilePic != null &&
+                                          state.rspp == RequestState.data)),
+                          child: Stack(
+                            children: [
+                              Builder(
+                                builder: (context) {
+                                  if (state.stateProfilePic ==
+                                      RequestState.loading) {
+                                    return CustomShimmer(
+                                        child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white,
+                                      ),
+                                      width: 100,
+                                      height: 100,
+                                    ));
+                                  }
+                                  if (state.profilePic != null &&
+                                      state.rspp == RequestState.data) {
+                                    return CircleAvatar(
+                                      radius: 50,
+                                      foregroundImage:
+                                          MemoryImage(state.profilePic!),
+                                    );
+                                  } else {
+                                    return CircleAvatar(
+                                      radius: 50,
+                                      foregroundImage: AssetImage(
+                                        AssetPath.getImage(
+                                            'profile_default.png'),
+                                      ),
+                                    );
+                                  }
+                                },
                               ),
-                            ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    color: primaryColor,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        color: scaffoldBackgroundColor),
+                                  ),
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      AssetPath.getIcon('camera_filled.svg'),
+                                      width: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(height: 16),

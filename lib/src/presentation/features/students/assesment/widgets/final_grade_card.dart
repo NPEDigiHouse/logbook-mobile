@@ -116,7 +116,7 @@ class _FinalGradeCardState extends State<FinalGradeCard> {
                                       SizedBox(
                                         width: 220,
                                         child: Text(
-                                          'Lorem ipsum dolor sit amet consectetur.',
+                                          'Your recap and final score for this department',
                                           maxLines: 2,
                                           style: textTheme.bodySmall?.copyWith(
                                             height: 1.2,

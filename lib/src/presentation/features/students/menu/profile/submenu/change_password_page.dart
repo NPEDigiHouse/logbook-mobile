@@ -66,19 +66,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     PasswordFormField(
-                      controller: _currentPasswordController,
-                      label: 'Current Password',
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value!.trim().isEmpty) {
-                          return 'Field can\'t be empty.';
-                        }
-
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    PasswordFormField(
                       controller: _newPasswordController,
                       label: 'New Password',
                       textInputAction: TextInputAction.next,

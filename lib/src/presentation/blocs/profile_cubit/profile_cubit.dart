@@ -126,6 +126,29 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<void> removeProfilePic() async {
+    try {
+      emit(state.copyWith(
+        stateProfilePic: RequestState.loading,
+      ));
+
+      await userDataSource.removeProfilePicture();
+      try {
+        emit(state.copyWith(
+            removeProfileImage: true, stateProfilePic: RequestState.data));
+      } catch (e) {
+        emit(state.copyWith(stateProfilePic: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          stateProfilePic: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> updateFullName({required String fullname}) async {
     try {
       emit(state.copyWith(

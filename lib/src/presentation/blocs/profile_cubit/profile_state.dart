@@ -7,12 +7,14 @@ class ProfileState {
   final RequestState stateProfilePic;
   final RequestState requestState;
   final RequestState rspp;
+  final bool removeProfileImage;
   final bool successUpdateProfile;
   final bool successDeleteAccount;
 
   ProfileState({
     this.profilePic,
     this.userCredential,
+    this.removeProfileImage = false,
     this.stateProfilePic = RequestState.init,
     this.requestState = RequestState.init,
     this.rspp = RequestState.init,
@@ -27,6 +29,7 @@ class ProfileState {
       bool successUploadProfilePic = false,
       bool successUpdateProfile = false,
       bool successDeleteAccount = false,
+      bool removeProfileImage = false,
       RequestState requestState = RequestState.init,
       RequestState rsPP = RequestState.init,
       UserCredential? userCredential}) {
@@ -35,6 +38,7 @@ class ProfileState {
         stateProfilePic: stateProfilePic,
         requestState: requestState,
         rspp: rsPP,
+        removeProfileImage: removeProfileImage,
         successDeleteAccount: successDeleteAccount,
         successUploadProfilePic: successUploadProfilePic,
         successUpdateProfile: successUpdateProfile,

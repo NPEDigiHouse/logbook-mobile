@@ -32,6 +32,9 @@ abstract class AuthDataSource {
     required String newPassword,
     required String token,
   });
+  Future<void> changePassword({
+    required String newPassword,
+  });
 }
 
 class AuthDataSourceImpl implements AuthDataSource {
@@ -276,6 +279,14 @@ class AuthDataSourceImpl implements AuthDataSource {
       return userCredential;
     } catch (e) {
       print("ERROR");
+      print(e.toString());
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> changePassword({required String newPassword}) async {
+    try {} catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
     }

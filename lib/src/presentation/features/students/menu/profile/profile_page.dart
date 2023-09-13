@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cool_alert/cool_alert.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
@@ -8,6 +9,7 @@ import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/change_password_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/export_data_page.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
+import 'package:elogbook/src/presentation/widgets/image_preview.dart';
 import 'package:elogbook/src/presentation/widgets/profile_pic_placeholder.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_row.dart';
 import 'package:flutter/material.dart';
@@ -103,22 +105,32 @@ class _ProfilePageState extends State<ProfilePage> {
                                       state.rspp == RequestState.data) {
                                     return Column(
                                       children: [
-                                        Container(
-                                          width: 100,
-                                          height: 100,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 2,
-                                                color: scaffoldBackgroundColor,
-                                                strokeAlign: BorderSide
-                                                    .strokeAlignOutside),
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              image: MemoryImage(
-                                                state.profilePic!,
+                                        InkWell(
+                                          onTap: () => context.navigateTo(
+                                              ImagePreview(
+                                                  byte: state.profilePic!,
+                                                  tag: 'profile_image')),
+                                          child: Hero(
+                                            tag: 'profile_image',
+                                            child: Container(
+                                              width: 100,
+                                              height: 100,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 2,
+                                                    color:
+                                                        scaffoldBackgroundColor,
+                                                    strokeAlign: BorderSide
+                                                        .strokeAlignOutside),
+                                                color: Colors.white,
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  image: MemoryImage(
+                                                    state.profilePic!,
+                                                  ),
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
-                                              fit: BoxFit.cover,
                                             ),
                                           ),
                                         ),
@@ -247,12 +259,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 8),
                   ProfileItemMenuCard(
                     iconPath: 'lock_filled.svg',
-                    title: 'Term and Conditions',
-                    onTap: () => context.navigateTo(const ChangePasswordPage()),
-                  ),
-                  const SizedBox(height: 12),
-                  ProfileItemMenuCard(
-                    iconPath: 'lock_filled.svg',
                     title: 'About E-Logbook',
                     onTap: () => context.navigateTo(const ChangePasswordPage()),
                   ),
@@ -279,7 +285,20 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileItemMenuCardVariant(
                     iconPath: 'delete_icon.svg',
                     title: 'Log Out',
-                    onTap: () {},
+                    onTap: () {
+                      CoolAlert.show(
+                        context: context,
+                        type: CoolAlertType.confirm,
+                        title: 'Confirm Logout',
+                        confirmBtnText: 'Confirm',
+                        text: "Are you sure to sign out?",
+                        onConfirmBtnTap: () async {
+                          await BlocProvider.of<ProfileCubit>(context).reset();
+                          await BlocProvider.of<AuthCubit>(context).logout();
+                        },
+                        confirmBtnColor: primaryColor,
+                      );
+                    },
                   ),
                   const SizedBox(height: 8),
                   ProfileItemMenuCardVariant2(
@@ -290,7 +309,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         context: context,
                         barrierLabel: '',
                         barrierDismissible: false,
-                        builder: (_) => InputFinalScoreDialog(),
+                        builder: (_) => DeleteAccountDialog(),
                       );
                     },
                   ),
@@ -304,16 +323,16 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-class InputFinalScoreDialog extends StatefulWidget {
-  const InputFinalScoreDialog({
+class DeleteAccountDialog extends StatefulWidget {
+  const DeleteAccountDialog({
     super.key,
   });
 
   @override
-  State<InputFinalScoreDialog> createState() => _AddTopicDialogState();
+  State<DeleteAccountDialog> createState() => _AddTopicDialogState();
 }
 
-class _AddTopicDialogState extends State<InputFinalScoreDialog> {
+class _AddTopicDialogState extends State<DeleteAccountDialog> {
   final textController = TextEditingController();
   String keyConfirm = '';
   final FocusScopeNode _focusScopeNode = FocusScopeNode();
