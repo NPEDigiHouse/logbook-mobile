@@ -130,6 +130,8 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
                                 week: element.weekNum ?? 0,
                                 // date: 'Senin, 27 Mar 2023',
                                 // place: 'RS Unhas',
+                                attendNum: element.attendNum ?? 0,
+                                notAttendNum: element.notAttendNum ?? 0,
                                 status: element.verificationStatus!,
                                 score: element.score!.toDouble(),
                               );

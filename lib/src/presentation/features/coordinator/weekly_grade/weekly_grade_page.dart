@@ -2,6 +2,7 @@ import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/custom_shimmer.dart';
+import 'package:elogbook/src/presentation/widgets/profile_pic_placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -132,13 +133,11 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
                                           height: 50,
                                         ));
                                       } else if (snapshot.hasError) {
-                                        return CircleAvatar(
-                                          radius: 25,
-                                          foregroundImage: AssetImage(
-                                            AssetPath.getImage(
-                                                'profile_default.png'),
-                                          ),
-                                        );
+                                        return ProfilePicPlaceholder(
+                                            height: 50,
+                                            name: s[index].studentName ?? '-',
+                                            isSmall: true,
+                                            width: 50);
                                       } else {
                                         s[index].profileImage = snapshot.data;
                                         return CircleAvatar(
@@ -155,11 +154,37 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  subtitle: Text(
-                                    s[index].studentId ?? '',
-                                    style: textTheme.bodySmall?.copyWith(
-                                      color: borderColor,
-                                    ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        s[index].studentId ?? '',
+                                        style: textTheme.bodySmall?.copyWith(
+                                          color: borderColor,
+                                        ),
+                                      ),
+                                      RichText(
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        text: TextSpan(
+                                          style: textTheme.bodySmall?.copyWith(
+                                            color: secondaryTextColor,
+                                          ),
+                                          children: <TextSpan>[
+                                            const TextSpan(
+                                              text: 'Department:\t',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                                text: s[index]
+                                                    .activeDepartmentName),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   onTap: () => context.navigateTo(
                                     WeeklyGradeDetailPage(student: s[index]),

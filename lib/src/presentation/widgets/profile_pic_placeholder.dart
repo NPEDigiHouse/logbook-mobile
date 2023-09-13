@@ -6,10 +6,12 @@ class ProfilePicPlaceholder extends StatelessWidget {
   final double width;
   final double height;
   final String name;
+  final bool isSmall;
   const ProfilePicPlaceholder(
       {super.key,
       required this.height,
       required this.name,
+      this.isSmall = false,
       required this.width});
 
   @override
@@ -31,6 +33,7 @@ class ProfilePicPlaceholder extends StatelessWidget {
           style: textTheme.displayMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: Colors.white,
+            fontSize: isSmall ? 30 : 61,
           ),
         ),
       ),

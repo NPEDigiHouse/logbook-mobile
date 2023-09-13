@@ -446,11 +446,10 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
           },
           followRedirects: false,
           validateStatus: (status) {
-            return status! < 1000;
+            return status! < 500;
           },
         ),
       );
-      print('/weekly-assesments/students/$studentId/units/$unitId');
       print(response);
       if (response.statusCode != 200) {
         throw Exception();

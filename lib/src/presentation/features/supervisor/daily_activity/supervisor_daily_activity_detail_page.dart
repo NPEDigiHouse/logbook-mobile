@@ -1,19 +1,11 @@
-import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/daily_activity/daily_activity_student.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
-import 'package:elogbook/src/presentation/features/supervisor/daily_activity/supervisor_daily_activity_perweek_page.dart';
-import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
-import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
-import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
-import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
-import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
-import 'package:elogbook/src/presentation/widgets/spacing_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -129,24 +121,25 @@ class _SupervisorDailyActivityDetailPageState
                               ],
                             ],
                           ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.location_on_rounded,
-                                size: 16,
-                                color: onFormDisableColor,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Text(
-                                widget.data.location ?? '',
-                                style: textTheme.bodyMedium?.copyWith(
+                          if (widget.data.activityStatus == 'ATTEND')
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on_rounded,
+                                  size: 16,
                                   color: onFormDisableColor,
                                 ),
-                              ),
-                            ],
-                          ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  widget.data.location ?? '',
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: onFormDisableColor,
+                                  ),
+                                ),
+                              ],
+                            ),
                           SizedBox(
                             height: 12,
                           ),
@@ -154,13 +147,24 @@ class _SupervisorDailyActivityDetailPageState
                           SizedBox(
                             height: 12,
                           ),
-                          Text('Activity', style: textTheme.bodyMedium),
-                          Text(
-                            widget.data.activityName ?? '',
-                            style: textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
+                          if (widget.data.activityStatus == 'ATTEND') ...[
+                            Text('Activity', style: textTheme.bodyMedium),
+                            Text(
+                              widget.data.activityName ?? '',
+                              style: textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
+                          ] else
+                            Text(
+                              widget.data.activityStatus![0].toUpperCase() +
+                                  widget.data.activityStatus!
+                                      .substring(1)
+                                      .toLowerCase(),
+                              style: textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           SizedBox(
                             height: 16,
                           ),

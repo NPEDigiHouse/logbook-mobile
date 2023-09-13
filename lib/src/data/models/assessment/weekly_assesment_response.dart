@@ -33,12 +33,16 @@ class Assesment {
   int? weekNum;
   @JsonKey(name: "id")
   String? id;
+  int? attendNum;
+  int? notAttendNum;
 
   Assesment({
     this.score,
     this.verificationStatus,
     this.weekNum,
     this.id,
+    this.attendNum,
+    this.notAttendNum,
   });
 
   factory Assesment.fromJson(Map<String, dynamic> json) =>

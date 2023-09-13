@@ -26,12 +26,14 @@ class DailyActivityStudent {
   final int? weekNum;
   @JsonKey(name: "day")
   final String? day;
+  final String? detail;
 
   DailyActivityStudent({
     this.activityName,
     this.activityStatus,
     this.id,
     this.createdAt,
+    this.detail,
     this.location,
     this.studentId,
     this.studentName,

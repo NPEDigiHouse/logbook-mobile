@@ -15,6 +15,7 @@ DailyActivityStudent _$DailyActivityStudentFromJson(
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
+      detail: json['detail'] as String?,
       location: json['location'] as String?,
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
@@ -38,4 +39,5 @@ Map<String, dynamic> _$DailyActivityStudentToJson(
       'verificationStatus': instance.verificationStatus,
       'weekNum': instance.weekNum,
       'day': instance.day,
+      'detail': instance.detail,
     };

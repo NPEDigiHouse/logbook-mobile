@@ -8,12 +8,16 @@ class WeeklyGradeCard extends StatelessWidget {
   final int week;
   // final String date;
   // final String place;
+  final int? attendNum;
+  final int? notAttendNum;
   final String status;
   final double? score;
   final VoidCallback? onTap;
 
   const WeeklyGradeCard({
     super.key,
+    this.attendNum,
+    this.notAttendNum,
     required this.week,
     // required this.date,
     required this.status,
@@ -71,20 +75,27 @@ class WeeklyGradeCard extends StatelessWidget {
                       ]
                     ],
                   ),
-
+                  SizedBox(
+                    height: 8,
+                  ),
                   // Text(
                   //   date,
                   //   style: textTheme.titleMedium?.copyWith(
                   //     color: secondaryTextColor,
                   //   ),
                   // ),
-                  // Text(
-                  //   place,
-                  //   style: textTheme.titleMedium?.copyWith(
-                  //     color: secondaryColor,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
+                  Text(
+                    '${attendNum ?? 0}× Attend',
+                    style: textTheme.titleSmall?.copyWith(
+                      color: primaryColor,
+                    ),
+                  ),
+                  Text(
+                    '${notAttendNum ?? 0}× Not Attend',
+                    style: textTheme.titleSmall?.copyWith(
+                      color: secondaryColor,
+                    ),
+                  ),
                 ],
               ),
             ),
