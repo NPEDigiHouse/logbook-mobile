@@ -44,7 +44,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: <Widget>[
-        const MainAppBar(),
+        const MainAppBar(
+          withLogout: false,
+        ),
         SliverFillRemaining(
           child: SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 24),

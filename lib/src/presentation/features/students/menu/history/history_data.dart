@@ -48,10 +48,10 @@ class HistoryHelper {
             title: 'Clinical Record',
             iconPath: AssetPath.getIcon('clinical_notes_rounded.svg'),
             patientName: element.patientName,
-            id: element.attachment!,
+            id: element.attachment??'',
             supervisor: element.supervisorName,
-            studentId: element.studentId!,
-            studentName: element.studentName!,
+            studentId: element.studentId??'',
+            studentName: element.studentName??'',
           ));
           break;
         case 'Scientific Session':
@@ -63,9 +63,9 @@ class HistoryHelper {
             title: 'Scientific Session',
             iconPath: AssetPath.getIcon('biotech_rounded.svg'),
             supervisor: element.supervisorName,
-            studentId: element.studentId!,
-            studentName: element.studentName!,
-            id: element.attachment!,
+            studentId: element.studentId ?? '',
+            studentName: element.studentName ?? '',
+            id: element.attachment ?? '',
           ));
           break;
         case 'SGL':
@@ -77,8 +77,8 @@ class HistoryHelper {
             title: 'SGL',
             iconPath: AssetPath.getIcon('diversity_3_rounded.svg'),
             supervisor: element.supervisorName,
-            studentId: element.studentId!,
-            studentName: element.studentName!,
+            studentId: element.studentId ?? '',
+            studentName: element.studentName ?? '',
             id: element.attachment!,
           ));
           break;
@@ -91,8 +91,8 @@ class HistoryHelper {
             title: 'CST',
             iconPath: AssetPath.getIcon('medical_information_rounded.svg'),
             supervisor: element.supervisorName,
-            studentId: element.studentId!,
-            studentName: element.studentName!,
+            studentId: element.studentId ?? '',
+            studentName: element.studentName ?? '',
             id: element.attachment!,
           ));
           break;
@@ -105,8 +105,8 @@ class HistoryHelper {
             title: 'Self Reflection',
             iconPath: AssetPath.getIcon('diversity_3_rounded.svg'),
             supervisor: element.supervisorName,
-            studentId: element.studentId!,
-            studentName: element.studentName!,
+            studentId: element.studentId ?? '',
+            studentName: element.studentName ?? '',
             id: element.attachment!,
           ));
           break;
@@ -123,9 +123,9 @@ class HistoryHelper {
               title: 'Competency',
               iconPath: AssetPath.getIcon('emoji_objects_rounded.svg'),
               supervisor: element.supervisorName,
-              studentId: element.studentId!,
-              studentName: element.studentName!,
-              id: element.attachment!,
+              studentId: element.studentId ?? '',
+              studentName: element.studentName ?? '',
+              id: element.attachment ?? '',
             ));
             break;
           case "Assesment":
@@ -137,9 +137,9 @@ class HistoryHelper {
               title: 'Assesment',
               iconPath: AssetPath.getIcon('feed_rounded.svg'),
               supervisor: element.supervisorName,
-              studentId: element.studentId!,
-              id: element.studentId!,
-              studentName: element.studentName!,
+              studentId: element.studentId ?? '',
+              id: element.studentId ?? '',
+              studentName: element.studentName ?? '',
             ));
             break;
           case 'Problem Consultation':
@@ -151,9 +151,9 @@ class HistoryHelper {
               title: 'Problem Constultation',
               iconPath: AssetPath.getIcon('consultation_icon.svg'),
               supervisor: element.supervisorName,
-              studentId: element.studentId!,
-              id: element.studentId!,
-              studentName: element.studentName!,
+              studentId: element.studentId ?? '',
+              id: element.studentId ?? '',
+              studentName: element.studentName ?? '',
             ));
             break;
           case 'Check-in':
@@ -165,9 +165,9 @@ class HistoryHelper {
               title: 'Check-In',
               iconPath: AssetPath.getIcon('wifi_protected_setup_rounded.svg'),
               supervisor: element.supervisorName,
-              studentId: element.studentId!,
-              id: element.studentId!,
-              studentName: element.studentName!,
+              studentId: element.studentId ?? '',
+              id: element.studentId ?? '',
+              studentName: element.studentName ?? '',
             ));
             break;
           case 'Check-out':
@@ -179,9 +179,9 @@ class HistoryHelper {
               title: 'Check-Out',
               iconPath: AssetPath.getIcon('wifi_protected_setup_rounded.svg'),
               supervisor: element.supervisorName,
-              studentId: element.studentId!,
-              id: element.studentId!,
-              studentName: element.studentName!,
+              studentId: element.studentId ?? '',
+              id: element.studentId ?? '',
+              studentName: element.studentName ?? '',
             ));
             break;
           default:
