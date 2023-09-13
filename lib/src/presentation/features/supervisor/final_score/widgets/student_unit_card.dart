@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/supervisor_final_grade_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_shimmer.dart';
+import 'package:elogbook/src/presentation/widgets/profile_pic_placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,12 +46,11 @@ class StudentDepartmentCard extends StatelessWidget {
                       height: 50,
                     ));
                   } else if (snapshot.hasError) {
-                    return CircleAvatar(
-                      radius: 25,
-                      foregroundImage: AssetImage(
-                        AssetPath.getImage('profile_default.png'),
-                      ),
-                    );
+                    return ProfilePicPlaceholder(
+                        height: 50,
+                        name: data.studentName ?? '-',
+                        width: 50,
+                        isSmall: true);
                   } else {
                     data.profileImage = snapshot.data;
                     return CircleAvatar(

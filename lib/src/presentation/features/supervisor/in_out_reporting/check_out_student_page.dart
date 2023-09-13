@@ -9,6 +9,7 @@ import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
+import 'package:elogbook/src/presentation/widgets/profile_pic_placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -182,12 +183,11 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
               ),
               Row(
                 children: <Widget>[
-                  CircleAvatar(
-                    radius: 28,
-                    foregroundImage: AssetImage(
-                      AssetPath.getImage('profile_default.png'),
-                    ),
-                  ),
+                  ProfilePicPlaceholder(
+                      height: 56,
+                      name: widget.student.fullname ?? '-',
+                      width: 56,
+                      isSmall: true),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(

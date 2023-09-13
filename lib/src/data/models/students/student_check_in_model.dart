@@ -16,6 +16,8 @@ class StudentCheckInModel {
   String? unitId;
   @JsonKey(name: "unitName")
   String? unitName;
+  @JsonKey(name: "userId")
+  String? userId;
 
   StudentCheckInModel({
     this.checkInStatus,
@@ -23,6 +25,7 @@ class StudentCheckInModel {
     this.fullname,
     this.studentId,
     this.unitId,
+    this.userId,
     this.unitName,
   });
 

@@ -13,6 +13,7 @@ StudentCheckInModel _$StudentCheckInModelFromJson(Map<String, dynamic> json) =>
       fullname: json['fullname'] as String?,
       studentId: json['studentId'] as String?,
       unitId: json['unitId'] as String?,
+      userId: json['userId'] as String?,
       unitName: json['unitName'] as String?,
     );
 
@@ -25,4 +26,5 @@ Map<String, dynamic> _$StudentCheckInModelToJson(
       'studentId': instance.studentId,
       'unitId': instance.unitId,
       'unitName': instance.unitName,
+      'userId': instance.userId,
     };
