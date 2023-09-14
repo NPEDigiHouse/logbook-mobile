@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cool_alert/cool_alert.dart';
 import 'package:elogbook/core/app/app_settings.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
@@ -355,8 +357,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ProfileItemMenuCard(
                     iconPath: 'rate_icon.svg',
                     title: 'Rate Us',
-                    onTap: () => ReusableFunctionHelper.urlLauncher(
-                        'https://play.google.com/store/apps/details?id=com.npedigital.elogbook')),
+                    onTap: () => ReusableFunctionHelper.urlLauncher(Platform
+                            .isAndroid
+                        ? 'https://play.google.com/store/apps/details?id=com.npedigital.elogbook'
+                        : 'https://apps.apple.com/us/app/e-logbook-umi/id6463897571')),
                 const SizedBox(height: 16),
                 Text(
                   'E-Logbook FK UMI Version ${AppSettings.appVersion}',

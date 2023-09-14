@@ -95,7 +95,8 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       final result = await dataSource.getDailyActivitiesBySupervisor();
 
       try {
-        emit(state.copyWith(dailyActivityStudents: result));
+        emit(state.copyWith(
+            dailyActivityStudents: result, requestState: RequestState.data));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }
@@ -205,6 +206,7 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       try {
         emit(state.copyWith(
           studentActivityPerweek: result,
+          requestState: RequestState.data,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
@@ -255,11 +257,15 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       ));
 
       await dataSource.verifiyDailyActivityById(
-          id: id, verifiedStatus: verifiedStatus);
+        id: id,
+        verifiedStatus: verifiedStatus,
+      );
       try {
         emit(state.copyWith(
-            isDailyActivityUpdated: true,
-            stateVerifyDailyActivity: RequestState.data));
+          isDailyActivityUpdated: true,
+          stateVerifyDailyActivity: RequestState.data,
+          requestState: RequestState.loading,
+        ));
       } catch (e) {
         emit(state.copyWith(stateVerifyDailyActivity: RequestState.error));
       }

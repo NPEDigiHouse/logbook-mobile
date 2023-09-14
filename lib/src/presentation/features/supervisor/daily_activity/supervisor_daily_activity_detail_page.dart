@@ -49,9 +49,9 @@ class _SupervisorDailyActivityDetailPageState
       body: BlocListener<DailyActivityCubit, DailyActivityState>(
         listener: (context, state) {
           if (state.stateVerifyDailyActivity == RequestState.data) {
-            isVerify.value = !isVerify.value;
             BlocProvider.of<DailyActivityCubit>(context)
               ..getDailyActivityStudentBySupervisor();
+            isVerify.value = !isVerify.value;
           }
         },
         child: SingleChildScrollView(

@@ -1,10 +1,6 @@
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/clinical_records/verify_clinical_record_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/verify_scientific_session_model.dart';
-import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
-import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
-import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +16,7 @@ class VerifyScientificSessionDialog extends StatefulWidget {
 }
 
 class _AddTopicDialogState extends State<VerifyScientificSessionDialog> {
-  int? rating;
+  int rating = 2;
   final TextEditingController feedbackController = TextEditingController();
 
   @override

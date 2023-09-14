@@ -16,7 +16,7 @@ class VerifyClinicalRecordDialog extends StatefulWidget {
 }
 
 class _AddTopicDialogState extends State<VerifyClinicalRecordDialog> {
-  double? rating;
+  double rating = 2;
   final TextEditingController feedbackController = TextEditingController();
 
   @override

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cool_alert/cool_alert.dart';
@@ -284,11 +285,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 12),
                   ProfileItemMenuCard(
-                    iconPath: 'rate_icon.svg',
-                    title: 'Rate Us',
-                    onTap: () => ReusableFunctionHelper.urlLauncher(
-                        'https://play.google.com/store/apps/details?id=com.npedigital.elogbook'),
-                  ),
+                      iconPath: 'rate_icon.svg',
+                      title: 'Rate Us',
+                      onTap: () => ReusableFunctionHelper.urlLauncher(Platform
+                              .isAndroid
+                          ? 'https://play.google.com/store/apps/details?id=com.npedigital.elogbook'
+                          : 'https://apps.apple.com/us/app/e-logbook-umi/id6463897571')),
                   const SizedBox(height: 16),
                   Text(
                     'E-Logbook FK UMI Version ${AppSettings.appVersion}',

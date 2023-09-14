@@ -1,5 +1,6 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/daily_activity/daily_activity_student.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/daily_activity/widgets/daily_activity_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -44,9 +45,17 @@ class _SupervisorStudentsDailyActivityPageState
           child: ValueListenableBuilder(
               valueListenable: listStudent,
               builder: (context, s, _) {
-                return BlocBuilder<DailyActivityCubit, DailyActivityState>(
+                return BlocConsumer<DailyActivityCubit, DailyActivityState>(
+                  listener: (context, state) {
+                    if (state.stateVerifyDailyActivity == RequestState.data) {
+                      isMounted = false;
+                      BlocProvider.of<DailyActivityCubit>(context)
+                          .getDailyActivityStudentBySupervisor();
+                    }
+                  },
                   builder: (context, state) {
-                    if (state.dailyActivityStudents != null) {
+                    if (state.dailyActivityStudents != null &&
+                        state.requestState == RequestState.data) {
                       if (!isMounted) {
                         Future.microtask(() {
                           listStudent.value = [...state.dailyActivityStudents!];
