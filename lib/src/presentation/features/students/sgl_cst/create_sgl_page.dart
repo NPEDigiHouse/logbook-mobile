@@ -11,6 +11,7 @@ import 'package:elogbook/src/presentation/widgets/headers/form_section_header.da
 import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/input_date_time_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -268,25 +269,45 @@ class _CreateSglPageState extends State<CreateSglPage> {
                         startTimeController.text.isNotEmpty &&
                         endTimeController.text.isNotEmpty &&
                         topics.value.first != -1) {
-                      final date = ReusableFunctionHelper.stringToDateTime(
-                          dateController.text);
-                      final start = startTimeController.text.split(':');
-                      final end = endTimeController.text.split(':');
-                      final startTime = DateTime(date.year, date.month,
-                          date.day, int.parse(start[0]), int.parse(start[1]));
-                      final endTime = DateTime(date.year, date.month, date.day,
-                          int.parse(end[0]), int.parse(end[1]));
-                      BlocProvider.of<SglCstCubit>(context)
-                        ..uploadSgl(
-                          model: SglCstPostModel(
-                            supervisorId: supervisorId,
-                            topicId: topics.value
-                                .where((element) => element != -1)
-                                .toList(),
-                            startTime: startTime.millisecondsSinceEpoch,
-                            endTime: endTime.millisecondsSinceEpoch,
-                          ),
-                        );
+                      showDialog(
+                          context: context,
+                          barrierLabel: '',
+                          barrierDismissible: false,
+                          builder: (_) => VerifyDialog(
+                                onTap: () {
+                                  final date =
+                                      ReusableFunctionHelper.stringToDateTime(
+                                          dateController.text);
+                                  final start =
+                                      startTimeController.text.split(':');
+                                  final end = endTimeController.text.split(':');
+                                  final startTime = DateTime(
+                                      date.year,
+                                      date.month,
+                                      date.day,
+                                      int.parse(start[0]),
+                                      int.parse(start[1]));
+                                  final endTime = DateTime(
+                                      date.year,
+                                      date.month,
+                                      date.day,
+                                      int.parse(end[0]),
+                                      int.parse(end[1]));
+                                  BlocProvider.of<SglCstCubit>(context)
+                                    ..uploadSgl(
+                                      model: SglCstPostModel(
+                                        supervisorId: supervisorId,
+                                        topicId: topics.value
+                                            .where((element) => element != -1)
+                                            .toList(),
+                                        startTime:
+                                            startTime.millisecondsSinceEpoch,
+                                        endTime: endTime.millisecondsSinceEpoch,
+                                      ),
+                                    );
+                                  Navigator.pop(context);
+                                },
+                              ));
                     }
                   },
                   child: Text('Submit'),

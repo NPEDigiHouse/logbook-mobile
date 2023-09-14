@@ -8,6 +8,8 @@ class ReferenceOnListModel {
   int? id;
   @JsonKey(name: "file")
   String? file;
+  @JsonKey(name: "filename")
+  String? filename;
   @JsonKey(name: "unitId")
   String? unitId;
   @JsonKey(name: "type")
@@ -18,6 +20,7 @@ class ReferenceOnListModel {
     this.type,
     this.file,
     this.unitId,
+    this.filename
   });
 
   factory ReferenceOnListModel.fromJson(Map<String, dynamic> json) =>

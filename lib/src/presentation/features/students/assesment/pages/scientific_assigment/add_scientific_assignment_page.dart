@@ -5,6 +5,7 @@ import 'package:elogbook/src/presentation/blocs/activity_cubit/activity_cubit.da
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -98,12 +99,22 @@ class _AddScientificAssignmentPageState
                     onPressed: () {
                       if (fieldController.text.isNotEmpty &&
                           locationId != null) {
-                        BlocProvider.of<AssesmentCubit>(context)
-                          ..uploadScientificAssignment(
-                            model: MiniCexPostModel(
-                                location: locationId,
-                                miniCexPostModelCase: fieldController.text),
-                          );
+                        showDialog(
+                            context: context,
+                            barrierLabel: '',
+                            barrierDismissible: false,
+                            builder: (_) => VerifyDialog(
+                                  onTap: () {
+                                    BlocProvider.of<AssesmentCubit>(context)
+                                      ..uploadScientificAssignment(
+                                        model: MiniCexPostModel(
+                                            location: locationId,
+                                            miniCexPostModelCase:
+                                                fieldController.text),
+                                      );
+                                    Navigator.pop(context);
+                                  },
+                                ));
                       }
                     },
                     child: Text('Submit'),

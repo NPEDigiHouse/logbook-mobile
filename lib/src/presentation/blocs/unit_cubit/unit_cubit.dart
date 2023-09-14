@@ -120,10 +120,11 @@ class DepartmentCubit extends Cubit<DepartmentState> {
       emit(CheckOutActiveDepartmentSuccess());
     } catch (e) {
       emit(
-        Failed(
-          message: e.toString(),
+        CheckOutFailed(
+          message: 'Cannot checkout finish all activities first',
         ),
       );
+      getActiveDepartment();
     }
   }
 }

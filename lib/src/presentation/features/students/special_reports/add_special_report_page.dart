@@ -1,6 +1,7 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -64,8 +65,18 @@ class _AddSpecialReportPageState extends State<AddSpecialReportPage> {
                   FilledButton(
                     onPressed: () {
                       if (fieldController.text.isNotEmpty) {
-                        BlocProvider.of<SpecialReportCubit>(context)
-                          ..postSpecialReport(content: fieldController.text);
+                        showDialog(
+                            context: context,
+                            barrierLabel: '',
+                            barrierDismissible: false,
+                            builder: (_) => VerifyDialog(
+                                  onTap: () {
+                                    BlocProvider.of<SpecialReportCubit>(context)
+                                      ..postSpecialReport(
+                                          content: fieldController.text);
+                                    Navigator.pop(context);
+                                  },
+                                ));
                       }
                     },
                     child: Text('Submit'),

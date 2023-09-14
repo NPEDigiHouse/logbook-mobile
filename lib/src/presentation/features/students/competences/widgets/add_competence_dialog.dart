@@ -10,6 +10,7 @@ import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubi
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -303,25 +304,33 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: FilledButton(
                   onPressed: () {
-                    print(caseId);
                     if (supervisorId != null &&
                         supervisorId!.isNotEmpty &&
                         caseId != null) {
-                      if (widget.type == CompetenceType.caseType) {
-                        BlocProvider.of<CompetenceCubit>(context)
-                          ..uploadNewCase(
-                              model: CasePostModel(
-                                  caseTypeId: caseId,
-                                  type: desc,
-                                  supervisorId: supervisorId));
-                      } else {
-                        BlocProvider.of<CompetenceCubit>(context)
-                          ..uploadNewSkills(
-                              model: SkillPostModel(
-                                  skillTypeId: caseId,
-                                  type: desc,
-                                  supervisorId: supervisorId));
-                      }
+                      showDialog(
+                          context: context,
+                          barrierLabel: '',
+                          barrierDismissible: false,
+                          builder: (_) => VerifyDialog(
+                                onTap: () {
+                                  if (widget.type == CompetenceType.caseType) {
+                                    BlocProvider.of<CompetenceCubit>(context)
+                                      ..uploadNewCase(
+                                          model: CasePostModel(
+                                              caseTypeId: caseId,
+                                              type: desc,
+                                              supervisorId: supervisorId));
+                                  } else {
+                                    BlocProvider.of<CompetenceCubit>(context)
+                                      ..uploadNewSkills(
+                                          model: SkillPostModel(
+                                              skillTypeId: caseId,
+                                              type: desc,
+                                              supervisorId: supervisorId));
+                                  }
+                                  Navigator.pop(context);
+                                },
+                              ));
                     }
                   },
                   child: Text('Submit'),

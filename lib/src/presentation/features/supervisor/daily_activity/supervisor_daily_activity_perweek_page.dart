@@ -7,6 +7,7 @@ import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activ
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -60,19 +61,41 @@ class _StudentDailyActivityWeekStatusPageState
                             side: BorderSide(color: primaryColor),
                           ),
                           onPressed: () {
-                            BlocProvider.of<DailyActivityCubit>(context)
-                              ..verifiyDailyActivityById(
-                                  id: widget.dailyActivityId,
-                                  verifiedStatus: false);
+                            showDialog(
+                                context: context,
+                                barrierLabel: '',
+                                barrierDismissible: false,
+                                builder: (_) => VerifyDialog(
+                                      onTap: () {
+                                        BlocProvider.of<DailyActivityCubit>(
+                                            context)
+                                          ..verifiyDailyActivityById(
+                                              id: widget.dailyActivityId,
+                                              verifiedStatus: false);
+                                        Navigator.pop(context);
+                                      },
+                                      isSubmit: false,
+                                    ));
                           },
                           child: Text('Cancel Verification'),
                         )
                       : FilledButton.icon(
                           onPressed: () {
-                            BlocProvider.of<DailyActivityCubit>(context)
-                              ..verifiyDailyActivityById(
-                                  id: widget.dailyActivityId,
-                                  verifiedStatus: true);
+                            showDialog(
+                                context: context,
+                                barrierLabel: '',
+                                barrierDismissible: false,
+                                builder: (_) => VerifyDialog(
+                                      onTap: () {
+                                        BlocProvider.of<DailyActivityCubit>(
+                                            context)
+                                          ..verifiyDailyActivityById(
+                                              id: widget.dailyActivityId,
+                                              verifiedStatus: true);
+                                        Navigator.pop(context);
+                                      },
+                                      isSubmit: true,
+                                    ));
                           },
                           icon: Icon(Icons.verified),
                           label: Text('Verify Activity'),

@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -68,10 +69,20 @@ class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
                     FilledButton(
                       onPressed: () {
                         if (fieldController.text.isNotEmpty) {
-                          BlocProvider.of<SelfReflectionCubit>(context)
-                            ..uploadSelfReflection(
-                                model: SelfReflectionPostModel(
-                                    content: fieldController.text));
+                          showDialog(
+                              context: context,
+                              barrierLabel: '',
+                              barrierDismissible: false,
+                              builder: (_) => VerifyDialog(
+                                    onTap: () {
+                                      BlocProvider.of<SelfReflectionCubit>(
+                                          context)
+                                        ..uploadSelfReflection(
+                                            model: SelfReflectionPostModel(
+                                                content: fieldController.text));
+                                      Navigator.pop(context);
+                                    },
+                                  ));
                         }
                       },
                       child: Text('Submit'),

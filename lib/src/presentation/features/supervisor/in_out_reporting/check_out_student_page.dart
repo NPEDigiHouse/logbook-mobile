@@ -10,6 +10,7 @@ import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/profile_pic_placeholder.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -225,8 +226,19 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: () {
-                    BlocProvider.of<StudentCubit>(context)
-                        .verifyCheckOut(studentId: widget.student.studentId!);
+                    showDialog(
+                        context: context,
+                        barrierLabel: '',
+                        barrierDismissible: false,
+                        builder: (_) => VerifyDialog(
+                              onTap: () {
+                                BlocProvider.of<StudentCubit>(context)
+                                    .verifyCheckOut(
+                                        studentId: widget.student.studentId!);
+                                Navigator.pop(context);
+                              },
+                              isSubmit: true,
+                            ));
                   },
                   icon: const Icon(
                     Icons.verified_rounded,

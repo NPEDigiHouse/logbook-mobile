@@ -8,6 +8,7 @@ import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -243,28 +244,54 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
                                                         'VERIFIED')
                                                       return FilledButton(
                                                         onPressed: () {
-                                                          BlocProvider.of<
-                                                                  SglCstCubit>(
-                                                              context)
-                                                            ..verifyCstTopic(
-                                                                topicId: data
-                                                                    .topic![i]
-                                                                    .id!,
-                                                                status: true);
+                                                          showDialog(
+                                                              context: context,
+                                                              barrierLabel: '',
+                                                              barrierDismissible:
+                                                                  false,
+                                                              builder: (_) =>
+                                                                  VerifyDialog(
+                                                                    onTap: () {
+                                                                      BlocProvider.of<
+                                                                              SglCstCubit>(
+                                                                          context)
+                                                                        ..verifyCstTopic(
+                                                                            topicId:
+                                                                                data.topic![i].id!,
+                                                                            status: true);
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    isSubmit:
+                                                                        true,
+                                                                  ));
                                                         },
                                                         child: Text('Verify'),
                                                       );
                                                     else
                                                       return OutlinedButton(
                                                         onPressed: () {
-                                                          BlocProvider.of<
-                                                                  SglCstCubit>(
-                                                              context)
-                                                            ..verifyCstTopic(
-                                                                topicId: data
-                                                                    .topic![i]
-                                                                    .id!,
-                                                                status: false);
+                                                          showDialog(
+                                                              context: context,
+                                                              barrierLabel: '',
+                                                              barrierDismissible:
+                                                                  false,
+                                                              builder: (_) =>
+                                                                  VerifyDialog(
+                                                                    onTap: () {
+                                                                      BlocProvider.of<
+                                                                              SglCstCubit>(
+                                                                          context)
+                                                                        ..verifyCstTopic(
+                                                                            topicId:
+                                                                                data.topic![i].id!,
+                                                                            status: false);
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    isSubmit:
+                                                                        false,
+                                                                  ));
                                                         },
                                                         child: Text('Cancel'),
                                                       );
@@ -300,24 +327,57 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
                                                   -1) {
                                                 return FilledButton(
                                                   onPressed: () {
-                                                    BlocProvider.of<
-                                                        SglCstCubit>(context)
-                                                      ..verifyAllCstTopic(
-                                                        topicId: data.cstId!,
-                                                        status: true,
-                                                      );
+                                                    showDialog(
+                                                        context: context,
+                                                        barrierLabel: '',
+                                                        barrierDismissible:
+                                                            false,
+                                                        builder: (_) =>
+                                                            VerifyDialog(
+                                                              onTap: () {
+                                                                BlocProvider.of<
+                                                                        SglCstCubit>(
+                                                                    context)
+                                                                  ..verifyAllCstTopic(
+                                                                    topicId: data
+                                                                        .cstId!,
+                                                                    status:
+                                                                        true,
+                                                                  );
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              isSubmit: true,
+                                                            ));
                                                   },
-                                                  child: Text('Verify Topics'),
+                                                  child:
+                                                      Text('Verify All Topics'),
                                                 );
                                               } else {
                                                 return OutlinedButton(
                                                   onPressed: () {
-                                                    BlocProvider.of<
-                                                        SglCstCubit>(context)
-                                                      ..verifyAllCstTopic(
-                                                        topicId: data.cstId!,
-                                                        status: false,
-                                                      );
+                                                    showDialog(
+                                                        context: context,
+                                                        barrierLabel: '',
+                                                        barrierDismissible:
+                                                            false,
+                                                        builder: (_) =>
+                                                            VerifyDialog(
+                                                              onTap: () {
+                                                                BlocProvider.of<
+                                                                        SglCstCubit>(
+                                                                    context)
+                                                                  ..verifyAllCstTopic(
+                                                                    topicId: data
+                                                                        .cstId!,
+                                                                    status:
+                                                                        false,
+                                                                  );
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              isSubmit: false,
+                                                            ));
                                                   },
                                                   child: Text('Cancel All'),
                                                 );
@@ -343,12 +403,28 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
                                                             'VERIFIED') ==
                                                     -1)
                                                 ? () {
-                                                    BlocProvider.of<
-                                                        SglCstCubit>(context)
-                                                      ..verifyCst(
-                                                        status: true,
-                                                        cstId: data.cstId!,
-                                                      );
+                                                    showDialog(
+                                                        context: context,
+                                                        barrierLabel: '',
+                                                        barrierDismissible:
+                                                            false,
+                                                        builder: (_) =>
+                                                            VerifyDialog(
+                                                              onTap: () {
+                                                                BlocProvider.of<
+                                                                        SglCstCubit>(
+                                                                    context)
+                                                                  ..verifyCst(
+                                                                    status:
+                                                                        true,
+                                                                    cstId: data
+                                                                        .cstId!,
+                                                                  );
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              isSubmit: true,
+                                                            ));
                                                   }
                                                 : null,
                                             child: Text('Verify CST'),
@@ -361,12 +437,25 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
                                               backgroundColor: errorColor,
                                             ),
                                             onPressed: () {
-                                              BlocProvider.of<SglCstCubit>(
-                                                  context)
-                                                ..verifyCst(
-                                                  status: false,
-                                                  cstId: data.cstId!,
-                                                );
+                                              showDialog(
+                                                  context: context,
+                                                  barrierLabel: '',
+                                                  barrierDismissible: false,
+                                                  builder: (_) => VerifyDialog(
+                                                        onTap: () {
+                                                          BlocProvider.of<
+                                                                  SglCstCubit>(
+                                                              context)
+                                                            ..verifyCst(
+                                                              status: false,
+                                                              cstId:
+                                                                  data.cstId!,
+                                                            );
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        isSubmit: false,
+                                                      ));
                                             },
                                             child: Text('Unverify CST'),
                                           ),

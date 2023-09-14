@@ -182,12 +182,10 @@ class DepartmentDatasourceImpl implements DepartmentDatasource {
           },
         ),
       );
-      print(response.statusCode);
       if (response.statusCode != 201) {
-        throw Exception();
+        throw ClientFailure(response.data['data']);
       }
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

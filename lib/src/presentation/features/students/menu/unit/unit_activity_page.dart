@@ -12,6 +12,7 @@ import 'package:elogbook/src/presentation/features/students/self_reflection/self
 import 'package:elogbook/src/presentation/features/students/sgl_cst/sgl_cst_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/special_report_home_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -133,6 +134,11 @@ class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
                     () =>
                         BlocProvider.of<DepartmentCubit>(context, listen: false)
                           ..getActiveDepartment(),
+                  );
+                }
+                if (state is CheckOutFailed) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.message)),
                   );
                 }
               },
@@ -288,10 +294,20 @@ class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
                                       width: double.infinity,
                                       child: FilledButton.icon(
                                         onPressed: () {
-                                          BlocProvider.of<DepartmentCubit>(
-                                              context,
-                                              listen: false)
-                                            ..checkInActiveDepartment();
+                                          showDialog(
+                                              context: context,
+                                              barrierLabel: '',
+                                              barrierDismissible: false,
+                                              builder: (_) => VerifyDialog(
+                                                    onTap: () {
+                                                      BlocProvider.of<
+                                                              DepartmentCubit>(
+                                                          context,
+                                                          listen: false)
+                                                        ..checkInActiveDepartment();
+                                                      context.back();
+                                                    },
+                                                  ));
                                         },
                                         icon: SvgPicture.asset(
                                           AssetPath.getIcon(
@@ -388,10 +404,20 @@ class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
                                       width: double.infinity,
                                       child: FilledButton.icon(
                                         onPressed: () {
-                                          BlocProvider.of<DepartmentCubit>(
-                                              context,
-                                              listen: false)
-                                            ..checkOutActiveDepartment();
+                                          showDialog(
+                                              context: context,
+                                              barrierLabel: '',
+                                              barrierDismissible: false,
+                                              builder: (_) => VerifyDialog(
+                                                    onTap: () {
+                                                      BlocProvider.of<
+                                                              DepartmentCubit>(
+                                                          context,
+                                                          listen: false)
+                                                        ..checkOutActiveDepartment();
+                                                      context.back();
+                                                    },
+                                                  ));
                                         },
                                         icon: SvgPicture.asset(
                                           AssetPath.getIcon(

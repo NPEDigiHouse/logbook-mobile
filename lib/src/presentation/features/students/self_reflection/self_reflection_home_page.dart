@@ -57,7 +57,8 @@ class _StudentSelfReflectionHomePageState
       appBar: AppBar(
         title: Text("Self Reflections"),
       ),
-      floatingActionButton: widget.activeDepartmentModel.countCheckIn! == 0
+      floatingActionButton: widget.activeDepartmentModel.countCheckIn! == 0 &&
+              (widget.credential.student?.examinerDPKId != null)
           ? FloatingActionButton(
               onPressed: () => context.navigateTo(CreateSelfReflectionPage(
                 credential: widget.credential,
@@ -96,6 +97,17 @@ class _StudentSelfReflectionHomePageState
                                 height: 12,
                               ),
                               ItemDivider(),
+                              if (widget.credential.student?.examinerDPKId ==
+                                  null)
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Please select a supervisor first in the profile menu before creating a self reflection',
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      color: errorColor,
+                                    ),
+                                  ),
+                                ),
                               Builder(
                                 builder: (context) {
                                   if (state.selfReflectionResponse != null) {

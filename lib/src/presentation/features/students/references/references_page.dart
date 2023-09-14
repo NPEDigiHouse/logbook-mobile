@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class ReferencePage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
@@ -269,7 +268,11 @@ class _ReferenceCardState extends State<ReferenceCard> {
             ),
             Expanded(
               child: Text(
-                p.basename(widget.reference.file!),
+                widget.reference.type == 'URL'
+                    ? widget.reference.filename ??
+                        widget.reference.file ??
+                        'nonamed'
+                    : p.basename(widget.reference.file!),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

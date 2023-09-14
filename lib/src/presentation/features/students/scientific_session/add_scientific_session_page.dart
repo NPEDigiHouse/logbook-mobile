@@ -17,6 +17,7 @@ import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/build_text_field.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -313,23 +314,35 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                       ),
                       FilledButton(
                         onPressed: () {
-                          BlocProvider.of<ScientificSessionCubit>(context,
-                              listen: false)
-                            ..uploadScientificSession(
-                              model: ScientificSessionPostModel(
-                                attachment: state.attachment,
-                                role: role,
-                                title: titleController.text,
-                                topic: topicController.text,
-                                // clinicalRotation: clinicalRotationController.text,
-                                reference: referenceController.text,
-                                sessionType: sesionType,
-                                supervisorId: supervisorId,
-                                notes: additionalNotesController.text.isEmpty
-                                    ? null
-                                    : additionalNotesController.text,
-                              ),
-                            );
+                          showDialog(
+                              context: context,
+                              barrierLabel: '',
+                              barrierDismissible: false,
+                              builder: (_) => VerifyDialog(
+                                    onTap: () {
+                                      BlocProvider.of<ScientificSessionCubit>(
+                                          context,
+                                          listen: false)
+                                        ..uploadScientificSession(
+                                          model: ScientificSessionPostModel(
+                                            attachment: state.attachment,
+                                            role: role,
+                                            title: titleController.text,
+                                            topic: topicController.text,
+                                            // clinicalRotation: clinicalRotationController.text,
+                                            reference: referenceController.text,
+                                            sessionType: sesionType,
+                                            supervisorId: supervisorId,
+                                            notes: additionalNotesController
+                                                    .text.isEmpty
+                                                ? null
+                                                : additionalNotesController
+                                                    .text,
+                                          ),
+                                        );
+                                      Navigator.pop(context);
+                                    },
+                                  ));
                         },
                         child: Text('Submit'),
                       ).fullWidth(),

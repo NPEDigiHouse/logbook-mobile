@@ -8,6 +8,7 @@ import 'package:elogbook/src/presentation/features/students/clinical_record/prov
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_temp.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -196,17 +197,28 @@ class _CreateClinicalRecordThirdPageState
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: FilledButton(
                         onPressed: () {
-                          if (state.pathAttachment != null)
-                            widget.clinicalRecordData
-                                .addAttachment(state.pathAttachment!);
-                          if (notesController.text.isNotEmpty)
-                            widget.clinicalRecordData
-                                .addNotes(notesController.text);
-                          BlocProvider.of<ClinicalRecordCubit>(context)
-                            ..uploadClinicalRecord(
-                              model: widget
-                                  .clinicalRecordData.clinicalRecordPostModel,
-                            );
+                          showDialog(
+                              context: context,
+                              barrierLabel: '',
+                              barrierDismissible: false,
+                              builder: (_) => VerifyDialog(
+                                    onTap: () {
+                                      if (state.pathAttachment != null)
+                                        widget.clinicalRecordData.addAttachment(
+                                            state.pathAttachment!);
+                                      if (notesController.text.isNotEmpty)
+                                        widget.clinicalRecordData
+                                            .addNotes(notesController.text);
+
+                                      BlocProvider.of<ClinicalRecordCubit>(
+                                          context)
+                                        ..uploadClinicalRecord(
+                                          model: widget.clinicalRecordData
+                                              .clinicalRecordPostModel,
+                                        );
+                                      Navigator.pop(context);
+                                    },
+                                  ));
                         },
                         child: Text('Submit'),
                       ).fullWidth(),

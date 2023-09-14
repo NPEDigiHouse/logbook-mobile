@@ -1,6 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
-import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
@@ -12,6 +11,7 @@ import 'package:elogbook/src/presentation/widgets/headers/form_section_header.da
 import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/input_date_time_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -275,25 +275,45 @@ class _CreateCstPageState extends State<CreateCstPage> {
                         startTimeController.text.isNotEmpty &&
                         endTimeController.text.isNotEmpty &&
                         topics.value.first != -1) {
-                      final date = ReusableFunctionHelper.stringToDateTime(
-                          dateController.text);
-                      final start = startTimeController.text.split(':');
-                      final end = endTimeController.text.split(':');
-                      final startTime = DateTime(date.year, date.month,
-                          date.day, int.parse(start[0]), int.parse(start[1]));
-                      final endTime = DateTime(date.year, date.month, date.day,
-                          int.parse(end[0]), int.parse(end[1]));
-                      BlocProvider.of<SglCstCubit>(context)
-                        ..uploadCst(
-                          model: SglCstPostModel(
-                            supervisorId: supervisorId,
-                            topicId: topics.value
-                                .where((element) => element != -1)
-                                .toList(),
-                            startTime: startTime.millisecondsSinceEpoch,
-                            endTime: endTime.millisecondsSinceEpoch,
-                          ),
-                        );
+                      showDialog(
+                          context: context,
+                          barrierLabel: '',
+                          barrierDismissible: false,
+                          builder: (_) => VerifyDialog(
+                                onTap: () {
+                                  final date =
+                                      ReusableFunctionHelper.stringToDateTime(
+                                          dateController.text);
+                                  final start =
+                                      startTimeController.text.split(':');
+                                  final end = endTimeController.text.split(':');
+                                  final startTime = DateTime(
+                                      date.year,
+                                      date.month,
+                                      date.day,
+                                      int.parse(start[0]),
+                                      int.parse(start[1]));
+                                  final endTime = DateTime(
+                                      date.year,
+                                      date.month,
+                                      date.day,
+                                      int.parse(end[0]),
+                                      int.parse(end[1]));
+                                  BlocProvider.of<SglCstCubit>(context)
+                                    ..uploadCst(
+                                      model: SglCstPostModel(
+                                        supervisorId: supervisorId,
+                                        topicId: topics.value
+                                            .where((element) => element != -1)
+                                            .toList(),
+                                        startTime:
+                                            startTime.millisecondsSinceEpoch,
+                                        endTime: endTime.millisecondsSinceEpoch,
+                                      ),
+                                    );
+                                  Navigator.pop(context);
+                                },
+                              ));
                     }
                   },
                   child: Text('Submit'),

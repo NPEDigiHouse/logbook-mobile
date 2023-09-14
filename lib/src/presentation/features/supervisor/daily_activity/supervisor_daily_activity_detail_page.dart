@@ -6,6 +6,7 @@ import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_r
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -176,11 +177,23 @@ class _SupervisorDailyActivityDetailPageState
                                   width: double.infinity,
                                   child: OutlinedButton(
                                     onPressed: () {
-                                      BlocProvider.of<DailyActivityCubit>(
-                                              context)
-                                          .verifiyDailyActivityById(
-                                              id: widget.data.id!,
-                                              verifiedStatus: false);
+                                      showDialog(
+                                          context: context,
+                                          barrierLabel: '',
+                                          barrierDismissible: false,
+                                          builder: (_) => VerifyDialog(
+                                                onTap: () {
+                                                  BlocProvider.of<
+                                                              DailyActivityCubit>(
+                                                          context)
+                                                      .verifiyDailyActivityById(
+                                                          id: widget.data.id!,
+                                                          verifiedStatus:
+                                                              false);
+                                                  Navigator.pop(context);
+                                                },
+                                                isSubmit: false,
+                                              ));
                                     },
                                     child: Text('Cancel'),
                                   ),
@@ -191,11 +204,22 @@ class _SupervisorDailyActivityDetailPageState
                                   child: FilledButton.icon(
                                     icon: Icon(Icons.verified),
                                     onPressed: () {
-                                      BlocProvider.of<DailyActivityCubit>(
-                                              context)
-                                          .verifiyDailyActivityById(
-                                              id: widget.data.id!,
-                                              verifiedStatus: true);
+                                      showDialog(
+                                          context: context,
+                                          barrierLabel: '',
+                                          barrierDismissible: false,
+                                          builder: (_) => VerifyDialog(
+                                                onTap: () {
+                                                  BlocProvider.of<
+                                                              DailyActivityCubit>(
+                                                          context)
+                                                      .verifiyDailyActivityById(
+                                                          id: widget.data.id!,
+                                                          verifiedStatus: true);
+                                                  Navigator.pop(context);
+                                                },
+                                                isSubmit: true,
+                                              ));
                                     },
                                     label: Text('Verify'),
                                   ),

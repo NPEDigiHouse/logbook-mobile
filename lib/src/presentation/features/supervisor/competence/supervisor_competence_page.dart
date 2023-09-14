@@ -51,7 +51,7 @@ class _SupervisorCompetenceHomePageState
                           onTap: () =>
                               context.navigateTo(ListStudentCasesPage()),
                           title: 'Cases',
-                          desc: 'Lorem ipsum dolor sit amet consectetur.',
+                          desc: 'List Acquired Case',
                           iconData: Icons.cases_rounded,
                         ),
                       ),
@@ -63,7 +63,7 @@ class _SupervisorCompetenceHomePageState
                           onTap: () =>
                               context.navigateTo(ListStudentTasksPage()),
                           title: 'Skills',
-                          desc: 'Lorem ipsum dolor sit amet consectetur',
+                          desc: 'List Diagnosis Skill',
                           iconData: Icons.back_hand_rounded,
                         ),
                       ),

@@ -52,8 +52,7 @@ class _SglCstHomePageState extends State<SglCstHomePage> {
                       activeDepartmentModel: widget.activeDepartmentModel,
                     )),
                     title: 'Small Group Learning',
-                    desc:
-                        'Lorem ipsum dolor sit amet consectetur. Sagitti viverra risus quis arcu siholmet.',
+                    desc: 'Small group learning (SGL) data',
                   ),
                   if (!widget.isCstHide) ...[
                     SizedBox(
@@ -64,8 +63,7 @@ class _SglCstHomePageState extends State<SglCstHomePage> {
                         activeDepartmentModel: widget.activeDepartmentModel,
                       )),
                       title: 'Clinical Skill Training',
-                      desc:
-                          'Lorem ipsum dolor sit amet consectetur. Sagitti viverra risus quis arcu siholmet.',
+                      desc: 'clinical skill training (CST) data',
                     ),
                   ]
                 ],

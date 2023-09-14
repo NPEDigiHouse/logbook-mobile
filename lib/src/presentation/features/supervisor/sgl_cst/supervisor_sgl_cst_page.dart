@@ -44,8 +44,7 @@ class _SupervisorSglCstHomePageState extends State<SupervisorSglCstHomePage> {
                       userId: widget.credential.supervisor!.supervisorId ?? '',
                     )),
                     title: 'Small Group Learning',
-                    desc:
-                        'Lorem ipsum dolor sit amet consectetur. Sagitti viverra risus quis arcu siholmet.',
+                    desc: 'small group learing (SGL) data',
                   ),
                   SizedBox(
                     height: 16,
@@ -58,8 +57,7 @@ class _SupervisorSglCstHomePageState extends State<SupervisorSglCstHomePage> {
                       userId: widget.credential.supervisor!.supervisorId ?? '',
                     )),
                     title: 'Clinical Skill Training',
-                    desc:
-                        'Lorem ipsum dolor sit amet consectetur. Sagitti viverra risus quis arcu siholmet.',
+                    desc: 'clinical skill training (CST) data',
                   ),
                 ],
               ),

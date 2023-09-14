@@ -34,3 +34,8 @@ class Failed extends DepartmentState {
   final String message;
   Failed({required this.message});
 }
+
+class CheckOutFailed extends DepartmentState {
+  final String message;
+  CheckOutFailed({required this.message});
+}
