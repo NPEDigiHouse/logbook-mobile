@@ -169,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 12),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -240,20 +240,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     title: 'Change Password',
                     onTap: () => context.navigateTo(const ChangePasswordPage()),
                   ),
-                  const SizedBox(height: 8),
-                  BlocBuilder<ProfileCubit, ProfileState>(
-                    builder: (context, state) {
-                      return ProfileItemMenuCard(
-                        iconPath: 'file_export_filled.svg',
-                        title: 'Export Data',
-                        onTap: () => context.navigateTo(ExportDataPage(
-                          memoryImage: state.requestState == RequestState.data
-                              ? state.profilePic
-                              : null,
-                        )),
-                      );
-                    },
-                  ),
+                  // const SizedBox(height: 8),
+                  // BlocBuilder<ProfileCubit, ProfileState>(
+                  //   builder: (context, state) {
+                  //     return ProfileItemMenuCard(
+                  //       iconPath: 'file_export_filled.svg',
+                  //       title: 'Export Data',
+                  //       onTap: () => context.navigateTo(ExportDataPage(
+                  //         memoryImage: state.requestState == RequestState.data
+                  //             ? state.profilePic
+                  //             : null,
+                  //       )),
+                  //     );
+                  //   },
+                  // ),
                   const SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -290,7 +290,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'E-Logbook FK UMI Versi ${AppSettings.appVersion}',
+                    'E-Logbook FK UMI Version ${AppSettings.appVersion}',
                     style: textTheme.titleSmall?.copyWith(
                       color: onFormDisableColor,
                     ),

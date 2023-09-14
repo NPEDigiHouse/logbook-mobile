@@ -1,18 +1,20 @@
-import 'dart:typed_data';
-import 'dart:ui';
+import 'dart:ui' as ui;
+import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
+import 'package:elogbook/src/presentation/features/students/menu/profile/pdf_helper/pdf_helper.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
-import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/unit_statistics_card.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/unit_statistics_field.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/unit_statistics_section.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DepartmentStatisticsPage extends StatefulWidget {
@@ -33,9 +35,31 @@ class DepartmentStatisticsPage extends StatefulWidget {
 }
 
 class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
+  final GlobalKey keyCase = GlobalKey(debugLabel: 'keyCase');
+  final GlobalKey keySkill = GlobalKey(debugLabel: 'keySkill');
+
+  void loadImageFromAssets(String path) async {
+    final ByteData data = await rootBundle.load(path);
+    final List<int> listBytes = data.buffer.asUint8List();
+    final Uint8List bytes = Uint8List.fromList(listBytes);
+    image = bytes;
+  }
+
+  Future<Uint8List> captureWidget(GlobalKey k) async {
+    RenderRepaintBoundary boundary =
+        k.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List pngBytes = byteData!.buffer.asUint8List();
+    return pngBytes;
+  }
+
+  late Uint8List image;
+
   @override
   void initState() {
     super.initState();
+    loadImageFromAssets(AssetPath.getImage('logo_umi.png'));
     Future.microtask(() {
       BlocProvider.of<StudentCubit>(context)..getStudentStatistic();
       BlocProvider.of<CompetenceCubit>(context)
@@ -57,10 +81,24 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
         shadowColor: Colors.transparent,
         flexibleSpace: ClipRect(
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Container(color: Colors.transparent),
           ),
         ),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                final caseImage = await captureWidget(keyCase);
+                final skillImage = await captureWidget(keySkill);
+                PdfHelper.generate(
+                  image: image,
+                  profilePhoto: widget.profilePic,
+                  caseStat: caseImage,
+                  skillStat: skillImage,
+                );
+              },
+              icon: Icon(Icons.print)),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
@@ -128,11 +166,6 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
               builder: (context, state1) {
                 return BlocBuilder<StudentCubit, StudentState>(
                   builder: (context, state) {
-                    print(state1.listCasesModel != null);
-                    print(state1.listSkillsModel != null);
-                    print(state1.studentCasesModel != null);
-                    print(state1.studentSkillsModel != null);
-                    print(state.studentStatistic != null);
                     if (state1.listCasesModel != null &&
                         state1.listSkillsModel != null &&
                         state1.studentCasesModel != null &&
@@ -160,6 +193,7 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
                               ),
                             ),
                             DepartmentStatisticsSection(
+                              repaintKey: keySkill,
                               titleText: 'Diagnosis Skills',
                               titleIconPath: 'skill_outlined.svg',
                               percentage: (stData.verifiedSkills! /
@@ -193,6 +227,7 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
                               ),
                             ),
                             DepartmentStatisticsSection(
+                              repaintKey: keyCase,
                               titleText: 'Acquired Cases',
                               titleIconPath: 'attach_resume_male_outlined.svg',
                               percentage: (stData.verifiedCases! /

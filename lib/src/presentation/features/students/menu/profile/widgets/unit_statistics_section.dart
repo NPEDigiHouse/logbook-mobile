@@ -9,6 +9,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 class DepartmentStatisticsSection extends StatelessWidget {
   final String titleText;
   final String titleIconPath;
+  final GlobalKey repaintKey;
   final double percentage;
   final Map<String, int?> statistics;
   final Map<int, List<String>> detailStatistics;
@@ -16,6 +17,7 @@ class DepartmentStatisticsSection extends StatelessWidget {
   const DepartmentStatisticsSection({
     super.key,
     required this.titleText,
+    required this.repaintKey,
     required this.titleIconPath,
     required this.percentage,
     required this.statistics,
@@ -51,25 +53,28 @@ class DepartmentStatisticsSection extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: <Widget>[
-              CircularPercentIndicator(
-                percent: percentage / 100,
-                radius: 56,
-                lineWidth: 12,
-                animation: true,
-                reverse: true,
-                animationDuration: 750,
-                center: Countup(
-                  begin: 0,
-                  end: percentage,
-                  suffix: '%',
-                  duration: const Duration(milliseconds: 750),
-                  style: textTheme.headlineSmall!.copyWith(
-                    fontWeight: FontWeight.w600,
+              RepaintBoundary(
+                key: repaintKey,
+                child: CircularPercentIndicator(
+                  percent: percentage / 100,
+                  radius: 56,
+                  lineWidth: 12,
+                  animation: true,
+                  reverse: true,
+                  animationDuration: 750,
+                  center: Countup(
+                    begin: 0,
+                    end: percentage,
+                    suffix: '%',
+                    duration: const Duration(milliseconds: 750),
+                    style: textTheme.headlineSmall!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
+                  progressColor: primaryColor,
+                  backgroundColor: const Color(0xFFCED8EE),
+                  circularStrokeCap: CircularStrokeCap.round,
                 ),
-                progressColor: primaryColor,
-                backgroundColor: const Color(0xFFCED8EE),
-                circularStrokeCap: CircularStrokeCap.round,
               ),
               const SizedBox(width: 20),
               Expanded(

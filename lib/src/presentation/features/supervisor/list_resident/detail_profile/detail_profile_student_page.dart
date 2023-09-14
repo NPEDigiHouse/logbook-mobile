@@ -22,6 +22,8 @@ class DetailProfileStudentPage extends StatefulWidget {
 }
 
 class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
+  final GlobalKey keyCase = GlobalKey(debugLabel: 'keyCase');
+  final GlobalKey keySkill = GlobalKey(debugLabel: 'keySkill');
   late ScrollController _scrollController;
   final ValueNotifier<String> title = ValueNotifier('Entry Details');
 
@@ -238,6 +240,7 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                             ),
                           ],
                           DepartmentStatisticsSection(
+                            repaintKey: keySkill,
                             titleText: 'Diagnosis Skills',
                             titleIconPath: 'skill_outlined.svg',
                             percentage:
@@ -266,6 +269,7 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                             ),
                           ),
                           DepartmentStatisticsSection(
+                            repaintKey: keyCase,
                             titleText: 'Acquired Cases',
                             titleIconPath: 'attach_resume_male_outlined.svg',
                             percentage:

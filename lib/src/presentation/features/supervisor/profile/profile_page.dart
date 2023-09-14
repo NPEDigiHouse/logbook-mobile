@@ -359,7 +359,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'E-Logbook FK UMI Versi ${AppSettings.appVersion}',
+                  'E-Logbook FK UMI Version ${AppSettings.appVersion}',
                   style: textTheme.titleSmall?.copyWith(
                     color: onFormDisableColor,
                   ),

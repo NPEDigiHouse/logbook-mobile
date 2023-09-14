@@ -369,7 +369,7 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'E-Logbook FK UMI Versi ${AppSettings.appVersion}',
+                      'E-Logbook FK UMI Versiion ${AppSettings.appVersion}',
                       style: textTheme.titleSmall?.copyWith(
                         color: onFormDisableColor,
                       ),
