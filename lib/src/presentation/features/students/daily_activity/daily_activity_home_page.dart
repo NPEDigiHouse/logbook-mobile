@@ -19,9 +19,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 class DailyActivityTempModel {
   final String day;
   final String? id;
+  final DateTime dateTime;
   final ActivitiesStatus? dailyActivity;
 
-  DailyActivityTempModel({required this.day, this.dailyActivity, this.id});
+  DailyActivityTempModel(
+      {required this.day, this.dailyActivity, this.id, required this.dateTime});
 }
 
 class DailyActivityPage extends StatefulWidget {
@@ -276,6 +278,11 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                                   .weekName);
                       print(i);
                       return DailyActivityHomeCard(
+                        startDate: DateTime.fromMillisecondsSinceEpoch(state
+                                .studentDailyActivity!
+                                .weeks![index]
+                                .startDate! *
+                            1000),
                         week: state.studentDailyActivity!.weeks![index],
                         checkInCount:
                             widget.activeDepartmentModel.countCheckIn!,
@@ -298,9 +305,11 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
 class DailyActivityHomeCard extends StatelessWidget {
   final int checkInCount;
   final Week week;
+  final DateTime startDate;
   final DailyActivity? dailyActivity;
   const DailyActivityHomeCard(
       {super.key,
+      required this.startDate,
       required this.week,
       required this.checkInCount,
       this.dailyActivity});
@@ -315,6 +324,7 @@ class DailyActivityHomeCard extends StatelessWidget {
           week: week,
           weekName: week.weekName!,
           checkInCount: checkInCount,
+          startDate: startDate,
         ),
       ),
       color: Colors.white,
@@ -336,7 +346,7 @@ class DailyActivityHomeCard extends StatelessWidget {
           Builder(builder: (context) {
             String status = 'PENDING';
             if (ReusableFunctionHelper.getIntervalOfData(
-                        week.endDate, week.startDate) +
+                        week.startDate, week.endDate) +
                     1 ==
                 (dailyActivity == null
                     ? 0
@@ -360,7 +370,7 @@ class DailyActivityHomeCard extends StatelessWidget {
                     color: status == 'VERIFIED'
                         ? successColor
                         : status == 'UNVERIFIED'
-                            ? errorColor
+                            ? secondaryColor
                             : onFormDisableColor,
                   ),
                   child: Row(
@@ -369,9 +379,7 @@ class DailyActivityHomeCard extends StatelessWidget {
                       Icon(
                         status == 'VERIFIED'
                             ? Icons.verified_rounded
-                            : status == 'UNVERIFIED'
-                                ? Icons.close_rounded
-                                : Icons.hourglass_bottom_rounded,
+                            : Icons.hourglass_bottom_rounded,
                         color: Colors.white,
                         size: 16,
                       ),
@@ -422,7 +430,7 @@ class DailyActivityHomeCard extends StatelessWidget {
             final List<DailyActivityTempModel> listDays = [];
             final List<ActivitiesStatus> temp =
                 dailyActivity != null ? dailyActivity!.activitiesStatus! : [];
-            print("yakin ${temp.length}");
+
             String firstDayName = ReusableFunctionHelper.epochToStringDate(
               startTime: week.startDate!,
               format: 'EEEE',
@@ -441,7 +449,7 @@ class DailyActivityHomeCard extends StatelessWidget {
               'SUNDAY',
             ];
             int startIndex = daysOfWeek.indexOf(firstDayName.toUpperCase());
-
+            DateTime start = startDate;
             for (var i = 0; i < interval + 1; i++) {
               ActivitiesStatus? tempD;
               if (temp.indexWhere(
@@ -449,14 +457,15 @@ class DailyActivityHomeCard extends StatelessWidget {
                   -1) {
                 tempD = temp.firstWhere(
                     (element) => element.day == daysOfWeek[startIndex % 7]);
-                print("terisi");
               }
               listDays.add(
                 DailyActivityTempModel(
                   day: daysOfWeek[startIndex % 7],
                   dailyActivity: tempD,
+                  dateTime: start,
                 ),
               );
+              start = start.add(Duration(days: 1));
               startIndex += 1;
             }
 
@@ -476,7 +485,19 @@ class DailyActivityHomeCard extends StatelessWidget {
                         SizedBox(
                           height: 4,
                         ),
-                        if (e.dailyActivity == null)
+                        if (e.dailyActivity == null &&
+                            e.dateTime.isBefore(DateTime(
+                              DateTime.now().year,
+                              DateTime.now().month,
+                              DateTime.now().day,
+                            )))
+                          SvgPicture.asset(
+                            AssetPath.getIcon(emoji['NOT_ATTEND']!),
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.cover,
+                          )
+                        else if (e.dailyActivity == null)
                           Container(
                             width: 24,
                             height: 24,

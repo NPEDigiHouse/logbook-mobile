@@ -8,7 +8,6 @@ import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activ
 import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/pages/create_daily_activity_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
-import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +17,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 class DailyActivityWeekStatusPage extends StatefulWidget {
   final Week week;
   final int weekName;
+  final DateTime startDate;
   final int checkInCount;
 
   const DailyActivityWeekStatusPage(
       {super.key,
+      required this.startDate,
       required this.week,
       required this.weekName,
       required this.checkInCount});
@@ -262,6 +263,8 @@ class _DailyActivityWeekStatusPageState
                                     .compareTo(daysOfWeek.indexOf(b.day!));
                               },
                             );
+                            DateTime start = widget.startDate;
+
                             for (var d in data) {
                               ActivitiesStatus? tempD;
                               if (state.activityPerDays!.activities!.indexWhere(
@@ -276,11 +279,14 @@ class _DailyActivityWeekStatusPageState
                                   day: d.day!,
                                   id: d.id,
                                   dailyActivity: tempD,
+                                  dateTime: start,
                                 ),
                               );
+                              start = start.add(Duration(days: 1));
                             }
                             return DailyActivityStatusCard(
                               id: listDays[index].id!,
+                              date: listDays[index].dateTime,
                               supervisorName:
                                   listDays[index].dailyActivity == null
                                       ? null
@@ -332,6 +338,7 @@ class _DailyActivityWeekStatusPageState
 }
 
 class DailyActivityStatusCard extends StatefulWidget {
+  final DateTime? date;
   final String? dailyActivityId;
   final String id;
   final String day;
@@ -345,6 +352,7 @@ class DailyActivityStatusCard extends StatefulWidget {
   const DailyActivityStatusCard({
     super.key,
     this.supervisorName,
+    required this.date,
     required this.dailyActivityId,
     required this.id,
     this.activitiesStatus,
@@ -382,7 +390,13 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
     return InkWellContainer(
       padding: EdgeInsets.all(16),
       radius: 12,
-      onTap: widget.checkInCount == 0 && widget.verificationStatus != 'VERIFIED'
+      onTap: widget.checkInCount == 0 &&
+              !widget.date!.isBefore(DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+              )) &&
+              widget.verificationStatus != 'VERIFIED'
           ? () => context.navigateTo(CreateDailyActivityPage(
                 dayId: widget.id,
                 id: widget.dailyActivityId!,
@@ -405,7 +419,19 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.status == null)
+          if (widget.status == null &&
+              widget.date!.isBefore(DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+              )))
+            SvgPicture.asset(
+              AssetPath.getIcon(emoji['NOT_ATTEND']!),
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
+            )
+          else if (widget.status == null)
             Container(
               width: 38,
               height: 38,
@@ -432,7 +458,7 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
           Text(
             widget.activity ??
                 (widget.status == null
-                    ? ''
+                    ? 'Unsubmitted'
                     : widget.status![0].toUpperCase() +
                         widget.status!.substring(1).toLowerCase()),
             style: textTheme.bodyMedium
