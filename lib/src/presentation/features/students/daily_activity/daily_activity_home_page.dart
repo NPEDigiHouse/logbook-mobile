@@ -299,6 +299,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
         ),
       ),
     );
+  
   }
 }
 

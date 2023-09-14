@@ -126,7 +126,7 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
           },
         ),
       );
-      print(response.statusCode);
+      print(response.data);
       if (response.statusCode != 200) {
         throw Exception();
       }

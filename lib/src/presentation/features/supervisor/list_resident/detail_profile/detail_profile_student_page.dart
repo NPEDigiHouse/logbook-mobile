@@ -118,33 +118,6 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                               SizedBox(
                                 height: 8,
                               ),
-                              Text(
-                                'Phone',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color: secondaryTextColor,
-                                ),
-                              ),
-                              Text(
-                                state.studentDetail!.phoneNumber ?? '-',
-                                style: textTheme.titleMedium?.copyWith(
-                                  color: primaryTextColor,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Text(
-                                'Address',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color: secondaryTextColor,
-                                ),
-                              ),
-                              Text(
-                                state.studentDetail!.address ?? '-',
-                                style: textTheme.titleMedium?.copyWith(
-                                  color: primaryTextColor,
-                                ),
-                              ),
                             ],
                           );
                         return CustomLoading();

@@ -44,6 +44,14 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
     'Daily Activity'
   ];
 
+  final List<String> descList = [
+    'Detail Profile of Student',
+    'Problem Consultation',
+    // 'History',
+    'Self Reflection',
+    'Daily Activity'
+  ];
+
   final List<String> iconPath = [
     'icon_detail_profile.svg',
     'icon_special_report.svg',
@@ -164,6 +172,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
                 itemBuilder: (context, index) {
                   return buildResidentMenuCard(
                     context: context,
+                    desc: descList[index],
                     iconPath: iconPath[index],
                     onTap: onTaps(context)[index],
                     title: titleList[index],
@@ -182,6 +191,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
     required String iconPath,
     required VoidCallback onTap,
     required BuildContext context,
+    required String desc,
   }) {
     return InkWellContainer(
       onTap: onTap,
@@ -227,7 +237,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
             ),
           ),
           Text(
-            'Lorem Ipsum Libre',
+            desc,
             style: textTheme.bodySmall?.copyWith(
               color: secondaryTextColor,
             ),
