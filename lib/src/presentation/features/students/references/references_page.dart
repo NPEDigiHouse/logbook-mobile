@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ReferencePage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
@@ -141,22 +142,29 @@ class _ReferencePageState extends State<ReferencePage> {
                                                   return ReferenceCard(
                                                     reference: s[index],
                                                     onTap: () async {
-                                                      final hasPermission =
-                                                          await checkAndRequestPermission();
-                                                      if (hasPermission) {
-                                                        BlocProvider.of<
-                                                                ReferenceCubit>(
-                                                            context)
-                                                          ..getReferenceById(
-                                                              id: state
-                                                                  .references![
-                                                                      index]
-                                                                  .id!,
-                                                              fileName: state
-                                                                      .references![
-                                                                          index]
-                                                                      .file ??
-                                                                  '');
+                                                      if (s[index].type ==
+                                                          'URL') {
+                                                        launchUrlString(
+                                                            s[index].file ??
+                                                                '');
+                                                      } else {
+                                                        final hasPermission =
+                                                            await checkAndRequestPermission();
+                                                        if (hasPermission) {
+                                                          BlocProvider.of<
+                                                                  ReferenceCubit>(
+                                                              context)
+                                                            ..getReferenceById(
+                                                                id: state
+                                                                    .references![
+                                                                        index]
+                                                                    .id!,
+                                                                fileName: state
+                                                                        .references![
+                                                                            index]
+                                                                        .file ??
+                                                                    '');
+                                                        }
                                                       }
                                                     },
                                                   );
@@ -245,7 +253,9 @@ class _ReferenceCardState extends State<ReferenceCard> {
               width: 4,
             ),
             Icon(
-              Icons.file_present_outlined,
+              widget.reference.type == 'URL'
+                  ? Icons.link
+                  : Icons.file_present_outlined,
               color: primaryColor,
             ),
             SizedBox(

@@ -10,9 +10,12 @@ class ReferenceOnListModel {
   String? file;
   @JsonKey(name: "unitId")
   String? unitId;
+  @JsonKey(name: "type")
+  String? type;
 
   ReferenceOnListModel({
     this.id,
+    this.type,
     this.file,
     this.unitId,
   });
