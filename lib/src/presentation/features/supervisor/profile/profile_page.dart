@@ -1,6 +1,7 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:elogbook/core/app/app_settings.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
@@ -352,11 +353,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 12),
                 ProfileItemMenuCard(
-                  iconPath: 'rate_icon.svg',
-                  title: 'Rate Us',
-                  onTap: () => launchUrlString(
-                      'https://play.google.com/store/apps/details?id=com.npedigital.elogbook'),
-                ),
+                    iconPath: 'rate_icon.svg',
+                    title: 'Rate Us',
+                    onTap: () => ReusableFunctionHelper.urlLauncher(
+                        'https://play.google.com/store/apps/details?id=com.npedigital.elogbook')),
                 const SizedBox(height: 16),
                 Text(
                   'E-Logbook FK UMI Version ${AppSettings.appVersion}',

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cool_alert/cool_alert.dart';
 import 'package:elogbook/core/app/app_settings.dart';
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
@@ -285,7 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileItemMenuCard(
                     iconPath: 'rate_icon.svg',
                     title: 'Rate Us',
-                    onTap: () => launchUrlString(
+                    onTap: () => ReusableFunctionHelper.urlLauncher(
                         'https://play.google.com/store/apps/details?id=com.npedigital.elogbook'),
                   ),
                   const SizedBox(height: 16),

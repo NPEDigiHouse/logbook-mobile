@@ -1,3 +1,4 @@
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -31,7 +32,8 @@ class ContactUsPage extends StatelessWidget {
                 width: double.infinity,
                 child: FilledButton(
                     onPressed: () {
-                      launchUrlString('https://forms.gle/4nC6ckakFDU4rpyT7');
+                      ReusableFunctionHelper.urlLauncher(
+                          'https://forms.gle/4nC6ckakFDU4rpyT7');
                     },
                     child: Text('Google Form'))),
             Center(child: Text('OR')),
@@ -39,7 +41,8 @@ class ContactUsPage extends StatelessWidget {
                 width: double.infinity,
                 child: FilledButton(
                     onPressed: () {
-                      launchUrlString('https://www.instagram.com/npe.digital/');
+                      ReusableFunctionHelper.urlLauncher(
+                          'https://www.instagram.com/npe.digital/');
                     },
                     child: Text('DM on Instagram'))),
             Center(child: Text('OR')),
@@ -47,7 +50,8 @@ class ContactUsPage extends StatelessWidget {
                 width: double.infinity,
                 child: FilledButton(
                     onPressed: () {
-                      launchUrlString('https://wa.me/+6285172065497');
+                      ReusableFunctionHelper.urlLauncher(
+                          'https://wa.me/+6285172065497');
                     },
                     child: Text('Chat via WhatsApp'))),
           ],
