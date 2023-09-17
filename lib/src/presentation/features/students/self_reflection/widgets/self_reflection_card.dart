@@ -49,9 +49,10 @@ class StudentSelfReflectionCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    const SizedBox(height: 4),
                     Row(
                       children: <Widget>[
                         Text(
@@ -71,7 +72,7 @@ class StudentSelfReflectionCard extends StatelessWidget {
                           ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 4),
                     Text(
                       model.content ?? '',
                       maxLines: 2,
