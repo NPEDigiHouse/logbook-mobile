@@ -1,3 +1,4 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
@@ -12,6 +13,7 @@ import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,19 +36,12 @@ class SupervisorListSkillsPage extends StatefulWidget {
 class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
   ValueNotifier<List<SkillModel>> listData = ValueNotifier([]);
   bool isMounted = false;
-  late final List<String> _menuList;
 
   late final ValueNotifier<String> _query, _selectedMenu;
   late final ValueNotifier<Map<String, String>?> _dataFilters;
 
   @override
   void initState() {
-    _menuList = [
-      'All',
-      'Verified',
-      'Unverified',
-    ];
-
     Future.microtask(() {
       BlocProvider.of<CompetenceCubit>(context)
         ..getSkillsByStudentId(
@@ -55,7 +50,7 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
     });
 
     _query = ValueNotifier('');
-    _selectedMenu = ValueNotifier(_menuList[0]);
+    _selectedMenu = ValueNotifier('All');
     _dataFilters = ValueNotifier(null);
 
     super.initState();
@@ -75,18 +70,22 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
       listener: (context, state) {
         if (state.isSkillSuccessVerify || state.isAllSkillsSuccessVerify) {
           BlocProvider.of<CompetenceCubit>(context)
-            ..getCasesByStudentId(
+            ..getSkillsByStudentId(
               studentId: widget.studentId,
             );
           isMounted = false;
         }
         if (state.listSkillsModel != null &&
-            state.requestState == RequestState.data &&
-            !isMounted) {
-          _menuList[1] =
-              '${state.listSkillsModel!.listSkills!.where((e) => e.verificationStatus == 'VERIFIED').toList().length} Verified';
-          _menuList[2] =
-              '${state.listSkillsModel!.listSkills!.where((e) => e.verificationStatus == 'INPROCESS').toList().length} Unverified';
+            !isMounted &&
+            state.requestState == RequestState.data) {
+          listData.value = [...state.listSkillsModel!.listSkills!];
+
+          if (listData.value.indexWhere(
+                  (element) => element.verificationStatus == 'INPROCESS') ==
+              -1) {
+            BlocProvider.of<CompetenceCubit>(context)..getSkillStudents();
+            context.back();
+          }
         }
       },
       builder: (context, state) {
@@ -102,8 +101,18 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
                         -1
                 ? FilledButton(
                     onPressed: () {
-                      BlocProvider.of<CompetenceCubit>(context)
-                        ..verifyAllCaseOfStudent(studentId: widget.studentId);
+                      showDialog(
+                          context: context,
+                          barrierLabel: '',
+                          barrierDismissible: false,
+                          builder: (_) => VerifyDialog(
+                                onTap: () {
+                                  BlocProvider.of<CompetenceCubit>(context)
+                                    ..verifyAllSkillOfStudent(
+                                        studentId: widget.studentId);
+                                  Navigator.pop(context);
+                                },
+                              ));
                     },
                     child: Text('Verify All Skils'),
                   )
@@ -154,7 +163,20 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
                                 SizedBox(
                                   height: 12,
                                 ),
-                                buildSearchFilterSection(),
+                                buildSearchFilterSection(
+                                  verifiedCount: state
+                                      .listSkillsModel!.listSkills!
+                                      .where((e) =>
+                                          e.verificationStatus == 'VERIFIED')
+                                      .toList()
+                                      .length,
+                                  unverifiedCount: state
+                                      .listSkillsModel!.listSkills!
+                                      .where((e) =>
+                                          e.verificationStatus == 'INPROCESS')
+                                      .toList()
+                                      .length,
+                                ),
                                 if (s.isEmpty) ...[
                                   SizedBox(
                                     height: 24,
@@ -202,7 +224,13 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
     );
   }
 
-  ValueListenableBuilder<Map<String, String>?> buildSearchFilterSection() {
+  ValueListenableBuilder<Map<String, String>?> buildSearchFilterSection(
+      {required int verifiedCount, required int unverifiedCount}) {
+    final _menuList = [
+      'All',
+      '${verifiedCount} Verified',
+      '${unverifiedCount} Unverified',
+    ];
     return ValueListenableBuilder(
       valueListenable: _dataFilters,
       builder: (context, data, value) {

@@ -1,3 +1,4 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
@@ -12,6 +13,7 @@ import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,18 +36,16 @@ class SupervisorListCasesPage extends StatefulWidget {
 class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
   ValueNotifier<List<CaseModel>> listData = ValueNotifier([]);
   bool isMounted = false;
-  late final List<String> _menuList;
-
   late final ValueNotifier<String> _query, _selectedMenu;
   late final ValueNotifier<Map<String, String>?> _dataFilters;
 
   @override
   void initState() {
-    _menuList = [
-      'All',
-      'Verified',
-      'Unverified',
-    ];
+    // _menuList = [
+    //   'All',
+    //   'Verified',
+    //   'Unverified',
+    // ];
 
     Future.microtask(() {
       BlocProvider.of<CompetenceCubit>(context)
@@ -55,7 +55,7 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
     });
 
     _query = ValueNotifier('');
-    _selectedMenu = ValueNotifier(_menuList[0]);
+    _selectedMenu = ValueNotifier('All');
     _dataFilters = ValueNotifier(null);
 
     super.initState();
@@ -81,12 +81,16 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
           isMounted = false;
         }
         if (state.listCasesModel != null &&
-            state.requestState == RequestState.data &&
-            !isMounted) {
-          _menuList[1] =
-              '${state.listCasesModel!.listCases!.where((e) => e.verificationStatus == 'VERIFIED').toList().length} ${_menuList[1]}';
-          _menuList[2] =
-              '${state.listCasesModel!.listCases!.where((e) => e.verificationStatus == 'INPROCESS').toList().length} ${_menuList[2]}';
+            !isMounted &&
+            state.requestState == RequestState.data) {
+          listData.value = [...state.listCasesModel!.listCases!];
+
+          if (listData.value.indexWhere(
+                  (element) => element.verificationStatus == 'INPROCESS') ==
+              -1) {
+            BlocProvider.of<CompetenceCubit>(context)..getCaseStudents();
+            context.back();
+          }
         }
       },
       builder: (context, state) {
@@ -102,8 +106,18 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
                         -1
                 ? FilledButton(
                     onPressed: () {
-                      BlocProvider.of<CompetenceCubit>(context)
-                        ..verifyAllCaseOfStudent(studentId: widget.studentId);
+                      showDialog(
+                          context: context,
+                          barrierLabel: '',
+                          barrierDismissible: false,
+                          builder: (_) => VerifyDialog(
+                                onTap: () {
+                                  BlocProvider.of<CompetenceCubit>(context)
+                                    ..verifyAllCaseOfStudent(
+                                        studentId: widget.studentId);
+                                  Navigator.pop(context);
+                                },
+                              ));
                     },
                     child: Text('Verify All Cases'),
                   )
@@ -153,7 +167,19 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
                                 SizedBox(
                                   height: 12,
                                 ),
-                                buildSearchFilterSection(),
+                                buildSearchFilterSection(
+                                    verifiedCount: state
+                                        .listCasesModel!.listCases!
+                                        .where((e) =>
+                                            e.verificationStatus == 'VERIFIED')
+                                        .toList()
+                                        .length,
+                                    unverifiedCount: state
+                                        .listCasesModel!.listCases!
+                                        .where((e) =>
+                                            e.verificationStatus == 'INPROCESS')
+                                        .toList()
+                                        .length),
                                 if (s.isEmpty) ...[
                                   SizedBox(
                                     height: 24,
@@ -201,12 +227,13 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
     );
   }
 
-  ValueListenableBuilder<Map<String, String>?> buildSearchFilterSection() {
-    // final _menuList = [
-    //   'All',
-    //   '${verifiedCount} Verified',
-    //   '${unverifiedCount} Unverified',
-    // ];
+  ValueListenableBuilder<Map<String, String>?> buildSearchFilterSection(
+      {required int verifiedCount, required int unverifiedCount}) {
+    final _menuList = [
+      'All',
+      '${verifiedCount} Verified',
+      '${unverifiedCount} Unverified',
+    ];
     return ValueListenableBuilder(
       valueListenable: _dataFilters,
       builder: (context, data, value) {

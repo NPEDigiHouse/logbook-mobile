@@ -5,6 +5,7 @@ import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.da
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/unit_statistics_card.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/unit_statistics_section.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/widgets/head_resident_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -41,6 +42,48 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
         title.value = widget.student.studentId ?? '';
       }
     });
+  }
+
+  TotalGradeHelper? getTotalGrades(double grades) {
+    Map<String, int> scoreColors = {
+      'A': 0xFF56B9A1,
+      'A-': 0xFF7AB28C,
+      'B+': 0xFF9FAE78,
+      'B': 0xFFC4A763,
+      'B-': 0xFFE8A04E,
+      'C+': 0xFFFFCB51,
+      'C': 0xFFE79D6B,
+      'D': 0xFFC28B86,
+      'E': 0xFFD1495B,
+    };
+    String scoreLevel;
+    if (grades >= 85) {
+      scoreLevel = 'A';
+    } else if (grades >= 80) {
+      scoreLevel = 'A-';
+    } else if (grades > 75) {
+      scoreLevel = 'B+';
+    } else if (grades > 70) {
+      scoreLevel = 'B';
+    } else if (grades > 65) {
+      scoreLevel = 'B-';
+    } else if (grades >= 60) {
+      scoreLevel = 'C+';
+    } else if (grades >= 50) {
+      scoreLevel = 'C';
+    } else if (grades >= 40) {
+      scoreLevel = 'D';
+    } else {
+      scoreLevel = 'E';
+    }
+
+    return TotalGradeHelper(
+      value: grades,
+      gradientScore: ScoreGradientName(
+        title: scoreLevel,
+        color: Color(scoreColors[scoreLevel]!),
+      ),
+    );
   }
 
   @override
@@ -182,27 +225,40 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.symmetric(horizontal: 24),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 12),
-                              decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  ((stData.finalScore ?? 100.0))
-                                      .toInt()
-                                      .toString(),
-                                  style: textTheme.titleLarge?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                            Builder(builder: (context) {
+                              final scoreData = getTotalGrades(
+                                  stData.finalScore.toDouble() ?? 0.0);
+                              return Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.symmetric(horizontal: 24),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: scoreData?.gradientScore.color,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        scoreData!.gradientScore.title,
+                                        style: textTheme.titleLarge?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        scoreData.value.toInt().toString(),
+                                        style: textTheme.bodyMedium?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ),
+                              );
+                            }),
                             const Padding(
                               padding: EdgeInsets.symmetric(vertical: 16),
                               child: Divider(

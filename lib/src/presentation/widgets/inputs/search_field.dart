@@ -28,14 +28,12 @@ class _SearchFieldState extends State<SearchField> {
   @override
   void initState() {
     _controller = TextEditingController();
-
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
-
     super.dispose();
   }
 
@@ -74,19 +72,17 @@ class _SearchFieldState extends State<SearchField> {
               AssetPath.getIcon('search_outlined.svg'),
             ),
           ),
-          suffixIcon: widget.text.isEmpty
-              ? const SizedBox()
-              : IconButton(
-                  icon: const Icon(
-                    Icons.close,
-                    color: Color(0xFF6B7280),
-                    size: 16,
-                  ),
-                  onPressed: () {
-                    _controller.clear();
-                    // widget.onChanged('');
-                  },
-                ),
+          suffixIcon: IconButton(
+            icon: const Icon(
+              Icons.close,
+              color: Color(0xFF6B7280),
+              size: 16,
+            ),
+            onPressed: () {
+              _controller.clear();
+              // widget.onChanged('');
+            },
+          ),
         ),
       ),
     );

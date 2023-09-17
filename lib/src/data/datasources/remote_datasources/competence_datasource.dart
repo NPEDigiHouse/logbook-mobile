@@ -101,7 +101,6 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         throw Exception();
       }
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-      print(dataResponse);
       final result = ListCasesModel.fromJson(dataResponse.data);
       return result;
     } catch (e) {
@@ -239,9 +238,15 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
         ),
       );
-      print(response);
+      print(response.data);
+
+      print(response.statusCode);
       if (response.statusCode != 200) {
         throw Exception();
       }
@@ -267,9 +272,13 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
         ),
       );
-      // print(response.statusCode);
+
       if (response.statusCode != 200) {
         throw Exception();
       }
@@ -348,8 +357,14 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
         ),
       );
+
+      print(response.data);
       if (response.statusCode != 200) {
         throw Exception();
       }
@@ -400,13 +415,18 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
         ),
         data: {
           "verified": true,
           "rating": rating,
         },
       );
-      if (response.statusCode != 201) {
+      print("this ${response.statusCode}");
+      if (response.statusCode != 200) {
         throw Exception();
       }
     } catch (e) {

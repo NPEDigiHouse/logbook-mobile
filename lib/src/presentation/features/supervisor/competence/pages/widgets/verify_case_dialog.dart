@@ -132,14 +132,11 @@ class _AddTopicDialogState extends State<VerifyCaseDialog> {
                     width: MediaQuery.of(context).size.width,
                     child: FilledButton.icon(
                       onPressed: () {
-                        print(rating);
-                        if (rating != null) {
-                          BlocProvider.of<CompetenceCubit>(context)
-                            ..verifyCaseById(
-                              id: widget.id,
-                              rating: rating!,
-                            );
-                        }
+                        BlocProvider.of<CompetenceCubit>(context)
+                          ..verifyCaseById(
+                            id: widget.id,
+                            rating: rating,
+                          );
                       },
                       icon: Icon(Icons.verified),
                       label: Text('Submit'),

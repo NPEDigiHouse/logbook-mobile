@@ -33,7 +33,7 @@ class _AddTopicDialogState extends State<VerifySkillDialog> {
   Widget build(BuildContext context) {
     return BlocListener<CompetenceCubit, CompetenceState>(
       listener: (context, state) {
-        if (state.isCaseSuccessVerify) {
+        if (state.isSkillSuccessVerify) {
           BlocProvider.of<CompetenceCubit>(context)
             ..getSkillsByStudentId(
               studentId: widget.studentId,
@@ -132,11 +132,10 @@ class _AddTopicDialogState extends State<VerifySkillDialog> {
                     width: MediaQuery.of(context).size.width,
                     child: FilledButton.icon(
                       onPressed: () {
-                        print(rating);
                         BlocProvider.of<CompetenceCubit>(context)
-                          ..verifyCaseById(
+                          ..verifySkillById(
                             id: widget.id,
-                            rating: rating!,
+                            rating: rating,
                           );
                       },
                       icon: Icon(Icons.verified),

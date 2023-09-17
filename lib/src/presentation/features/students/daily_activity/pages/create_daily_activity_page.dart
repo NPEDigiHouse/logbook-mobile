@@ -106,6 +106,13 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                     if (state is FetchSuccess) {
                       _supervisors.clear();
                       _supervisors.addAll(state.supervisors);
+                      if (_supervisors.indexWhere((element) =>
+                              element.fullName == supervisorName) !=
+                          -1) {
+                        final al = _supervisors.firstWhere(
+                            (element) => element.fullName == supervisorName);
+                        supervisorId = al.id;
+                      }
                       return CustomDropdown<SupervisorModel>(
                           onSubmit: (text, controller) {
                             if (_supervisors.indexWhere((element) =>
@@ -206,6 +213,13 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                           _activityLocations.clear();
                           _activityLocations.addAll(state.activityLocations!);
                         }
+                        if (_activityLocations.indexWhere(
+                                (element) => element.name == locationName) !=
+                            -1) {
+                          final al = _activityLocations.firstWhere(
+                              (element) => element.name == locationName);
+                          locationId = al.id;
+                        }
                         return DropdownButtonFormField(
                           isExpanded: true,
                           hint: Text('Location'),
@@ -238,6 +252,13 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                         if (state.activityNames != null) {
                           _activityLocations.clear();
                           _activityLocations.addAll(state.activityNames!);
+                        }
+                        if (_activityLocations.indexWhere(
+                                (element) => element.name == activityName) !=
+                            -1) {
+                          final al = _activityLocations.firstWhere(
+                              (element) => element.name == activityName);
+                          activityNameId = al.id;
                         }
                         return DropdownButtonFormField(
                           isExpanded: true,

@@ -307,8 +307,11 @@ class _CreateCstPageState extends State<CreateCstPage> {
                                             .where((element) => element != -1)
                                             .toList(),
                                         startTime:
-                                            startTime.millisecondsSinceEpoch,
-                                        endTime: endTime.millisecondsSinceEpoch,
+                                            startTime.millisecondsSinceEpoch ~/
+                                                1000,
+                                        endTime:
+                                            endTime.millisecondsSinceEpoch ~/
+                                                1000,
                                       ),
                                     );
                                   Navigator.pop(context);

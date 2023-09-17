@@ -25,6 +25,8 @@ class CustomDropdown<T> extends StatefulWidget {
 
 class _CustomDropdownState extends State<CustomDropdown> {
   final TextEditingController controller = TextEditingController();
+  FocusNode myFocusNode = FocusNode();
+
   final SuggestionsBoxController suggestionController =
       SuggestionsBoxController();
   @override
@@ -51,6 +53,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
         child: Text('No Items Found'),
       ),
       textFieldConfiguration: TextFieldConfiguration(
+        focusNode: myFocusNode,
         onSubmitted: (value) => widget.onSubmit(value, controller),
         onTapOutside: (v) {
           widget.onSubmit(controller.text, controller);
@@ -58,18 +61,20 @@ class _CustomDropdownState extends State<CustomDropdown> {
         },
         controller: controller,
         decoration: InputDecoration(
-          suffix: InkWell(
-            onTap: () {
-              controller.text = '';
-            },
-            child: SizedBox(
-                width: 20,
-                height: 20,
-                child: Icon(
-                  Icons.close_rounded,
-                  size: 16,
-                )),
-          ),
+          suffix: myFocusNode.hasFocus
+              ? InkWell(
+                  onTap: () {
+                    controller.text = '';
+                  },
+                  child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Icon(
+                        Icons.close_rounded,
+                        size: 16,
+                      )),
+                )
+              : null,
           hintText: widget.hint,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
