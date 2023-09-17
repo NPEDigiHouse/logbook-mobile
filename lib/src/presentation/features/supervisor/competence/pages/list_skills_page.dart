@@ -84,9 +84,9 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
             state.requestState == RequestState.data &&
             !isMounted) {
           _menuList[1] =
-              '${state.listSkillsModel!.listSkills!.where((e) => e.verificationStatus == 'VERIFIED').toList().length} ${_menuList[1]}';
+              '${state.listSkillsModel!.listSkills!.where((e) => e.verificationStatus == 'VERIFIED').toList().length} Verified';
           _menuList[2] =
-              '${state.listSkillsModel!.listSkills!.where((e) => e.verificationStatus == 'INPROCESS').toList().length} ${_menuList[2]}';
+              '${state.listSkillsModel!.listSkills!.where((e) => e.verificationStatus == 'INPROCESS').toList().length} Unverified';
         }
       },
       builder: (context, state) {

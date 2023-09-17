@@ -25,7 +25,8 @@ class CustomDropdown<T> extends StatefulWidget {
 
 class _CustomDropdownState extends State<CustomDropdown> {
   final TextEditingController controller = TextEditingController();
-
+  final SuggestionsBoxController suggestionController =
+      SuggestionsBoxController();
   @override
   void initState() {
     super.initState();
@@ -57,6 +58,18 @@ class _CustomDropdownState extends State<CustomDropdown> {
         },
         controller: controller,
         decoration: InputDecoration(
+          suffix: InkWell(
+            onTap: () {
+              controller.text = '';
+            },
+            child: SizedBox(
+                width: 20,
+                height: 20,
+                child: Icon(
+                  Icons.close_rounded,
+                  size: 16,
+                )),
+          ),
           hintText: widget.hint,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
@@ -66,6 +79,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
           ),
         ),
       ),
+      suggestionsBoxController: suggestionController,
       suggestionsCallback: (pattern) => widget.onCallback(pattern),
       itemBuilder: (context, suggestion) => widget.child(suggestion),
       onSuggestionSelected: (v) => widget.onItemSelect(v, controller),
