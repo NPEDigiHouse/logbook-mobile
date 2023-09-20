@@ -29,9 +29,7 @@ class ActivityDataSourceImpl implements ActivityDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ActivityModel> listData =
@@ -57,9 +55,7 @@ class ActivityDataSourceImpl implements ActivityDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ActivityModel> listData =

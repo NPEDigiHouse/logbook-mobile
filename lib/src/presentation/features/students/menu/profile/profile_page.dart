@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:elogbook/core/app/app_settings.dart';
 import 'package:elogbook/core/helpers/reusable_function_helper.dart';
-import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
@@ -13,11 +12,9 @@ import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/about_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/change_password_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/contact_us_page.dart';
-import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/export_data_page.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/image_preview.dart';
 import 'package:elogbook/src/presentation/widgets/profile_pic_placeholder.dart';
-import 'package:elogbook/src/presentation/widgets/spacing_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -29,7 +26,6 @@ import 'package:elogbook/src/presentation/features/students/menu/profile/submenu
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/unit_statistics_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/profile_item_menu_card.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class ProfilePage extends StatefulWidget {
   final UserCredential credential;
@@ -190,7 +186,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               builder: (context, state) {
                                 return Text(
                                   state is GetActiveDepartmentSuccess
-                                      ? state.activeDepartment.unitName!
+                                      ? state.activeDepartment.unitName ??
+                                          'No Active Department'
                                       : '...',
                                   style: textTheme.bodyMedium?.copyWith(
                                     color: Colors.white,
@@ -287,8 +284,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileItemMenuCard(
                       iconPath: 'rate_icon.svg',
                       title: 'Rate Us',
-                      onTap: () => ReusableFunctionHelper.urlLauncher(Platform
-                              .isAndroid
+                      onTap: () => Utils.urlLauncher(Platform.isAndroid
                           ? 'https://play.google.com/store/apps/details?id=com.npedigital.elogbook'
                           : 'https://apps.apple.com/us/app/e-logbook-umi/id6463897571')),
                   const SizedBox(height: 16),

@@ -36,9 +36,7 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
           },
         ),
       );
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ReferenceOnListModel> listData = dataResponse.data

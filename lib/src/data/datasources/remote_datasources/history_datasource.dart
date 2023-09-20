@@ -26,17 +26,11 @@ class HistoryDataSourceImpl extends HistoryDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print("calll");
       print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<HistoryModel> listData =

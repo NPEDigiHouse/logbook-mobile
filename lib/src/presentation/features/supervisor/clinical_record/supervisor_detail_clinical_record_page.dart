@@ -815,7 +815,7 @@ class _SupervisorDetailClinicalRecordPageState
                               },
                             ),
                             Text(
-                              ReusableFunctionHelper.rateToText(state
+                              Utils.rateToText(state
                                   .detailClinicalRecordModel!.rating!
                                   .toInt()),
                               style: textTheme.bodyLarge

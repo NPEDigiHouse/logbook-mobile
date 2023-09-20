@@ -87,7 +87,7 @@ class SpecialReportStudentCard extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                              text: ReusableFunctionHelper.datetimeToString(
+                              text: Utils.datetimeToString(
                             sr.latest!,
                           )),
                         ],

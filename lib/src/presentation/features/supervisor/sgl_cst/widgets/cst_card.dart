@@ -71,7 +71,7 @@ class CstOnListCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      ReusableFunctionHelper.datetimeToString(sglCst.latest!,
+                      Utils.datetimeToString(sglCst.latest!,
                           format: 'EEE, dd MMM'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

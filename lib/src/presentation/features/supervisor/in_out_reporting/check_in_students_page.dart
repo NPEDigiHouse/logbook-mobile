@@ -173,7 +173,7 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
                 style: textTheme.titleMedium,
               ),
               Text(
-                'Send it on: ${ReusableFunctionHelper.datetimeToString(DateTime.fromMillisecondsSinceEpoch(widget.student.checkInTime! * 1000), isShowTime: true)}',
+                'Send it on: ${Utils.datetimeToString(DateTime.fromMillisecondsSinceEpoch(widget.student.checkInTime! * 1000), isShowTime: true)}',
                 style: textTheme.bodySmall?.copyWith(
                   color: secondaryTextColor,
                 ),
@@ -297,7 +297,7 @@ class InOutReportingItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  ReusableFunctionHelper.datetimeToString(
+                  Utils.datetimeToString(
                       DateTime.fromMillisecondsSinceEpoch(
                           student.checkInTime! * 1000),
                       isShowTime: true),

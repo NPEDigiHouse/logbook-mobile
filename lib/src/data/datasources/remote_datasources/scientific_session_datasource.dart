@@ -54,10 +54,10 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
                   "content-type": 'application/json',
                   "authorization": 'Bearer ${credential?.accessToken}'
                 },
-                followRedirects: false,
-                validateStatus: (status) {
-                  return status! < 500;
-                },
+                // followRedirects: false,
+                // validateStatus: (status) {
+                //   return status! < 500;
+                // },
               ),
               data: {
             'supervisorId': scientificSessionPostModel.supervisorId,
@@ -72,10 +72,10 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
             if (scientificSessionPostModel.attachment != null)
               'attachment': scientificSessionPostModel.attachment,
           });
-      print(response.data);
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // print(response.data);
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -131,9 +131,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = ScientificSessionDetailModel.fromJson(dataResponse.data);
@@ -209,9 +207,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       print(response.data);
       final dataResponse =
           await DataResponse<ListScientificSessionModel>.fromJson(
@@ -238,9 +234,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ScientificRoles> listData =
@@ -266,9 +260,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<SessionTypesModel> listData =
@@ -295,9 +287,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ScientificSessionOnListModel> listData = dataResponse.data
@@ -322,18 +312,11 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: model.toJson(),
       );
       print(response);
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

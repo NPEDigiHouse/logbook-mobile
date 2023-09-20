@@ -35,9 +35,7 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       // print(response.data);
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
@@ -65,9 +63,7 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       // print(response.data);
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
@@ -95,9 +91,7 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       // print(response.data);
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
@@ -127,9 +121,7 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
         ),
       );
       print(response.data);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentStatistic.fromJson(dataResponse.data);

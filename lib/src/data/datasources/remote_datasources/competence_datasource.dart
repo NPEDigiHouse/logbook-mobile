@@ -51,9 +51,9 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
                 },
               ),
               data: casePostModel.toJson());
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -74,9 +74,9 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
                 },
               ),
               data: skillPostModel.toJson());
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -97,9 +97,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
       final result = ListCasesModel.fromJson(dataResponse.data);
       return result;
@@ -123,9 +121,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = ListSkillsModel.fromJson(dataResponse.data);
@@ -151,9 +147,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       print("TERP");
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
@@ -181,9 +175,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentSkillModel> listData =
@@ -210,9 +202,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentCompetenceModel> listData = dataResponse.data
@@ -238,18 +228,12 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response.data);
 
       print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
       print(dataResponse);
       final result = ListCasesModel.fromJson(dataResponse.data);
@@ -272,16 +256,9 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
 
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = ListSkillsModel.fromJson(dataResponse.data);
@@ -306,9 +283,7 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentCompetenceModel> listData = dataResponse.data
@@ -336,9 +311,6 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
           },
         ),
       );
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -357,17 +329,10 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
 
       print(response.data);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -393,9 +358,6 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         },
       );
       print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -415,10 +377,6 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: {
           "verified": true,
@@ -426,9 +384,6 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         },
       );
       print("this ${response.statusCode}");
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

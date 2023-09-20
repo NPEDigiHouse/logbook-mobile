@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 /// A collection of functions that are reusable
-class ReusableFunctionHelper {
+class Utils {
   /// Convert DateTime to String
   static String datetimeToString(DateTime date,
       {bool isShowTime = false, String? format}) {

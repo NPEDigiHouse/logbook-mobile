@@ -60,16 +60,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentClinicalRecordResponse.fromJson(dataResponse.data);
@@ -92,16 +86,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result =
@@ -124,16 +112,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentSelfReflectionModel.fromJson(dataResponse.data);
@@ -154,10 +136,6 @@ class StudentDataSourceImpl implements StudentDataSource {
           headers: {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
-          },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
           },
         ),
         data: {
@@ -180,9 +158,6 @@ class StudentDataSourceImpl implements StudentDataSource {
       );
       print(model.graduationDate);
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -200,16 +175,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data['data']);
       List<MiniCexListModel> listData =
@@ -233,16 +202,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentCheckInModel> listData = dataResponse.data
@@ -267,18 +230,11 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: {'verified': true},
       );
       print(response);
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -297,16 +253,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentScientificAssignment> listData = dataResponse.data
@@ -331,16 +281,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentScientificAssignment> listData = dataResponse.data
@@ -365,16 +309,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = CstResponse.fromJson(dataResponse.data);
@@ -396,16 +334,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = SglResponse.fromJson(dataResponse.data);
@@ -427,16 +359,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = SpecialReportResponse.fromJson(dataResponse.data);
@@ -461,9 +387,7 @@ class StudentDataSourceImpl implements StudentDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = FinalScoreResponse.fromJson(dataResponse.data);
@@ -486,17 +410,15 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 1000;
-          },
+          // followRedirects: false,
+          // validateStatus: (status) {
+          //   return status! < 1000;
+          // },
         ),
       );
       print("aoapajfap");
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = WeeklyAssesmentResponse.fromJson(dataResponse.data);
@@ -519,16 +441,10 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentCheckOutModel> listData = dataResponse.data
@@ -553,18 +469,11 @@ class StudentDataSourceImpl implements StudentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: {'verified': true},
       );
       print(response);
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -585,9 +494,7 @@ class StudentDataSourceImpl implements StudentDataSource {
         ),
       );
       print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentStatistic.fromJson(dataResponse.data);
@@ -612,9 +519,7 @@ class StudentDataSourceImpl implements StudentDataSource {
         ),
       );
       print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
       final result = StudentById.fromJson(dataResponse.data);
       return result;

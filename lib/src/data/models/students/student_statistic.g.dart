@@ -19,6 +19,22 @@ StudentStatistic _$StudentStatisticFromJson(Map<String, dynamic> json) =>
           ?.map((e) => Skill.fromJson(e as Map<String, dynamic>))
           .toList(),
       finalScore: json['finalScore'],
+      scientificAssesement: json['scientificAssesement'] == null
+          ? null
+          : ListScientificAssignment.fromJson(
+              json['scientificAssesement'] as Map<String, dynamic>),
+      miniCex: json['miniCex'] == null
+          ? null
+          : MiniCexStudentDetailModel.fromJson(
+              json['miniCex'] as Map<String, dynamic>),
+      student: json['student'] == null
+          ? null
+          : StudentCredentialProfile.fromJson(
+              json['student'] as Map<String, dynamic>),
+      weeklyAssesment: json['weeklyAssesment'] == null
+          ? null
+          : WeeklyAssesmentResponse.fromJson(
+              json['weeklyAssesment'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$StudentStatisticToJson(StudentStatistic instance) =>
@@ -30,6 +46,10 @@ Map<String, dynamic> _$StudentStatisticToJson(StudentStatistic instance) =>
       'cases': instance.cases,
       'skills': instance.skills,
       'finalScore': instance.finalScore,
+      'student': instance.student,
+      'weeklyAssesment': instance.weeklyAssesment,
+      'miniCex': instance.miniCex,
+      'scientificAssesement': instance.scientificAssesement,
     };
 
 Case _$CaseFromJson(Map<String, dynamic> json) => Case(

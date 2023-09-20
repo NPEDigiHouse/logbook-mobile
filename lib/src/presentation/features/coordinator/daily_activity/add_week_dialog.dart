@@ -116,10 +116,9 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
                 onPressed: () {
                   if (startDateController.text.isNotEmpty &&
                       endDateController.text.isNotEmpty) {
-                    final start = ReusableFunctionHelper.stringToDateTime(
-                        startDateController.text);
-                    final end = ReusableFunctionHelper.stringToDateTime(
-                        endDateController.text);
+                    final start =
+                        Utils.stringToDateTime(startDateController.text);
+                    final end = Utils.stringToDateTime(endDateController.text);
                     BlocProvider.of<DailyActivityCubit>(context)
                       ..addWeekByCoordinator(
                         postWeek: PostWeek(

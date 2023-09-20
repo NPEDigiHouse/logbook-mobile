@@ -1,3 +1,7 @@
+import 'package:elogbook/src/data/models/assessment/list_scientific_assignment.dart';
+import 'package:elogbook/src/data/models/assessment/mini_cex_detail_model.dart';
+import 'package:elogbook/src/data/models/assessment/weekly_assesment_response.dart';
+import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'student_statistic.g.dart';
@@ -18,16 +22,23 @@ class StudentStatistic {
   final List<Skill>? skills;
   @JsonKey(name: "finalScore")
   final dynamic finalScore;
+  final StudentCredentialProfile? student;
+  final WeeklyAssesmentResponse? weeklyAssesment;
+  final MiniCexStudentDetailModel? miniCex;
+  final ListScientificAssignment? scientificAssesement;
 
-  StudentStatistic({
-    this.totalCases,
-    this.totalSkills,
-    this.verifiedCases,
-    this.verifiedSkills,
-    this.cases,
-    this.skills,
-    this.finalScore,
-  });
+  StudentStatistic(
+      {this.totalCases,
+      this.totalSkills,
+      this.verifiedCases,
+      this.verifiedSkills,
+      this.cases,
+      this.skills,
+      this.finalScore,
+      this.scientificAssesement,
+      this.miniCex,
+      this.student,
+      this.weeklyAssesment});
 
   factory StudentStatistic.fromJson(Map<String, dynamic> json) =>
       _$StudentStatisticFromJson(json);

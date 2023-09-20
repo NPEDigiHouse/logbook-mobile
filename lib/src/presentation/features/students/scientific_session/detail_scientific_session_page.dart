@@ -100,7 +100,7 @@ class _DetailScientificSessionPageState
                               height: 4,
                             ),
                             Text(
-                              ReusableFunctionHelper.datetimeToString(
+                              Utils.datetimeToString(
                                 state.detail!.updatedAt ?? DateTime.now(),
                               ),
                               style: textTheme.bodyMedium?.copyWith(

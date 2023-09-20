@@ -299,7 +299,6 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
         ),
       ),
     );
-  
   }
 }
 
@@ -346,9 +345,7 @@ class DailyActivityHomeCard extends StatelessWidget {
         children: [
           Builder(builder: (context) {
             String status = 'PENDING';
-            if (ReusableFunctionHelper.getIntervalOfData(
-                        week.startDate, week.endDate) +
-                    1 ==
+            if (Utils.getIntervalOfData(week.startDate, week.endDate) + 1 ==
                 (dailyActivity == null
                     ? 0
                     : dailyActivity!.activitiesStatus!.length)) {
@@ -413,7 +410,7 @@ class DailyActivityHomeCard extends StatelessWidget {
             ),
           ),
           Text(
-            '${ReusableFunctionHelper.epochToStringDate(startTime: week.startDate!, endTime: week.endDate)}',
+            '${Utils.epochToStringDate(startTime: week.startDate!, endTime: week.endDate)}',
             style: textTheme.bodyMedium?.copyWith(
               color: secondaryTextColor,
             ),
@@ -432,12 +429,12 @@ class DailyActivityHomeCard extends StatelessWidget {
             final List<ActivitiesStatus> temp =
                 dailyActivity != null ? dailyActivity!.activitiesStatus! : [];
 
-            String firstDayName = ReusableFunctionHelper.epochToStringDate(
+            String firstDayName = Utils.epochToStringDate(
               startTime: week.startDate!,
               format: 'EEEE',
             );
-            int interval = ReusableFunctionHelper.getIntervalOfData(
-                week.startDate, week.endDate);
+            int interval =
+                Utils.getIntervalOfData(week.startDate, week.endDate);
             print(interval);
 
             final daysOfWeek = [

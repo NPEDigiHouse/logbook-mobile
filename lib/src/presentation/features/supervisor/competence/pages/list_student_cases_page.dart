@@ -192,7 +192,7 @@ class _ListStudentCasesPageState extends State<ListStudentCasesPage> {
                   ),
                 ),
                 Text(
-                  ReusableFunctionHelper.datetimeToString(student.latest!,
+                  Utils.datetimeToString(student.latest!,
                       format: 'EEE, dd MMM'),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

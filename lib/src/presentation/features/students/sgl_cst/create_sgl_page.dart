@@ -38,8 +38,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
       ..getAllSupervisors();
     BlocProvider.of<SglCstCubit>(context, listen: false)
       ..getTopicsByDepartmentId(unitId: widget.model.unitId!);
-    dateController.text =
-        ReusableFunctionHelper.datetimeToString(DateTime.now());
+    dateController.text = Utils.datetimeToString(DateTime.now());
   }
 
   @override
@@ -138,8 +137,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                             action: (d) {},
                             initialDate: dateController.text.isEmpty
                                 ? DateTime.now()
-                                : ReusableFunctionHelper.stringToDateTime(
-                                    dateController.text),
+                                : Utils.stringToDateTime(dateController.text),
                             controller: startTimeController,
                             hintText: 'Start Time'),
                       ),
@@ -151,8 +149,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                             action: (d) {},
                             initialDate: dateController.text.isEmpty
                                 ? DateTime.now()
-                                : ReusableFunctionHelper.stringToDateTime(
-                                    dateController.text),
+                                : Utils.stringToDateTime(dateController.text),
                             controller: endTimeController,
                             hintText: 'End Time'),
                       ),
@@ -275,9 +272,8 @@ class _CreateSglPageState extends State<CreateSglPage> {
                           barrierDismissible: false,
                           builder: (_) => VerifyDialog(
                                 onTap: () {
-                                  final date =
-                                      ReusableFunctionHelper.stringToDateTime(
-                                          dateController.text);
+                                  final date = Utils.stringToDateTime(
+                                      dateController.text);
                                   final start =
                                       startTimeController.text.split(':');
                                   final end = endTimeController.text.split(':');

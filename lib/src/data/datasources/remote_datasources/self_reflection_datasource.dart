@@ -39,16 +39,16 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
               "content-type": 'application/json',
               "authorization": 'Bearer ${credential?.accessToken}'
             },
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
-            },
+            // followRedirects: false,
+            // validateStatus: (status) {
+            //   return status! < 500;
+            // },
           ),
           data: selfReflectionPostModel.toJson());
-      print(response);
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // print(response);
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -69,9 +69,7 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = dataResponse.data;
@@ -96,9 +94,7 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<SelfReflectionModel> listData = dataResponse.data
@@ -124,18 +120,11 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: model.toJson(),
       );
       print(response);
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -154,18 +143,12 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(studentId);
       print(response);
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentSelfReflectionModel.fromJson(dataResponse.data);

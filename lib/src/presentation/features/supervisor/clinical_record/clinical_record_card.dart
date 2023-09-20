@@ -65,8 +65,7 @@ class ClinicalRecordCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          ReusableFunctionHelper.datetimeToString(
-                              clinicalRecord.time!,
+                          Utils.datetimeToString(clinicalRecord.time!,
                               format: 'EEE, dd MMM'),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

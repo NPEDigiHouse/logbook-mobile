@@ -97,8 +97,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                       label: Text('Date'),
                       enabled: false,
                     ),
-                    initialValue:
-                        ReusableFunctionHelper.datetimeToString(DateTime.now()),
+                    initialValue: Utils.datetimeToString(DateTime.now()),
                   ),
                   BlocBuilder<SupervisorsCubit, SupervisorsState>(
                       builder: (context, state) {

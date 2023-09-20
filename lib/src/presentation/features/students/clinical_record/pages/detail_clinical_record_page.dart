@@ -802,7 +802,7 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                               },
                             ),
                             Text(
-                              ReusableFunctionHelper.rateToText(state
+                              Utils.rateToText(state
                                   .detailClinicalRecordModel!.rating!
                                   .toInt()),
                               style: textTheme.bodyLarge

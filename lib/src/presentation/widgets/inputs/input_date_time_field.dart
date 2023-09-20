@@ -47,7 +47,7 @@ class _InputDateTimeFieldState extends State<InputDateTimeField> {
               widget.initialDate!.day,
               time.hour,
               time.minute);
-          widget.controller.text = ReusableFunctionHelper.datetimeToStringTime(
+          widget.controller.text = Utils.datetimeToStringTime(
             dateTime,
           );
           widget.action!.call(dateTime);

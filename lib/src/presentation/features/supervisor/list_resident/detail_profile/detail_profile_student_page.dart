@@ -227,7 +227,7 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                             const SizedBox(height: 16),
                             Builder(builder: (context) {
                               final scoreData = getTotalGrades(
-                                  stData.finalScore.toDouble() ?? 0.0);
+                                  (stData.finalScore ?? 0.0).toDouble());
                               return Container(
                                 width: double.infinity,
                                 margin: EdgeInsets.symmetric(horizontal: 24),

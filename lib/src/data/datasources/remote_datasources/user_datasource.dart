@@ -35,10 +35,6 @@ class UserDataSourceImpl implements UserDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response.data);
@@ -68,10 +64,6 @@ class UserDataSourceImpl implements UserDataSource {
           headers: {
             "content-type": 'multipart/form-data',
             "authorization": 'Bearer ${credential?.accessToken}'
-          },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
           },
         ),
         data: FormData.fromMap(
@@ -106,19 +98,12 @@ class UserDataSourceImpl implements UserDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: {
           'fullname': fullname,
         },
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -137,16 +122,9 @@ class UserDataSourceImpl implements UserDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
 
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
       await preferenceHandler.removeCredential();
     } catch (e) {
       print(e.toString());
@@ -165,16 +143,9 @@ class UserDataSourceImpl implements UserDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
 
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
       await preferenceHandler.removeCredential();
     } catch (e) {
       print(e.toString());
@@ -197,10 +168,10 @@ class UserDataSourceImpl implements UserDataSource {
           data: {
             'password': newPassword,
           });
-      print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception(response.statusMessage);
-      }
+      // print(response.statusCode);
+      // if (response.statusCode != 200) {
+      //   throw Exception(response.statusMessage);
+      // }
     } catch (e) {
       print("here");
       print(e.toString());

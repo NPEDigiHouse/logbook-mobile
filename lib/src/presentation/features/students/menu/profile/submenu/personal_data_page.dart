@@ -222,7 +222,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
                           state.userCredential!.student!.preClinicId,
                       'S.Ked Graduation Date':
                           state.userCredential!.student!.graduationDate != null
-                              ? ReusableFunctionHelper.datetimeToString(
+                              ? Utils.datetimeToString(
                                   DateTime.fromMillisecondsSinceEpoch(state
                                           .userCredential!
                                           .student!

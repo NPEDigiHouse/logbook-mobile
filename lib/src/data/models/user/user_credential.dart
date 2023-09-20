@@ -42,7 +42,9 @@ class UserCredential {
 @JsonSerializable()
 class StudentCredentialProfile {
   final String? studentId;
+  final String? email;
   final String? address;
+  @JsonKey(name: 'fullName')
   final String? fullname;
   final String? clinicId;
   final int? graduationDate;
@@ -62,6 +64,7 @@ class StudentCredentialProfile {
 
   StudentCredentialProfile(
       {required this.address,
+      this.email,
       required this.checkInStatus,
       required this.checkOutStatus,
       required this.clinicId,

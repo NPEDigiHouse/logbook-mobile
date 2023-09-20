@@ -109,8 +109,7 @@ class StudentScientificSessionCard extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: ReusableFunctionHelper.datetimeToString(
-                                model.updatedAt!),
+                            text: Utils.datetimeToString(model.updatedAt!),
                           ),
                         ],
                       ),

@@ -155,7 +155,7 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
                                     Row(
                                       children: [
                                         Text(
-                                          "(${ReusableFunctionHelper.epochToStringTime(startTime: data.startTime!, endTime: data.endTime)})",
+                                          "(${Utils.epochToStringTime(startTime: data.startTime!, endTime: data.endTime)})",
                                           style: textTheme.bodyMedium?.copyWith(
                                               color: primaryTextColor),
                                         ),
@@ -163,9 +163,9 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
                                           width: 6,
                                         ),
                                         Text(
-                                          ReusableFunctionHelper
-                                              .datetimeToString(data.createdAt!,
-                                                  format: 'EEEE, dd MMM yyyy'),
+                                          Utils.datetimeToString(
+                                              data.createdAt!,
+                                              format: 'EEEE, dd MMM yyyy'),
                                           style: textTheme.bodyMedium?.copyWith(
                                               color: primaryTextColor),
                                         ),

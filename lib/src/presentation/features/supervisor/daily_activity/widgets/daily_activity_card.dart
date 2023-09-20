@@ -112,7 +112,7 @@ class DailyActivityCard extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: ReusableFunctionHelper.datetimeToString(
+                            text: Utils.datetimeToString(
                                 dailyActivityStudent.createdAt!,
                                 format: 'EEE, dd MMM'),
                           ),

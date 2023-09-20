@@ -64,10 +64,6 @@ class AuthDataSourceImpl implements AuthDataSource {
               "authorization":
                   'Basic ${base64Encode(utf8.encode('admin:admin'))}'
             },
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
-            },
           ),
           data: {
             "username": username,
@@ -77,9 +73,11 @@ class AuthDataSourceImpl implements AuthDataSource {
             if (firstName != null) "firstName": firstName,
             if (lastName != null) "lastName": lastName,
           });
-      if (response.statusCode != 200) {
-        throw Exception(response.statusMessage);
-      }
+
+      // if (response.statusCode != 201) {
+      //   throw Exception(response.statusMessage);
+      // }
+
       he.handleErrorResponse(
         response: response,
       );
@@ -100,10 +98,6 @@ class AuthDataSourceImpl implements AuthDataSource {
             "content-type": 'application/json',
             "authorization":
                 'Basic ${base64Encode(utf8.encode('$username:$password'))}'
-          },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
           },
         ),
       );
@@ -140,10 +134,6 @@ class AuthDataSourceImpl implements AuthDataSource {
                   "content-type": 'application/json',
                   "authorization":
                       'Basic ${base64Encode(utf8.encode('admin:admin'))}'
-                },
-                followRedirects: false,
-                validateStatus: (status) {
-                  return status! < 500;
                 },
               ),
               data: {

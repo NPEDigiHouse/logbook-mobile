@@ -48,16 +48,10 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response.data);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentDailyActivityResponse.fromJson(dataResponse.data);
@@ -81,16 +75,10 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentActivityPerweekResponse.fromJson(dataResponse.data);
@@ -114,10 +102,6 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
                   "content-type": 'application/json',
                   "authorization": 'Bearer ${credential?.accessToken}'
                 },
-                followRedirects: false,
-                validateStatus: (status) {
-                  return status! < 500;
-                },
               ),
               data: {
             'activityStatus': model.activityStatus,
@@ -128,9 +112,6 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
               'activityNameId': model.activityNameId,
           });
       print(response.data);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -151,9 +132,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
           },
         ),
       );
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentDailyActivityResponse.fromJson(dataResponse.data);
@@ -176,16 +155,10 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentActivityPerweekResponse.fromJson(dataResponse.data);
@@ -208,17 +181,10 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
                   "content-type": 'application/json',
                   "authorization": 'Bearer ${credential?.accessToken}'
                 },
-                followRedirects: false,
-                validateStatus: (status) {
-                  return status! < 500;
-                },
               ),
               data: {"verified": verifiedStatus});
       print(response);
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -235,17 +201,13 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
               "content-type": 'application/json',
               "authorization": 'Bearer ${credential?.accessToken}'
             },
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
-            },
           ),
           data: postWeek.toJson());
-      print(response.statusCode);
       // print(response.statusCode);
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // // print(response.statusCode);
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -270,9 +232,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         },
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ListWeekItem> listData =
@@ -297,16 +257,10 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentDailyActivityPerDays.fromJson(dataResponse.data);
@@ -331,9 +285,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<DailyActivityStudent> listData = dataResponse.data

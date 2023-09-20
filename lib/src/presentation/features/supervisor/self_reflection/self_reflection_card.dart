@@ -84,7 +84,7 @@ class SelfReflectionCard extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                              text: ReusableFunctionHelper.datetimeToString(
+                              text: Utils.datetimeToString(
                             selfReflection.latest!,
                           )),
                         ],

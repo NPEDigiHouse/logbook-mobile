@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:elogbook/core/styles/color_palette.dart';
+import 'package:elogbook/core/helpers/reusable_function_helper.dart';
+import 'package:elogbook/src/data/models/students/student_statistic.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -13,6 +14,8 @@ class PdfHelper {
     required Uint8List? profilePhoto,
     Uint8List? skillStat,
     Uint8List? caseStat,
+    StudentStatistic? data,
+    String? activeUnitName,
   }) async {
     var myTheme = ThemeData.withFont(
       base:
@@ -28,22 +31,22 @@ class PdfHelper {
       pageFormat: PdfPageFormat.a4,
       header: (context) => buildHeader(image),
       build: (context) => [
-        buildBody(profilePhoto),
+        buildBody(profilePhoto, data, activeUnitName),
       ],
     ));
     pdf.addPage(MultiPage(
       pageFormat: PdfPageFormat.a4,
       header: (context) => buildHeader(image),
       build: (context) => [
-        buildCompetence(caseStat, skillStat),
+        buildCompetence(caseStat, skillStat, data),
         SizedBox(height: 48),
-        buildWeeklyScore(),
+        buildWeeklyScore(data),
         SizedBox(height: 48),
-        buildScienceScore(),
+        buildScienceScore(data),
         SizedBox(height: 48),
-        buildMiniCexScore(),
+        buildMiniCexScore(data),
         SizedBox(height: 48),
-        buildFinalScore(),
+        // buildFinalScore(data),
       ],
     ));
 
@@ -92,14 +95,16 @@ class PdfHelper {
     );
   }
 
-  static Widget buildBody(Uint8List? profilePhoto) {
+  static Widget buildBody(
+      Uint8List? profilePhoto, StudentStatistic? data, String? departmentName) {
+    final studentData = data?.student;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Center(
           child: Text(
-            'Departemen Ilmu Kesehatan Anak',
+            departmentName ?? '-',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -137,79 +142,80 @@ class PdfHelper {
               TableRow(
                 children: [
                   Text(' Student Name'),
-                  Text(' : Masloman'),
+                  Text(' : ${studentData?.fullname ?? '-'}'),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' Clinic Id'),
-                  Text(' : 0912431412'),
+                  Text(' : ${studentData?.clinicId ?? '-'}'),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' Preclinic Id'),
-                  Text(' : 0912431412'),
+                  Text(' : ${studentData?.preClinicId ?? '-'}'),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' S.Ked Graduation Date'),
-                  Text(' : 02 Januari 2025'),
+                  Text(
+                      " : ${studentData?.graduationDate != null ? Utils.datetimeToString(DateTime.fromMillisecondsSinceEpoch(studentData!.graduationDate! * 1000)) : '-'}"),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' Phone Number'),
-                  Text(' : 08231241242'),
+                  Text(' : ${studentData?.phoneNumber ?? '-'}'),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' Email'),
-                  Text(' : phantom@gmail.com'),
+                  Text(' : ${studentData?.email ?? '-'} '),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' Address'),
-                  Text(' : Makassar'),
+                  Text(' : ${studentData?.address ?? '-'}'),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' Academic Adviser'),
-                  Text(' : Toriq'),
+                  Text(' : ${studentData?.academicSupervisorName ?? '-'}'),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' Supervising DPK'),
-                  Text(' : Abdul'),
+                  Text(' : ${studentData?.supervisingDPKName ?? '-'}'),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' Examiner DPK'),
-                  Text(' : Komar'),
+                  Text(' : ${studentData?.examinerDPKName ?? '-'}'),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' Period and Length of Station'),
-                  Text(' : 11 Weeks'),
+                  Text(' : ${studentData?.periodLengthStation ?? '-'} Weeks'),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' RS Station'),
-                  Text(' : RSUD Makassar'),
+                  Text(' : ${studentData?.rsStation ?? '-'}'),
                 ],
               ),
               TableRow(
                 children: [
                   Text(' PKM Station'),
-                  Text(' : Location 1'),
+                  Text(' : ${studentData?.pkmStation ?? '-'}'),
                 ],
               )
             ],
@@ -219,446 +225,434 @@ class PdfHelper {
     );
   }
 
-  static Widget buildScienceScore() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 12),
-        Text(
-          'C. SCIENTIFIC ASSIGNMENT (CASE REPORT/ REFERAT)',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+  static Widget buildScienceScore(StudentStatistic? data) {
+    if (data != null && data.scientificAssesement != null)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 12),
+          Text(
+            'C. SCIENTIFIC ASSIGNMENT (CASE REPORT/ REFERAT)',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        SizedBox(height: 12),
-        Text(
-          'Title: \"ini tempat judul\"',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
+          SizedBox(height: 12),
+          Text(
+            'Title: \"${data?.scientificAssesement?.listScientificAssignmentCase}\"',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        Table(
-            tableWidth: TableWidth.min,
-            border: TableBorder.all(width: 1.2),
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            columnWidths: {
-              0: FixedColumnWidth(300),
-              1: FixedColumnWidth(80),
-            },
-            children: [
-              TableRow(
-                decoration: BoxDecoration(
-                  color: PdfColors.black,
+          Table(
+              tableWidth: TableWidth.min,
+              border: TableBorder.all(width: 1.2),
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              columnWidths: {
+                0: FixedColumnWidth(300),
+                1: FixedColumnWidth(80),
+              },
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(
+                    color: PdfColors.black,
+                  ),
+                  children: [
+                    Center(
+                      child: Text(
+                        'Grade Item',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        'Score',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                children: [
-                  Center(
-                    child: Text(
-                      'Grade Item',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                ...[
+                  for (int i = 0;
+                      i < data.scientificAssesement!.scores!.length;
+                      i++)
+                    TableRow(
+                      children: [
+                        Text(
+                            ' ${i + 1}. ${data.scientificAssesement?.scores?[i].name}'),
+                        Text(' ${data.scientificAssesement?.scores?[i].score}')
+                      ],
                     ),
-                  ),
-                  Center(
-                    child: Text(
-                      'Score',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
                 ],
+              ]),
+          SizedBox(height: 8),
+          Row(children: [
+            SizedBox(
+              width: 300,
+              child: Text(
+                'Total Score : ',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: PdfColors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              TableRow(
-                children: [Text('1. Bla bla bla'), Text('90')],
-              ),
-            ]),
-        SizedBox(height: 8),
-        Row(children: [
-          SizedBox(
-            width: 300,
-            child: Text(
-              'Total Score : ',
+            ),
+            Text(
+              '${data.scientificAssesement?.grade ?? 0}',
               style: TextStyle(
                 fontSize: 14,
                 color: PdfColors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
+          ]),
+          SizedBox(height: 8),
+        ],
+      );
+    return SizedBox.shrink();
+  }
+
+  static Widget buildMiniCexScore(StudentStatistic? data) {
+    if (data != null && data.miniCex != null)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 12),
           Text(
-            '95',
+            'D. MINI-CEX ASSESMENT',
             style: TextStyle(
-              fontSize: 14,
-              color: PdfColors.black,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-        ]),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  static Widget buildMiniCexScore() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 12),
-        Text(
-          'D. MINI-CEX ASSESMENT',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+          SizedBox(height: 12),
+          Text(
+            'Title: \"${data.miniCex?.dataCase}\"',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        SizedBox(height: 12),
-        Text(
-          'Title: \"ini tempat judul\"',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Table(
-            tableWidth: TableWidth.min,
-            border: TableBorder.all(width: 1.2),
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            columnWidths: {
-              0: FixedColumnWidth(300),
-              1: FixedColumnWidth(80),
-            },
-            children: [
-              TableRow(
-                decoration: BoxDecoration(
-                  color: PdfColors.black,
+          Table(
+              tableWidth: TableWidth.min,
+              border: TableBorder.all(width: 1.2),
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              columnWidths: {
+                0: FixedColumnWidth(300),
+                1: FixedColumnWidth(80),
+              },
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(
+                    color: PdfColors.black,
+                  ),
+                  children: [
+                    Center(
+                      child: Text(
+                        'Grade Item',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        'Score',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                children: [
-                  Center(
-                    child: Text(
-                      'Grade Item',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                ...[
+                  for (int i = 0; i < data.miniCex!.scores!.length; i++)
+                    TableRow(
+                      children: [
+                        Text(' ${i + 1}. ${data.miniCex?.scores?[i].name}'),
+                        Text('${data.miniCex?.scores?[i].score}')
+                      ],
                     ),
-                  ),
-                  Center(
-                    child: Text(
-                      'Score',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
                 ],
+              ]),
+          SizedBox(height: 8),
+          Row(children: [
+            SizedBox(
+              width: 300,
+              child: Text(
+                'Total Score : ',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: PdfColors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              TableRow(
-                children: [Text('1. Bla bla bla'), Text('90')],
-              ),
-            ]),
-        SizedBox(height: 8),
-        Row(children: [
-          SizedBox(
-            width: 300,
-            child: Text(
-              'Total Score : ',
+            ),
+            Text(
+              '${data.miniCex?.grade ?? 0.0}',
               style: TextStyle(
                 fontSize: 14,
                 color: PdfColors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
+          ]),
+          SizedBox(height: 8),
+        ],
+      );
+    return SizedBox.shrink();
+  }
+
+  // static Widget buildFinalScore(StudentStatistic? data) {
+  //   if (data != null && data.finalScore != null)
+  //     return Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         SizedBox(height: 12),
+  //         Text(
+  //           'E. FINAL SCORE',
+  //           style: TextStyle(
+  //             fontSize: 16,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //         SizedBox(height: 12),
+  //         Table(
+  //             tableWidth: TableWidth.min,
+  //             border: TableBorder.all(width: 1.2),
+  //             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+  //             columnWidths: {
+  //               0: FixedColumnWidth(150),
+  //               1: FixedColumnWidth(80),
+  //               2: FixedColumnWidth(70),
+  //             },
+  //             children: [
+  //               TableRow(
+  //                 decoration: BoxDecoration(
+  //                   color: PdfColors.black,
+  //                 ),
+  //                 children: [
+  //                   Center(
+  //                     child: Text(
+  //                       'Grade Item',
+  //                       style: TextStyle(
+  //                         fontSize: 12,
+  //                         color: PdfColors.white,
+  //                         fontWeight: FontWeight.bold,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Center(
+  //                     child: Text(
+  //                       'Score',
+  //                       style: TextStyle(
+  //                         fontSize: 12,
+  //                         color: PdfColors.white,
+  //                         fontWeight: FontWeight.bold,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Center(
+  //                     child: Text(
+  //                       '%',
+  //                       style: TextStyle(
+  //                         fontSize: 12,
+  //                         color: PdfColors.white,
+  //                         fontWeight: FontWeight.bold,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //               ...[
+  //                 for (int i = 0; i < data.finalScore!.scores!.length; i++)
+  //                   TableRow(
+  //                     children: [
+  //                       Text(' ${data.finalScore?.scores?[i]}'),
+  //                       Text('90'),
+  //                       Text('10%'),
+  //                     ],
+  //                   ),
+  //               ],
+  //               TableRow(
+  //                 children: [
+  //                   Text('Bla bla bla'),
+  //                   Text('90'),
+  //                   Text('10%'),
+  //                 ],
+  //               ),
+  //               TableRow(
+  //                 children: [
+  //                   Text('Bla bla bla'),
+  //                   Text('90'),
+  //                   Text('10%'),
+  //                 ],
+  //               ),
+  //             ]),
+  //         SizedBox(height: 8),
+  //         Row(children: [
+  //           SizedBox(
+  //             width: 230,
+  //             child: Text(
+  //               'Total Score : ',
+  //               style: TextStyle(
+  //                 fontSize: 14,
+  //                 color: PdfColors.black,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //           ),
+  //           Text(
+  //             '95',
+  //             style: TextStyle(
+  //               fontSize: 14,
+  //               color: PdfColors.black,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //         ]),
+  //         SizedBox(height: 8),
+  //       ],
+  //     );
+  // }
+
+  static Widget buildWeeklyScore(StudentStatistic? data) {
+    if (data != null && data.weeklyAssesment != null)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 12),
           Text(
-            '95',
+            'B. WEEKLY ASSESMENT',
             style: TextStyle(
-              fontSize: 14,
-              color: PdfColors.black,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-        ]),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  static Widget buildFinalScore() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 12),
-        Text(
-          'E. FINAL SCORE',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 12),
-        Table(
-            tableWidth: TableWidth.min,
-            border: TableBorder.all(width: 1.2),
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            columnWidths: {
-              0: FixedColumnWidth(150),
-              1: FixedColumnWidth(80),
-              2: FixedColumnWidth(70),
-            },
-            children: [
-              TableRow(
-                decoration: BoxDecoration(
-                  color: PdfColors.black,
+          SizedBox(height: 12),
+          // Text(
+          //   'Notes: Attend ${data?.weeklyAssesment?.assesments} Days, Not Attend 11 Days',
+          //   style: TextStyle(
+          //     fontSize: 14,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
+          Table(
+              tableWidth: TableWidth.min,
+              border: TableBorder.all(width: 1.2),
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              columnWidths: {
+                0: FixedColumnWidth(50),
+                1: FixedColumnWidth(100),
+                4: FixedColumnWidth(80),
+              },
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(
+                    color: PdfColors.black,
+                  ),
+                  children: [
+                    Center(
+                      child: Text(
+                        'Week',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        'Status',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        'Score',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                children: [
-                  Center(
-                    child: Text(
-                      'Grade Item',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      'Score',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      '%',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                ...[
+                  for (int i = 0;
+                      i < data.weeklyAssesment!.assesments!.length;
+                      i++)
+                    TableRow(
+                      children: [
+                        Center(
+                          child: Text(
+                              'Week ${data.weeklyAssesment?.assesments?[i].weekNum}'),
+                        ),
+                        Text(
+                            ' ${data.weeklyAssesment?.assesments?[i].verificationStatus}'),
+                        Text(
+                            ' ${data.weeklyAssesment?.assesments?[i].score?.toStringAsFixed(2)}'),
+                      ],
+                    )
                 ],
+              ]),
+          SizedBox(height: 8),
+          Row(children: [
+            SizedBox(
+              width: 150,
+              child: Text(
+                'Total Score : ',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: PdfColors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              TableRow(
-                children: [
-                  Text('Bla bla bla'),
-                  Text('90'),
-                  Text('10%'),
-                ],
-              ),
-              TableRow(
-                children: [
-                  Text('Bla bla bla'),
-                  Text('90'),
-                  Text('10%'),
-                ],
-              ),
-              TableRow(
-                children: [
-                  Text('Bla bla bla'),
-                  Text('90'),
-                  Text('10%'),
-                ],
-              ),
-            ]),
-        SizedBox(height: 8),
-        Row(children: [
-          SizedBox(
-            width: 230,
-            child: Text(
-              'Total Score : ',
+            ),
+            Text(
+              ' ${(data.weeklyAssesment?.assesments?.fold(0, (previousValue, element) => previousValue + (element.score ?? 0)) ?? 0) / (data.weeklyAssesment?.assesments?.length ?? 1)}',
               style: TextStyle(
                 fontSize: 14,
                 color: PdfColors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          Text(
-            '95',
-            style: TextStyle(
-              fontSize: 14,
-              color: PdfColors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ]),
-        SizedBox(height: 8),
-      ],
-    );
+          ]),
+          SizedBox(height: 8),
+        ],
+      );
+    return SizedBox.shrink();
   }
 
-  static Widget buildWeeklyScore() {
+  static Widget buildCompetence(
+      Uint8List? caseImage, Uint8List? skillImage, StudentStatistic? data) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 12),
-        Text(
-          'B. WEEKLY ASSESMENT',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 12),
-        Text(
-          'Notes: Attend 0 Days, Not Attend 11 Days',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Table(
-            tableWidth: TableWidth.min,
-            border: TableBorder.all(width: 1.2),
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            columnWidths: {
-              0: FixedColumnWidth(50),
-              1: FixedColumnWidth(100),
-              2: FixedColumnWidth(100),
-              3: FixedColumnWidth(100),
-              4: FixedColumnWidth(80),
-            },
-            children: [
-              TableRow(
-                decoration: BoxDecoration(
-                  color: PdfColors.black,
-                ),
-                children: [
-                  Center(
-                    child: Text(
-                      'Week',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      'Date',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      'Location',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      'Status',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      'Score',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: PdfColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              TableRow(
-                children: [
-                  Center(
-                    child: Text('1'),
-                  ),
-                  Text(' 12 Jan 2023'),
-                  Text(' RS Hasanuddin'),
-                  Text(' VERIFIED'),
-                  Text(' 90'),
-                ],
-              ),
-              TableRow(
-                children: [
-                  Center(
-                    child: Text('2'),
-                  ),
-                  Text(' 12 Jan 2023'),
-                  Text(' RS Hasanuddin'),
-                  Text(' VERIFIED'),
-                  Text(' 90'),
-                ],
-              ),
-              TableRow(
-                children: [
-                  Center(
-                    child: Text('3'),
-                  ),
-                  Text(' 12 Jan 2023'),
-                  Text(' RS Hasanuddin'),
-                  Text(' VERIFIED'),
-                  Text(' 90'),
-                ],
-              ),
-            ]),
-        SizedBox(height: 8),
-        Row(children: [
-          SizedBox(
-            width: 350,
-            child: Text(
-              'Total Score : ',
-              style: TextStyle(
-                fontSize: 14,
-                color: PdfColors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Text(
-            '95',
-            style: TextStyle(
-              fontSize: 14,
-              color: PdfColors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ]),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  static Widget buildCompetence(Uint8List? caseImage, Uint8List? skillImage) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 12),
@@ -670,7 +664,7 @@ class PdfHelper {
           ),
         ),
         SizedBox(height: 12),
-        Row(children: [
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Expanded(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -695,7 +689,7 @@ class PdfHelper {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${10 ?? 0}',
+                              '${data?.totalCases ?? 0}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: PdfColor.fromInt(0xFF222431),
@@ -709,7 +703,7 @@ class PdfHelper {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              '${10 ?? 0}',
+                              '${data?.verifiedCases ?? 0}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: PdfColor.fromInt(0xFF229ABF),
@@ -723,7 +717,7 @@ class PdfHelper {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              '${10 ?? 0}',
+                              '${(data?.totalCases ?? 0) - (data?.verifiedCases ?? 0)}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: PdfColor.fromInt(0xFF7209B7),
@@ -739,10 +733,9 @@ class PdfHelper {
                     )
                   ]),
                 SizedBox(height: 12),
-                ...[
-                  Text('1. Case 1'),
-                  Text('2. Case 2'),
-                  Text('3. Case 3'),
+                if (data != null) ...[
+                  for (int i = 0; i < data.cases!.length; i++)
+                    Text("${(i + 1)}.${data.cases![i].caseName}")
                 ],
               ])),
           SizedBox(width: 12),
@@ -770,42 +763,42 @@ class PdfHelper {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${10 ?? 0}',
+                              '${data?.totalSkills ?? 0}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: PdfColor.fromInt(0xFF222431),
                               ),
                             ),
                             Text(
-                              'Total Acquired Case',
+                              'Diagnosis Skills',
                               style: TextStyle(
                                 color: PdfColor.fromInt(0xFFBBBEC1),
                               ),
                             ),
                             SizedBox(height: 8),
                             Text(
-                              '${10 ?? 0}',
+                              '${data?.verifiedSkills ?? 0}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: PdfColor.fromInt(0xFF229ABF),
                               ),
                             ),
                             Text(
-                              'Identified Case',
+                              'Identified Skills',
                               style: TextStyle(
                                 color: PdfColor.fromInt(0xFFBBBEC1),
                               ),
                             ),
                             SizedBox(height: 8),
                             Text(
-                              '${10 ?? 0}',
+                              '${(data?.totalSkills ?? 0) - (data?.verifiedSkills ?? 0)}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: PdfColor.fromInt(0xFF7209B7),
                               ),
                             ),
                             Text(
-                              'Unidentified Case',
+                              'Unidentified Skills',
                               style: TextStyle(
                                 color: PdfColor.fromInt(0xFFBBBEC1),
                               ),
@@ -815,9 +808,10 @@ class PdfHelper {
                   ]),
                 SizedBox(height: 12),
                 ...[
-                  Text('1. Skill 1'),
-                  Text('2. Skill 2'),
-                  Text('3. Skill 3'),
+                  if (data != null) ...[
+                    for (int i = 0; i < data.skills!.length; i++)
+                      Text("${(i + 1)}.${data.skills![i].skillName}")
+                  ],
                 ],
               ])),
         ]),

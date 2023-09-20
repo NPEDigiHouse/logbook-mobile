@@ -52,10 +52,11 @@ StudentCredentialProfile _$StudentCredentialProfileFromJson(
         Map<String, dynamic> json) =>
     StudentCredentialProfile(
       address: json['address'] as String?,
+      email: json['email'] as String?,
       checkInStatus: json['checkInStatus'] as String?,
       checkOutStatus: json['checkOutStatus'] as String?,
       clinicId: json['clinicId'] as String?,
-      fullname: json['fullname'] as String?,
+      fullname: json['fullName'] as String?,
       graduationDate: json['graduationDate'] as int?,
       phoneNumber: json['phoneNumber'] as String?,
       preClinicId: json['preClinicId'] as String?,
@@ -75,8 +76,9 @@ Map<String, dynamic> _$StudentCredentialProfileToJson(
         StudentCredentialProfile instance) =>
     <String, dynamic>{
       'studentId': instance.studentId,
+      'email': instance.email,
       'address': instance.address,
-      'fullname': instance.fullname,
+      'fullName': instance.fullname,
       'clinicId': instance.clinicId,
       'graduationDate': instance.graduationDate,
       'phoneNumber': instance.phoneNumber,

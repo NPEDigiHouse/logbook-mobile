@@ -119,10 +119,9 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                               .text
                                               .isEmpty
                                           ? null
-                                          : (ReusableFunctionHelper
-                                                      .stringToDateTime(
-                                                          editingControllers[3]
-                                                              .text)
+                                          : (Utils.stringToDateTime(
+                                                      editingControllers[3]
+                                                          .text)
                                                   .millisecondsSinceEpoch) ~/
                                               1000,
                                     );
@@ -213,8 +212,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                     return InputDateField(
                                       action: (v) {
                                         editingControllers[i].text =
-                                            ReusableFunctionHelper
-                                                .datetimeToString(v);
+                                            Utils.datetimeToString(v);
                                       },
                                       controller: editingControllers[i],
                                       hintText: 'S.Ked Graduation Date',

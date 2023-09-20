@@ -42,13 +42,13 @@ class DepartmentDatasourceImpl implements DepartmentDatasource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        he.handleErrorResponse(
-          response: response,
-          refreshToken: authDataSource.refreshToken(),
-          retryOriginalRequest: this.fetchAllDepartment(),
-        );
-      }
+      // if (response.statusCode != 200) {
+      //   he.handleErrorResponse(
+      //     response: response,
+      //     refreshToken: authDataSource.refreshToken(),
+      //     retryOriginalRequest: this.fetchAllDepartment(),
+      //   );
+      // }
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
 
@@ -75,23 +75,23 @@ class DepartmentDatasourceImpl implements DepartmentDatasource {
               "content-type": 'application/json',
               "authorization": 'Bearer ${credential?.accessToken}'
             },
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
-            },
+            // followRedirects: false,
+            // validateStatus: (status) {
+            //   return status! < 500;
+            // },
           ),
           data: {
             'unitId': unitId,
           });
-      if (response.statusCode != 200) {
-        print(response.statusMessage);
-        print("Faileddd");
-        throw Exception();
-        // await authDataSource.refreshToken();
-        // return changeDepartmentActive(unitId: unitId);
-      } else {
-        print('success');
-      }
+      // if (response.statusCode != 200) {
+      //   print(response.statusMessage);
+      //   print("Faileddd");
+      //   throw Exception();
+      //   // await authDataSource.refreshToken();
+      //   // return changeDepartmentActive(unitId: unitId);
+      // } else {
+      //   print('success');
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -110,26 +110,13 @@ class DepartmentDatasourceImpl implements DepartmentDatasource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
 
-      print('Bearer ${credential?.accessToken}');
-      print(response.data);
-      if (response.statusCode != 200) {
-        print(response.statusCode);
-        await authDataSource.refreshToken();
-        return getActiveDepartment();
-      } else {
-        print(response.data);
-        final dataResponse = await DataResponse.fromJson(response.data);
-        final activeDepartmentModel =
-            ActiveDepartmentModel.fromJson(dataResponse.data);
-        return activeDepartmentModel;
-      }
+      final dataResponse = await DataResponse.fromJson(response.data);
+      final activeDepartmentModel =
+          ActiveDepartmentModel.fromJson(dataResponse.data);
+      return activeDepartmentModel;
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -148,16 +135,12 @@ class DepartmentDatasourceImpl implements DepartmentDatasource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
-      print(response.statusCode);
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // print(response.statusCode);
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -176,15 +159,11 @@ class DepartmentDatasourceImpl implements DepartmentDatasource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
-      if (response.statusCode != 201) {
-        throw ClientFailure(response.data['data']);
-      }
+      // if (response.statusCode != 201) {
+      //   throw ClientFailure(response.data['data']);
+      // }
     } catch (e) {
       throw ClientFailure(e.toString());
     }

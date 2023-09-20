@@ -64,8 +64,7 @@ class ScientificSessionCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          ReusableFunctionHelper.datetimeToString(
-                              scientificSession.time!,
+                          Utils.datetimeToString(scientificSession.time!,
                               format: 'EEE, dd MMM'),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

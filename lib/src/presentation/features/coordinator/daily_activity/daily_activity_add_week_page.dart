@@ -147,7 +147,7 @@ class _DailyActivityAddWeekPageState extends State<DailyActivityAddWeekPage> {
                                   ),
                                   Builder(builder: (context) {
                                     return Text(
-                                      ReusableFunctionHelper.epochToStringDate(
+                                      Utils.epochToStringDate(
                                           startTime: state.weekItems![index]
                                                   .startDate ??
                                               DateTime.now()

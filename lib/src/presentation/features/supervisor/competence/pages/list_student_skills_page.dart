@@ -45,7 +45,6 @@ class _ListStudentTasksPageState extends State<ListStudentTasksPage> {
             await Future.wait([
               BlocProvider.of<CompetenceCubit>(context).getSkillStudents(),
             ]);
-            
           },
           child: BlocConsumer<CompetenceCubit, CompetenceState>(
             listener: (context, state) {
@@ -200,7 +199,7 @@ class _ListStudentTasksPageState extends State<ListStudentTasksPage> {
                   ),
                 ),
                 Text(
-                  ReusableFunctionHelper.datetimeToString(student.latest!,
+                  Utils.datetimeToString(student.latest!,
                       format: 'EEE, dd MMM'),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

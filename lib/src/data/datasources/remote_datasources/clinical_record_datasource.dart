@@ -62,10 +62,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: {
           'patientName': clinicalRecordPostModel.patientName,
@@ -84,11 +80,11 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           'managements': clinicalRecordPostModel.managements,
         },
       );
-      print(response.data);
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
-      print(response.statusCode);
+      // print(response.data);
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
+      // print(response.statusCode);
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -143,9 +139,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<ListClinicalRecordModel>.fromJson(response.data);
 
@@ -171,9 +165,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = DetailClinicalRecordModel.fromJson(dataResponse.data);
@@ -199,9 +191,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<DiagnosisTypesModel> listData = dataResponse.data
@@ -230,9 +220,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ExaminationTypesModel> listData = dataResponse.data
@@ -261,9 +249,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ManagementTypesModel> listData = dataResponse.data
@@ -291,9 +277,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<AffectedPart> affectedParts =
@@ -320,9 +304,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ManagementRoleModel> listData = dataResponse.data
@@ -350,9 +332,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ClinicalRecordListModel> listData = dataResponse.data
@@ -379,10 +359,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: {
           'verified': model.verified,
@@ -393,9 +369,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       );
       print(response);
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -414,10 +387,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: {
           'feedback': feedback,
@@ -425,9 +394,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       );
       print(response);
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

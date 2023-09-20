@@ -69,9 +69,9 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         ),
         data: model.toJson(),
       );
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -93,9 +93,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = MiniCexStudentDetailModel.fromJson(dataResponse.data);
@@ -120,9 +118,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = StudentMiniCex.fromJson(dataResponse.data);
@@ -146,17 +142,10 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: listItemRating,
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -175,17 +164,10 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! <= 500;
-          },
         ),
         data: score,
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -207,9 +189,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = ListScientificAssignment.fromJson(dataResponse.data);
@@ -236,9 +216,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentScientificAssignment> listData = dataResponse.data
@@ -263,17 +241,13 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! <= 500;
-          },
         ),
         data: model.toJson(),
       );
-      print(response.data);
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // print(response.data);
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -295,9 +269,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = PersonalBehaviorDetailModel.fromJson(dataResponse.data);
@@ -324,9 +296,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentScientificAssignment> listData = dataResponse.data
@@ -356,9 +326,6 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         data: {"id": id, "verified": status},
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -379,17 +346,11 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
 
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = FinalScoreResponse.fromJson(dataResponse.data);
@@ -422,9 +383,6 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         },
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -444,16 +402,10 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = WeeklyAssesmentResponse.fromJson(dataResponse.data);
@@ -483,9 +435,6 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         },
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -508,19 +457,12 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: {
           'verified': status,
         },
       );
       print(response.data);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -541,9 +483,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ScientificGradeItem> listData = dataResponse.data

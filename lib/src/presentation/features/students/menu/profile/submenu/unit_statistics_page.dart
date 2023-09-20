@@ -86,18 +86,33 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
           ),
         ),
         actions: [
-          IconButton(
-              onPressed: () async {
-                final caseImage = await captureWidget(keyCase);
-                final skillImage = await captureWidget(keySkill);
-                PdfHelper.generate(
-                  image: image,
-                  profilePhoto: widget.profilePic,
-                  caseStat: caseImage,
-                  skillStat: skillImage,
-                );
-              },
-              icon: Icon(Icons.print)),
+          BlocBuilder<StudentCubit, StudentState>(
+            builder: (context, state) {
+              if (state.studentStatistic != null)
+                return IconButton(
+                    onPressed: () async {
+                      final caseImage = await captureWidget(keyCase);
+                      final skillImage = await captureWidget(keySkill);
+                      PdfHelper.generate(
+                              image: image,
+                              profilePhoto: widget.profilePic,
+                              caseStat: caseImage,
+                              skillStat: skillImage,
+                              data: state.studentStatistic,
+                              activeUnitName:
+                                  widget.activeDepartmentModel.unitName)
+                          .whenComplete(() {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content:
+                                  Text('Success Download Student Statistic')),
+                        );
+                      });
+                    },
+                    icon: Icon(Icons.print));
+              return SizedBox.shrink();
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(

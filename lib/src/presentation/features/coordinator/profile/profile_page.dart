@@ -367,8 +367,7 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                     ProfileItemMenuCard(
                         iconPath: 'rate_icon.svg',
                         title: 'Rate Us',
-                        onTap: () => ReusableFunctionHelper.urlLauncher(Platform
-                                .isAndroid
+                        onTap: () => Utils.urlLauncher(Platform.isAndroid
                             ? 'https://play.google.com/store/apps/details?id=com.npedigital.elogbook'
                             : 'https://apps.apple.com/us/app/e-logbook-umi/id6463897571')),
                     const SizedBox(height: 16),

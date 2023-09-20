@@ -56,16 +56,16 @@ class SglCstDataSourceImpl implements SglCstDataSource {
               "content-type": 'application/json',
               "authorization": 'Bearer ${credential?.accessToken}'
             },
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
-            },
+            // followRedirects: false,
+            // validateStatus: (status) {
+            //   return status! < 500;
+            // },
           ),
           data: postModel.toJson());
-      print(response);
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // print(response);
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -83,10 +83,10 @@ class SglCstDataSourceImpl implements SglCstDataSource {
               "content-type": 'application/json',
               "authorization": 'Bearer ${credential?.accessToken}'
             },
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
-            },
+            // followRedirects: false,
+            // validateStatus: (status) {
+            //   return status! < 500;
+            // },
           ),
           data: {
             'supervisorId': postModel.supervisorId,
@@ -94,10 +94,10 @@ class SglCstDataSourceImpl implements SglCstDataSource {
             'endTime': postModel.endTime,
             'topicId': postModel.topicId,
           });
-      print(response);
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // print(response);
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -118,9 +118,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       print("TERP");
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
@@ -147,9 +145,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = CstResponse.fromJson(dataResponse.data);
@@ -173,9 +169,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
           },
         ),
       );
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<SglCstOnList> listData =
@@ -201,9 +195,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = SglResponse.fromJson(dataResponse.data);
@@ -228,9 +220,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<SglCstOnList> listData =
@@ -256,9 +246,6 @@ class SglCstDataSourceImpl implements SglCstDataSource {
           ),
           data: {'verified': true});
       print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -276,16 +263,13 @@ class SglCstDataSourceImpl implements SglCstDataSource {
               "content-type": 'application/json',
               "authorization": 'Bearer ${credential?.accessToken}'
             },
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
-            },
+            // followRedirects: false,
+            // validateStatus: (status) {
+            //   return status! < 500;
+            // },
           ),
           data: {'verified': status});
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -306,9 +290,6 @@ class SglCstDataSourceImpl implements SglCstDataSource {
           ),
           data: {'verified': true});
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -329,9 +310,6 @@ class SglCstDataSourceImpl implements SglCstDataSource {
           ),
           data: {'verified': status});
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -354,9 +332,6 @@ class SglCstDataSourceImpl implements SglCstDataSource {
         data: topic.toJson(),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -379,9 +354,6 @@ class SglCstDataSourceImpl implements SglCstDataSource {
         data: topic.toJson(),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -403,9 +375,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
         ),
       );
       // print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<TopicModel> listData =
@@ -432,9 +402,6 @@ class SglCstDataSourceImpl implements SglCstDataSource {
               ),
               data: {'verified': status});
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -456,9 +423,6 @@ class SglCstDataSourceImpl implements SglCstDataSource {
               ),
               data: {'verified': status});
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

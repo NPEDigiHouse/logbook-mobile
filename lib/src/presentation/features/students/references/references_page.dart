@@ -144,10 +144,9 @@ class _ReferencePageState extends State<ReferencePage> {
                                                     onTap: () async {
                                                       if (s[index].type ==
                                                           'URL') {
-                                                        ReusableFunctionHelper
-                                                            .urlLauncher(
-                                                                s[index].file ??
-                                                                    '');
+                                                        Utils.urlLauncher(
+                                                            s[index].file ??
+                                                                '');
                                                       } else {
                                                         final hasPermission =
                                                             await checkAndRequestPermission();

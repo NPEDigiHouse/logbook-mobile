@@ -10,7 +10,7 @@ import 'package:elogbook/src/data/models/user/user_profile_post_model.dart';
 abstract class ProfileDataSource {
   Future<void> updateUserProfile(
       {required UserProfilePostModel userProfilePostModel});
-      
+
   Future<void> updateStudentData(
       {required StudentPostModel studentDataPostModel});
   Future<void> updateUserProfilePicture({required String path});
@@ -38,9 +38,9 @@ class ProfileDataSourceImpl extends ProfileDataSource {
             },
           ),
           data: userProfilePostModel.toJson());
-      if (response != 201) {
-        throw Exception();
-      }
+      // if (response != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -64,9 +64,9 @@ class ProfileDataSourceImpl extends ProfileDataSource {
         ),
         data: formData,
       );
-      if (response != 201) {
-        throw Exception();
-      }
+      // if (response != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -87,13 +87,9 @@ class ProfileDataSourceImpl extends ProfileDataSource {
           responseType: ResponseType.bytes,
         ),
       );
-      print("ini ${response.statusCode}");
-      if (response.statusCode != 200) {
-        throw Exception();
-      } else {
-        final List<int> bytes = response.data;
-        return Uint8List.fromList(bytes);
-      }
+
+      final List<int> bytes = response.data;
+      return Uint8List.fromList(bytes);
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -114,9 +110,6 @@ class ProfileDataSourceImpl extends ProfileDataSource {
             },
           ),
           data: studentDataPostModel.toJson());
-      if (response != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());

@@ -36,16 +36,10 @@ class SpecialReportDataSourceImpl implements SpecialReportDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = SpecialReportDetail.fromJson(dataResponse.data);
@@ -67,19 +61,15 @@ class SpecialReportDataSourceImpl implements SpecialReportDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: {
           'content': content,
         },
       );
-      print(response.statusCode);
-      if (response.statusCode != 201) {
-        throw Exception();
-      }
+      // print(response.statusCode);
+      // if (response.statusCode != 201) {
+      //   throw Exception();
+      // }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -97,16 +87,10 @@ class SpecialReportDataSourceImpl implements SpecialReportDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<SpecialReportOnList> listData = dataResponse.data
@@ -132,10 +116,6 @@ class SpecialReportDataSourceImpl implements SpecialReportDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
         data: {
           'rating': 5,
@@ -143,9 +123,6 @@ class SpecialReportDataSourceImpl implements SpecialReportDataSource {
         },
       );
       print(response.statusCode);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -164,16 +141,10 @@ class SpecialReportDataSourceImpl implements SpecialReportDataSource {
             "content-type": 'application/json',
             "authorization": 'Bearer ${credential?.accessToken}'
           },
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
         ),
       );
       print(response);
-      if (response.statusCode != 200) {
-        throw Exception();
-      }
+
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
 
       final result = SpecialReportResponse.fromJson(dataResponse.data);
