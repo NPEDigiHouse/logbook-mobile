@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
@@ -44,32 +45,22 @@ abstract class StudentDataSource {
 
 class StudentDataSourceImpl implements StudentDataSource {
   final Dio dio;
-  final AuthPreferenceHandler preferenceHandler;
+  final ApiHeader apiHeader;
 
-  StudentDataSourceImpl({required this.dio, required this.preferenceHandler});
+  StudentDataSourceImpl({required this.dio, required this.apiHeader});
 
   @override
   Future<StudentClinicalRecordResponse>
       getStudentClinicalRecordOfActiveDepartment() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/clinical-records',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result = StudentClinicalRecordResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
@@ -77,67 +68,41 @@ class StudentDataSourceImpl implements StudentDataSource {
   @override
   Future<StudentScientificSessionResponse>
       getStudentScientificSessionOfActiveDepartment() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/scientific-sessions',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result =
           StudentScientificSessionResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<StudentSelfReflectionModel> getStudentSelfReflection() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/self-reflections',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result = StudentSelfReflectionModel.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<void> updateStudentProfile(StudentProfile model) async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.put(
         ApiService.baseUrl + '/students',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
         data: {
           if (model.clinicId != null) 'clinicId': model.clinicId,
           if (model.preclinicId != null) 'preclinicId': model.preclinicId,
@@ -156,87 +121,55 @@ class StudentDataSourceImpl implements StudentDataSource {
             'periodLengthStation': model.periodLengthStation,
         },
       );
-      print(model.graduationDate);
-      print(response);
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<List<MiniCexListModel>> getStudentMiniCex() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/mini-cexs',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data['data']);
       List<MiniCexListModel> listData =
           dataResponse.data.map((e) => MiniCexListModel.fromJson(e)).toList();
-
       return listData;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<List<StudentCheckInModel>> getStudentCheckIn() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/checkins',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentCheckInModel> listData = dataResponse.data
           .map((e) => StudentCheckInModel.fromJson(e))
           .toList();
-
       return listData;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<void> verifyCheckIn({required String studentId}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
-      final response = await dio.put(
+      await dio.put(
         ApiService.baseUrl + '/students/checkins/$studentId',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
         data: {'verified': true},
       );
-      print(response);
-      // print(response.statusCode);
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
@@ -244,77 +177,48 @@ class StudentDataSourceImpl implements StudentDataSource {
   @override
   Future<List<StudentScientificAssignment>>
       getStudentScientificAssignment() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/scientific-assesments',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentScientificAssignment> listData = dataResponse.data
           .map((e) => StudentScientificAssignment.fromJson(e))
           .toList();
-
       return listData;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<List<StudentScientificAssignment>> getStudentPersonalBehavior() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/personal-behaviours',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentScientificAssignment> listData = dataResponse.data
           .map((e) => StudentScientificAssignment.fromJson(e))
           .toList();
-
       return listData;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<CstResponse> getStudentCst() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/csts',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result = CstResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
@@ -325,126 +229,71 @@ class StudentDataSourceImpl implements StudentDataSource {
 
   @override
   Future<SglResponse> getStudentSgl() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/sgls',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result = SglResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<SpecialReportResponse> getStudentSpecialReports() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/problem-consultations',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result = SpecialReportResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<FinalScoreResponse> getStudentFinalScore() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/assesments/',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result = FinalScoreResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<WeeklyAssesmentResponse> getStudentWeeklyAssesment() async {
-    print("dasd");
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/weekly-assesments/',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-          // followRedirects: false,
-          // validateStatus: (status) {
-          //   return status! < 1000;
-          // },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print("aoapajfap");
-      print(response);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result = WeeklyAssesmentResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print("Errr");
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<List<StudentCheckOutModel>> getStudentCheckOut() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/checkouts',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentCheckOutModel> listData = dataResponse.data
@@ -453,78 +302,49 @@ class StudentDataSourceImpl implements StudentDataSource {
 
       return listData;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<void> verifyCheckOut({required String studentId}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
-      final response = await dio.put(
+      await dio.put(
         ApiService.baseUrl + '/students/checkouts/$studentId',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
         data: {'verified': true},
       );
-      print(response);
-      // print(response.statusCode);
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<StudentStatistic> getStudentStatistic() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/statistics',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response.statusCode);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result = StudentStatistic.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<StudentById> getStudentById({required String studentId}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/$studentId',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response.statusCode);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
       final result = StudentById.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

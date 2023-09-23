@@ -1,10 +1,11 @@
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
-import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/scientific_session/list_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_roles.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_session_detail_model.dart';
@@ -17,15 +18,17 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 abstract class ScientificSessionDataSource {
-  Future<void> uploadScientificSession({
+  Future<Either<Failure, void>> uploadScientificSession({
     required ScientificSessionPostModel scientificSessionPostModel,
   });
-  Future<ScientificSessionDetailModel> getScientificSessionDetail(
-      {required String scientificSessionId});
-  Future<String> uploadScientificSessionAttachment({required String filePath});
-  Future<ListScientificSessionModel> getStudentScientificSessions();
-  Future<List<SessionTypesModel>> getListSessionTypes();
-  Future<List<ScientificRoles>> getListScientificRoles();
+  Future<Either<Failure, ScientificSessionDetailModel>>
+      getScientificSessionDetail({required String scientificSessionId});
+  Future<Either<Failure, String>> uploadScientificSessionAttachment(
+      {required String filePath});
+  Future<Either<Failure, ListScientificSessionModel>>
+      getStudentScientificSessions();
+  Future<Either<Failure, List<SessionTypesModel>>> getListSessionTypes();
+  Future<Either<Failure, List<ScientificRoles>>> getListScientificRoles();
   Future<List<ScientificSessionOnListModel>>
       getScientificSessionsBySupervisor();
 
@@ -36,30 +39,17 @@ abstract class ScientificSessionDataSource {
 
 class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
   final Dio dio;
-  final AuthPreferenceHandler preferenceHandler;
+  final ApiHeader apiHeader;
 
-  ScientificSessionDataSourceImpl(
-      {required this.dio, required this.preferenceHandler});
+  ScientificSessionDataSourceImpl({required this.dio, required this.apiHeader});
 
   @override
-  Future<void> uploadScientificSession(
+  Future<Either<Failure, void>> uploadScientificSession(
       {required ScientificSessionPostModel scientificSessionPostModel}) async {
-    final credential = await preferenceHandler.getCredential();
-
     try {
-      final response =
-          await dio.post(ApiService.baseUrl + '/scientific-sessions/',
-              options: Options(
-                headers: {
-                  "content-type": 'application/json',
-                  "authorization": 'Bearer ${credential?.accessToken}'
-                },
-                // followRedirects: false,
-                // validateStatus: (status) {
-                //   return status! < 500;
-                // },
-              ),
-              data: {
+      await dio.post(ApiService.baseUrl + '/scientific-sessions/',
+          options: await apiHeader.userOptions(),
+          data: {
             'supervisorId': scientificSessionPostModel.supervisorId,
             'sessionType': scientificSessionPostModel.sessionType,
             if (scientificSessionPostModel.reference != null)
@@ -72,30 +62,19 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
             if (scientificSessionPostModel.attachment != null)
               'attachment': scientificSessionPostModel.attachment,
           });
-      // print(response.data);
-      // if (response.statusCode != 201) {
-      //   throw Exception();
-      // }
+      return Right(true);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<String> uploadScientificSessionAttachment(
+  Future<Either<Failure, String>> uploadScientificSessionAttachment(
       {required String filePath}) async {
-    final credential = await preferenceHandler.getCredential();
-
     try {
       final response = await dio.post(
         ApiService.baseUrl + '/scientific-sessions/attachments',
-        options: Options(
-          headers: {
-            "content-type": 'multipart/form-data',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.fileOptions(),
         data: FormData.fromMap(
           {
             'attachments': await MultipartFile.fromFile(
@@ -105,51 +84,34 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
           },
         ),
       );
-      if (response == 201) {
-        return await response.data['data'];
-      }
-      // throw Exception();
       return await response.data['data'];
     } catch (e) {
-      print("ini" + e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
-  Future<ScientificSessionDetailModel> getScientificSessionDetail(
-      {required String scientificSessionId}) async {
-    final credential = await preferenceHandler.getCredential();
+  Future<Either<Failure, ScientificSessionDetailModel>>
+      getScientificSessionDetail({required String scientificSessionId}) async {
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/scientific-sessions/$scientificSessionId',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result = ScientificSessionDetailModel.fromJson(dataResponse.data);
-      return result;
+      return Right(result);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
   Future<String> downloadFile(
       {required String crId, required String filename}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
       Directory _directory = Directory("");
       if (Platform.isAndroid) {
-        // Redirects it to download folder in android
         _directory = Directory("/storage/emulated/0/Download");
       } else {
         _directory = await getApplicationDocumentsDirectory();
@@ -164,12 +126,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
               print((received / total * 100).toStringAsFixed(0) + "%");
             }
           },
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-          ),
+          options: await apiHeader.userOptions(),
         );
       } else {
         savePath = await FileSaver.instance.saveAs(
@@ -177,10 +134,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
           ext: 'pdf',
           link: LinkDetails(
             link: ApiService.baseUrl + '/scientific-sessions/$crId/attachments',
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
+            headers: await apiHeader.userOptions(onlyHeader: true),
           ),
           mimeType: MimeType.pdf,
         );
@@ -194,99 +148,65 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
   }
 
   @override
-  Future<ListScientificSessionModel> getStudentScientificSessions() async {
-    final credential = await preferenceHandler.getCredential();
+  Future<Either<Failure, ListScientificSessionModel>>
+      getStudentScientificSessions() async {
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/scientific-sessions',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
-      print(response.data);
       final dataResponse =
           await DataResponse<ListScientificSessionModel>.fromJson(
               response.data);
-
-      return dataResponse.data;
+      return Right(dataResponse.data);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<List<ScientificRoles>> getListScientificRoles() async {
-    final credential = await preferenceHandler.getCredential();
+  Future<Either<Failure, List<ScientificRoles>>>
+      getListScientificRoles() async {
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/scientific-roles',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ScientificRoles> listData =
           dataResponse.data.map((e) => ScientificRoles.fromJson(e)).toList();
-      return listData;
+      return Right(listData);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<List<SessionTypesModel>> getListSessionTypes() async {
-    final credential = await preferenceHandler.getCredential();
+  Future<Either<Failure, List<SessionTypesModel>>> getListSessionTypes() async {
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/session-types',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<SessionTypesModel> listData =
           dataResponse.data.map((e) => SessionTypesModel.fromJson(e)).toList();
-      return listData;
+      return Right(listData);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
   Future<List<ScientificSessionOnListModel>>
       getScientificSessionsBySupervisor() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/scientific-sessions',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
 
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
@@ -295,7 +215,6 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
           .toList();
       return listData;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
@@ -303,22 +222,13 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
   @override
   Future<void> verifyScientificSession(
       {required String id, required VerifyScientificSessionModel model}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
-      final response = await dio.put(
+      await dio.put(
         ApiService.baseUrl + '/scientific-sessions/$id',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
         data: model.toJson(),
       );
-      print(response);
-      // print(response.statusCode);
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

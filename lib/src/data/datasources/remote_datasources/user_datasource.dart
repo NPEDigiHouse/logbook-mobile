@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
@@ -19,53 +20,34 @@ abstract class UserDataSource {
 
 class UserDataSourceImpl implements UserDataSource {
   final Dio dio;
-  final AuthPreferenceHandler preferenceHandler;
+  final AuthPreferenceHandler pref;
+  final ApiHeader apiHeader;
 
-  UserDataSourceImpl({required this.dio, required this.preferenceHandler});
+  UserDataSourceImpl(
+      {required this.dio, required this.apiHeader, required this.pref});
   @override
   Future<UserCredential> getUserCredential() async {
     try {
-      final credential = await preferenceHandler.getCredential();
-      // print(credential?.accessToken);
-      print(credential?.accessToken);
       final response = await dio.get(
         ApiService.baseUrl + '/users',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response.data);
-
       final dataResponse =
           await DataResponse<Map<String, dynamic>>.fromJson(response.data);
       UserCredential userCredential =
           UserCredential.fromJson(dataResponse.data);
-
-      print(userCredential);
       return userCredential;
     } catch (e) {
-      print("ERROR");
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<String> uploadProfilePicture(String path) async {
-    final credential = await preferenceHandler.getCredential();
-
     try {
       final response = await dio.post(
         ApiService.baseUrl + '/users/pic',
-        options: Options(
-          headers: {
-            "content-type": 'multipart/form-data',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
         data: FormData.fromMap(
           {
             'pic': await MultipartFile.fromFile(
@@ -75,57 +57,36 @@ class UserDataSourceImpl implements UserDataSource {
           },
         ),
       );
-      print(response);
-      if (response.statusCode == 201) {
-        return await response.data['data'];
-      }
-      // throw Exception();
       return await response.data['data'];
     } catch (e) {
-      print("ini" + e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<void> updateFullName({required String fullname}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
-      final response = await dio.put(
+      await dio.put(
         ApiService.baseUrl + '/users',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
         data: {
           'fullname': fullname,
         },
       );
-      print(response);
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<void> deleteUser() async {
-    print('d');
-    final credential = await preferenceHandler.getCredential();
     try {
-      final response = await dio.delete(
+      await dio.delete(
         ApiService.baseUrl + '/users',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
 
-      await preferenceHandler.removeCredential();
+      await pref.removeCredential();
     } catch (e) {
       print(e.toString());
       throw ClientFailure(e.toString());
@@ -134,47 +95,25 @@ class UserDataSourceImpl implements UserDataSource {
 
   @override
   Future<void> removeProfilePicture() async {
-    final credential = await preferenceHandler.getCredential();
     try {
-      final response = await dio.delete(
+      await dio.delete(
         ApiService.baseUrl + '/users/pic',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-
-      await preferenceHandler.removeCredential();
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<void> changePassword({required String newPassword}) async {
-    final credential = await preferenceHandler.getCredential();
-
     try {
-      final response = await dio.put(ApiService.baseUrl + '/users',
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-          ),
+      await dio.put(ApiService.baseUrl + '/users',
+          options: await apiHeader.userOptions(),
           data: {
             'password': newPassword,
           });
-      // print(response.statusCode);
-      // if (response.statusCode != 200) {
-      //   throw Exception(response.statusMessage);
-      // }
     } catch (e) {
-      print("here");
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

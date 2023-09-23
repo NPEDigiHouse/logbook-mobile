@@ -47,9 +47,14 @@ class ScientificSessionSupervisorCubit
       final result =
           await datasource.getScientificSessionDetail(scientificSessionId: id);
       try {
-        emit(state.copyWith(
-          detailClinicalRecordModel: result,
-        ));
+        result.fold(
+            (l) => emit(
+                  state.copyWith(requestState: RequestState.error),
+                ), (r) {
+          return emit(state.copyWith(
+            detailClinicalRecordModel: r,
+          ));
+        });
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

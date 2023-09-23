@@ -29,13 +29,9 @@ class _LoginPageState extends State<LoginPage> {
       listener: (context, state) {
         if (state is LoginSuccess) {
           Future.microtask(() {
-            // print("fall");
-
             BlocProvider.of<AuthCubit>(context).isSignIn();
           });
-
           context.replace(const Wrapper());
-
           state = Initial();
         }
 

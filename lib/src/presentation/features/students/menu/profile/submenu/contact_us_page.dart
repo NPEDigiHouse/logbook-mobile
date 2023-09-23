@@ -1,9 +1,8 @@
-import 'package:elogbook/core/helpers/reusable_function_helper.dart';
+import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class ContactUsPage extends StatelessWidget {
   const ContactUsPage({super.key});

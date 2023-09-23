@@ -1,33 +1,33 @@
-import 'dart:convert';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/helpers/handle_error_response.dart'
-    as he;
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/data/models/user/user_token.dart';
 
 abstract class AuthDataSource {
-  Future<void> register(
+  Future<Either<Failure, void>> register(
       {required String username,
       required String studentId,
       required String password,
       String? fullname,
       required String email});
 
-  Future<void> login({
+  Future<Either<Failure, void>> login({
     required String username,
     required String password,
   });
   Future<void> refreshToken();
-  Future<UserCredential> getUserCredential();
+  Future<Either<Failure, UserCredential>> getUserCredential();
 
-  Future<bool> isSignIn();
-  Future<void> logout();
-  Future<String> generateTokenResetPassword({required String email});
-  Future<void> resetPassword({
+  Future<Either<Failure, bool>> isSignIn();
+  Future<Either<Failure, void>> logout();
+  Future<Either<Failure, String>> generateTokenResetPassword(
+      {required String email});
+  Future<Either<Failure, void>> resetPassword({
     required String otp,
     required String newPassword,
     required String token,
@@ -37,17 +37,23 @@ abstract class AuthDataSource {
 class AuthDataSourceImpl implements AuthDataSource {
   final Dio dio;
   final AuthPreferenceHandler preferenceHandler;
+  final ApiHeader apiHeader;
 
-  AuthDataSourceImpl({required this.dio, required this.preferenceHandler});
+  AuthDataSourceImpl(
+      {required this.dio,
+      required this.preferenceHandler,
+      required this.apiHeader});
 
   @override
-  Future<void> register(
-      {required String username,
-      required String studentId,
-      required String password,
-      String? fullname,
-      required String email}) async {
+  Future<Either<Failure, void>> register({
+    required String username,
+    required String studentId,
+    required String password,
+    String? fullname,
+    required String email,
+  }) async {
     try {
+      // Split First and Last Name
       String? firstName;
       String? lastName;
       if (fullname != null && fullname.isNotEmpty) {
@@ -57,64 +63,38 @@ class AuthDataSourceImpl implements AuthDataSource {
           lastName = fullname.substring(firstName.length + 1, fullname.length);
         }
       }
-      final response = await dio.post(ApiService.baseUrl + '/students',
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization":
-                  'Basic ${base64Encode(utf8.encode('admin:admin'))}'
-            },
-          ),
-          data: {
-            "username": username,
-            "password": password,
-            "studentId": studentId,
-            "email": email,
-            if (firstName != null) "firstName": firstName,
-            if (lastName != null) "lastName": lastName,
-          });
-
-      // if (response.statusCode != 201) {
-      //   throw Exception(response.statusMessage);
-      // }
-
-      he.handleErrorResponse(
-        response: response,
+      await dio.post(
+        ApiService.baseUrl + '/students',
+        options: apiHeader.adminOptions(),
+        data: {
+          "username": username,
+          "password": password,
+          "studentId": studentId,
+          "email": email,
+          if (firstName != null) "firstName": firstName,
+          if (lastName != null) "lastName": lastName,
+        },
       );
+      return Right(true);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<void> login(
+  Future<Either<Failure, void>> login(
       {required String username, required String password}) async {
     try {
       final response = await dio.post(
         ApiService.baseUrl + '/users/login',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization":
-                'Basic ${base64Encode(utf8.encode('$username:$password'))}'
-          },
-        ),
+        options: apiHeader.loginOptions(username, password),
       );
-      if (response.statusCode == 200) {
-        final dataResponse = await DataResponse.fromJson(response.data);
-
-        UserToken credential = await UserToken.fromJson(dataResponse.data);
-        await preferenceHandler.setUserData(credential);
-      } else {
-        throw Exception(response.statusMessage);
-      }
-      he.handleErrorResponse(
-        response: response,
-      );
+      final dataResponse = await DataResponse.fromJson(response.data);
+      UserToken credential = await UserToken.fromJson(dataResponse.data);
+      await preferenceHandler.setUserData(credential);
+      return Right(true);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
@@ -123,151 +103,99 @@ class AuthDataSourceImpl implements AuthDataSource {
       UserToken? credential = await preferenceHandler.getCredential();
       String? refreshToken = credential!.refreshToken;
       if (refreshToken == null) {
-        // Handle jika refresh token tidak tersedia
         return;
       }
-
-      final response =
-          await dio.post(ApiService.baseUrl + '/users/refresh-token',
-              options: Options(
-                headers: {
-                  "content-type": 'application/json',
-                  "authorization":
-                      'Basic ${base64Encode(utf8.encode('admin:admin'))}'
-                },
-              ),
-              data: {
+      final response = await dio.post(
+          ApiService.baseUrl + '/users/refresh-token',
+          options: apiHeader.adminOptions(),
+          data: {
             'refreshToken': refreshToken,
           });
 
-      if (response.statusCode == 200) {
-        final responseData =
-            await DataResponse<Map<String, dynamic>>.fromJson(response.data);
-        final newAccessToken = responseData.data['accessToken'];
-        await preferenceHandler.setUserData(
-            UserToken(accessToken: newAccessToken, refreshToken: refreshToken));
-      } else {
-        print(response.statusCode);
-        // he.handleErrorResponse(response: response);
-      }
+      final responseData =
+          await DataResponse<Map<String, dynamic>>.fromJson(response.data);
+      final newAccessToken = responseData.data['accessToken'];
+      await preferenceHandler.setUserData(
+          UserToken(accessToken: newAccessToken, refreshToken: refreshToken));
     } catch (e) {
       throw ClientFailure(e.toString());
     }
   }
 
   @override
-  Future<bool> isSignIn() async {
+  Future<Either<Failure, bool>> isSignIn() async {
     try {
       UserToken? credential = await preferenceHandler.getCredential();
-      return credential != null;
+      return Right(credential != null);
     } catch (e) {
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<void> logout() async {
+  Future<Either<Failure, void>> logout() async {
     try {
       await preferenceHandler.removeCredential();
+      return Right(true);
     } catch (e) {
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<String> generateTokenResetPassword({required String email}) async {
+  Future<Either<Failure, String>> generateTokenResetPassword(
+      {required String email}) async {
     try {
       final response = await dio.post(
         ApiService.baseUrl + '/students/reset-password',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Basic ${base64Encode(utf8.encode('admin:admin'))}'
-          },
-        ),
+        options: apiHeader.adminOptions(),
         data: {
           'email': email,
         },
       );
-      // print(response.data);
-      if (response.statusCode == 201) {
-        final Map<String, dynamic> responseData =
-            await DataResponse<Map<String, dynamic>>.fromJson(response.data)
-                .data;
-        return responseData['token'];
-      }
-      he.handleErrorResponse(response: response);
-      throw ClientFailure(response.statusMessage ?? '');
+      final Map<String, dynamic> responseData =
+          await DataResponse<Map<String, dynamic>>.fromJson(response.data).data;
+      return Right(responseData['token']);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<void> resetPassword({
+  Future<Either<Failure, void>> resetPassword({
     required String otp,
     required String newPassword,
     required String token,
   }) async {
     try {
-      // print(otp);
-      // print(newPassword);
-      // print(token);
-      // print('Basic ${base64Encode(utf8.encode('admin:admin'))}');
-      final response = await dio.post(
+      await dio.post(
         ApiService.baseUrl + '/students/reset-password/$token',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Basic ${base64Encode(utf8.encode('admin:admin'))}'
-          },
-        ),
+        options: apiHeader.adminOptions(),
         data: {
           'otp': otp,
           'newPassword': newPassword,
         },
       );
-      he.handleErrorResponse(response: response);
+      return Right(true);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<UserCredential> getUserCredential() async {
+  Future<Either<Failure, UserCredential>> getUserCredential() async {
     try {
-      final credential = await preferenceHandler.getCredential();
-      // print(credential?.accessToken);
-
-      print(credential?.accessToken);
       final response = await dio.get(
         ApiService.baseUrl + '/users',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-          // followRedirects: false,
-          // validateStatus: (status) {
-          //   return status! < 500;
-          // },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print(response.data);
-
       final dataResponse =
           await DataResponse<Map<String, dynamic>>.fromJson(response.data);
       UserCredential userCredential =
           UserCredential.fromJson(dataResponse.data);
-
-      print(userCredential);
-      return userCredential;
+      return Right(userCredential);
     } catch (e) {
-      print("ERROR");
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 }

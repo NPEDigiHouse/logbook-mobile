@@ -1,5 +1,5 @@
 import 'package:elogbook/core/helpers/asset_path.dart';
-import 'package:elogbook/core/helpers/reusable_function_helper.dart';
+import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/data/models/history/history_model.dart';
 
 class Activity {

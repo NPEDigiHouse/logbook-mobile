@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:elogbook/core/helpers/reusable_function_helper.dart';
+import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/data/models/students/student_statistic.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';

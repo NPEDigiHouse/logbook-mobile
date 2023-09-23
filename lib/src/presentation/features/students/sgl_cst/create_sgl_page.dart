@@ -1,5 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/core/helpers/reusable_function_helper.dart';
+import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/data/models/sglcst/sglcst_post_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';

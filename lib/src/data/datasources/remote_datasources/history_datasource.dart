@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
@@ -11,34 +12,23 @@ abstract class HistoryDataSource {
 
 class HistoryDataSourceImpl extends HistoryDataSource {
   final Dio dio;
-  final AuthPreferenceHandler preferenceHandler;
+  final ApiHeader apiHeader;
 
-  HistoryDataSourceImpl({required this.dio, required this.preferenceHandler});
+  HistoryDataSourceImpl({required this.dio, required this.apiHeader});
 
   @override
   Future<List<HistoryModel>> getHistory() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/history/',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      print("calll");
-      print(response.statusCode);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<HistoryModel> listData =
           dataResponse.data.map((e) => HistoryModel.fromJson(e)).toList();
-
       return listData;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

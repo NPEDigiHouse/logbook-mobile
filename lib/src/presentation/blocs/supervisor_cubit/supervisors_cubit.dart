@@ -4,18 +4,15 @@ import 'package:elogbook/src/data/datasources/remote_datasources/supervisors_dat
 import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
-import 'package:elogbook/src/domain/usecases/supervisor_usecases/get_all_supervisors_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 
 part 'supervisors_state.dart';
 
 class SupervisorsCubit extends Cubit<SupervisorsState> {
-  final GetAllSupervisorsUsecase getAllSupervisorsUsecase;
   final SupervisorsDataSource dataSource;
   final ProfileDataSource profileDataSource;
   SupervisorsCubit({
-    required this.getAllSupervisorsUsecase,
     required this.dataSource,
     required this.profileDataSource,
   }) : super(Initial());
@@ -24,7 +21,7 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
     try {
       emit(Loading());
 
-      final result = await getAllSupervisorsUsecase.execute();
+      final result = await dataSource.getAllSupervisors();
 
       result.fold((l) => emit(Failed(message: l.message)),
           (r) => emit(FetchSuccess(supervisors: r)));

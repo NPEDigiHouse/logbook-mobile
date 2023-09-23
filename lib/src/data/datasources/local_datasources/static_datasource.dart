@@ -4,10 +4,8 @@ import 'package:elogbook/src/presentation/features/students/thesis/add_thesis_pa
 import 'package:flutter/material.dart';
 
 final List<Color> colors = [
-  // primaryColor,
   variant2Color,
   variant1Color,
-  // errorColor,
 ];
 
 class MenuModel {

@@ -1,7 +1,6 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:elogbook/core/helpers/reusable_function_helper.dart';
+import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/change_profile_photo.dart';

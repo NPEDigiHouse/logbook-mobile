@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
-import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/activity/activity_model.dart';
 
 abstract class ActivityDataSource {
@@ -12,23 +12,16 @@ abstract class ActivityDataSource {
 
 class ActivityDataSourceImpl implements ActivityDataSource {
   final Dio dio;
-  final AuthPreferenceHandler preferenceHandler;
+  final ApiHeader apiHeader;
 
-  ActivityDataSourceImpl({required this.dio, required this.preferenceHandler});
+  ActivityDataSourceImpl({required this.dio, required this.apiHeader});
   @override
   Future<List<ActivityModel>> getActivityLocations() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/activity-locations/',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
 
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
@@ -36,33 +29,23 @@ class ActivityDataSourceImpl implements ActivityDataSource {
           dataResponse.data.map((e) => ActivityModel.fromJson(e)).toList();
       return listData;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<List<ActivityModel>> getActivityNames() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/activity-names/',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ActivityModel> listData =
           dataResponse.data.map((e) => ActivityModel.fromJson(e)).toList();
       return listData;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

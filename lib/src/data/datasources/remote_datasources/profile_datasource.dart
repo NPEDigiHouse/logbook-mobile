@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/students/student_post_model.dart';
@@ -20,55 +21,34 @@ abstract class ProfileDataSource {
 
 class ProfileDataSourceImpl extends ProfileDataSource {
   final Dio dio;
-  final AuthPreferenceHandler preferenceHandler;
+  final ApiHeader apiHeader;
 
-  ProfileDataSourceImpl({required this.dio, required this.preferenceHandler});
+  ProfileDataSourceImpl({required this.dio, required this.apiHeader});
 
   @override
   Future<void> updateUserProfile(
       {required UserProfilePostModel userProfilePostModel}) async {
-    final credential = await preferenceHandler.getCredential();
-
     try {
-      final response = await dio.put(ApiService.baseUrl + '/users',
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-          ),
+      await dio.put(ApiService.baseUrl + '/users',
+          options: await apiHeader.userOptions(),
           data: userProfilePostModel.toJson());
-      // if (response != 201) {
-      //   throw Exception();
-      // }
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<void> updateUserProfilePicture({required String path}) async {
-    final credential = await preferenceHandler.getCredential();
     FormData formData = FormData.fromMap({
       'attachments': await MultipartFile.fromFile(path),
     });
     try {
-      final response = await dio.post(
+      await dio.post(
         ApiService.baseUrl + '/users/pic',
-        options: Options(
-          headers: {
-            "content-type": 'multipart/form-data',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.fileOptions(),
         data: formData,
       );
-      // if (response != 201) {
-      //   throw Exception();
-      // }
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
@@ -76,16 +56,9 @@ class ProfileDataSourceImpl extends ProfileDataSource {
   @override
   Future<Uint8List?> getUserProfilePicture() async {
     try {
-      final credential = await preferenceHandler.getCredential();
       final response = await dio.get(
         ApiService.baseUrl + '/users/pic',
-        options: Options(
-          headers: {
-            "content-type": 'multipart/form-data',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-          responseType: ResponseType.bytes,
-        ),
+        options: await apiHeader.fileOptions(withType: true),
       );
 
       final List<int> bytes = response.data;
@@ -99,16 +72,9 @@ class ProfileDataSourceImpl extends ProfileDataSource {
   @override
   Future<void> updateStudentData(
       {required StudentPostModel studentDataPostModel}) async {
-    final credential = await preferenceHandler.getCredential();
-
     try {
-      final response = await dio.put(ApiService.baseUrl + '/students',
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-          ),
+      await dio.put(ApiService.baseUrl + '/students',
+          options: await apiHeader.userOptions(),
           data: studentDataPostModel.toJson());
     } catch (e) {
       print(e.toString());
@@ -119,26 +85,13 @@ class ProfileDataSourceImpl extends ProfileDataSource {
   @override
   Future<Uint8List> getProfilePic({required String userId}) async {
     try {
-      final credential = await preferenceHandler.getCredential();
       final response = await dio.get(
         ApiService.baseUrl + '/users/${userId}/pic',
-        options: Options(
-          headers: {
-            "content-type": 'multipart/form-data',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-          responseType: ResponseType.bytes,
-        ),
+        options: await apiHeader.fileOptions(withType: true),
       );
-      print(response.statusCode);
-      if (response.statusCode! >= 400) {
-        throw Exception();
-      } else {
-        final List<int> bytes = response.data;
-        return Uint8List.fromList(bytes);
-      }
+      final List<int> bytes = response.data;
+      return Uint8List.fromList(bytes);
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

@@ -1,169 +1,105 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/units/unit_model.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/helpers/handle_error_response.dart'
-    as he;
 
 abstract class DepartmentDatasource {
-  Future<List<DepartmentModel>> fetchAllDepartment();
-  Future<void> changeDepartmentActive({required String unitId});
-  Future<ActiveDepartmentModel> getActiveDepartment();
-  Future<void> checkInActiveDepartment();
+  Future<Either<Failure, List<DepartmentModel>>> fetchAllDepartment();
+  Future<Either<Failure, void>> changeDepartmentActive(
+      {required String unitId});
+  Future<Either<Failure, ActiveDepartmentModel>> getActiveDepartment();
+  Future<Either<Failure, void>> checkInActiveDepartment();
   Future<void> checkOutActiveDepartment();
 }
 
 class DepartmentDatasourceImpl implements DepartmentDatasource {
   final Dio dio;
   final AuthDataSource authDataSource;
-  final AuthPreferenceHandler preferenceHandler;
+  final ApiHeader apiHeader;
 
   DepartmentDatasourceImpl(
       {required this.dio,
       required this.authDataSource,
-      required this.preferenceHandler});
+      required this.apiHeader});
 
   @override
-  Future<List<DepartmentModel>> fetchAllDepartment() async {
+  Future<Either<Failure, List<DepartmentModel>>> fetchAllDepartment() async {
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/units',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Basic ${base64Encode(utf8.encode('admin:admin'))}'
-          },
-        ),
+        options: await apiHeader.adminOptions(),
       );
-      // print(response.statusCode);
-      // if (response.statusCode != 200) {
-      //   he.handleErrorResponse(
-      //     response: response,
-      //     refreshToken: authDataSource.refreshToken(),
-      //     retryOriginalRequest: this.fetchAllDepartment(),
-      //   );
-      // }
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
 
       List<DepartmentModel> units =
           dataResponse.data.map((e) => DepartmentModel.fromJson(e)).toList();
-      // print(units);
-      return units;
+      return Right(units);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<void> changeDepartmentActive({required String unitId}) async {
-    final credential = await preferenceHandler.getCredential();
-
-    print(credential?.accessToken);
-    print(unitId);
+  Future<Either<Failure, void>> changeDepartmentActive(
+      {required String unitId}) async {
     try {
-      final response = await dio.put(ApiService.baseUrl + '/students/units',
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-            // followRedirects: false,
-            // validateStatus: (status) {
-            //   return status! < 500;
-            // },
-          ),
+      await dio.put(ApiService.baseUrl + '/students/units',
+          options: await apiHeader.userOptions(),
           data: {
             'unitId': unitId,
           });
-      // if (response.statusCode != 200) {
-      //   print(response.statusMessage);
-      //   print("Faileddd");
-      //   throw Exception();
-      //   // await authDataSource.refreshToken();
-      //   // return changeDepartmentActive(unitId: unitId);
-      // } else {
-      //   print('success');
-      // }
+      return Right(true);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<ActiveDepartmentModel> getActiveDepartment() async {
+  Future<Either<Failure, ActiveDepartmentModel>> getActiveDepartment() async {
     try {
-      final credential = await preferenceHandler.getCredential();
-      // print(credential?.accessToken);
       final response = await dio.get(
         ApiService.baseUrl + '/students/units',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
 
       final dataResponse = await DataResponse.fromJson(response.data);
       final activeDepartmentModel =
           ActiveDepartmentModel.fromJson(dataResponse.data);
-      return activeDepartmentModel;
+      return Right(activeDepartmentModel);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<void> checkInActiveDepartment() async {
+  Future<Either<Failure, void>> checkInActiveDepartment() async {
     try {
-      final credential = await preferenceHandler.getCredential();
-      // print(credential?.accessToken);
-      final response = await dio.post(
+      await dio.post(
         ApiService.baseUrl + '/students/units/check-in',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-      // if (response.statusCode != 201) {
-      //   throw Exception();
-      // }
+      return Right(true);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
   Future<void> checkOutActiveDepartment() async {
     try {
-      final credential = await preferenceHandler.getCredential();
-      // print(credential?.accessToken);
-      final response = await dio.post(
+      await dio.post(
         ApiService.baseUrl + '/students/units/check-out',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // if (response.statusCode != 201) {
-      //   throw ClientFailure(response.data['data']);
-      // }
     } catch (e) {
       throw ClientFailure(e.toString());
     }

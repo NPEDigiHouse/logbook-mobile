@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:elogbook/core/app/app_settings.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/core/helpers/reusable_function_helper.dart';
+import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
@@ -22,7 +22,6 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/profile_item_menu_card.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class CoordinatorProfilePage extends StatefulWidget {
   const CoordinatorProfilePage({super.key});

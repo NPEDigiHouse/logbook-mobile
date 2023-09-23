@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
@@ -20,20 +22,23 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 abstract class ClinicalRecordsDatasource {
-  Future<void> uploadClinicalRecord({
+  Future<Either<Failure, void>> uploadClinicalRecord({
     required ClinicalRecordPostModel clinicalRecordPostModel,
   });
-  Future<String> uploadClinicalRecordAttachment({required String filePath});
+  Future<Either<Failure, String>> uploadClinicalRecordAttachment(
+      {required String filePath});
   Future<ListClinicalRecordModel> getStudentClinicalRecords();
   Future<DetailClinicalRecordModel> getDetailClinicalRecord(
       {required String clinicalRecordId});
-  Future<List<DiagnosisTypesModel>> getDiagnosisTypes({required String unitId});
-  Future<List<ManagementTypesModel>> getManagementTypes(
+  Future<Either<Failure, List<DiagnosisTypesModel>>> getDiagnosisTypes(
       {required String unitId});
-  Future<List<ExaminationTypesModel>> getExaminationTypes(
+  Future<Either<Failure, List<ManagementTypesModel>>> getManagementTypes(
       {required String unitId});
-  Future<List<ManagementRoleModel>> getManagementRoles();
-  Future<List<AffectedPart>> getAffectedParts({required String unitId});
+  Future<Either<Failure, List<ExaminationTypesModel>>> getExaminationTypes(
+      {required String unitId});
+  Future<Either<Failure, List<ManagementRoleModel>>> getManagementRoles();
+  Future<Either<Failure, List<AffectedPart>>> getAffectedParts(
+      {required String unitId});
   Future<List<ClinicalRecordListModel>> getClinicalRecordsBySupervisor();
   Future<void> verifiyClinicalRecord(
       {required String clinicalRecordId,
@@ -44,25 +49,17 @@ abstract class ClinicalRecordsDatasource {
 
 class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   final Dio dio;
-  final AuthPreferenceHandler preferenceHandler;
+  final ApiHeader apiHeader;
 
-  ClinicalRecordsDatasourceImpl(
-      {required this.dio, required this.preferenceHandler});
+  ClinicalRecordsDatasourceImpl({required this.dio, required this.apiHeader});
 
   @override
-  Future<void> uploadClinicalRecord(
+  Future<Either<Failure, void>> uploadClinicalRecord(
       {required ClinicalRecordPostModel clinicalRecordPostModel}) async {
-    final credential = await preferenceHandler.getCredential();
-
     try {
-      final response = await dio.post(
+      await dio.post(
         ApiService.baseUrl + '/clinical-records',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
         data: {
           'patientName': clinicalRecordPostModel.patientName,
           'patientAge': clinicalRecordPostModel.patientAge,
@@ -80,31 +77,19 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           'managements': clinicalRecordPostModel.managements,
         },
       );
-      // print(response.data);
-      // if (response.statusCode != 201) {
-      //   throw Exception();
-      // }
-      // print(response.statusCode);
+      return Right(true);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<String> uploadClinicalRecordAttachment(
+  Future<Either<Failure, String>> uploadClinicalRecordAttachment(
       {required String filePath}) async {
-    final credential = await preferenceHandler.getCredential();
-
     try {
       final response = await dio.post(
         ApiService.baseUrl + '/clinical-records/attachments',
-        options: Options(
-          headers: {
-            "content-type": 'multipart/form-data',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.fileOptions(),
         data: FormData.fromMap(
           {
             'attachments': await MultipartFile.fromFile(
@@ -114,38 +99,24 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           },
         ),
       );
-      if (response == 201) {
-        return await response.data['data'];
-      }
-      // throw Exception();
-      return await response.data['data'];
+      return Right(await response.data['data']);
     } catch (e) {
-      print("ini" + e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
   Future<ListClinicalRecordModel> getStudentClinicalRecords() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/students/clinical-records',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse =
           await DataResponse<ListClinicalRecordModel>.fromJson(response.data);
 
       return dataResponse.data;
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
@@ -153,21 +124,12 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   @override
   Future<DetailClinicalRecordModel> getDetailClinicalRecord(
       {required String clinicalRecordId}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/clinical-records/$clinicalRecordId',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-
       final result = DetailClinicalRecordModel.fromJson(dataResponse.data);
       return result;
     } catch (e) {
@@ -177,168 +139,111 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   }
 
   @override
-  Future<List<DiagnosisTypesModel>> getDiagnosisTypes(
+  Future<Either<Failure, List<DiagnosisTypesModel>>> getDiagnosisTypes(
       {required String unitId}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/diagnosis-types/units/$unitId',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<DiagnosisTypesModel> listData = dataResponse.data
           .map((e) => DiagnosisTypesModel.fromJson(e))
           .toList();
-
-      return listData;
+      return Right(listData);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<List<ExaminationTypesModel>> getExaminationTypes(
+  Future<Either<Failure, List<ExaminationTypesModel>>> getExaminationTypes(
       {required String unitId}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/examination-types/units/$unitId',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ExaminationTypesModel> listData = dataResponse.data
           .map((e) => ExaminationTypesModel.fromJson(e))
           .toList();
-
-      return listData;
+      return Right(listData);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<List<ManagementTypesModel>> getManagementTypes(
+  Future<Either<Failure, List<ManagementTypesModel>>> getManagementTypes(
       {required String unitId}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/management-types/units/$unitId',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ManagementTypesModel> listData = dataResponse.data
           .map((e) => ManagementTypesModel.fromJson(e))
           .toList();
-
-      return listData;
+      return Right(listData);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<List<AffectedPart>> getAffectedParts({required String unitId}) async {
-    final credential = await preferenceHandler.getCredential();
+  Future<Either<Failure, List<AffectedPart>>> getAffectedParts(
+      {required String unitId}) async {
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/affected-parts/units/$unitId',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<AffectedPart> affectedParts =
           dataResponse.data.map((e) => AffectedPart.fromJson(e)).toList();
-
-      return affectedParts;
+      return Right(affectedParts);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
-  Future<List<ManagementRoleModel>> getManagementRoles() async {
-    final credential = await preferenceHandler.getCredential();
+  Future<Either<Failure, List<ManagementRoleModel>>>
+      getManagementRoles() async {
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/management-roles',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ManagementRoleModel> listData = dataResponse.data
           .map((e) => ManagementRoleModel.fromJson(e))
           .toList();
-
-      return listData;
+      return Right(listData);
     } catch (e) {
-      print(e.toString());
-      throw ClientFailure(e.toString());
+      return Left(ClientFailure(e.toString()));
     }
   }
 
   @override
   Future<List<ClinicalRecordListModel>> getClinicalRecordsBySupervisor() async {
-    final credential = await preferenceHandler.getCredential();
     try {
       final response = await dio.get(
         ApiService.baseUrl + '/clinical-records',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
       );
-      // print(response.statusCode);
-
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ClinicalRecordListModel> listData = dataResponse.data
           .map((e) => ClinicalRecordListModel.fromJson(e))
           .toList();
-
       return listData;
     } catch (e) {
       print(e.toString());
@@ -347,19 +252,14 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   }
 
   @override
-  Future<void> verifiyClinicalRecord(
-      {required String clinicalRecordId,
-      required VerifyClinicalRecordModel model}) async {
-    final credential = await preferenceHandler.getCredential();
+  Future<void> verifiyClinicalRecord({
+    required String clinicalRecordId,
+    required VerifyClinicalRecordModel model,
+  }) async {
     try {
-      final response = await dio.put(
+      await dio.put(
         ApiService.baseUrl + '/clinical-records/$clinicalRecordId',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
         data: {
           'verified': model.verified,
           'rating': model.rating,
@@ -367,35 +267,22 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
             'supervisorFeedback': model.supervisorFeedback,
         },
       );
-      print(response);
-      // print(response.statusCode);
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
 
   @override
   Future<void> makeFeedback({required String feedback, required crId}) async {
-    final credential = await preferenceHandler.getCredential();
-
     try {
-      final response = await dio.put(
+      await dio.put(
         ApiService.baseUrl + '/clinical-records/${crId}/feedback',
-        options: Options(
-          headers: {
-            "content-type": 'application/json',
-            "authorization": 'Bearer ${credential?.accessToken}'
-          },
-        ),
+        options: await apiHeader.userOptions(),
         data: {
           'feedback': feedback,
         },
       );
-      print(response);
-      // print(response.statusCode);
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
@@ -403,11 +290,9 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   @override
   Future<String> downloadFile(
       {required String crId, required String filename}) async {
-    final credential = await preferenceHandler.getCredential();
     try {
       Directory _directory = Directory("");
       if (Platform.isAndroid) {
-        // Redirects it to download folder in android
         _directory = Directory("/storage/emulated/0/Download");
       } else {
         _directory = await getApplicationDocumentsDirectory();
@@ -422,12 +307,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
               print((received / total * 100).toStringAsFixed(0) + "%");
             }
           },
-          options: Options(
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
-          ),
+          options: await apiHeader.userOptions(),
         );
       } else {
         savePath = await FileSaver.instance.saveAs(
@@ -435,17 +315,13 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           ext: 'pdf',
           link: LinkDetails(
             link: ApiService.baseUrl + '/clinical-records/$crId/attachments',
-            headers: {
-              "content-type": 'application/json',
-              "authorization": 'Bearer ${credential?.accessToken}'
-            },
+            headers: await apiHeader.userOptions(onlyHeader: true),
           ),
           mimeType: MimeType.pdf,
         );
       }
       return savePath ?? '';
     } catch (e) {
-      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

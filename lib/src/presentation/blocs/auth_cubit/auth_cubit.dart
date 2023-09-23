@@ -1,36 +1,16 @@
 import 'package:bloc/bloc.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/user_datasource.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
-import 'package:elogbook/src/domain/usecases/auth_usecases/generate_token_reset_password_usecase.dart';
-import 'package:elogbook/src/domain/usecases/auth_usecases/get_credential_usecase.dart';
-import 'package:elogbook/src/domain/usecases/auth_usecases/is_sign_in_usecase.dart';
-import 'package:elogbook/src/domain/usecases/auth_usecases/login_usecase.dart';
-import 'package:elogbook/src/domain/usecases/auth_usecases/logout_usecase.dart';
-import 'package:elogbook/src/domain/usecases/auth_usecases/register_usecase.dart';
-import 'package:elogbook/src/domain/usecases/auth_usecases/reset_password_usecase.dart';
 import 'package:equatable/equatable.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  final RegisterUsecase registerUsecase;
-  final LoginUsecase loginUsecase;
-  final IsSignInUsecase isSignInUsecase;
-  final LogoutUsecase logoutUsecase;
-  final GenerateTokenResetPasswordUsecase generateTokenResetPasswordUsecase;
-  final ResetPasswordUsecase resetPasswordUsecase;
-  final GetCredentialUsecase getCredentialUsecase;
+  final AuthDataSource authDataSource;
   final UserDataSource userDataSource;
 
-  AuthCubit(
-      {required this.registerUsecase,
-      required this.loginUsecase,
-      required this.isSignInUsecase,
-      required this.logoutUsecase,
-      required this.generateTokenResetPasswordUsecase,
-      required this.resetPasswordUsecase,
-      required this.getCredentialUsecase,
-      required this.userDataSource})
+  AuthCubit({required this.authDataSource, required this.userDataSource})
       : super(Initial());
 
   Future<void> register(
@@ -41,7 +21,7 @@ class AuthCubit extends Cubit<AuthState> {
       required String email}) async {
     try {
       emit(Loading());
-      final result = await registerUsecase.execute(
+      final result = await authDataSource.register(
         username: username,
         studentId: studentId,
         password: password,
@@ -63,7 +43,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(Loading());
 
-      final result = await loginUsecase.execute(
+      final result = await authDataSource.login(
         username: username,
         password: password,
       );
@@ -77,20 +57,13 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> isSignIn() async {
     try {
-      print("1");
       emit(Loading());
-
-      final result = await isSignInUsecase.execute();
-
+      final result = await authDataSource.isSignIn();
       result.fold(
         (l) => emit(Failed(message: l.message)),
         (r) async {
-          print("2");
-
           if (r) {
-            final credentialResult = await getCredentialUsecase.execute();
-            print("3");
-
+            final credentialResult = await authDataSource.getUserCredential();
             credentialResult.fold(
               (l) => emit(Failed(message: l.message)),
               (r) => emit(CredentialExist(credential: r)),
@@ -110,7 +83,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(Loading());
 
-      final result = await logoutUsecase.execute();
+      final result = await authDataSource.logout();
 
       result.fold(
         (l) => emit(Failed(message: l.message)),
@@ -126,7 +99,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(Loading());
 
       final result =
-          await generateTokenResetPasswordUsecase.execute(username: email);
+          await authDataSource.generateTokenResetPassword(email: email);
 
       result.fold(
         (l) => emit(Failed(message: l.message)),
@@ -145,7 +118,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(Loading());
 
     try {
-      final result = await resetPasswordUsecase.execute(
+      final result = await authDataSource.resetPassword(
         newPassword: newPassword,
         token: token,
         otp: otp,
