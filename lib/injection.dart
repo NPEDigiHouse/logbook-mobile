@@ -147,6 +147,7 @@ void _injectDatasource() {
     () => UserDataSourceImpl(
       dio: locator(),
       apiHeader: locator(),
+      pref: locator(),
     ),
   );
   locator.registerLazySingleton<AssesmentDataSource>(
