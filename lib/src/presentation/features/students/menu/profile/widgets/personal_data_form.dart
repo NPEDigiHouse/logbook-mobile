@@ -238,6 +238,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                                   .first
                                                   .id!;
                                         return CustomDropdown<SupervisorModel>(
+                                  
                                             errorNotifier: supervisorVal,
                                             onSubmit: (text, controller) {
                                               if (_supervisors.indexWhere(

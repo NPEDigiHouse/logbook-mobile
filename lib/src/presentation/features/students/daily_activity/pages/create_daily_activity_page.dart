@@ -120,6 +120,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                           supervisorId = al.id;
                         }
                         return CustomDropdown<SupervisorModel>(
+                           
                             errorNotifier: supervisorVal,
                             onSubmit: (text, controller) {
                               if (_supervisors.indexWhere((element) =>

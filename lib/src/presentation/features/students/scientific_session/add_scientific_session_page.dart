@@ -159,6 +159,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                             _supervisors.addAll(state.supervisors);
                           }
                           return CustomDropdown<SupervisorModel>(
+                             
                               errorNotifier: supervisorValue,
                               onSubmit: (text, controller) {
                                 if (_supervisors.indexWhere((element) =>

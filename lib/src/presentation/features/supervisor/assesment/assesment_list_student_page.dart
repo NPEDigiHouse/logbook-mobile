@@ -53,8 +53,7 @@ class _SupervisorAssesmentStudentPageState
               builder: (context, s, _) {
                 return BlocConsumer<StudentCubit, StudentState>(
                   listener: (context, state) {
-                    if (
-                        state.students != null) {
+                    if (state.students != null) {
                       if (!isMounted) {
                         Future.microtask(() {
                           listData.value = [...state.students!];
@@ -64,8 +63,7 @@ class _SupervisorAssesmentStudentPageState
                     }
                   },
                   builder: (context, state) {
-                    if (
-                        state.students != null) {
+                    if (state.students != null) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CustomScrollView(
@@ -163,18 +161,18 @@ class _SupervisorAssesmentStudentPageState
                         width: 50,
                         height: 50,
                       ));
-                    } else if (snapshot.hasError) {
+                    } else if (snapshot.hasData) {
+                      student.profileImage = snapshot.data;
+                      return CircleAvatar(
+                        radius: 25,
+                        foregroundImage: MemoryImage(snapshot.data!),
+                      );
+                    } else {
                       return CircleAvatar(
                         radius: 25,
                         foregroundImage: AssetImage(
                           AssetPath.getImage('profile_default.png'),
                         ),
-                      );
-                    } else {
-                      student.profileImage = snapshot.data;
-                      return CircleAvatar(
-                        radius: 25,
-                        foregroundImage: MemoryImage(snapshot.data!),
                       );
                     }
                   },

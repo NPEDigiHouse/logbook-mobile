@@ -164,18 +164,18 @@ class _ListResidentPageState extends State<ListResidentPage> {
                         width: 50,
                         height: 50,
                       ));
-                    } else if (snapshot.hasError) {
+                    } else if (snapshot.hasData) {
+                      student.profileImage = snapshot.data;
+                      return CircleAvatar(
+                        radius: 25,
+                        foregroundImage: MemoryImage(snapshot.data!),
+                      );
+                    } else {
                       return CircleAvatar(
                         radius: 25,
                         foregroundImage: AssetImage(
                           AssetPath.getImage('profile_default.png'),
                         ),
-                      );
-                    } else {
-                      student.profileImage = snapshot.data;
-                      return CircleAvatar(
-                        radius: 25,
-                        foregroundImage: MemoryImage(snapshot.data!),
                       );
                     }
                   },

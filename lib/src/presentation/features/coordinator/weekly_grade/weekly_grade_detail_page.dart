@@ -102,19 +102,19 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                                           width: 50,
                                           height: 50,
                                         ));
-                                      } else if (snapshot.hasError) {
+                                      } else if (snapshot.hasData) {
+                                        return CircleAvatar(
+                                          radius: 25,
+                                          foregroundImage:
+                                              MemoryImage(snapshot.data!),
+                                        );
+                                      } else {
                                         return ProfilePicPlaceholder(
                                             height: 50,
                                             name: widget.student.studentName ??
                                                 '-',
                                             isSmall: true,
                                             width: 50);
-                                      } else {
-                                        return CircleAvatar(
-                                          radius: 25,
-                                          foregroundImage:
-                                              MemoryImage(snapshot.data!),
-                                        );
                                       }
                                     },
                                   ),
@@ -239,8 +239,8 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                             final grades =
                                 state.weeklyAssesment!.assesments![i];
                             return WeeklyGradeCard(
-                              attendNum: grades.attendNum??0,
-                              notAttendNum: grades.notAttendNum??0,
+                              attendNum: grades.attendNum ?? 0,
+                              notAttendNum: grades.notAttendNum ?? 0,
                               week: grades.weekNum ?? 0,
                               score: grades.score!.toDouble(),
                               onTap: () => showDialog(

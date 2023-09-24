@@ -342,9 +342,13 @@ class TestGradeScoreCard extends StatelessWidget {
                   children: [
                     Text(
                       caseName,
-                      style: textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold, height: 1.1),
+                    ),
+                    SizedBox(
+                      height: 2,
                     ),
                     Text(
                       caseType,

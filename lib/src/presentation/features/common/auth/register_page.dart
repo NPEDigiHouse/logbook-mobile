@@ -173,7 +173,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         width: AppSize.getAppWidth(context),
                         child: FilledButton(
                           onPressed: onRegisterClick,
-                          child: const Text('Sign Up'),
+                          child: Text(
+                            state is Loading ? "Loading..." : "Sign Up",
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),

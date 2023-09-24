@@ -82,18 +82,14 @@ class CstOnListCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          sglCst.studentName ?? '',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: textTheme.bodyMedium?.copyWith(
-                            height: 1,
-                            color: secondaryColor,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      sglCst.studentName ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodyMedium?.copyWith(
+                        height: 1,
+                        color: secondaryColor,
+                      ),
                     ),
                   ],
                 ),

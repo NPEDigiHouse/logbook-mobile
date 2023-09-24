@@ -96,6 +96,7 @@ class _CreateClinicalRecordFirstPageState
                           _supervisors.clear();
                           _supervisors.addAll(state.supervisors);
                           return CustomDropdown<SupervisorModel>(
+                              
                               errorNotifier: supervisorVal,
                               onSubmit: (text, controller) {
                                 if (_supervisors.indexWhere((element) =>

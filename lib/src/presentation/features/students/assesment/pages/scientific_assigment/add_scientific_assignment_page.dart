@@ -8,6 +8,8 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 class AddScientificAssignmentPage extends StatefulWidget {
   final String unitName;
@@ -22,6 +24,7 @@ class _AddScientificAssignmentPageState
     extends State<AddScientificAssignmentPage> {
   final TextEditingController fieldController = new TextEditingController();
   final ValueNotifier<bool> isSaveAsDraft = ValueNotifier(false);
+  final _formKey = GlobalKey<FormBuilderState>();
   int? locationId;
 
   @override
@@ -49,85 +52,96 @@ class _AddScientificAssignmentPageState
           child: CustomScrollView(slivers: [
             SliverFillRemaining(
               hasScrollBody: false,
-              child: SpacingColumn(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                onlyPading: true,
-                horizontalPadding: 16,
-                children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  DepartmentHeader(unitName: widget.unitName),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  TextFormField(
-                    controller: fieldController,
-                    decoration: InputDecoration(
-                      label: Text('Scientific assignment title'),
+              child: FormBuilder(
+                key: _formKey,
+                child: SpacingColumn(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  onlyPading: true,
+                  horizontalPadding: 16,
+                  children: [
+                    SizedBox(
+                      height: 16,
                     ),
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  BlocBuilder<ActivityCubit, ActivityState>(
-                      builder: (context, state) {
-                    List<ActivityModel> _activityLocations = [];
-                    if (state.activityLocations != null) {
-                      _activityLocations.clear();
-                      _activityLocations.addAll(state.activityLocations!);
-                    }
-                    return DropdownButtonFormField(
-                      hint: Text('Location'),
-                      isExpanded: true,
-                      items: _activityLocations
-                          .map(
-                            (e) => DropdownMenuItem(
-                              child: Text(e.name!),
-                              value: e,
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (v) {
-                        if (v != null) locationId = v.id!;
-                      },
-                      value: null,
-                    );
-                  }),
-                  Spacer(),
-                  FilledButton(
-                    onPressed: () {
-                      if (fieldController.text.isNotEmpty &&
-                          locationId != null) {
-                        showDialog(
-                            context: context,
-                            barrierLabel: '',
-                            barrierDismissible: false,
-                            builder: (_) => VerifyDialog(
-                                  onTap: () {
-                                    BlocProvider.of<AssesmentCubit>(context)
-                                      ..uploadScientificAssignment(
-                                        model: MiniCexPostModel(
-                                            location: locationId,
-                                            miniCexPostModelCase:
-                                                fieldController.text),
-                                      );
-                                    Navigator.pop(context);
-                                  },
-                                ));
+                    DepartmentHeader(unitName: widget.unitName),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    TextFormField(
+                      controller: fieldController,
+                      decoration: InputDecoration(
+                        label: Text('Scientific assignment title'),
+                      ),
+                      validator: FormBuilderValidators.required(
+                        errorText: 'This field is required',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    BlocBuilder<ActivityCubit, ActivityState>(
+                        builder: (context, state) {
+                      List<ActivityModel> _activityLocations = [];
+                      if (state.activityLocations != null) {
+                        _activityLocations.clear();
+                        _activityLocations.addAll(state.activityLocations!);
                       }
-                    },
-                    child: Text('Submit'),
-                  ).fullWidth(),
-                  SizedBox(
-                    height: 16,
-                  ),
-                ],
+                      return DropdownButtonFormField(
+                        hint: Text('Location'),
+                        isExpanded: true,
+                        validator: FormBuilderValidators.required(
+                          errorText: 'This field is required',
+                        ),
+                        items: _activityLocations
+                            .map(
+                              (e) => DropdownMenuItem(
+                                child: Text(e.name!),
+                                value: e,
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (v) {
+                          if (v != null) locationId = v.id!;
+                        },
+                        value: null,
+                      );
+                    }),
+                    Spacer(),
+                    FilledButton(
+                      onPressed: onSubmit,
+                      child: Text('Submit'),
+                    ).fullWidth(),
+                    SizedBox(
+                      height: 16,
+                    ),
+                  ],
+                ),
               ),
             ),
           ]),
         ),
       ),
     );
+  }
+
+  void onSubmit() {
+    FocusScope.of(context).unfocus();
+    if (_formKey.currentState!.saveAndValidate() && locationId != null) {
+      showDialog(
+        context: context,
+        barrierLabel: '',
+        barrierDismissible: false,
+        builder: (_) => VerifyDialog(
+          onTap: () {
+            BlocProvider.of<AssesmentCubit>(context)
+              ..uploadScientificAssignment(
+                model: MiniCexPostModel(
+                    location: locationId,
+                    miniCexPostModelCase: fieldController.text),
+              );
+            Navigator.pop(context);
+          },
+        ),
+      );
+    }
   }
 }

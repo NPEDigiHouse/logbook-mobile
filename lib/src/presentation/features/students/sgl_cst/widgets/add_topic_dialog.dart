@@ -132,6 +132,7 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                       _topics.addAll(state.topics!);
                       return CustomDropdown<TopicModel>(
                           errorNotifier: topicVal,
+                 
                           onSubmit: (text, controller) {
                             if (_topics.indexWhere((element) =>
                                     element.name?.trim() == text.trim()) ==
@@ -187,27 +188,7 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: FilledButton(
-                  onPressed: () {
-                    if (topicId.isNotEmpty) {
-                      if (widget.type == TopicDialogType.sgl) {
-                        BlocProvider.of<SglCstCubit>(context)
-                          ..addNewSglTopic(
-                            sglId: widget.id,
-                            topicModel: TopicPostModel(
-                              topicId: topicId,
-                            ),
-                          );
-                      } else {
-                        BlocProvider.of<SglCstCubit>(context)
-                          ..addNewCstTopic(
-                            cstId: widget.id,
-                            topicModel: TopicPostModel(
-                              topicId: topicId,
-                            ),
-                          );
-                      }
-                    }
-                  },
+                  onPressed: onSubmit,
                   child: Text('Submit'),
                 ).fullWidth(),
               ),
@@ -219,5 +200,30 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
         ),
       ),
     );
+  }
+
+  void onSubmit() {
+    FocusScope.of(context).unfocus();
+    topicVal.value =
+        topicId.isEmpty ? 'This field is required, please select again.' : null;
+    if (topicId.isNotEmpty) {
+      if (widget.type == TopicDialogType.sgl) {
+        BlocProvider.of<SglCstCubit>(context)
+          ..addNewSglTopic(
+            sglId: widget.id,
+            topicModel: TopicPostModel(
+              topicId: topicId,
+            ),
+          );
+      } else {
+        BlocProvider.of<SglCstCubit>(context)
+          ..addNewCstTopic(
+            cstId: widget.id,
+            topicModel: TopicPostModel(
+              topicId: topicId,
+            ),
+          );
+      }
+    }
   }
 }

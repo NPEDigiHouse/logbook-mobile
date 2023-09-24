@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 /// A collection of functions that are reusable
 class Utils {
   /// Convert DateTime to String
@@ -21,9 +22,10 @@ class Utils {
         : DateFormat("EEEE, dd MMMM yyyy", "en_EN").parse(date);
   }
 
-  static String epochToStringTime({required int startTime, int? endTime}) {
+  static String epochToStringTime({required int? startTime, int? endTime}) {
     String time = '';
-    DateTime startDate = DateTime.fromMillisecondsSinceEpoch(startTime * 1000);
+    DateTime startDate = DateTime.fromMillisecondsSinceEpoch(
+        (startTime ?? (DateTime.now().millisecondsSinceEpoch)) * 1000);
     time += datetimeToStringTime(startDate);
     if (endTime != null) {
       DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endTime * 1000);

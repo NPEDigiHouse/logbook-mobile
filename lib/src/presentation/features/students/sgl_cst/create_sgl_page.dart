@@ -86,6 +86,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                         _supervisors.addAll(state.supervisors);
                       }
                       return CustomDropdown<SupervisorModel>(
+                    
                           errorNotifier: supervisorVal,
                           onSubmit: (text, controller) {
                             if (_supervisors.indexWhere((element) =>
@@ -188,6 +189,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                                           i < value.length;
                                           i++) ...[
                                         CustomDropdown<TopicModel>(
+                                     
                                           errorNotifier: topicVal,
                                           onSubmit: (text, controller) {
                                             if (_topics.indexWhere((element) =>

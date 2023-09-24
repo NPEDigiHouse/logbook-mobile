@@ -118,7 +118,8 @@ class _LoginPageState extends State<LoginPage> {
                               width: AppSize.getAppWidth(context),
                               child: FilledButton(
                                 onPressed: onLoginClick,
-                                child: const Text('Login'),
+                                child: Text(
+                                    state is Loading ? "Loading..." : "Login"),
                               ),
                             ),
                             const Spacer(),

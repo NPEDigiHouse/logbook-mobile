@@ -132,19 +132,19 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
                                           width: 50,
                                           height: 50,
                                         ));
-                                      } else if (snapshot.hasError) {
-                                        return ProfilePicPlaceholder(
-                                            height: 50,
-                                            name: s[index].studentName ?? '-',
-                                            isSmall: true,
-                                            width: 50);
-                                      } else {
+                                      } else if (snapshot.hasData) {
                                         s[index].profileImage = snapshot.data;
                                         return CircleAvatar(
                                           radius: 25,
                                           foregroundImage:
                                               MemoryImage(snapshot.data!),
                                         );
+                                      } else {
+                                        return ProfilePicPlaceholder(
+                                            height: 50,
+                                            name: s[index].studentName ?? '-',
+                                            isSmall: true,
+                                            width: 50);
                                       }
                                     },
                                   ),

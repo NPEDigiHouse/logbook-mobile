@@ -9,6 +9,8 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 class CreateSelfReflectionPage extends StatefulWidget {
   final UserCredential credential;
@@ -22,6 +24,8 @@ class CreateSelfReflectionPage extends StatefulWidget {
 class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
   final TextEditingController fieldController = new TextEditingController();
   final ValueNotifier<bool> isSaveAsDraft = ValueNotifier(false);
+  final _formKey = GlobalKey<FormBuilderState>();
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<SelfReflectionCubit, SelfReflectionState>(
@@ -39,64 +43,75 @@ class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
           child: CustomScrollView(slivers: [
             SliverFillRemaining(
               hasScrollBody: false,
-              child: SpacingColumn(
-                onlyPading: true,
-                horizontalPadding: 16,
-                children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  if (widget.credential.student?.supervisingDPKId == null)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Please select a supervisor first in the profile menu before creating a self reflection',
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: errorColor,
-                        ),
-                      ),
-                    ),
-                  if (widget.credential.student?.supervisingDPKId != null) ...[
-                    TextFormField(
-                      minLines: 7,
-                      maxLines: 7,
-                      controller: fieldController,
-                      decoration: InputDecoration(
-                        label: Text('Self-reflection Content'),
-                      ),
-                    ),
-                    Spacer(),
-                    FilledButton(
-                      onPressed: () {
-                        if (fieldController.text.isNotEmpty) {
-                          showDialog(
-                              context: context,
-                              barrierLabel: '',
-                              barrierDismissible: false,
-                              builder: (_) => VerifyDialog(
-                                    onTap: () {
-                                      BlocProvider.of<SelfReflectionCubit>(
-                                          context)
-                                        ..uploadSelfReflection(
-                                            model: SelfReflectionPostModel(
-                                                content: fieldController.text));
-                                      Navigator.pop(context);
-                                    },
-                                  ));
-                        }
-                      },
-                      child: Text('Submit'),
-                    ).fullWidth(),
+              child: FormBuilder(
+                key: _formKey,
+                child: SpacingColumn(
+                  onlyPading: true,
+                  horizontalPadding: 16,
+                  children: [
                     SizedBox(
                       height: 16,
                     ),
-                  ]
-                ],
+                    if (widget.credential.student?.supervisingDPKId == null)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Please select a supervisor first in the profile menu before creating a self reflection',
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: errorColor,
+                          ),
+                        ),
+                      ),
+                    if (widget.credential.student?.supervisingDPKId !=
+                        null) ...[
+                      TextFormField(
+                        minLines: 7,
+                        maxLines: 7,
+                        validator: FormBuilderValidators.required(
+                          errorText: 'This field is required',
+                        ),
+                        controller: fieldController,
+                        decoration: InputDecoration(
+                          label: Text('Self-reflection Content'),
+                        ),
+                      ),
+                      Spacer(),
+                      FilledButton(
+                        onPressed: onSubmit,
+                        child: Text('Submit'),
+                      ).fullWidth(),
+                      SizedBox(
+                        height: 16,
+                      ),
+                    ]
+                  ],
+                ),
               ),
             ),
           ]),
         ),
       ),
     );
+  }
+
+  void onSubmit() {
+    FocusScope.of(context).unfocus();
+
+    if (_formKey.currentState!.saveAndValidate()) {
+      showDialog(
+        context: context,
+        barrierLabel: '',
+        barrierDismissible: false,
+        builder: (_) => VerifyDialog(
+          onTap: () {
+            BlocProvider.of<SelfReflectionCubit>(context)
+              ..uploadSelfReflection(
+                  model:
+                      SelfReflectionPostModel(content: fieldController.text));
+            Navigator.pop(context);
+          },
+        ),
+      );
+    }
   }
 }

@@ -22,7 +22,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   flutter_svg: ^1.1.6
   flutter_switch: ^0.3.2
-  flutter_typeahead: ^4.6.2
+  flutter_typeahead: ^4.7.0
   form_builder_validators: ^9.0.0
   get_it: ^7.6.0
   grouped_list: ^5.1.2

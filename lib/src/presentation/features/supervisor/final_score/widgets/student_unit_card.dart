@@ -45,18 +45,18 @@ class StudentDepartmentCard extends StatelessWidget {
                       width: 50,
                       height: 50,
                     ));
-                  } else if (snapshot.hasError) {
-                    return ProfilePicPlaceholder(
-                        height: 50,
-                        name: data.studentName ?? '-',
-                        width: 50,
-                        isSmall: true);
-                  } else {
+                  } else if (snapshot.hasData) {
                     data.profileImage = snapshot.data;
                     return CircleAvatar(
                       radius: 25,
                       foregroundImage: MemoryImage(snapshot.data!),
                     );
+                  } else {
+                    return ProfilePicPlaceholder(
+                        height: 50,
+                        name: data.studentName ?? '-',
+                        width: 50,
+                        isSmall: true);
                   }
                 },
               ),
