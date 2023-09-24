@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
         if (state is Failed) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login failed')),
+            SnackBar(content: Text(state.message)),
           );
 
           state = Initial();

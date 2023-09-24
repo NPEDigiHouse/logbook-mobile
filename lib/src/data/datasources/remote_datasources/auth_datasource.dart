@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
+import 'package:elogbook/core/utils/exception_handler.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
@@ -77,7 +78,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       );
       return Right(true);
     } catch (e) {
-      return Left(ClientFailure(e.toString()));
+      return Left(failure(e));
     }
   }
 
@@ -94,7 +95,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       await preferenceHandler.setUserData(credential);
       return Right(true);
     } catch (e) {
-      return Left(ClientFailure(e.toString()));
+      return Left(failure(e));
     }
   }
 

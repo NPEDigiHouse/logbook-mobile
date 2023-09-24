@@ -52,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
         }
         if (state is Failed) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Register failed')),
+            SnackBar(content: Text(state.message)),
           );
 
           state = Initial();
