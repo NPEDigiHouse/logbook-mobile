@@ -53,7 +53,7 @@ class _SupervisorAssesmentStudentPageState
               builder: (context, s, _) {
                 return BlocConsumer<StudentCubit, StudentState>(
                   listener: (context, state) {
-                    if (state is StudentStateSuccess &&
+                    if (
                         state.students != null) {
                       if (!isMounted) {
                         Future.microtask(() {
@@ -64,7 +64,7 @@ class _SupervisorAssesmentStudentPageState
                     }
                   },
                   builder: (context, state) {
-                    if (state is StudentStateSuccess &&
+                    if (
                         state.students != null) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),

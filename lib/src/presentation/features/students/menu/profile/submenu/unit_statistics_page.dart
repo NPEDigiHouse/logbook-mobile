@@ -88,8 +88,7 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
         actions: [
           BlocBuilder<StudentCubit, StudentState>(
             builder: (context, state) {
-              if (state is StudentStateSuccess &&
-                  state.studentStatistic != null)
+              if (state.studentStatistic != null)
                 return IconButton(
                     onPressed: () async {
                       final caseImage = await captureWidget(keyCase);
@@ -186,7 +185,6 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
                         state1.listSkillsModel != null &&
                         state1.studentCasesModel != null &&
                         state1.studentSkillsModel != null &&
-                        state is StudentStateSuccess &&
                         state.studentStatistic != null) {
                       final stData = state.studentStatistic!;
                       return DepartmentStatisticsCard(

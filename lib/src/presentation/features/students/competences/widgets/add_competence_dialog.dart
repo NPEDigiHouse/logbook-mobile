@@ -33,6 +33,9 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
   int? caseId;
   String? desc;
   String? supervisorId;
+  final ValueNotifier<String?> supervisorVal = ValueNotifier(null);
+  final ValueNotifier<String?> caseVal = ValueNotifier(null);
+  final ValueNotifier<String?> skillVal = ValueNotifier(null);
 
   @override
   void initState() {
@@ -134,9 +137,10 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                       _supervisors.addAll(state.supervisors);
                     }
                     return CustomDropdown<SupervisorModel>(
+                        errorNotifier: supervisorVal,
                         onSubmit: (text, controller) {
                           if (_supervisors.indexWhere((element) =>
-                                  element.fullName == text.trim()) ==
+                                  element.fullName?.trim() == text.trim()) ==
                               -1) {
                             controller.clear();
                             supervisorId = '';
@@ -178,6 +182,7 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                           _competences.clear();
                           _competences.addAll(state.studentSkillsModel!);
                           return CustomDropdown<dynamic>(
+                              errorNotifier: skillVal,
                               onSubmit: (text, controller) {
                                 if (_competences.indexWhere((element) =>
                                         element.name?.trim() == text.trim()) ==
@@ -225,6 +230,7 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                           _competences.clear();
                           _competences.addAll(state.studentCasesModel!);
                           return CustomDropdown<dynamic>(
+                              errorNotifier: caseVal,
                               onSubmit: (text, controller) {
                                 if (_competences.indexWhere((element) =>
                                         element.name?.trim() == text.trim()) ==

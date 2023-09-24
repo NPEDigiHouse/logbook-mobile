@@ -8,25 +8,29 @@ ThemeData get lightTheme {
     textTheme: textTheme,
     useMaterial3: true,
   ).copyWith(
-      dividerColor: dividerColor,
-      scaffoldBackgroundColor: scaffoldBackgroundColor,
-      filledButtonTheme: filledButtonTheme,
-      outlinedButtonTheme: outlinedButtonTheme,
-      textButtonTheme: textButtonTheme,
-      inputDecorationTheme: inputDecorationTheme,
-      pageTransitionsTheme: const PageTransitionsTheme(
-        builders: {
-          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-        },
+    dividerColor: dividerColor,
+    scaffoldBackgroundColor: scaffoldBackgroundColor,
+    filledButtonTheme: filledButtonTheme,
+    outlinedButtonTheme: outlinedButtonTheme,
+    textButtonTheme: textButtonTheme,
+    inputDecorationTheme: inputDecorationTheme,
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+      },
+    ),
+    appBarTheme: appBarTheme,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    timePickerTheme: TimePickerThemeData(
+      hourMinuteTextStyle: TextStyle(
+        fontSize: 48,
+        fontWeight: FontWeight.w600,
+        color: primaryTextColor,
       ),
-      appBarTheme: appBarTheme,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      timePickerTheme: TimePickerThemeData(
-        hourMinuteTextStyle: textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: secondaryColor,
-        ),
-      ));
+      dialBackgroundColor: primaryColor.withOpacity(.1),
+      dialTextStyle: textTheme.bodySmall,
+    ),
+  );
 }
 
 final appBarTheme = AppBarTheme(

@@ -8,6 +8,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final List<dynamic> Function(String pattern) onCallback;
   final Widget Function(dynamic suggestion) child;
   final void Function(dynamic v, TextEditingController controller) onItemSelect;
+  final ValueNotifier<String?> errorNotifier;
   final void Function(dynamic text, TextEditingController controller) onSubmit;
   const CustomDropdown({
     super.key,
@@ -16,6 +17,7 @@ class CustomDropdown<T> extends StatefulWidget {
     required this.child,
     required this.onItemSelect,
     required this.onSubmit,
+    required this.errorNotifier,
     this.init,
   });
 
@@ -37,57 +39,57 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return TypeAheadField(
-      noItemsFoundBuilder: (context) => Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12.0,
-          vertical: 16,
-        ),
-        child: Text('No Items Found'),
-      ),
-      textFieldConfiguration: TextFieldConfiguration(
-        focusNode: myFocusNode,
-        onSubmitted: (value) => widget.onSubmit(value, controller),
-        onTapOutside: (v) {
-          widget.onSubmit(controller.text, controller);
-          FocusScope.of(context).unfocus();
-        },
-        controller: controller,
-        decoration: InputDecoration(
-          suffix: myFocusNode.hasFocus
-              ? InkWell(
-                  onTap: () {
-                    controller.text = '';
-                  },
-                  child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: Icon(
-                        Icons.close_rounded,
-                        size: 16,
-                      )),
-                )
-              : null,
-          hintText: widget.hint,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(
-              color: onFormDisableColor,
+    return ValueListenableBuilder(
+        valueListenable: widget.errorNotifier,
+        builder: (context, errorVal, _) {
+          return TypeAheadField(
+            noItemsFoundBuilder: (context) => Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 16,
+              ),
+              child: Text('No Items Found'),
             ),
-          ),
-        ),
-      ),
-      suggestionsBoxController: suggestionController,
-      suggestionsCallback: (pattern) => widget.onCallback(pattern),
-      itemBuilder: (context, suggestion) => widget.child(suggestion),
-      onSuggestionSelected: (v) => widget.onItemSelect(v, controller),
-    );
+            textFieldConfiguration: TextFieldConfiguration(
+              focusNode: myFocusNode,
+              onSubmitted: (value) => widget.onSubmit(value, controller),
+              controller: controller,
+              decoration: InputDecoration(
+                errorText: errorVal,
+                suffix: myFocusNode.hasFocus
+                    ? InkWell(
+                        onTap: () {
+                          controller.text = '';
+                        },
+                        child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: Icon(
+                              Icons.close_rounded,
+                              size: 16,
+                            )),
+                      )
+                    : null,
+                hintText: widget.hint,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: const BorderSide(
+                    color: onFormDisableColor,
+                  ),
+                ),
+              ),
+            ),
+            suggestionsBoxController: suggestionController,
+            suggestionsCallback: (pattern) => widget.onCallback(pattern),
+            itemBuilder: (context, suggestion) => widget.child(suggestion),
+            onSuggestionSelected: (v) => widget.onItemSelect(v, controller),
+          );
+        });
   }
 }

@@ -40,6 +40,7 @@ class _CreateClinicalRecordSecondPageState
         ..getDiagnosisTypes(unitId: widget.unitId)
         ..getManagementTypes(unitId: widget.unitId)
         ..getManagementRoles();
+      context.read<ClinicalRecordDataNotifier2>()..reset();
     });
     super.initState();
   }

@@ -127,7 +127,7 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                     ),
                     child: BlocBuilder<StudentCubit, StudentState>(
                       builder: (context, state) {
-                        if (state is StudentStateSuccess &&
+                        if (
                             state.studentDetail != null)
                           return SpacingColumn(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +181,7 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
               sliver: SliverToBoxAdapter(
                 child: BlocBuilder<StudentCubit, StudentState>(
                     builder: (context, state) {
-                  if (state is StudentStateSuccess &&
+                  if (
                       state.studentStatistic != null) {
                     final stData = state.studentStatistic!;
                     return DepartmentStatisticsCard(

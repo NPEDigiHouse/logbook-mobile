@@ -51,7 +51,6 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.activeDepartmentModel.countCheckIn);
     return Scaffold(
       appBar: AppBar(
         title: Text("Clinical Records"),
@@ -94,8 +93,7 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                           },
                           child: BlocConsumer<StudentCubit, StudentState>(
                             listener: (context, state) {
-                              if (state is StudentStateSuccess &&
-                                  state.clinicalRecordResponse != null) {
+                              if (state.clinicalRecordResponse != null) {
                                 if (!isMounted) {
                                   Future.microtask(() {
                                     listData.value = [
@@ -108,10 +106,20 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                               }
                             },
                             builder: (context, state) {
-                              if (state is StudentStateLoading) {
+                              if (state.requestState == RequestState.loading) {
                                 return CustomLoading();
-                              } else if (state is StudentStateSuccess &&
-                                  state.clinicalRecordResponse != null) {
+                              } else if (state.clinicalRecordResponse != null &&
+                                  state.clinicalRecordResponse
+                                          ?.listClinicalRecords !=
+                                      null) {
+                                if (state.clinicalRecordResponse!
+                                    .listClinicalRecords!.isEmpty) {
+                                  return EmptyData(
+                                    title: 'Clinical Record Empty',
+                                    subtitle:
+                                        'Please upload clinical record before',
+                                  );
+                                }
                                 return SingleChildScrollView(
                                   child: SpacingColumn(
                                     crossAxisAlignment:
@@ -237,15 +245,13 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                               switch (index) {
                                 case 0:
                                   listData.value = [
-                                    ...(state as StudentStateSuccess)
-                                        .clinicalRecordResponse!
+                                    ...state.clinicalRecordResponse!
                                         .listClinicalRecords!
                                   ];
                                   break;
                                 case 1:
                                   listData.value = [
-                                    ...(state as StudentStateSuccess)
-                                        .clinicalRecordResponse!
+                                    ...state.clinicalRecordResponse!
                                         .listClinicalRecords!
                                         .where((element) =>
                                             element.verificationStatus ==
@@ -255,8 +261,7 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                   break;
                                 case 2:
                                   listData.value = [
-                                    ...(state as StudentStateSuccess)
-                                        .clinicalRecordResponse!
+                                    ...state.clinicalRecordResponse!
                                         .listClinicalRecords!
                                         .where((element) =>
                                             element.verificationStatus !=

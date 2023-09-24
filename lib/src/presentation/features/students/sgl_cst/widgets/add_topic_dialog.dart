@@ -33,6 +33,7 @@ class AddTopicDialog extends StatefulWidget {
 
 class _AddTopicDialogState extends State<AddTopicDialog> {
   late final TextEditingController _controller;
+  final ValueNotifier<String?> topicVal = ValueNotifier(null);
 
   @override
   void initState() {
@@ -130,9 +131,10 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                       _topics.clear();
                       _topics.addAll(state.topics!);
                       return CustomDropdown<TopicModel>(
+                          errorNotifier: topicVal,
                           onSubmit: (text, controller) {
-                            if (_topics.indexWhere(
-                                    (element) => element.name == text.trim()) ==
+                            if (_topics.indexWhere((element) =>
+                                    element.name?.trim() == text.trim()) ==
                                 -1) {
                               controller.clear();
                               topicId.clear();

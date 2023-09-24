@@ -64,7 +64,14 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
           });
       return Right(true);
     } catch (e) {
-      return Left(ClientFailure(e.toString()));
+      if (e is DioException) {
+        if (e.response != null) {
+          print(e.response?.data['data']);
+        } else {
+          print(e.message);
+        }
+      }
+      return Left(ClientFailure('error not recognized'));
     }
   }
 

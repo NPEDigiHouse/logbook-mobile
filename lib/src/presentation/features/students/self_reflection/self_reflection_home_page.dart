@@ -83,7 +83,7 @@ class _StudentSelfReflectionHomePageState
                 sliver: SliverFillRemaining(
                   child: BlocBuilder<StudentCubit, StudentState>(
                     builder: (context, state) {
-                      if (state is StudentStateSuccess && state.selfReflectionResponse != null) {
+                      if (state.selfReflectionResponse != null) {
                         return SingleChildScrollView(
                           child: SpacingColumn(
                             crossAxisAlignment: CrossAxisAlignment.start,

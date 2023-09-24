@@ -45,8 +45,7 @@ class _ListResidentPageState extends State<ListResidentPage> {
               builder: (context, s, _) {
                 return BlocConsumer<StudentCubit, StudentState>(
                   listener: (context, state) {
-                    if (state is StudentStateSuccess &&
-                        state.students != null) {
+                    if (state.students != null) {
                       if (!isMounted) {
                         Future.microtask(() {
                           listStudent.value = [...state.students!];
@@ -56,7 +55,7 @@ class _ListResidentPageState extends State<ListResidentPage> {
                     }
                   },
                   builder: (context, state) {
-                    if (state is StudentStateSuccess && state.students != null)
+                    if (state.students != null)
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CustomScrollView(

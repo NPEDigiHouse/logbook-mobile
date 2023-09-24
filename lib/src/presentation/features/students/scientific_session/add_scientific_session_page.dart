@@ -21,6 +21,8 @@ import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 
@@ -36,14 +38,15 @@ class AddScientificSessionPage extends StatefulWidget {
 }
 
 class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
-  String supervisorId = '';
+  String? supervisorId;
   int role = -1;
+  final _formKey = GlobalKey<FormBuilderState>();
   int sesionType = -1;
   final topicController = TextEditingController();
-  // final clinicalRotationController = TextEditingController();
   final titleController = TextEditingController();
   final referenceController = TextEditingController();
   final additionalNotesController = TextEditingController();
+  ValueNotifier<String?> supervisorValue = ValueNotifier(null);
   List<ScientificRoles> _roles = [];
   List<SessionTypesModel> _sessionTypes = [];
 
@@ -118,242 +121,258 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
           return SafeArea(
             child: SingleChildScrollView(
               padding: EdgeInsets.only(bottom: 20),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  FormSectionHeader(
-                    label: 'General Info',
-                    pathPrefix: 'icon_info.svg',
-                    padding: 16,
-                  ),
-                  SpacingColumn(
-                    horizontalPadding: 16,
-                    spacing: 14,
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration(
-                          label: Text('Date'),
-                          enabled: false,
+              child: FormBuilder(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 16,
+                    ),
+                    FormSectionHeader(
+                      label: 'General Info',
+                      pathPrefix: 'icon_info.svg',
+                      padding: 16,
+                    ),
+                    SpacingColumn(
+                      horizontalPadding: 16,
+                      spacing: 14,
+                      children: [
+                        TextFormField(
+                          decoration: InputDecoration(
+                            label: Text('Date'),
+                            enabled: false,
+                          ),
+                          initialValue: '02/20/2023 23:11:26',
                         ),
-                        initialValue: '02/20/2023 23:11:26',
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          label: Text('Department'),
-                          enabled: false,
+                        TextFormField(
+                          decoration: InputDecoration(
+                            label: Text('Department'),
+                            enabled: false,
+                          ),
+                          initialValue: widget.activeDepartmentModel.unitName,
                         ),
-                        initialValue: widget.activeDepartmentModel.unitName,
-                      ),
-                      BlocBuilder<SupervisorsCubit, SupervisorsState>(
-                          builder: (context, state) {
-                        List<SupervisorModel> _supervisors = [];
-                        if (state is FetchSuccess) {
-                          _supervisors.clear();
-                          _supervisors.addAll(state.supervisors);
-                        }
-                        return CustomDropdown<SupervisorModel>(
-                            onSubmit: (text, controller) {
-                              if (_supervisors.indexWhere((element) =>
-                                      element.fullName == text.trim()) ==
-                                  -1) {
-                                controller.clear();
-                                supervisorId = '';
-                              }
-                            },
-                            hint: 'Supervisor',
-                            onCallback: (pattern) {
-                              final temp = _supervisors
-                                  .where((competence) =>
-                                      (competence.fullName ?? 'unknown')
-                                          .toLowerCase()
-                                          .trim()
-                                          .contains(pattern.toLowerCase()))
-                                  .toList();
+                        BlocBuilder<SupervisorsCubit, SupervisorsState>(
+                            builder: (context, state) {
+                          List<SupervisorModel> _supervisors = [];
+                          if (state is FetchSuccess) {
+                            _supervisors.clear();
+                            _supervisors.addAll(state.supervisors);
+                          }
+                          return CustomDropdown<SupervisorModel>(
+                              errorNotifier: supervisorValue,
+                              onSubmit: (text, controller) {
+                                if (_supervisors.indexWhere((element) =>
+                                        element.fullName?.trim() ==
+                                        text.trim()) ==
+                                    -1) {
+                                  controller.clear();
+                                  supervisorId = '';
+                                }
+                              },
+                              hint: 'Supervisor',
+                              onCallback: (pattern) {
+                                final temp = _supervisors
+                                    .where((competence) =>
+                                        (competence.fullName ?? 'unknown')
+                                            .toLowerCase()
+                                            .trim()
+                                            .contains(pattern.toLowerCase()))
+                                    .toList();
 
-                              return pattern.isEmpty ? _supervisors : temp;
-                            },
-                            child: (suggestion) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0,
-                                  vertical: 16,
+                                return pattern.isEmpty ? _supervisors : temp;
+                              },
+                              child: (suggestion) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 16,
+                                  ),
+                                  child: Text(suggestion?.fullName ?? ''),
+                                );
+                              },
+                              onItemSelect: (v, controller) {
+                                if (v != null) {
+                                  supervisorId = v.id!;
+                                  controller.text = v.fullName!;
+                                }
+                              });
+                        }),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    SectionDivider(),
+                    FormSectionHeader(
+                      label: 'Scientific Session',
+                      pathPrefix: 'biotech_rounded.svg',
+                      padding: 16,
+                    ),
+                    SpacingColumn(
+                      horizontalPadding: 16,
+                      spacing: 14,
+                      children: [
+                        DropdownButtonFormField(
+                          validator: FormBuilderValidators.required(
+                            errorText: 'This field is required',
+                          ),
+                          isExpanded: true,
+                          hint: Text('Session Type'),
+                          items: _sessionTypes
+                              .map(
+                                (e) => DropdownMenuItem(
+                                  child: Text(e.name!),
+                                  value: e,
                                 ),
-                                child: Text(suggestion?.fullName ?? ''),
-                              );
-                            },
-                            onItemSelect: (v, controller) {
-                              if (v != null) {
-                                supervisorId = v.id!;
-                                controller.text = v.fullName!;
-                              }
-                            });
-                      }),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  SectionDivider(),
-                  FormSectionHeader(
-                    label: 'Scientific Session',
-                    pathPrefix: 'biotech_rounded.svg',
-                    padding: 16,
-                  ),
-                  SpacingColumn(
-                    horizontalPadding: 16,
-                    spacing: 14,
-                    children: [
-                      DropdownButtonFormField(
-                        isExpanded: true,
-                        hint: Text('Session Type'),
-                        items: _sessionTypes
-                            .map(
-                              (e) => DropdownMenuItem(
-                                child: Text(e.name!),
-                                value: e,
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (v) {
-                          if (v != null) sesionType = v.id!;
-                        },
-                        value: null,
-                      ),
-                      BuildTextField(
-                        onChanged: (v) {},
-                        label: 'Topics',
-                        controller: topicController,
-                      ),
-                      // BuildTextField(
-                      //   onChanged: (v) {},
-                      //   label: 'Clinical rotation',
-                      //   controller: clinicalRotationController,
-                      // ),
-                      BuildTextField(
-                        onChanged: (v) {},
-                        label: 'Title',
-                        controller: titleController,
-                      ),
-                      BuildTextField(
-                        onChanged: (v) {},
-                        label: 'Reference',
-                        controller: referenceController,
-                      ),
-                      DropdownButtonFormField(
-                        isExpanded: true,
-                        hint: Text('Role'),
-                        items: _roles
-                            .map(
-                              (e) => DropdownMenuItem(
-                                child: Text(e.name!),
-                                value: e,
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (v) {
-                          if (v != null) role = v.id!;
-                        },
-                        value: null,
-                      ),
-                      InkWellContainer(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 24),
-                        radius: 12,
-                        color: Color(0xFF29C5F6).withOpacity(.2),
-                        onTap: () => uploadFile(context),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: IconButton(
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all(primaryColor),
-                                ),
-                                padding: new EdgeInsets.all(0.0),
-                                iconSize: 14,
-                                onPressed: () => uploadFile(context),
-                                icon: Icon(
-                                  Icons.add_rounded,
-                                  color: backgroundColor,
-                                  size: 16,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            if (state.attachment == null) ...[
-                              Text('Upload image or PDF'),
-                              Spacer(),
-                              Text('(max. 5 MB)')
-                            ],
-                            if (state.attachment != null) ...[
-                              Expanded(
-                                  child: Text(
-                                path.basename(state.attachment!),
-                                maxLines: 1,
-                              ))
-                            ],
-                          ],
+                              )
+                              .toList(),
+                          onChanged: (v) {
+                            if (v != null) sesionType = v.id!;
+                          },
+                          value: null,
                         ),
-                      ),
-                      TextFormField(
-                        maxLines: 5,
-                        minLines: 5,
-                        controller: additionalNotesController,
-                        decoration: InputDecoration(
-                          label: Text('Additional Notes'),
+                        BuildTextField(
+                          onChanged: (v) {},
+                          label: 'Topics',
+                          controller: topicController,
+                          validator: FormBuilderValidators.required(
+                            errorText: 'This field is required',
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      FilledButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              barrierLabel: '',
-                              barrierDismissible: false,
-                              builder: (_) => VerifyDialog(
-                                    onTap: () {
-                                      BlocProvider.of<ScientificSessionCubit>(
-                                          context,
-                                          listen: false)
-                                        ..uploadScientificSession(
-                                          model: ScientificSessionPostModel(
-                                            attachment: state.attachment,
-                                            role: role,
-                                            title: titleController.text,
-                                            topic: topicController.text,
-                                            // clinicalRotation: clinicalRotationController.text,
-                                            reference: referenceController.text,
-                                            sessionType: sesionType,
-                                            supervisorId: supervisorId,
-                                            notes: additionalNotesController
-                                                    .text.isEmpty
-                                                ? null
-                                                : additionalNotesController
-                                                    .text,
-                                          ),
-                                        );
-                                      Navigator.pop(context);
-                                    },
-                                  ));
-                        },
-                        child: Text('Submit'),
-                      ).fullWidth(),
-                    ],
-                  ),
-                ],
+                        BuildTextField(
+                          onChanged: (v) {},
+                          label: 'Title',
+                          controller: titleController,
+                          validator: FormBuilderValidators.required(
+                            errorText: 'This field is required',
+                          ),
+                        ),
+                        BuildTextField(
+                          onChanged: (v) {},
+                          label: 'Reference',
+                          controller: referenceController,
+                        ),
+                        DropdownButtonFormField(
+                          isExpanded: true,
+                          hint: Text('Role'),
+                          validator: FormBuilderValidators.required(
+                            errorText: 'This field is required',
+                          ),
+                          items: _roles
+                              .map(
+                                (e) => DropdownMenuItem(
+                                  child: Text(e.name!),
+                                  value: e,
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (v) {
+                            if (v != null) role = v.id!;
+                          },
+                          value: null,
+                        ),
+                        InkWellContainer(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 24),
+                          radius: 12,
+                          color: Color(0xFF29C5F6).withOpacity(.2),
+                          onTap: () => uploadFile(context),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: IconButton(
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all(primaryColor),
+                                  ),
+                                  padding: new EdgeInsets.all(0.0),
+                                  iconSize: 14,
+                                  onPressed: () => uploadFile(context),
+                                  icon: Icon(
+                                    Icons.add_rounded,
+                                    color: backgroundColor,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              if (state.attachment == null) ...[
+                                Text('Upload image or PDF'),
+                                Spacer(),
+                                Text('(max. 5 MB)')
+                              ],
+                              if (state.attachment != null) ...[
+                                Expanded(
+                                    child: Text(
+                                  path.basename(state.attachment!),
+                                  maxLines: 1,
+                                ))
+                              ],
+                            ],
+                          ),
+                        ),
+                        TextFormField(
+                          maxLines: 5,
+                          minLines: 5,
+                          controller: additionalNotesController,
+                          decoration: InputDecoration(
+                            label: Text('Additional Notes'),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        FilledButton(
+                          onPressed: () => onSubmit(state.attachment),
+                          child: Text('Submit'),
+                        ).fullWidth(),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );
         },
       ),
     );
+  }
+
+  void onSubmit(String? attachment) {
+    FocusScope.of(context).unfocus();
+    supervisorValue.value = supervisorId == null
+        ? 'This field is required, please select again.'
+        : null;
+    if (_formKey.currentState!.saveAndValidate() && supervisorId != null) {
+      showDialog(
+          context: context,
+          barrierLabel: '',
+          barrierDismissible: false,
+          builder: (_) => VerifyDialog(
+                onTap: () {
+                  BlocProvider.of<ScientificSessionCubit>(context,
+                      listen: false)
+                    ..uploadScientificSession(
+                      model: ScientificSessionPostModel(
+                        attachment: attachment,
+                        role: role,
+                        title: titleController.text,
+                        topic: topicController.text,
+                        reference: referenceController.text,
+                        sessionType: sesionType,
+                        supervisorId: supervisorId,
+                        notes: additionalNotesController.text.isEmpty
+                            ? null
+                            : additionalNotesController.text,
+                      ),
+                    );
+                  Navigator.pop(context);
+                },
+              ));
+    }
   }
 }

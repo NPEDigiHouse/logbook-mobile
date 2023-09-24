@@ -195,6 +195,7 @@ class AuthDataSourceImpl implements AuthDataSource {
           UserCredential.fromJson(dataResponse.data);
       return Right(userCredential);
     } catch (e) {
+      print(e.toString());
       return Left(ClientFailure(e.toString()));
     }
   }

@@ -33,6 +33,7 @@ class PersonalDataForm extends StatefulWidget {
 
 class _PersonalDataFormState extends State<PersonalDataForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final ValueNotifier<String?> supervisorVal = ValueNotifier(null);
   final List<TextEditingController> editingControllers = [];
 
   late final ValueNotifier<Map<String, String?>> formNotifier;
@@ -71,8 +72,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
       builder: (context, isEdit, child) {
         return BlocListener<StudentCubit, StudentState>(
           listener: (context, state) {
-            if (state is StudentStateSuccess &&
-                state.successUpdateStudentProfile) {
+            if (state.successUpdateStudentProfile) {
               isEditNotifier.value = false;
               BlocProvider.of<UserCubit>(context)..getUserCredential();
             }
@@ -238,10 +238,12 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                                   .first
                                                   .id!;
                                         return CustomDropdown<SupervisorModel>(
+                                            errorNotifier: supervisorVal,
                                             onSubmit: (text, controller) {
                                               if (_supervisors.indexWhere(
                                                       (element) =>
-                                                          element.fullName ==
+                                                          element.fullName
+                                                              ?.trim() ==
                                                           text.trim()) ==
                                                   -1) {
                                                 controller.clear();

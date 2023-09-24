@@ -29,8 +29,7 @@ class _WrapperSelfReflectionState extends State<WrapperSelfReflection> {
       ),
       body: BlocListener<StudentCubit, StudentState>(
         listener: (context, state) {
-          if (state is StudentStateSuccess &&
-              state.selfReflectionResponse != null)
+          if (state.selfReflectionResponse != null)
             context.navigateTo(
               DetailSelfReflectionPage(
                 model: state.selfReflectionResponse!.listSelfReflections!
