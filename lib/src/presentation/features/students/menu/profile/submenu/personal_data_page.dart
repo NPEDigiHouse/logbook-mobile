@@ -62,7 +62,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
           ],
         );
         try {
-          BlocProvider.of<ProfileCubit>(context)
+          BlocProvider.of<UserCubit>(context)
             ..uploadProfilePic(path: croppedFile!.path);
         } catch (e) {
           print('Error uploading file: $e');
@@ -81,7 +81,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      BlocProvider.of<ProfileCubit>(context)
+      BlocProvider.of<UserCubit>(context)
         ..getUserCredential()
         ..getProfilePic();
     });
@@ -103,10 +103,10 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
           ),
         ),
       ),
-      body: BlocConsumer<ProfileCubit, ProfileState>(
+      body: BlocConsumer<UserCubit, UserState>(
         listener: (context, state) {
           if (state.successUploadProfilePic) {
-            BlocProvider.of<ProfileCubit>(context)..getProfilePic();
+            BlocProvider.of<UserCubit>(context)..getProfilePic();
           }
         },
         builder: (context, state) {
@@ -116,7 +116,7 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
                 children: <Widget>[
                   const SizedBox(height: 40),
                   Center(
-                    child: BlocBuilder<ProfileCubit, ProfileState>(
+                    child: BlocBuilder<UserCubit, UserState>(
                       builder: (context, state) {
                         return InkWell(
                           onTap: () => showModalBottomSheet(

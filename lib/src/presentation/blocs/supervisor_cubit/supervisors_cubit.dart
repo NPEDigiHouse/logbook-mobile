@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/profile_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/supervisors_datasource.dart';
+import 'package:elogbook/src/data/datasources/remote_datasources/user_datasource.dart';
 import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
@@ -11,7 +11,7 @@ part 'supervisors_state.dart';
 
 class SupervisorsCubit extends Cubit<SupervisorsState> {
   final SupervisorsDataSource dataSource;
-  final ProfileDataSource profileDataSource;
+  final UserDataSource profileDataSource;
   SupervisorsCubit({
     required this.dataSource,
     required this.profileDataSource,
@@ -35,9 +35,9 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
     }
   }
 
-  Future<Uint8List> getImageProfile({required String id}) async {
+  Future<Uint8List?> getImageProfile({required String id}) async {
     final image = await profileDataSource.getProfilePic(userId: id);
-    return image;
+    return image.fold((l) => null, (r) => r);
   }
 
   Future<void> getAllStudentDepartment() async {

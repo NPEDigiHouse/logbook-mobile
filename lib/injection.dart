@@ -8,7 +8,6 @@ import 'package:elogbook/src/data/datasources/remote_datasources/clinical_record
 import 'package:elogbook/src/data/datasources/remote_datasources/competence_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/daily_activity_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/history_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/profile_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/reference_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/scientific_session_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/self_reflection_datasource.dart';
@@ -119,12 +118,7 @@ void _injectDatasource() {
       apiHeader: locator(),
     ),
   );
-  locator.registerLazySingleton<ProfileDataSource>(
-    () => ProfileDataSourceImpl(
-      dio: locator(),
-      apiHeader: locator(),
-    ),
-  );
+
   locator.registerLazySingleton<DailyActivityDataSource>(
     () => DailyActivityDataSourceImpl(
       dio: locator(),
@@ -211,9 +205,8 @@ void _injectStateManagement() {
     ),
   );
   locator.registerFactory(
-    () => ProfileCubit(
+    () => UserCubit(
       dataSource: locator(),
-      userDataSource: locator(),
     ),
   );
   locator.registerFactory(

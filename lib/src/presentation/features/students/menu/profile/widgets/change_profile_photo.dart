@@ -15,10 +15,10 @@ class ChangeProfilePhotoSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ProfileCubit, ProfileState>(
+    return BlocListener<UserCubit, UserState>(
       listener: (context, state) {
         if (state.removeProfileImage) {
-          BlocProvider.of<ProfileCubit>(context)..getProfilePic();
+          BlocProvider.of<UserCubit>(context)..getProfilePic();
           context.back();
         }
       },
@@ -56,7 +56,7 @@ class ChangeProfilePhotoSheet extends StatelessWidget {
                     backgroundColor: errorColor,
                   ),
                   onPressed: () {
-                    BlocProvider.of<ProfileCubit>(context)..removeProfilePic();
+                    BlocProvider.of<UserCubit>(context)..removeProfilePic();
                   },
                   label: Text('Remove Profile Photo'),
                   icon: Icon(

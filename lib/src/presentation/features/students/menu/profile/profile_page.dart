@@ -43,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      BlocProvider.of<ProfileCubit>(context)..getProfilePic();
+      BlocProvider.of<UserCubit>(context)..getProfilePic();
       BlocProvider.of<DepartmentCubit>(
         context,
       )..getActiveDepartment();
@@ -102,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           top: 16,
                           child: Column(
                             children: <Widget>[
-                              BlocBuilder<ProfileCubit, ProfileState>(
+                              BlocBuilder<UserCubit, UserState>(
                                 builder: (context, state) {
                                   if (state.profilePic != null &&
                                       state.rspp == RequestState.data) {
@@ -214,7 +214,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   BlocBuilder<DepartmentCubit, DepartmentState>(
                     builder: (context, state1) {
                       if (state1 is GetActiveDepartmentSuccess)
-                        return BlocBuilder<ProfileCubit, ProfileState>(
+                        return BlocBuilder<UserCubit, UserState>(
                           builder: (context, state) {
                             return ProfileItemMenuCard(
                               iconPath: 'stats_chart_filled.svg',
@@ -306,7 +306,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         confirmBtnText: 'Confirm',
                         text: "Are you sure to sign out?",
                         onConfirmBtnTap: () async {
-                          await BlocProvider.of<ProfileCubit>(context).reset();
+                          await BlocProvider.of<UserCubit>(context).reset();
                           await BlocProvider.of<AuthCubit>(context).logout();
                         },
                         confirmBtnColor: primaryColor,

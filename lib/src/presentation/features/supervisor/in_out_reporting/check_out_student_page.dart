@@ -39,7 +39,7 @@ class _CheckOutReportPageState extends State<CheckOutReportPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<StudentCubit, StudentState>(
       builder: (context, state) {
-        if (state.studentsCheckOut != null) {
+        if (state is StudentStateSuccess && state.studentsCheckOut != null) {
           if (state.studentsCheckOut!.isEmpty) {
             return EmptyData(
                 title: 'No Data', subtitle: 'no student check out');
@@ -112,7 +112,7 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
   Widget build(BuildContext context) {
     return BlocListener<StudentCubit, StudentState>(
       listener: (context, state) {
-        if (state.successVerifyCheckOut) {
+        if (state is StudentStateSuccess && state.successVerifyCheckOut) {
           BlocProvider.of<StudentCubit>(context).getStudentCheckOut();
           context.back();
         }

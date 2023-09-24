@@ -10,7 +10,7 @@ import 'package:elogbook/src/data/models/students/student_check_out_model.dart';
 import 'package:elogbook/src/data/models/students/student_profile_post.dart';
 import 'package:elogbook/src/data/models/students/student_statistic.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
-import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:equatable/equatable.dart';
 
 part 'student_state.dart';
 
@@ -19,269 +19,188 @@ class StudentCubit extends Cubit<StudentState> {
   final SupervisorsDataSource dataSourceSp;
 
   StudentCubit({required this.dataSource, required this.dataSourceSp})
-      : super(StudentState());
+      : super(StudentStateInit());
 
   Future<void> getStudentClinicalRecordOfActiveDepartment() async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
 
       final result =
           await dataSource.getStudentClinicalRecordOfActiveDepartment();
       try {
-        emit(state.copyWith(
+        emit((state as StudentStateSuccess).copyWith(
           clinicalRecordResponse: result,
-          requestState: RequestState.data,
         ));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(StudentStateError(message: e.toString()));
       }
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> getStudentScientificSessionOfActiveDepartment() async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
 
       final result =
           await dataSource.getStudentScientificSessionOfActiveDepartment();
       try {
-        emit(state.copyWith(
+        emit((state as StudentStateSuccess).copyWith(
           scientificSessionResponse: result,
-          requestState: RequestState.data,
         ));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(StudentStateError(message: e.toString()));
       }
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> getStudentDetailById({required String studentId}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
+
       final data = await dataSource.getStudentById(studentId: studentId);
       try {
-        emit(state.copyWith(studentDetail: data));
+        emit((state as StudentStateSuccess).copyWith(studentDetail: data));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(StudentStateError(message: e.toString()));
       }
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> getStatisticByStudentId({required String studentId}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
 
       final result =
           await dataSourceSp.getStatisticByStudentId(studentId: studentId);
-      emit(state.copyWith(studentStatistic: result));
+      emit((state as StudentStateSuccess).copyWith(studentStatistic: result));
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> getStudentSelfReflections() async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
 
       final result = await dataSource.getStudentSelfReflection();
       try {
-        emit(state.copyWith(
+        emit((state as StudentStateSuccess).copyWith(
           selfReflectionResponse: result,
         ));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(StudentStateError(message: e.toString()));
       }
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> updateStudentData(
       {required StudentProfile studentProfile}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
 
       await dataSource.updateStudentProfile(studentProfile);
       try {
-        emit(state.copyWith(
+        emit((state as StudentStateSuccess).copyWith(
           successUpdateStudentProfile: true,
         ));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(StudentStateError(message: e.toString()));
       }
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> getStudentCheckIn() async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
 
       final result = await dataSource.getStudentCheckIn();
       try {
-        emit(state.copyWith(studentsCheckIn: result));
+        emit((state as StudentStateSuccess).copyWith(studentsCheckIn: result));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(StudentStateError(message: e.toString()));
       }
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> verifyCheckIn({required String studentId}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
+
       await dataSource.verifyCheckIn(studentId: studentId);
       try {
-        emit(state.copyWith(successVerifyCheckIn: true));
+        emit((state as StudentStateSuccess)
+            .copyWith(successVerifyCheckIn: true));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(StudentStateError(message: e.toString()));
       }
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> getStudentCheckOut() async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
 
       final result = await dataSource.getStudentCheckOut();
       try {
-        emit(state.copyWith(studentsCheckOut: result));
+        emit((state as StudentStateSuccess).copyWith(studentsCheckOut: result));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(StudentStateError(message: e.toString()));
       }
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> getStudentStatistic() async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
 
       final result = await dataSource.getStudentStatistic();
-      emit(state.copyWith(studentStatistic: result));
+      emit((state as StudentStateSuccess).copyWith(studentStatistic: result));
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> verifyCheckOut({required String studentId}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
+
       await dataSource.verifyCheckOut(studentId: studentId);
       try {
-        emit(state.copyWith(successVerifyCheckOut: true));
+        emit((state as StudentStateSuccess)
+            .copyWith(successVerifyCheckOut: true));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(StudentStateError(message: e.toString()));
       }
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 
   Future<void> getAllStudents() async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      emit(StudentStateLoading());
 
       final result = await dataSourceSp.getAllStudents();
 
-      emit(state.copyWith(students: result));
+      emit((state as StudentStateSuccess).copyWith(students: result));
     } catch (e) {
-      print(e.toString());
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
+      emit(StudentStateError(message: e.toString()));
     }
   }
 }

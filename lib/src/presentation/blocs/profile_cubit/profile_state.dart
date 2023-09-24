@@ -1,6 +1,6 @@
 part of 'profile_cubit.dart';
 
-class ProfileState {
+class UserState {
   final Uint8List? profilePic;
   final UserCredential? userCredential;
   final bool successUploadProfilePic;
@@ -12,7 +12,7 @@ class ProfileState {
   final bool successDeleteAccount;
   final bool isResetPasswordSuccess;
 
-  ProfileState({
+  UserState({
     this.profilePic,
     this.userCredential,
     this.isResetPasswordSuccess = false,
@@ -25,7 +25,7 @@ class ProfileState {
     this.successUpdateProfile = false,
   });
 
-  ProfileState copyWith(
+  UserState copyWith(
       {RequestState stateProfilePic = RequestState.init,
       Uint8List? profilePic,
       bool isResetPasswordSuccess = false,
@@ -36,7 +36,7 @@ class ProfileState {
       RequestState requestState = RequestState.init,
       RequestState rsPP = RequestState.init,
       UserCredential? userCredential}) {
-    return ProfileState(
+    return UserState(
         profilePic: profilePic ?? this.profilePic,
         stateProfilePic: stateProfilePic,
         requestState: requestState,

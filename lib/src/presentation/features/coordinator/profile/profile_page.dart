@@ -36,13 +36,13 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
     super.initState();
 
     Future.microtask(() {
-      BlocProvider.of<ProfileCubit>(context)..getProfilePic();
+      BlocProvider.of<UserCubit>(context)..getProfilePic();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileCubit, ProfileState>(
+    return BlocBuilder<UserCubit, UserState>(
       builder: (context, state) {
         return CustomScrollView(
           slivers: <Widget>[
@@ -54,7 +54,7 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                 padding: const EdgeInsets.only(bottom: 24),
                 child: Column(
                   children: <Widget>[
-                    BlocBuilder<ProfileCubit, ProfileState>(
+                    BlocBuilder<UserCubit, UserState>(
                       builder: (context, state) {
                         return Column(
                           children: [
@@ -87,7 +87,7 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                                     top: 16,
                                     child: Column(
                                       children: <Widget>[
-                                        BlocBuilder<ProfileCubit, ProfileState>(
+                                        BlocBuilder<UserCubit, UserState>(
                                           builder: (context, state) {
                                             if (state.profilePic != null &&
                                                 state.rspp ==
@@ -229,7 +229,7 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                                   .toList()
                           ]),
                     ),
-                    BlocBuilder<ProfileCubit, ProfileState>(
+                    BlocBuilder<UserCubit, UserState>(
                       builder: (context, state) {
                         if (state.userCredential != null) {
                           return Padding(
@@ -388,8 +388,7 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                           confirmBtnText: 'Confirm',
                           text: "Are you sure to sign out?",
                           onConfirmBtnTap: () async {
-                            await BlocProvider.of<ProfileCubit>(context)
-                                .reset();
+                            await BlocProvider.of<UserCubit>(context).reset();
                             await BlocProvider.of<AuthCubit>(context).logout();
                           },
                           confirmBtnColor: primaryColor,

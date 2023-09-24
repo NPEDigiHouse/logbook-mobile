@@ -38,7 +38,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProfileCubit>(context)..getProfilePic();
+    BlocProvider.of<UserCubit>(context)..getProfilePic();
 
     _isList = ValueNotifier(false);
   }

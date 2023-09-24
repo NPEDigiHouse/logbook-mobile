@@ -43,7 +43,7 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
       if (result != null) {
         File file = File(result.files.single.path!);
         try {
-          BlocProvider.of<ProfileCubit>(context)
+          BlocProvider.of<UserCubit>(context)
             ..uploadProfilePic(path: file.path);
         } catch (e) {
           print('Error uploading file: $e');
@@ -64,7 +64,7 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
     super.initState();
 
     Future.microtask(() {
-      BlocProvider.of<ProfileCubit>(context)
+      BlocProvider.of<UserCubit>(context)
         ..getUserCredential()
         ..getProfilePic();
     });
@@ -86,14 +86,14 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
           ),
         ),
       ),
-      body: BlocConsumer<ProfileCubit, ProfileState>(
+      body: BlocConsumer<UserCubit, UserState>(
         listener: (context, state) {
           if (state.successUploadProfilePic) {
-            BlocProvider.of<ProfileCubit>(context)..getProfilePic();
+            BlocProvider.of<UserCubit>(context)..getProfilePic();
           }
           if (state.successUpdateProfile) {
             FocusScope.of(context).unfocus();
-            BlocProvider.of<ProfileCubit>(context)..getUserCredential();
+            BlocProvider.of<UserCubit>(context)..getUserCredential();
           }
         },
         builder: (context, state) {
@@ -122,7 +122,7 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
                                   isProfilePhotoExist:
                                       state.profilePic != null &&
                                           state.rspp == RequestState.data)),
-                          child: BlocBuilder<ProfileCubit, ProfileState>(
+                          child: BlocBuilder<UserCubit, UserState>(
                             builder: (context, state) {
                               if (state.stateProfilePic ==
                                   RequestState.loading) {
@@ -231,7 +231,7 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
                     ),
                     FilledButton(
                             onPressed: () {
-                              BlocProvider.of<ProfileCubit>(context)
+                              BlocProvider.of<UserCubit>(context)
                                 ..updateFullName(
                                     fullname: fullnameController.text);
                             },

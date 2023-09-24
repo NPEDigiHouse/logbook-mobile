@@ -212,8 +212,8 @@ class SglCstCubit extends Cubit<SglCstState> {
       ));
 
       final result = await dataSource.getSglBySupervisor();
-      // result.sort((a, b) =>
-      //     (b.latest ?? DateTime.now()).compareTo(a.latest ?? DateTime.now()));
+      result.sort((a, b) =>
+          (b.latest ?? DateTime.now()).compareTo(a.latest ?? DateTime.now()));
 
       try {
         emit(state.copyWith(sglStudents: result));
@@ -237,8 +237,8 @@ class SglCstCubit extends Cubit<SglCstState> {
       ));
 
       final result = await dataSource.getCstBySupervisor();
-      // result.sort((a, b) =>
-      //     (b.latest ?? DateTime.now()).compareTo(a.latest ?? DateTime.now()));
+      result.sort((a, b) =>
+          (b.latest ?? DateTime.now()).compareTo(a.latest ?? DateTime.now()));
 
       try {
         emit(state.copyWith(cstStudents: result));

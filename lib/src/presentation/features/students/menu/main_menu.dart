@@ -28,7 +28,7 @@ class _MainMenuState extends State<MainMenu> {
     // TODO: implement initState
     super.initState();
     Future.microtask(
-        () => BlocProvider.of<ProfileCubit>(context)..getUserCredential());
+        () => BlocProvider.of<UserCubit>(context)..getUserCredential());
   }
 
   @override
@@ -60,8 +60,7 @@ class _MainMenuState extends State<MainMenu> {
         return ValueListenableBuilder(
           valueListenable: _selectedIndex,
           builder: (context, value, _) {
-            return BlocBuilder<ProfileCubit, ProfileState>(
-                builder: (context, s) {
+            return BlocBuilder<UserCubit, UserState>(builder: (context, s) {
               if (s.userCredential != null)
                 return Scaffold(
                   body: IndexedStack(

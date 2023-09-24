@@ -39,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      BlocProvider.of<ProfileCubit>(context)..getProfilePic();
+      BlocProvider.of<UserCubit>(context)..getProfilePic();
     });
   }
 
@@ -55,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.only(bottom: 24),
             child: Column(
               children: <Widget>[
-                BlocBuilder<ProfileCubit, ProfileState>(
+                BlocBuilder<UserCubit, UserState>(
                   builder: (context, state) {
                     return Column(
                       children: [
@@ -88,7 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 top: 16,
                                 child: Column(
                                   children: <Widget>[
-                                    BlocBuilder<ProfileCubit, ProfileState>(
+                                    BlocBuilder<UserCubit, UserState>(
                                       builder: (context, state) {
                                         if (state.profilePic != null &&
                                             state.rspp == RequestState.data) {
@@ -222,7 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ]),
                 ),
 
-                BlocBuilder<ProfileCubit, ProfileState>(
+                BlocBuilder<UserCubit, UserState>(
                   builder: (context, state) {
                     if (state.userCredential != null) {
                       return Padding(
@@ -379,7 +379,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       confirmBtnText: 'Confirm',
                       text: "Are you sure to sign out?",
                       onConfirmBtnTap: () async {
-                        await BlocProvider.of<ProfileCubit>(context).reset();
+                        await BlocProvider.of<UserCubit>(context).reset();
                         await BlocProvider.of<AuthCubit>(context).logout();
                       },
                       confirmBtnColor: primaryColor,

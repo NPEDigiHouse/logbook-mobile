@@ -94,8 +94,8 @@ class _StudentListScientificSessionPageState
                           },
                           child: BlocConsumer<StudentCubit, StudentState>(
                             listener: (context, state) {
-                              if (state.scientificSessionResponse != null &&
-                                  state.requestState == RequestState.data) {
+                              if (state is StudentStateSuccess &&
+                                  state.scientificSessionResponse != null) {
                                 if (!isMounted) {
                                   Future.microtask(() {
                                     listData.value = [
@@ -108,8 +108,8 @@ class _StudentListScientificSessionPageState
                               }
                             },
                             builder: (context, state) {
-                              if (state.scientificSessionResponse != null &&
-                                  state.requestState == RequestState.data) {
+                              if (state is StudentStateSuccess &&
+                                  state.scientificSessionResponse != null) {
                                 return SingleChildScrollView(
                                   child: SpacingColumn(
                                     crossAxisAlignment:
@@ -247,13 +247,15 @@ class _StudentListScientificSessionPageState
                               switch (index) {
                                 case 0:
                                   listData.value = [
-                                    ...state.scientificSessionResponse!
+                                    ...(state as StudentStateSuccess)
+                                        .scientificSessionResponse!
                                         .listScientificSessions!
                                   ];
                                   break;
                                 case 1:
                                   listData.value = [
-                                    ...state.scientificSessionResponse!
+                                    ...(state as StudentStateSuccess)
+                                        .scientificSessionResponse!
                                         .listScientificSessions!
                                         .where((element) =>
                                             element.verificationStatus ==
@@ -263,7 +265,8 @@ class _StudentListScientificSessionPageState
                                   break;
                                 case 2:
                                   listData.value = [
-                                    ...state.scientificSessionResponse!
+                                    ...(state as StudentStateSuccess)
+                                        .scientificSessionResponse!
                                         .listScientificSessions!
                                         .where((element) =>
                                             element.verificationStatus !=

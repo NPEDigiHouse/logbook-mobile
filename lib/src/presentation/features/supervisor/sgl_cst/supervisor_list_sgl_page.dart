@@ -1,6 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
-import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/widgets/sgl_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';

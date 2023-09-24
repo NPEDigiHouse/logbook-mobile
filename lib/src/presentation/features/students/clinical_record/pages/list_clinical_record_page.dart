@@ -94,8 +94,8 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                           },
                           child: BlocConsumer<StudentCubit, StudentState>(
                             listener: (context, state) {
-                              if (state.clinicalRecordResponse != null &&
-                                  state.requestState == RequestState.data) {
+                              if (state is StudentStateSuccess &&
+                                  state.clinicalRecordResponse != null) {
                                 if (!isMounted) {
                                   Future.microtask(() {
                                     listData.value = [
@@ -108,8 +108,10 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                               }
                             },
                             builder: (context, state) {
-                              if (state.clinicalRecordResponse != null &&
-                                  state.requestState == RequestState.data) {
+                              if (state is StudentStateLoading) {
+                                return CustomLoading();
+                              } else if (state is StudentStateSuccess &&
+                                  state.clinicalRecordResponse != null) {
                                 return SingleChildScrollView(
                                   child: SpacingColumn(
                                     crossAxisAlignment:
@@ -173,7 +175,7 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                   ),
                                 );
                               }
-                              return CustomLoading();
+                              return SizedBox.shrink();
                             },
                           ),
                         ),
@@ -201,15 +203,6 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
           builder: (context, state) {
             return Column(
               children: [
-                // ValueListenableBuilder(
-                //   valueListenable: _query,
-                //   builder: (context, query, child) {
-                //     return SearchField(
-                //       text: query,
-                //       onChanged: (value) => _query.value = value,
-                //     );
-                //   },
-                // ),
                 SizedBox(
                   height: 64,
                   child: ListView.separated(
@@ -244,13 +237,15 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                               switch (index) {
                                 case 0:
                                   listData.value = [
-                                    ...state.clinicalRecordResponse!
+                                    ...(state as StudentStateSuccess)
+                                        .clinicalRecordResponse!
                                         .listClinicalRecords!
                                   ];
                                   break;
                                 case 1:
                                   listData.value = [
-                                    ...state.clinicalRecordResponse!
+                                    ...(state as StudentStateSuccess)
+                                        .clinicalRecordResponse!
                                         .listClinicalRecords!
                                         .where((element) =>
                                             element.verificationStatus ==
@@ -260,7 +255,8 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                   break;
                                 case 2:
                                   listData.value = [
-                                    ...state.clinicalRecordResponse!
+                                    ...(state as StudentStateSuccess)
+                                        .clinicalRecordResponse!
                                         .listClinicalRecords!
                                         .where((element) =>
                                             element.verificationStatus !=

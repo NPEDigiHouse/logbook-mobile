@@ -25,7 +25,7 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
   void initState() {
     super.initState();
     Future.microtask(
-        () => BlocProvider.of<ProfileCubit>(context)..getUserCredential());
+        () => BlocProvider.of<UserCubit>(context)..getUserCredential());
   }
 
   final ValueNotifier<int> _selectedIndex = ValueNotifier(0);
@@ -67,7 +67,7 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
         return ValueListenableBuilder(
           valueListenable: _selectedIndex,
           builder: (context, value, _) {
-            return BlocBuilder<ProfileCubit, ProfileState>(
+            return BlocBuilder<UserCubit, UserState>(
               builder: (context, s) {
                 if (s.userCredential != null)
                   return Scaffold(

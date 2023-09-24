@@ -47,7 +47,7 @@ class MainAppBar extends StatelessWidget {
                   confirmBtnText: 'Confirm',
                   text: "Are you sure to sign out?",
                   onConfirmBtnTap: () async {
-                    await BlocProvider.of<ProfileCubit>(context).reset();
+                    await BlocProvider.of<UserCubit>(context).reset();
                     await BlocProvider.of<AuthCubit>(context).logout();
                   },
                   confirmBtnColor: primaryColor,

@@ -26,19 +26,11 @@ class _WrapperSelfReflectionState extends State<WrapperSelfReflection> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Entry Detail"),
-        actions: [
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: Icon(
-          //     Icons.more_vert_rounded,
-          //     color: Colors.white,
-          //   ),
-          // )
-        ],
       ),
       body: BlocListener<StudentCubit, StudentState>(
         listener: (context, state) {
-          if (state.selfReflectionResponse != null)
+          if (state is StudentStateSuccess &&
+              state.selfReflectionResponse != null)
             context.navigateTo(
               DetailSelfReflectionPage(
                 model: state.selfReflectionResponse!.listSelfReflections!

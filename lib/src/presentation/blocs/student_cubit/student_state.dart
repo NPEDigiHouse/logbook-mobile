@@ -1,7 +1,20 @@
 part of 'student_cubit.dart';
 
-class StudentState {
-  final RequestState? requestState;
+class StudentState extends Equatable {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class StudentStateError extends StudentState {
+  final String message;
+  StudentStateError({required this.message});
+}
+
+class StudentStateLoading extends StudentState {}
+
+class StudentStateInit extends StudentState {}
+
+class StudentStateSuccess extends StudentState {
   final StudentClinicalRecordResponse? clinicalRecordResponse;
   final StudentScientificSessionResponse? scientificSessionResponse;
   final StudentStatistic? studentStatistic;
@@ -14,11 +27,10 @@ class StudentState {
   final StudentById? studentDetail;
   final List<SupervisorStudent>? students;
 
-  StudentState({
+  StudentStateSuccess({
     this.clinicalRecordResponse,
     this.scientificSessionResponse,
     this.selfReflectionResponse,
-    this.requestState,
     this.studentStatistic,
     this.successUpdateStudentProfile = false,
     this.studentsCheckIn,
@@ -29,8 +41,7 @@ class StudentState {
     this.students,
   });
 
-  StudentState copyWith({
-    RequestState? requestState,
+  StudentStateSuccess copyWith({
     StudentClinicalRecordResponse? clinicalRecordResponse,
     final StudentScientificSessionResponse? scientificSessionResponse,
     bool isDailyActivityUpdated = false,
@@ -44,21 +55,21 @@ class StudentState {
     bool successVerifyCheckIn = false,
     bool successVerifyCheckOut = false,
   }) {
-    return StudentState(
-        clinicalRecordResponse:
-            clinicalRecordResponse ?? this.clinicalRecordResponse,
-        requestState: requestState ?? RequestState.init,
-        selfReflectionResponse:
-            selfReflectionResponse ?? this.selfReflectionResponse,
-        scientificSessionResponse:
-            scientificSessionResponse ?? this.scientificSessionResponse,
-        successUpdateStudentProfile: successUpdateStudentProfile,
-        studentsCheckIn: studentsCheckIn ?? this.studentsCheckIn,
-        successVerifyCheckIn: successVerifyCheckIn,
-        studentDetail: studentDetail ?? this.studentDetail,
-        studentsCheckOut: studentsCheckOut ?? this.studentsCheckOut,
-        successVerifyCheckOut: successVerifyCheckOut,
-        students: students ?? this.students,
-        studentStatistic: studentStatistic ?? this.studentStatistic);
+    return StudentStateSuccess(
+      clinicalRecordResponse:
+          clinicalRecordResponse ?? this.clinicalRecordResponse,
+      selfReflectionResponse:
+          selfReflectionResponse ?? this.selfReflectionResponse,
+      scientificSessionResponse:
+          scientificSessionResponse ?? this.scientificSessionResponse,
+      successUpdateStudentProfile: successUpdateStudentProfile,
+      studentsCheckIn: studentsCheckIn ?? this.studentsCheckIn,
+      successVerifyCheckIn: successVerifyCheckIn,
+      studentDetail: studentDetail ?? this.studentDetail,
+      studentsCheckOut: studentsCheckOut ?? this.studentsCheckOut,
+      successVerifyCheckOut: successVerifyCheckOut,
+      students: students ?? this.students,
+      studentStatistic: studentStatistic ?? this.studentStatistic,
+    );
   }
 }

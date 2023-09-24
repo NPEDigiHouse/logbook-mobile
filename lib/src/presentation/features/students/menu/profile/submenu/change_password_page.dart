@@ -40,13 +40,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ProfileCubit, ProfileState>(
+    return BlocListener<UserCubit, UserState>(
       listener: (context, state) async {
         if (state.isResetPasswordSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Success reset password')),
           );
-          await BlocProvider.of<ProfileCubit>(context).reset();
+          await BlocProvider.of<UserCubit>(context).reset();
           await BlocProvider.of<AuthCubit>(context).logout();
         }
       },
@@ -117,7 +117,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         child: FilledButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              BlocProvider.of<ProfileCubit>(context)
+                              BlocProvider.of<UserCubit>(context)
                                 ..resetPassword(
                                     password: _newPasswordController.text);
                             }

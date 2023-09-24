@@ -1,21 +1,18 @@
 import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/profile_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/user_datasource.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
 part 'profile_state.dart';
 
-class ProfileCubit extends Cubit<ProfileState> {
-  final ProfileDataSource dataSource;
-  final UserDataSource userDataSource;
+class UserCubit extends Cubit<UserState> {
+  final UserDataSource dataSource;
 
-  ProfileCubit({
+  UserCubit({
     required this.dataSource,
-    required this.userDataSource,
-  }) : super(ProfileState(stateProfilePic: RequestState.init));
+  }) : super(UserState(stateProfilePic: RequestState.init));
 
   Future<void> reset() async {
     emit(
@@ -29,21 +26,21 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> getProfilePic() async {
-    print("call");
     try {
       emit(state.copyWith(
         rsPP: RequestState.loading,
       ));
 
       final result = await dataSource.getUserProfilePicture();
-      try {
-        emit(state.copyWith(
-          profilePic: result,
-          rsPP: RequestState.data,
-        ));
-      } catch (e) {
-        emit(state.copyWith(rsPP: RequestState.error));
-      }
+      result.fold(
+        (l) => emit(state.copyWith(rsPP: RequestState.error)),
+        (r) => emit(
+          state.copyWith(
+            profilePic: r,
+            rsPP: RequestState.data,
+          ),
+        ),
+      );
     } catch (e) {
       print(e.toString());
       emit(
@@ -62,13 +59,12 @@ class ProfileCubit extends Cubit<ProfileState> {
       ));
 
       final result = await dataSource.getProfilePic(userId: id);
-      try {
-        emit(state.copyWith(
-          profilePic: result,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      result.fold(
+        (l) => emit(state.copyWith(requestState: RequestState.error)),
+        (r) => emit(state.copyWith(
+          profilePic: r,
+        )),
+      );
     } catch (e) {
       print(e.toString());
       emit(
@@ -85,16 +81,14 @@ class ProfileCubit extends Cubit<ProfileState> {
         requestState: RequestState.loading,
       ));
 
-      final result = await userDataSource.getUserCredential();
-      try {
-        emit(state.copyWith(
-          userCredential: result,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      final result = await dataSource.getUserCredential();
+      result.fold(
+        (l) => emit(state.copyWith(requestState: RequestState.error)),
+        (r) => emit(state.copyWith(
+          userCredential: r,
+        )),
+      );
     } catch (e) {
-      print(e.toString());
       emit(
         state.copyWith(
           requestState: RequestState.error,
@@ -109,7 +103,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         stateProfilePic: RequestState.loading,
       ));
 
-      await userDataSource.uploadProfilePicture(path);
+      await dataSource.uploadProfilePicture(path);
       try {
         emit(state.copyWith(
             successUploadProfilePic: true, stateProfilePic: RequestState.data));
@@ -132,7 +126,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         requestState: RequestState.loading,
       ));
 
-      await userDataSource.changePassword(newPassword: password);
+      await dataSource.changePassword(newPassword: password);
       try {
         emit(state.copyWith(
             isResetPasswordSuccess: true, requestState: RequestState.data));
@@ -155,7 +149,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         stateProfilePic: RequestState.loading,
       ));
 
-      await userDataSource.removeProfilePicture();
+      await dataSource.removeProfilePicture();
       try {
         emit(state.copyWith(
             removeProfileImage: true, stateProfilePic: RequestState.data));
@@ -178,7 +172,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         requestState: RequestState.loading,
       ));
 
-      await userDataSource.updateFullName(fullname: fullname);
+      await dataSource.updateFullName(fullname: fullname);
       try {
         emit(state.copyWith(successUpdateProfile: true));
       } catch (e) {

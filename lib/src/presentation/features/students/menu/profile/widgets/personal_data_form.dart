@@ -71,9 +71,10 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
       builder: (context, isEdit, child) {
         return BlocListener<StudentCubit, StudentState>(
           listener: (context, state) {
-            if (state.successUpdateStudentProfile) {
+            if (state is StudentStateSuccess &&
+                state.successUpdateStudentProfile) {
               isEditNotifier.value = false;
-              BlocProvider.of<ProfileCubit>(context)..getUserCredential();
+              BlocProvider.of<UserCubit>(context)..getUserCredential();
             }
           },
           child: Column(
@@ -126,7 +127,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                               1000,
                                     );
                                     if (editingControllers[0].text.isNotEmpty)
-                                      BlocProvider.of<ProfileCubit>(context)
+                                      BlocProvider.of<UserCubit>(context)
                                         ..updateFullName(
                                             fullname:
                                                 editingControllers[0].text);

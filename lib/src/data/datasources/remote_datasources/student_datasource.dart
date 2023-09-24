@@ -3,7 +3,6 @@ import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
-import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/assessment/final_score_response.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_list_model.dart';
 import 'package:elogbook/src/data/models/assessment/student_scientific_assignment.dart';
@@ -17,6 +16,7 @@ import 'package:elogbook/src/data/models/special_reports/special_report_response
 import 'package:elogbook/src/data/models/students/student_by_id_model.dart';
 import 'package:elogbook/src/data/models/students/student_check_in_model.dart';
 import 'package:elogbook/src/data/models/students/student_check_out_model.dart';
+import 'package:elogbook/src/data/models/students/student_post_model.dart';
 import 'package:elogbook/src/data/models/students/student_profile_post.dart';
 import 'package:elogbook/src/data/models/students/student_statistic.dart';
 
@@ -41,6 +41,8 @@ abstract class StudentDataSource {
   Future<void> verifyCheckOut({required String studentId});
   Future<StudentById> getStudentById({required String studentId});
   Future<StudentStatistic> getStudentStatistic();
+  Future<void> updateStudentData(
+      {required StudentPostModel studentDataPostModel});
 }
 
 class StudentDataSourceImpl implements StudentDataSource {
@@ -345,6 +347,19 @@ class StudentDataSourceImpl implements StudentDataSource {
       final result = StudentById.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<void> updateStudentData(
+      {required StudentPostModel studentDataPostModel}) async {
+    try {
+      await dio.put(ApiService.baseUrl + '/students',
+          options: await apiHeader.userOptions(),
+          data: studentDataPostModel.toJson());
+    } catch (e) {
+      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }
