@@ -115,7 +115,6 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
           (l) => emit(
                 state.copyWith(requestState: RequestState.error),
               ), (r) {
-
         return emit(
           state.copyWith(
             postSuccess: true,

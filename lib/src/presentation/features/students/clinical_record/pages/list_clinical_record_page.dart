@@ -93,7 +93,8 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                           },
                           child: BlocConsumer<StudentCubit, StudentState>(
                             listener: (context, state) {
-                              if (state.clinicalRecordResponse != null) {
+                              if (state.clinicalRecordResponse != null &&
+                                  state.crState == RequestState.data) {
                                 if (!isMounted) {
                                   Future.microtask(() {
                                     listData.value = [

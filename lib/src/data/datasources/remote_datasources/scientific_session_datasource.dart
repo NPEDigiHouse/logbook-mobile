@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
+import 'package:elogbook/core/utils/exception_handler.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/models/scientific_session/list_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/scientific_session/scientific_roles.dart';
@@ -52,7 +53,8 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
           data: {
             'supervisorId': scientificSessionPostModel.supervisorId,
             'sessionType': scientificSessionPostModel.sessionType,
-            if (scientificSessionPostModel.reference != null)
+            if (scientificSessionPostModel.reference != null &&
+                scientificSessionPostModel.reference!.isNotEmpty)
               'reference': scientificSessionPostModel.reference,
             'topic': scientificSessionPostModel.topic,
             'title': scientificSessionPostModel.title,
@@ -64,14 +66,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
           });
       return Right(true);
     } catch (e) {
-      if (e is DioException) {
-        if (e.response != null) {
-          print(e.response?.data['data']);
-        } else {
-          print(e.message);
-        }
-      }
-      return Left(ClientFailure('error not recognized'));
+      return Left(failure(e));
     }
   }
 

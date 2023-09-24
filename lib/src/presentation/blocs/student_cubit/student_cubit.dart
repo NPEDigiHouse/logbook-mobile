@@ -24,7 +24,7 @@ class StudentCubit extends Cubit<StudentState> {
   Future<void> getStudentClinicalRecordOfActiveDepartment() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        crState: RequestState.loading,
       ));
 
       final result =
@@ -32,16 +32,16 @@ class StudentCubit extends Cubit<StudentState> {
       try {
         emit(state.copyWith(
           clinicalRecordResponse: result,
-          requestState: RequestState.data,
+          crState: RequestState.data,
         ));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(crState: RequestState.error));
       }
     } catch (e) {
       print(e.toString());
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          crState: RequestState.error,
         ),
       );
     }
@@ -50,7 +50,7 @@ class StudentCubit extends Cubit<StudentState> {
   Future<void> getStudentScientificSessionOfActiveDepartment() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        ssState: RequestState.loading,
       ));
 
       final result =
@@ -58,16 +58,15 @@ class StudentCubit extends Cubit<StudentState> {
       try {
         emit(state.copyWith(
           scientificSessionResponse: result,
-          requestState: RequestState.data,
+          ssState: RequestState.data,
         ));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(ssState: RequestState.error));
       }
     } catch (e) {
-      print(e.toString());
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          ssState: RequestState.error,
         ),
       );
     }

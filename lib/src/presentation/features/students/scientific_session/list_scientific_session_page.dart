@@ -3,6 +3,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/scientific_session/student_scientific_session_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/add_scientific_session_page.dart';
@@ -93,7 +94,8 @@ class _StudentListScientificSessionPageState
                           },
                           child: BlocConsumer<StudentCubit, StudentState>(
                             listener: (context, state) {
-                              if (state.scientificSessionResponse != null) {
+                              if (state.scientificSessionResponse != null &&
+                                  state.ssState == RequestState.data) {
                                 if (!isMounted) {
                                   Future.microtask(() {
                                     listData.value = [
@@ -201,15 +203,6 @@ class _StudentListScientificSessionPageState
           builder: (context, state) {
             return Column(
               children: [
-                // ValueListenableBuilder(
-                //   valueListenable: _query,
-                //   builder: (context, query, child) {
-                //     return SearchField(
-                //       text: query,
-                //       onChanged: (value) => _query.value = value,
-                //     );
-                //   },
-                // ),
                 SizedBox(
                   height: 64,
                   child: ListView.separated(

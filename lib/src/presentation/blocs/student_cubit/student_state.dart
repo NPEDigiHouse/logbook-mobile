@@ -2,6 +2,8 @@ part of 'student_cubit.dart';
 
 class StudentState {
   final RequestState? requestState;
+  final RequestState? crState;
+  final RequestState? ssState;
   final StudentClinicalRecordResponse? clinicalRecordResponse;
   final StudentScientificSessionResponse? scientificSessionResponse;
   final StudentStatistic? studentStatistic;
@@ -20,8 +22,10 @@ class StudentState {
     this.selfReflectionResponse,
     this.requestState,
     this.studentStatistic,
+    this.ssState,
     this.successUpdateStudentProfile = false,
     this.studentsCheckIn,
+    this.crState,
     this.studentDetail,
     this.studentsCheckOut,
     this.successVerifyCheckIn = false,
@@ -31,6 +35,8 @@ class StudentState {
 
   StudentState copyWith({
     RequestState? requestState,
+    RequestState? crState,
+    RequestState? ssState,
     StudentClinicalRecordResponse? clinicalRecordResponse,
     final StudentScientificSessionResponse? scientificSessionResponse,
     bool isDailyActivityUpdated = false,
@@ -45,6 +51,8 @@ class StudentState {
     bool successVerifyCheckOut = false,
   }) {
     return StudentState(
+        crState: crState ?? this.crState,
+        ssState: ssState ?? this.ssState,
         clinicalRecordResponse:
             clinicalRecordResponse ?? this.clinicalRecordResponse,
         requestState: requestState ?? RequestState.init,
