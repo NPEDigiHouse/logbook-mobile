@@ -287,55 +287,57 @@ class DailyActivityHomeCard extends StatelessWidget {
               spacing: 0,
               horizontalPadding: 12,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: listDays
-                  .map(
-                    (e) => Column(
-                      children: [
-                        Text(
-                          e.day.substring(0, 3),
-                          style: textTheme.bodySmall,
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        if (e.dailyActivity == null &&
-                            endDate.isBefore(DateTime(
-                              DateTime.now().year,
-                              DateTime.now().month,
-                              DateTime.now().day,
-                            )))
-                          SvgPicture.asset(
-                            AssetPath.getIcon(emoji['NOT_ATTEND']!),
-                            width: 30,
-                            height: 30,
-                            fit: BoxFit.cover,
-                          )
-                        else if (e.dailyActivity == null)
-                          Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: dividerColor,
-                              border: Border.all(
-                                strokeAlign: BorderSide.strokeAlignInside,
-                                width: 1,
-                                color: Colors.grey,
-                              ),
+              children: listDays.map(
+                (e) {
+                  print(e.dailyActivity);
+
+                  return Column(
+                    children: [
+                      Text(
+                        e.day.substring(0, 3),
+                        style: textTheme.bodySmall,
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      if (e.dailyActivity == null &&
+                          endDate.isBefore(DateTime(
+                            DateTime.now().year,
+                            DateTime.now().month,
+                            DateTime.now().day,
+                          )))
+                        SvgPicture.asset(
+                          AssetPath.getIcon(emoji['NOT_ATTEND']!),
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.cover,
+                        )
+                      else if (e.dailyActivity == null)
+                        Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: dividerColor,
+                            border: Border.all(
+                              strokeAlign: BorderSide.strokeAlignInside,
+                              width: 1,
+                              color: Colors.grey,
                             ),
-                          )
-                        else
-                          SvgPicture.asset(
-                            AssetPath.getIcon(
-                                emoji[e.dailyActivity!.activityStatus!]!),
-                            width: 30,
-                            height: 30,
-                            fit: BoxFit.cover,
                           ),
-                      ],
-                    ),
-                  )
-                  .toList(),
+                        )
+                      else
+                        SvgPicture.asset(
+                          AssetPath.getIcon(
+                              emoji[e.dailyActivity!.activityStatus!]!),
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.cover,
+                        ),
+                    ],
+                  );
+                },
+              ).toList(),
             );
           }),
         ],
