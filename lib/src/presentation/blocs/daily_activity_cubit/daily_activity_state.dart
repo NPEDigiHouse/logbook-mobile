@@ -13,6 +13,9 @@ class DailyActivityState {
   final List<ListWeekItem>? weekItems;
   final List<DailyActivityStudent>? dailyActivityStudents;
   final StudentDailyActivityPerDays? activityPerDays;
+  final bool isEditWeekSuccess;
+  final bool isRemoveWeekSuccess;
+  final bool isEditStatusWeek;
 
   DailyActivityState({
     this.studentDailyActivity,
@@ -26,6 +29,9 @@ class DailyActivityState {
     this.isDailyActivityVerifiedById = false,
     this.dailyActivityBySupervisor,
     this.activityPerDays,
+    this.isEditWeekSuccess = false,
+    this.isRemoveWeekSuccess = false,
+    this.isEditStatusWeek = false,
     this.stateVerifyDailyActivity = RequestState.init,
   });
 
@@ -40,10 +46,16 @@ class DailyActivityState {
     bool isDailyActivityVerifiedById = false,
     List<ListWeekItem>? weekItems,
     bool isAddWeekSuccess = false,
+    bool isEditWeekSuccess = false,
+    bool isRemoveWeekSuccess = false,
+    bool isEditStatusWeek = false,
     List<DailyActivityStudent>? dailyActivityStudents,
     RequestState stateVerifyDailyActivity = RequestState.init,
   }) {
     return DailyActivityState(
+        isEditWeekSuccess: isEditWeekSuccess,
+        isRemoveWeekSuccess: isRemoveWeekSuccess,
+        isEditStatusWeek: isEditStatusWeek,
         activityPerDays: activityPerDays ?? this.activityPerDays,
         studentDailyActivity: studentDailyActivity ?? this.studentDailyActivity,
         activityPerweekBySupervisor:

@@ -1,9 +1,10 @@
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
+import 'package:elogbook/core/utils/exception_handler.dart';
 import 'package:elogbook/core/utils/failure.dart';
-import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/daily_activity/daily_activity_post_model.dart';
 import 'package:elogbook/src/data/models/daily_activity/daily_activity_student.dart';
 import 'package:elogbook/src/data/models/daily_activity/list_week_item.dart';
@@ -29,6 +30,10 @@ abstract class DailyActivityDataSource {
       {required String dayId, required DailyActivityPostModel model});
   Future<void> verifiyDailyActivityById(
       {required String id, required bool verifiedStatus});
+  Future<Either<Failure, bool>> updateStatus({required bool status});
+  Future<Either<Failure, bool>> updateWeek(
+      {required PostWeek postWeek, required String id});
+  Future<Either<Failure, bool>> deleteWeek({required String id});
 }
 
 class DailyActivityDataSourceImpl implements DailyActivityDataSource {
@@ -197,6 +202,54 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       return listData;
     } catch (e) {
       throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteWeek({required String id}) async {
+    try {
+      await dio.delete(
+        ApiService.baseUrl + '/weeks/$id',
+        options: await apiHeader.userOptions(),
+      );
+      return Right(true);
+    } catch (e) {
+      return Left(failure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateStatus({required bool status}) async {
+    try {
+      await dio.put(
+        ApiService.baseUrl + '/weeks/$id/status',
+        options: await apiHeader.userOptions(),
+        data: {
+          "status": status,
+        },
+      );
+      return Right(true);
+    } catch (e) {
+      return Left(failure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateWeek(
+      {required PostWeek postWeek, required String id}) async {
+    try {
+      await dio.put(
+        ApiService.baseUrl + '/weeks/$id',
+        options: await apiHeader.userOptions(),
+        data: {
+          if (postWeek.weekNum != null) 'weekNum': postWeek.weekNum,
+          if (postWeek.startDate != null) 'startDate': postWeek.startDate,
+          if (postWeek.endDate != null) 'endDate': postWeek.endDate,
+        },
+      );
+      return Right(true);
+    } catch (e) {
+      return Left(failure(e));
     }
   }
 }

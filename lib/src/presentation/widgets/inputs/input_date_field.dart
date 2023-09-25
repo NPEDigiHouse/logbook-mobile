@@ -7,11 +7,13 @@ class InputDateField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final String? initialValue;
+  final String? Function(dynamic data)? validator;
   final FutureOr<void> Function(DateTime date)? action;
   const InputDateField(
       {super.key,
       required this.action,
       this.initialValue,
+      this.validator,
       required this.controller,
       required this.hintText});
 
@@ -31,7 +33,8 @@ class _InputDateFieldState extends State<InputDateField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      validator: widget.validator,
       controller: widget.controller,
       readOnly: true,
       onTap: () async {

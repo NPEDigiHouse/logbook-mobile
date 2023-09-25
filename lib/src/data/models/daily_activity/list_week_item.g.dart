@@ -16,6 +16,7 @@ ListWeekItem _$ListWeekItemFromJson(Map<String, dynamic> json) => ListWeekItem(
       unitId: json['unitId'] as String?,
       weekName: json['weekName'] as int?,
       unitName: json['unitName'] as String?,
+      status: json['status'] as bool?,
     );
 
 Map<String, dynamic> _$ListWeekItemToJson(ListWeekItem instance) =>
@@ -27,6 +28,7 @@ Map<String, dynamic> _$ListWeekItemToJson(ListWeekItem instance) =>
       'unitId': instance.unitId,
       'weekName': instance.weekName,
       'unitName': instance.unitName,
+      'status': instance.status,
     };
 
 Day _$DayFromJson(Map<String, dynamic> json) => Day(

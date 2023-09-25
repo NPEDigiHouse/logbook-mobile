@@ -68,207 +68,6 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                     DepartmentHeader(
                       unitName: widget.activeDepartmentModel.unitName!,
                     ),
-                    // Container(
-                    //   width: AppSize.getAppWidth(context),
-                    //   padding:
-                    //       EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                    //   decoration: BoxDecoration(
-                    //     boxShadow: [
-                    //       BoxShadow(
-                    //         color: Colors.black.withOpacity(.12),
-                    //         offset: Offset(0, 2),
-                    //         blurRadius: 20,
-                    //       )
-                    //     ],
-                    //     borderRadius: BorderRadius.circular(12),
-                    //     color: scaffoldBackgroundColor,
-                    //   ),
-                    //   child: Column(
-                    //     children: [
-                    //       Row(
-                    //         children: [
-                    //           Expanded(
-                    //             child: Container(
-                    //               decoration: BoxDecoration(
-                    //                 color: Color(0xFFF6F7F8),
-                    //                 borderRadius: BorderRadius.circular(8),
-                    //               ),
-                    //               height: 84,
-                    //               child: Column(
-                    //                 mainAxisAlignment: MainAxisAlignment.center,
-                    //                 children: [
-                    //                   Container(
-                    //                     width: 24,
-                    //                     height: 24,
-                    //                     decoration: BoxDecoration(
-                    //                       color: primaryColor.withOpacity(
-                    //                         .2,
-                    //                       ),
-                    //                       shape: BoxShape.circle,
-                    //                     ),
-                    //                     padding: EdgeInsets.all(2),
-                    //                     child: Icon(
-                    //                       Icons.summarize,
-                    //                       size: 18,
-                    //                       color: primaryColor,
-                    //                     ),
-                    //                   ),
-                    //                   SizedBox(
-                    //                     height: 8,
-                    //                   ),
-                    //                   Text(
-                    //                     '${state.studentDailyActivity!.inprocessDailyActivity! + state.studentDailyActivity!.unverifiedDailyActivity! + state.studentDailyActivity!.verifiedDailyActivity!}',
-                    //                     style: textTheme.titleMedium?.copyWith(
-                    //                       fontWeight: FontWeight.bold,
-                    //                       height: 1,
-                    //                     ),
-                    //                   ),
-                    //                   Text('Total'),
-                    //                 ],
-                    //               ),
-                    //             ),
-                    //           ),
-                    //           SizedBox(
-                    //             width: 8,
-                    //           ),
-                    //           Expanded(
-                    //             child: Container(
-                    //               decoration: BoxDecoration(
-                    //                 color: Color(0xFFF6F7F8),
-                    //                 borderRadius: BorderRadius.circular(8),
-                    //               ),
-                    //               height: 84,
-                    //               child: Column(
-                    //                 mainAxisAlignment: MainAxisAlignment.center,
-                    //                 children: [
-                    //                   Container(
-                    //                     width: 24,
-                    //                     height: 24,
-                    //                     decoration: BoxDecoration(
-                    //                       color: variant2Color.withOpacity(
-                    //                         .2,
-                    //                       ),
-                    //                       shape: BoxShape.circle,
-                    //                     ),
-                    //                     padding: EdgeInsets.all(2),
-                    //                     child: Icon(
-                    //                       Icons.radio_button_unchecked_rounded,
-                    //                       size: 18,
-                    //                       color: variant2Color,
-                    //                     ),
-                    //                   ),
-                    //                   SizedBox(
-                    //                     height: 8,
-                    //                   ),
-                    //                   Text(
-                    //                     '${state.studentDailyActivity!.inprocessDailyActivity!}',
-                    //                     style: textTheme.titleMedium?.copyWith(
-                    //                       fontWeight: FontWeight.bold,
-                    //                       height: 1,
-                    //                     ),
-                    //                   ),
-                    //                   Text('Uncompleted'),
-                    //                 ],
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       SizedBox(
-                    //         height: 8,
-                    //       ),
-                    //       Row(
-                    //         children: [
-                    //           Expanded(
-                    //             child: Container(
-                    //               decoration: BoxDecoration(
-                    //                 color: Color(0xFFF6F7F8),
-                    //                 borderRadius: BorderRadius.circular(8),
-                    //               ),
-                    //               height: 84,
-                    //               child: Column(
-                    //                 mainAxisAlignment: MainAxisAlignment.center,
-                    //                 children: [
-                    //                   Container(
-                    //                     width: 24,
-                    //                     height: 24,
-                    //                     decoration: BoxDecoration(
-                    //                       color: successColor.withOpacity(
-                    //                         .2,
-                    //                       ),
-                    //                       shape: BoxShape.circle,
-                    //                     ),
-                    //                     padding: EdgeInsets.all(2),
-                    //                     child: Icon(
-                    //                       Icons.verified_rounded,
-                    //                       size: 18,
-                    //                       color: successColor,
-                    //                     ),
-                    //                   ),
-                    //                   SizedBox(
-                    //                     height: 8,
-                    //                   ),
-                    //                   Text(
-                    //                     '${state.studentDailyActivity!.verifiedDailyActivity!}',
-                    //                     style: textTheme.titleMedium?.copyWith(
-                    //                       fontWeight: FontWeight.bold,
-                    //                       height: 1,
-                    //                     ),
-                    //                   ),
-                    //                   Text('Verified'),
-                    //                 ],
-                    //               ),
-                    //             ),
-                    //           ),
-                    //           SizedBox(
-                    //             width: 8,
-                    //           ),
-                    //           Expanded(
-                    //             child: Container(
-                    //               decoration: BoxDecoration(
-                    //                 color: Color(0xFFF6F7F8),
-                    //                 borderRadius: BorderRadius.circular(8),
-                    //               ),
-                    //               height: 84,
-                    //               child: Column(
-                    //                 mainAxisAlignment: MainAxisAlignment.center,
-                    //                 children: [
-                    //                   Container(
-                    //                     width: 24,
-                    //                     height: 24,
-                    //                     decoration: BoxDecoration(
-                    //                       color: errorColor.withOpacity(
-                    //                         .2,
-                    //                       ),
-                    //                       shape: BoxShape.circle,
-                    //                     ),
-                    //                     padding: EdgeInsets.all(2),
-                    //                     child: Icon(
-                    //                       Icons.hourglass_bottom_rounded,
-                    //                       size: 18,
-                    //                       color: errorColor,
-                    //                     ),
-                    //                   ),
-                    //                   SizedBox(
-                    //                     height: 8,
-                    //                   ),
-                    //                   Text(
-                    //                     '${state.studentDailyActivity!.unverifiedDailyActivity!}',
-                    //                     style: textTheme.titleMedium?.copyWith(
-                    //                       fontWeight: FontWeight.bold,
-                    //                       height: 1,
-                    //                     ),
-                    //                   ),
-                    //                   Text('Unverified'),
-                    //                 ],
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                     ...List.generate(state.studentDailyActivity!.weeks!.length,
                         (index) {
                       final i = state.studentDailyActivity!.dailyActivities!
@@ -276,14 +75,21 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                               element.weekName ==
                               state.studentDailyActivity!.weeks![index]
                                   .weekName);
-                      print(i);
+
+                      final endDate = DateTime.fromMillisecondsSinceEpoch(
+                          state.studentDailyActivity!.weeks![index].endDate! *
+                              1000);
                       return DailyActivityHomeCard(
                         startDate: DateTime.fromMillisecondsSinceEpoch(state
                                 .studentDailyActivity!
                                 .weeks![index]
                                 .startDate! *
                             1000),
+                        endDate: endDate,
                         week: state.studentDailyActivity!.weeks![index],
+                        status:
+                            state.studentDailyActivity!.weeks![index].status ??
+                                false,
                         checkInCount:
                             widget.activeDepartmentModel.countCheckIn!,
                         dailyActivity: i == -1
@@ -306,9 +112,13 @@ class DailyActivityHomeCard extends StatelessWidget {
   final int checkInCount;
   final Week week;
   final DateTime startDate;
+  final DateTime endDate;
   final DailyActivity? dailyActivity;
+  final bool status;
   const DailyActivityHomeCard(
       {super.key,
+      required this.status,
+      required this.endDate,
       required this.startDate,
       required this.week,
       required this.checkInCount,
@@ -325,6 +135,12 @@ class DailyActivityHomeCard extends StatelessWidget {
           weekName: week.weekName!,
           checkInCount: checkInCount,
           startDate: startDate,
+          status: status ||
+              (!endDate.isBefore(DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+              ))),
         ),
       ),
       color: Colors.white,
@@ -435,7 +251,6 @@ class DailyActivityHomeCard extends StatelessWidget {
             );
             int interval =
                 Utils.getIntervalOfData(week.startDate, week.endDate);
-            print(interval);
 
             final daysOfWeek = [
               'MONDAY',
@@ -484,7 +299,7 @@ class DailyActivityHomeCard extends StatelessWidget {
                           height: 4,
                         ),
                         if (e.dailyActivity == null &&
-                            e.dateTime.isBefore(DateTime(
+                            endDate.isBefore(DateTime(
                               DateTime.now().year,
                               DateTime.now().month,
                               DateTime.now().day,

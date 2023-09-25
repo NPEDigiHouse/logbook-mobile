@@ -19,9 +19,11 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
   final int weekName;
   final DateTime startDate;
   final int checkInCount;
+  final bool status;
 
   const DailyActivityWeekStatusPage(
       {super.key,
+      required this.status,
       required this.startDate,
       required this.week,
       required this.weekName,
@@ -97,53 +99,6 @@ class _DailyActivityWeekStatusPageState
                                       'Week ${widget.weekName}',
                                       style: textTheme.titleLarge,
                                     ),
-                                    // Container(
-                                    //   padding: EdgeInsets.symmetric(
-                                    //     horizontal: 12,
-                                    //     vertical: 4,
-                                    //   ),
-                                    //   decoration: BoxDecoration(
-                                    //     borderRadius: BorderRadius.circular(50),
-                                    //     color: state.activityPerDays?
-                                    //                 .verificationStatus ==
-                                    //             'VERIFIED'
-                                    //         ? successColor
-                                    //         : state.activityPerDays?
-                                    //                     .verificationStatus ==
-                                    //                 'UNVERIFIED'
-                                    //             ? errorColor
-                                    //             : onFormDisableColor,
-                                    //   ),
-                                    //   child: Row(
-                                    //     crossAxisAlignment:
-                                    //         CrossAxisAlignment.center,
-                                    //     children: [
-                                    //       Icon(
-                                    //         state.activityPerDays?
-                                    //                     .verificationStatus ==
-                                    //                 'VERIFIED'
-                                    //             ? Icons.verified_rounded
-                                    //             : state.activityPerDays?
-                                    //                         .verificationStatus ==
-                                    //                     'UNVERIFIED'
-                                    //                 ? Icons.close_rounded
-                                    //                 : Icons
-                                    //                     .hourglass_bottom_rounded,
-                                    //         color: Colors.white,
-                                    //         size: 16,
-                                    //       ),
-                                    //       SizedBox(
-                                    //         width: 4,
-                                    //       ),
-                                    //       Text(
-                                    //         '${state.activityPerDays?.verificationStatus}',
-                                    //         style: textTheme.bodySmall?.copyWith(
-                                    //           color: Colors.white,
-                                    //         ),
-                                    //       ),
-                                    //     ],
-                                    //   ),
-                                    // ),
                                   ],
                                 ),
                                 SizedBox(
@@ -285,6 +240,7 @@ class _DailyActivityWeekStatusPageState
                               start = start.add(Duration(days: 1));
                             }
                             return DailyActivityStatusCard(
+                              activeStatus: widget.status,
                               id: listDays[index].id!,
                               date: listDays[index].dateTime,
                               supervisorName:
@@ -349,6 +305,7 @@ class DailyActivityStatusCard extends StatefulWidget {
   final int checkInCount;
   final String? detail;
   final ActivitiesStatus? activitiesStatus;
+  final bool activeStatus;
   const DailyActivityStatusCard({
     super.key,
     this.supervisorName,
@@ -357,6 +314,7 @@ class DailyActivityStatusCard extends StatefulWidget {
     required this.id,
     this.activitiesStatus,
     this.activity,
+    required this.activeStatus,
     this.detail,
     required this.verificationStatus,
     required this.day,
@@ -391,11 +349,7 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
       padding: EdgeInsets.all(16),
       radius: 12,
       onTap: widget.checkInCount == 0 &&
-              !widget.date!.isBefore(DateTime(
-                DateTime.now().year,
-                DateTime.now().month,
-                DateTime.now().day,
-              )) &&
+              widget.activeStatus &&
               widget.verificationStatus != 'VERIFIED'
           ? () => context.navigateTo(CreateDailyActivityPage(
                 dayId: widget.id,

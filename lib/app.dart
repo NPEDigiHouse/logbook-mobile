@@ -18,7 +18,6 @@ import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/splash/splash_page.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier2.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';

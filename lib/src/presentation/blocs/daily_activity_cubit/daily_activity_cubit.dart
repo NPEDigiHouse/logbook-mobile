@@ -37,6 +37,73 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
+  Future<void> editWeekByCoordinator(
+      {required PostWeek postWeek, required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.updateWeek(postWeek: postWeek, id: id);
+      try {
+        emit(state.copyWith(isEditWeekSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> deleteWeekByCoordinator({required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.deleteWeek(id: id);
+      try {
+        emit(state.copyWith(isRemoveWeekSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> changeWeekStatus({required bool status}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.updateStatus(status: status);
+      try {
+        emit(state.copyWith(isEditWeekSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getListWeek({required String unitId}) async {
     try {
       emit(state.copyWith(

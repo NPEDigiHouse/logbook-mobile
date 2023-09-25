@@ -2,6 +2,18 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
+import 'package:elogbook/src/data/models/user/user_token.dart';
+
+class CredentialSaver {
+  static UserToken? credential;
+
+  static instance() async {
+    if (credential == null) {
+      AuthPreferenceHandler preference = AuthPreferenceHandler();
+      credential = await preference.getCredential();
+    }
+  }
+}
 
 class ApiHeader {
   final AuthPreferenceHandler preference;
@@ -22,8 +34,8 @@ class ApiHeader {
         },
       );
 
-  Future<dynamic> userOptions({bool onlyHeader = false}) async {
-    final credential = await preference.getCredential();
+  dynamic userOptions({bool onlyHeader = false}) {
+    final credential = CredentialSaver.credential;
     final headers = {
       "content-type": 'application/json',
       "authorization": 'Bearer ${credential?.accessToken}'
@@ -31,8 +43,8 @@ class ApiHeader {
     return onlyHeader ? headers : Options(headers: headers);
   }
 
-  Future<dynamic> fileOptions({bool withType = false}) async {
-    final credential = await preference.getCredential();
+  dynamic fileOptions({bool withType = false}) {
+    final credential = CredentialSaver.credential;
     final headers = {
       "content-type": 'multipart/form-data',
       "authorization": 'Bearer ${credential?.accessToken}'

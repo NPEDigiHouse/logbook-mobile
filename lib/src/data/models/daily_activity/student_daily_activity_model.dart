@@ -33,6 +33,7 @@ class DailyActivity {
   final int? notAttendNum;
   @JsonKey(name: "sickNum")
   final int? sickNum;
+
   @JsonKey(name: "activitiesStatus")
   final List<ActivitiesStatus>? activitiesStatus;
 
@@ -101,6 +102,8 @@ class Week {
   final int? weekName;
   @JsonKey(name: "id")
   final String? id;
+  @JsonKey(name: "status")
+  final bool? status;
 
   Week({
     this.endDate,
@@ -109,6 +112,7 @@ class Week {
     this.unitName,
     this.weekName,
     this.id,
+    this.status,
   });
 
   factory Week.fromJson(Map<String, dynamic> json) => _$WeekFromJson(json);

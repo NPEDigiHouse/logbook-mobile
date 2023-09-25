@@ -241,10 +241,15 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                                 SizedBox(
                                   height: 8,
                                 ),
-                                if (state.userCredential!.supervisor!.locations!
-                                        .isNotEmpty ||
-                                    state.userCredential!.supervisor!.units!
-                                        .isNotEmpty) ...[
+                                if (state.userCredential!.supervisor != null &&
+                                    ((state.userCredential!.supervisor!
+                                                    .locations ??
+                                                [])
+                                            .isNotEmpty ||
+                                        (state.userCredential!.supervisor!
+                                                    .units ??
+                                                [])
+                                            .isNotEmpty)) ...[
                                   Align(
                                     child: Text(
                                       'Department & Location',
@@ -258,8 +263,11 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                                     height: 4,
                                   ),
                                 ],
-                                if (state.userCredential!.supervisor!.locations!
-                                    .isNotEmpty)
+                                if (state.userCredential!.supervisor!
+                                            .locations !=
+                                        null &&
+                                    state.userCredential!.supervisor!.locations!
+                                        .isNotEmpty)
                                   Row(
                                     children: [
                                       Icon(
@@ -284,8 +292,10 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                                       ),
                                     ],
                                   ),
-                                if (state.userCredential!.supervisor!.units!
-                                    .isNotEmpty) ...[
+                                if (state.userCredential!.supervisor!.units !=
+                                        null &&
+                                    state.userCredential!.supervisor!.units!
+                                        .isNotEmpty) ...[
                                   SizedBox(
                                     height: 4,
                                   ),

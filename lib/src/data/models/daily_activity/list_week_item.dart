@@ -18,6 +18,8 @@ class ListWeekItem {
   final int? weekName;
   @JsonKey(name: "unitName")
   final String? unitName;
+  @JsonKey(name: "status")
+  final bool? status;
 
   ListWeekItem({
     this.days,
@@ -27,6 +29,7 @@ class ListWeekItem {
     this.unitId,
     this.weekName,
     this.unitName,
+    this.status,
   });
 
   factory ListWeekItem.fromJson(Map<String, dynamic> json) =>

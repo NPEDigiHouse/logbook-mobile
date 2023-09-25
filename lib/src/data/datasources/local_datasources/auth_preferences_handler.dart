@@ -1,3 +1,4 @@
+import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/src/data/models/user/user_token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,7 +47,12 @@ class AuthPreferenceHandler {
     if (pr!.containsKey(accessTokenKey)) {
       String accessToken = pr.getString(accessTokenKey) ?? '';
       String refreshToken = pr.getString(refreshTokenKey) ?? '';
-
+      if (CredentialSaver.credential == null) {
+        CredentialSaver.credential = UserToken(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        );
+      }
       return UserToken(
         accessToken: accessToken,
         refreshToken: refreshToken,
@@ -62,6 +68,7 @@ class AuthPreferenceHandler {
     try {
       pr!.remove(accessTokenKey);
       pr.remove(refreshTokenKey);
+      CredentialSaver.credential = null;
 
       return true;
     } catch (e) {

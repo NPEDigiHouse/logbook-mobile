@@ -1,12 +1,9 @@
-import 'package:elogbook/core/styles/color_palette.dart';
-import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/widgets/head_resident_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
-import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,6 +93,9 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
                                               .weeks![index]
                                               .startDate! *
                                           1000),
+                                  status: state.studentDailyActivity!
+                                          .weeks![index].status ??
+                                      false,
                                   checkInCount: 2,
                                   week:
                                       state.studentDailyActivity!.weeks![index],
@@ -103,6 +103,10 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
                                       ? null
                                       : state.studentDailyActivity!
                                           .dailyActivities![i],
+                                  endDate: DateTime.fromMillisecondsSinceEpoch(
+                                      state.studentDailyActivity!.weeks![index]
+                                              .endDate! *
+                                          1000),
                                 );
                               }),
                               SizedBox(

@@ -79,6 +79,7 @@ Week _$WeekFromJson(Map<String, dynamic> json) => Week(
       unitName: json['unitName'] as String?,
       weekName: json['weekName'] as int?,
       id: json['id'] as String?,
+      status: json['status'] as bool?,
     );
 
 Map<String, dynamic> _$WeekToJson(Week instance) => <String, dynamic>{
@@ -88,4 +89,5 @@ Map<String, dynamic> _$WeekToJson(Week instance) => <String, dynamic>{
       'unitName': instance.unitName,
       'weekName': instance.weekName,
       'id': instance.id,
+      'status': instance.status,
     };
