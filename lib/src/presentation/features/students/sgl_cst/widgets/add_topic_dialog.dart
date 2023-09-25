@@ -1,4 +1,5 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
+import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
@@ -129,10 +130,11 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                     List<TopicModel> _topics = [];
                     if (state.topics != null) {
                       _topics.clear();
-                      _topics.addAll(state.topics!);
+                      _topics.addAll(Utils.filterTopic(
+                          listData: state.topics!,
+                          isSGL: widget.type == TopicDialogType.sgl));
                       return CustomDropdown<TopicModel>(
                           errorNotifier: topicVal,
-                 
                           onSubmit: (text, controller) {
                             if (_topics.indexWhere((element) =>
                                     element.name?.trim() == text.trim()) ==

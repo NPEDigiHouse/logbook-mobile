@@ -177,7 +177,8 @@ class _CreateCstPageState extends State<CreateCstPage> {
                       List<TopicModel> _topics = [];
                       if (state.topics != null) {
                         _topics.clear();
-                        _topics.addAll(state.topics!);
+                        _topics.addAll(Utils.filterTopic(
+                            listData: state.topics!, isSGL: false));
                         if (_topics.isNotEmpty)
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

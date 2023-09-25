@@ -1,3 +1,4 @@
+import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -73,5 +74,23 @@ class Utils {
     DateTime end = DateTime.fromMillisecondsSinceEpoch(endDate! * 1000);
     Duration interval = end.difference(start);
     return interval.inDays;
+  }
+
+  static List<TopicModel> filterTopic(
+      {required List<TopicModel> listData, required bool isSGL}) {
+    final List<TopicModel> topics = [];
+    for (var i = 0; i < listData.length; i++) {
+      if (isSGL && listData[i].name!.trim().toLowerCase().startsWith('sgl')) {
+        topics.add(listData[i]);
+      } else if (!isSGL &&
+          listData[i].name!.trim().toLowerCase().startsWith('cst')) {
+        topics.add(listData[i]);
+      }
+      if (!listData[i].name!.trim().toLowerCase().startsWith('sgl') &&
+          !listData[i].name!.trim().toLowerCase().startsWith('cst')) {
+        topics.add(listData[i]);
+      }
+    }
+    return topics;
   }
 }

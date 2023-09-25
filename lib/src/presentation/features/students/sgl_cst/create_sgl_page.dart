@@ -86,7 +86,6 @@ class _CreateSglPageState extends State<CreateSglPage> {
                         _supervisors.addAll(state.supervisors);
                       }
                       return CustomDropdown<SupervisorModel>(
-                    
                           errorNotifier: supervisorVal,
                           onSubmit: (text, controller) {
                             if (_supervisors.indexWhere((element) =>
@@ -175,7 +174,8 @@ class _CreateSglPageState extends State<CreateSglPage> {
                       List<TopicModel> _topics = [];
                       if (state.topics != null) {
                         _topics.clear();
-                        _topics.addAll(state.topics!);
+                        _topics.addAll(Utils.filterTopic(
+                            listData: state.topics!, isSGL: true));
                         if (_topics.isNotEmpty)
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,7 +189,6 @@ class _CreateSglPageState extends State<CreateSglPage> {
                                           i < value.length;
                                           i++) ...[
                                         CustomDropdown<TopicModel>(
-                                     
                                           errorNotifier: topicVal,
                                           onSubmit: (text, controller) {
                                             if (_topics.indexWhere((element) =>
