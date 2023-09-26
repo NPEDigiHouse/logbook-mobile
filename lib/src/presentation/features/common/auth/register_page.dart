@@ -1,3 +1,4 @@
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -42,18 +43,14 @@ class _RegisterPageState extends State<RegisterPage> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Register success')),
-          );
+          CustomAlert.success(message: 'Register success', context: context);
 
           state = Initial();
 
           context.replace(const LoginPage());
         }
         if (state is Failed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          CustomAlert.error(message: state.message, context: context);
 
           state = Initial();
         }

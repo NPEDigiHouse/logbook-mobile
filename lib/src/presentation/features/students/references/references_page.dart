@@ -4,6 +4,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/data/models/reference/reference_on_list_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/reference/reference_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -82,12 +83,11 @@ class _ReferencePageState extends State<ReferencePage> {
                                 BlocConsumer<ReferenceCubit, ReferenceState>(
                                   listener: (context, state) {
                                     if (state.rData != null) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Success download data ${state.rData}')),
-                                      );
+                                      CustomAlert.success(
+                                          message:
+                                              'Success download data ${state.rData}',
+                                          context: context);
+
                                       BlocProvider.of<ReferenceCubit>(context)
                                           .reset();
                                     }

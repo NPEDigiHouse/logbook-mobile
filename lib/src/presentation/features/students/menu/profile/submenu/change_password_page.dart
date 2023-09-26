@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/widgets/password_form_field.dart';
@@ -43,9 +44,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     return BlocListener<UserCubit, UserState>(
       listener: (context, state) async {
         if (state.isResetPasswordSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Success reset password')),
-          );
+          CustomAlert.success(
+              message: 'Success reset password', context: context);
+
           await BlocProvider.of<UserCubit>(context).reset();
           await BlocProvider.of<AuthCubit>(context).logout();
         }

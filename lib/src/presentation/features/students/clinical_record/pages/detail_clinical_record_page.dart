@@ -5,6 +5,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
@@ -69,11 +70,9 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
               ..getDetailClinicalRecord(id: widget.id);
           }
           if (state.crDownloadPath != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content:
-                      Text('Success download data ${state.crDownloadPath}')),
-            );
+            CustomAlert.success(
+                message: 'Success download data ${state.crDownloadPath}',
+                context: context);
           }
         },
         child: SafeArea(

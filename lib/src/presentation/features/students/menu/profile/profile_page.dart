@@ -12,6 +12,7 @@ import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/about_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/change_password_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/contact_us_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/image_preview.dart';
 import 'package:elogbook/src/presentation/widgets/profile_pic_placeholder.dart';
@@ -55,12 +56,8 @@ class _ProfilePageState extends State<ProfilePage> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is SuccessDeleteAccount) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Success Delete Account'),
-              backgroundColor: successColor,
-            ),
-          );
+          CustomAlert.success(
+              message: 'Success Delete Account', context: context);
         }
       },
       child: CustomScrollView(

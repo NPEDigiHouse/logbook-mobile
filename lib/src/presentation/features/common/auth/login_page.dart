@@ -1,3 +1,4 @@
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -36,10 +37,7 @@ class _LoginPageState extends State<LoginPage> {
         }
 
         if (state is Failed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-
+          CustomAlert.error(message: state.message, context: context);
           state = Initial();
         }
       },

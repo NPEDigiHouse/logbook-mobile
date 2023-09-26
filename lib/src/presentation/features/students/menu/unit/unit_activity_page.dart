@@ -11,6 +11,7 @@ import 'package:elogbook/src/presentation/features/students/scientific_session/l
 import 'package:elogbook/src/presentation/features/students/self_reflection/self_reflection_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/sgl_cst_home_page.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/special_report_home_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
@@ -137,9 +138,8 @@ class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
                   );
                 }
                 if (state is CheckOutFailed) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
-                  );
+                 
+                  CustomAlert.error(message: state.message, context: context);
                 }
               },
               child: Builder(builder: (context) {

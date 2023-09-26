@@ -6,6 +6,7 @@ import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_r
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/pdf_helper/pdf_helper.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
@@ -102,11 +103,9 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
                               activeUnitName:
                                   widget.activeDepartmentModel.unitName)
                           .whenComplete(() {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text('Success Download Student Statistic')),
-                        );
+                        CustomAlert.success(
+                            message: 'Success Download Student Statistic',
+                            context: context);
                       });
                     },
                     icon: Icon(Icons.print));
