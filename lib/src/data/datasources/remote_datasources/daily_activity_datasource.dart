@@ -30,7 +30,8 @@ abstract class DailyActivityDataSource {
       {required String dayId, required DailyActivityPostModel model});
   Future<void> verifiyDailyActivityById(
       {required String id, required bool verifiedStatus});
-  Future<Either<Failure, bool>> updateStatus({required bool status});
+  Future<Either<Failure, bool>> updateStatus(
+      {required bool status, required String id});
   Future<Either<Failure, bool>> updateWeek(
       {required PostWeek postWeek, required String id});
   Future<Either<Failure, bool>> deleteWeek({required String id});
@@ -161,6 +162,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
           'unitId': unitId,
         },
       );
+      print(response.data);
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<ListWeekItem> listData =
@@ -219,15 +221,17 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
   }
 
   @override
-  Future<Either<Failure, bool>> updateStatus({required bool status}) async {
+  Future<Either<Failure, bool>> updateStatus(
+      {required bool status, required String id}) async {
     try {
-      await dio.put(
+      final data = await dio.put(
         ApiService.baseUrl + '/weeks/$id/status',
         options: await apiHeader.userOptions(),
         data: {
           "status": status,
         },
       );
+      print(data.data);
       return Right(true);
     } catch (e) {
       return Left(failure(e));

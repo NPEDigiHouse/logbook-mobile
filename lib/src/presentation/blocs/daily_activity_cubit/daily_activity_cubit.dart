@@ -82,16 +82,18 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
-  Future<void> changeWeekStatus({required bool status}) async {
+  Future<void> changeWeekStatus(
+      {required bool status, required String id}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      await dataSource.updateStatus(status: status);
+      await dataSource.updateStatus(status: status, id: id);
       try {
-        emit(state.copyWith(isEditWeekSuccess: true));
+        emit(state.copyWith(isEditStatusWeek: true));
       } catch (e) {
+        print(e.toString());
         emit(state.copyWith(requestState: RequestState.error));
       }
     } catch (e) {

@@ -7,6 +7,7 @@ import 'package:elogbook/src/data/models/daily_activity/list_week_item.dart';
 import 'package:elogbook/src/data/models/units/unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/coordinator/daily_activity/add_week_dialog.dart';
+import 'package:elogbook/src/presentation/features/coordinator/daily_activity/update_status.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
@@ -242,9 +243,21 @@ class _DailyActivtyWeekCardState extends State<DailyActivtyWeekCard> {
                         endDate: endDate,
                         isEdit: true,
                         id: widget.weekItem.id,
+                      ),
+                    );
+                  }
+                  if (value == 'Status') {
+                    showDialog(
+                      context: context,
+                      barrierLabel: '',
+                      barrierDismissible: false,
+                      builder: (_) => UpdateStatusDialog(
+                        departmentId: widget.departmentId,
+                        weekNum: widget.weekItem.weekName ?? 0,
                         isExpired: expired,
                         isExpiredDate: expiredDate,
                         status: widget.weekItem.status,
+                        id: widget.weekItem.id,
                       ),
                     );
                   }
@@ -268,6 +281,10 @@ class _DailyActivtyWeekCardState extends State<DailyActivtyWeekCard> {
                     PopupMenuItem<String>(
                       value: 'Edit',
                       child: Text('Edit'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'Status',
+                      child: Text('Change Status'),
                     ),
                     PopupMenuItem<String>(
                       value: 'Delete',

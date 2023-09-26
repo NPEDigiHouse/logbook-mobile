@@ -19,20 +19,14 @@ class AddWeekDialog extends StatefulWidget {
   final int weekNum;
   final DateTime? startDate;
   final DateTime? endDate;
-  final bool? isExpired;
-  final bool? isExpiredDate;
-  final bool? status;
   final String? id;
 
   const AddWeekDialog({
     super.key,
-    this.status,
     this.id,
     this.isEdit = false,
     this.endDate,
     this.startDate,
-    this.isExpired,
-    this.isExpiredDate,
     required this.departmentId,
     required this.weekNum,
   });
@@ -60,7 +54,6 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
       if (widget.endDate != null) {
         endDateController.text = Utils.datetimeToString(widget.endDate!);
       }
-      status = widget.status ?? false;
     }
   }
 
@@ -74,9 +67,6 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
           Navigator.pop(context);
         }
         if (state.isEditWeekSuccess) {
-          if (status != widget.status && !state.isEditStatusWeek) {
-            return;
-          }
           BlocProvider.of<DailyActivityCubit>(context)
             ..getListWeek(unitId: widget.departmentId);
           Navigator.pop(context);
@@ -181,53 +171,6 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
                     },
                   ),
                 ),
-                ItemDivider(),
-                if (widget.isEdit) ...[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 6, 0, 20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Week Status',
-                              ),
-                              Text(
-                                widget.isExpired! && !status
-                                    ? 'Expired'
-                                    : 'Active',
-                                style: textTheme.titleSmall?.copyWith(
-                                  color: widget.isExpired! && !status
-                                      ? secondaryTextColor
-                                      : successColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        if (widget.isExpiredDate!)
-                          PopupMenuItem<String>(
-                            value: 'Status',
-                            child: Switch.adaptive(
-                              activeColor: primaryColor,
-                              value: status,
-                              inactiveThumbColor: onFormDisableColor,
-                              trackOutlineWidth: MaterialStatePropertyAll(.5),
-                              trackOutlineColor:
-                                  MaterialStatePropertyAll(secondaryTextColor),
-                              onChanged: (value) {
-                                status = value;
-                                setState(() {});
-                                print(status);
-                              },
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                   child: FilledButton(
@@ -239,16 +182,15 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
                           barrierLabel: '',
                           barrierDismissible: false,
                           builder: (_) => VerifyDialog(
+                            message: widget.isEdit
+                                ? 'If you change the week\'s data, all previous daily activities for this week will be reset. Are you sure?'
+                                : null,
                             onTap: () {
                               final start = Utils.stringToDateTime(
                                   startDateController.text);
                               final end = Utils.stringToDateTime(
                                   endDateController.text);
                               if (widget.isEdit) {
-                                if (status != widget.status) {
-                                  BlocProvider.of<DailyActivityCubit>(context)
-                                      .changeWeekStatus(status: status);
-                                }
                                 BlocProvider.of<DailyActivityCubit>(context)
                                   ..editWeekByCoordinator(
                                     id: widget.id ?? '',

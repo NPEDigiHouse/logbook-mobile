@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 class VerifyDialog extends StatefulWidget {
   final VoidCallback onTap;
   final bool isSubmit;
-  const VerifyDialog({super.key, required this.onTap, this.isSubmit = true});
+  final String? message;
+  const VerifyDialog(
+      {super.key, required this.onTap, this.isSubmit = true, this.message});
 
   @override
   State<VerifyDialog> createState() => _VerifyDialogState();
@@ -74,6 +76,18 @@ class _VerifyDialogState extends State<VerifyDialog> {
                 ),
               ],
             ),
+            if (widget.message != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 4.0,
+                ),
+                child: Text(
+                  widget.message ?? '',
+                  style: textTheme.bodyMedium?.copyWith(color: errorColor),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             SizedBox(
               height: 8,
             ),
