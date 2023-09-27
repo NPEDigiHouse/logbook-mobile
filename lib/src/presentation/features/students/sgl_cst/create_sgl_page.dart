@@ -6,6 +6,7 @@ import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
@@ -146,9 +147,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                               validator: FormBuilderValidators.required(
                                 errorText: 'This field is required',
                               ),
-                              initialDate: dateController.text.isEmpty
-                                  ? DateTime.now()
-                                  : Utils.stringToDateTime(dateController.text),
+                              initialDate: DateTime.now(),
                               controller: startTimeController,
                               hintText: 'Start Time'),
                         ),
@@ -161,9 +160,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                               validator: FormBuilderValidators.required(
                                 errorText: 'This field is required',
                               ),
-                              initialDate: dateController.text.isEmpty
-                                  ? DateTime.now()
-                                  : Utils.stringToDateTime(dateController.text),
+                              initialDate: DateTime.now(),
                               controller: endTimeController,
                               hintText: 'End Time'),
                         ),

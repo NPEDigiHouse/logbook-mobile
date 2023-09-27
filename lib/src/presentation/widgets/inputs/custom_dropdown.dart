@@ -8,11 +8,13 @@ class CustomDropdown<T> extends StatefulWidget {
   final List<dynamic> Function(String pattern) onCallback;
   final Widget Function(dynamic suggestion) child;
   final void Function(dynamic v, TextEditingController controller) onItemSelect;
+  final void Function(TextEditingController controller)? onClear;
   final ValueNotifier<String?> errorNotifier;
   final void Function(dynamic text, TextEditingController controller) onSubmit;
   const CustomDropdown({
     super.key,
     required this.hint,
+    this.onClear,
     required this.onCallback,
     required this.child,
     required this.onItemSelect,
@@ -63,6 +65,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                 suffix: InkWell(
                   onTap: () {
                     controller.text = '';
+                    widget.onClear?.call(controller);
                   },
                   child: SizedBox(
                       width: 20,

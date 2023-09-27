@@ -1,4 +1,5 @@
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
+import 'package:elogbook/src/presentation/features/common/no_internet/check_internet_onetime.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
@@ -92,65 +93,69 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
         appBar: AppBar(
           title: Text("Weekly Assignments"),
         ).variant(),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            await Future.wait([
-              BlocProvider.of<AssesmentCubit>(context)
-                  .getStudentWeeklyAssesment(),
-            ]);
-          },
-          child: BlocBuilder<AssesmentCubit, AssesmentState>(
-            builder: (context, state) {
-              print(state.weeklyAssesment);
-              if (state.weeklyAssesment != null) {
-                if (state.weeklyAssesment!.assesments!.isNotEmpty) {
-                  double avg = 0;
-                  state.weeklyAssesment!.assesments!
-                      .forEach((e) => avg += e.score!);
-                  avg /= state.weeklyAssesment!.assesments!.length;
-                  return CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: SpacingColumn(
-                          horizontalPadding: 16,
-                          spacing: 12,
-                          children: [
-                            SizedBox(
-                              height: 16,
+        body: CheckInternetOnetime(
+          child: (context) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                await Future.wait([
+                  BlocProvider.of<AssesmentCubit>(context)
+                      .getStudentWeeklyAssesment(),
+                ]);
+              },
+              child: BlocBuilder<AssesmentCubit, AssesmentState>(
+                builder: (context, state) {
+                  print(state.weeklyAssesment);
+                  if (state.weeklyAssesment != null) {
+                    if (state.weeklyAssesment!.assesments!.isNotEmpty) {
+                      double avg = 0;
+                      state.weeklyAssesment!.assesments!
+                          .forEach((e) => avg += e.score!);
+                      avg /= state.weeklyAssesment!.assesments!.length;
+                      return CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: SpacingColumn(
+                              horizontalPadding: 16,
+                              spacing: 12,
+                              children: [
+                                SizedBox(
+                                  height: 16,
+                                ),
+                                // _buildAttendanceOverview(context),
+                                if (state.weeklyAssesment!.assesments!.isNotEmpty)
+                                  TopStatCard(
+                                    title: 'Total Grades',
+                                    totalGrade: getTotalGrades(avg / 100),
+                                  ),
+                                ...state.weeklyAssesment!.assesments!
+                                    .map((element) {
+                                  return WeeklyGradeCard(
+                                    week: element.weekNum ?? 0,
+                                    // date: 'Senin, 27 Mar 2023',
+                                    // place: 'RS Unhas',
+                                    attendNum: element.attendNum ?? 0,
+                                    notAttendNum: element.notAttendNum ?? 0,
+                                    status: element.verificationStatus!,
+                                    score: element.score!.toDouble(),
+                                  );
+                                }).toList(),
+                                SizedBox(
+                                  height: 16,
+                                ),
+                              ],
                             ),
-                            // _buildAttendanceOverview(context),
-                            if (state.weeklyAssesment!.assesments!.isNotEmpty)
-                              TopStatCard(
-                                title: 'Total Grades',
-                                totalGrade: getTotalGrades(avg / 100),
-                              ),
-                            ...state.weeklyAssesment!.assesments!
-                                .map((element) {
-                              return WeeklyGradeCard(
-                                week: element.weekNum ?? 0,
-                                // date: 'Senin, 27 Mar 2023',
-                                // place: 'RS Unhas',
-                                attendNum: element.attendNum ?? 0,
-                                notAttendNum: element.notAttendNum ?? 0,
-                                status: element.verificationStatus!,
-                                score: element.score!.toDouble(),
-                              );
-                            }).toList(),
-                            SizedBox(
-                              height: 16,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                return EmptyData(
-                    title: 'No Data', subtitle: 'no daily activity verified');
-              }
-              return CustomLoading();
-            },
-          ),
+                          ),
+                        ],
+                      );
+                    }
+                    return EmptyData(
+                        title: 'No Data', subtitle: 'no daily activity verified');
+                  }
+                  return CustomLoading();
+                },
+              ),
+            );
+          }
         ));
   }
 }

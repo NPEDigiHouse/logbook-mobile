@@ -4,15 +4,21 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/data/models/sglcst/cst_model.dart';
+import 'package:elogbook/src/data/models/sglcst/topic_on_sglcst.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
+import 'package:elogbook/src/presentation/features/common/no_internet/check_internet_onetime.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/create_sgl_page.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/add_topic_dialog.dart';
+import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/edit_sglcst_dialog.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/sgl_cst_app_bar.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -42,249 +48,322 @@ class _ListSglPageState extends State<ListSglPage> {
               title: Text('Small Group Learning (SGL)'),
             )
           : null,
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Future.wait(
-              [BlocProvider.of<SglCstCubit>(context).getStudentSglDetail()]);
-        },
-        child: CustomScrollView(
-          slivers: [
-            if (widget.activeDepartmentModel.countCheckIn! == 0)
-              SglCstAppBar(
-                title: 'Small Group Learning (SGL)',
-                onBtnPressed: () {
-                  context.navigateTo(
-                    CreateSglPage(
-                      model: widget.activeDepartmentModel,
-                    ),
-                  );
-                },
-              ),
-            SliverFillRemaining(
-              child: SingleChildScrollView(
-                child: SpacingColumn(
-                  horizontalPadding: 16,
-                  children: [
-                    // SizedBox(
-                    //   height: 16,
-                    // ),
-                    // _buildAttendanceOverview(context),
-                    BlocBuilder<SglCstCubit, SglCstState>(
-                      builder: (context, state) {
-                        if (state.sglDetail != null) {
-                          if (state.sglDetail!.sgls!.isEmpty) {
-                            return EmptyData(
-                                title: 'No SGL Found',
-                                subtitle: 'There is no sgl data added yet');
+      body: CheckInternetOnetime(child: (context) {
+        return RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait(
+                [BlocProvider.of<SglCstCubit>(context).getStudentSglDetail()]);
+          },
+          child: CustomScrollView(
+            slivers: [
+              if (widget.activeDepartmentModel.countCheckIn! == 0)
+                SglCstAppBar(
+                  title: 'Small Group Learning (SGL)',
+                  onBtnPressed: () {
+                    context.navigateTo(
+                      CreateSglPage(
+                        model: widget.activeDepartmentModel,
+                      ),
+                    );
+                  },
+                ),
+              SliverFillRemaining(
+                child: SingleChildScrollView(
+                  child: SpacingColumn(
+                    horizontalPadding: 16,
+                    children: [
+                      BlocConsumer<SglCstCubit, SglCstState>(
+                        listener: (context, state) {
+                          if (state.isSglDeleteSuccess ||
+                              state.isSglEditSuccess) {
+                            BlocProvider.of<SglCstCubit>(context)
+                              ..getStudentSglDetail();
                           }
-                          return ListView.separated(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                final data = state.sglDetail!.sgls![index];
-                                return Container(
-                                  width: AppSize.getAppWidth(context),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 20),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(.12),
-                                        offset: Offset(0, 2),
-                                        blurRadius: 20,
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: scaffoldBackgroundColor,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'SGL #${state.sglDetail!.sgls!.length - index}',
-                                            style:
-                                                textTheme.titleMedium?.copyWith(
-                                              color: primaryColor,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          if (data.verificationStatus ==
-                                              'VERIFIED') ...[
-                                            SizedBox(
-                                              width: 4,
-                                            ),
-                                            Icon(
-                                              Icons.verified,
-                                              color: successColor,
-                                              size: 16,
-                                            )
-                                          ]
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 4,
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: RichText(
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          text: TextSpan(
-                                            style:
-                                                textTheme.bodySmall?.copyWith(
-                                              color: secondaryTextColor,
-                                            ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: 'Supervisor:\t',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                ),
+                        },
+                        builder: (context, state) {
+                          if (state.sglDetail != null) {
+                            if (state.sglDetail!.sgls!.isEmpty) {
+                              return EmptyData(
+                                  title: 'No SGL Found',
+                                  subtitle: 'There is no sgl data added yet');
+                            }
+                            return ListView.separated(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  final data = state.sglDetail!.sgls![index];
+                                  return Container(
+                                    width: AppSize.getAppWidth(context),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 16, horizontal: 20),
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(.12),
+                                          offset: Offset(0, 2),
+                                          blurRadius: 20,
+                                        )
+                                      ],
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: scaffoldBackgroundColor,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'SGL #${state.sglDetail!.sgls!.length - index}',
+                                              style: textTheme.titleMedium
+                                                  ?.copyWith(
+                                                color: primaryColor,
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                              TextSpan(
-                                                text:
-                                                    data.supervisorName ?? '-',
+                                            ),
+                                            if (data.verificationStatus ==
+                                                'VERIFIED') ...[
+                                              SizedBox(
+                                                width: 4,
                                               ),
+                                              Icon(
+                                                Icons.verified,
+                                                color: successColor,
+                                                size: 16,
+                                              )
                                             ],
+                                            Spacer(),
+                                            if (data.verificationStatus !=
+                                                'VERIFIED')
+                                              PopupMenuButton<String>(
+                                                icon: Icon(
+                                                  Icons.more_vert_rounded,
+                                                ),
+                                                onSelected: (value) {
+                                                  if (value == 'Edit') {
+                                                    showDialog(
+                                                      context: context,
+                                                      barrierLabel: '',
+                                                      barrierDismissible: false,
+                                                      builder: (_) =>
+                                                          EditSglCstDialog(
+                                                              type:
+                                                                  TopicDialogType
+                                                                      .sgl,
+                                                              id: data.sglId ??
+                                                                  '',
+                                                              startTime:
+                                                                  data.startTime ??
+                                                                      -1,
+                                                              endTime:
+                                                                  data.endTime ??
+                                                                      -1,
+                                                              topics: data
+                                                                      .topic ??
+                                                                  <Topic>[]),
+                                                    );
+                                                  }
+
+                                                  if (value == 'Delete') {
+                                                    showDialog(
+                                                      context: context,
+                                                      barrierLabel: '',
+                                                      barrierDismissible: false,
+                                                      builder: (_) =>
+                                                          VerifyDialog(
+                                                        onTap: () {
+                                                          BlocProvider.of<
+                                                                  SglCstCubit>(
+                                                              context)
+                                                            ..deleteSgl(
+                                                                id: data.sglId ??
+                                                                    '');
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                                itemBuilder:
+                                                    (BuildContext context) {
+                                                  return <PopupMenuEntry<
+                                                      String>>[
+                                                    PopupMenuItem<String>(
+                                                      value: 'Edit',
+                                                      child: Text('Edit'),
+                                                    ),
+                                                    PopupMenuItem<String>(
+                                                      value: 'Delete',
+                                                      child: Text('Delete'),
+                                                    ),
+                                                  ];
+                                                },
+                                              ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 4,
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: RichText(
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            text: TextSpan(
+                                              style:
+                                                  textTheme.bodySmall?.copyWith(
+                                                color: secondaryTextColor,
+                                              ),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                  text: 'Supervisor:\t',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text: data.supervisorName ??
+                                                      '-',
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "(${Utils.epochToStringTime(startTime: data.startTime!, endTime: data.endTime)})",
-                                            style: textTheme.bodyMedium
-                                                ?.copyWith(
-                                                    color: primaryTextColor),
-                                          ),
-                                          SizedBox(
-                                            width: 6,
-                                          ),
-                                          Text(
-                                            Utils.datetimeToString(
-                                                data.createdAt!,
-                                                format: 'EEEE, dd MMM yyyy'),
-                                            style: textTheme.bodyMedium
-                                                ?.copyWith(
-                                                    color: primaryTextColor),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 12,
-                                      ),
-                                      for (int i = 0;
-                                          i < data.topic!.length;
-                                          i++)
-                                        TimelineTile(
-                                          indicatorStyle: IndicatorStyle(
-                                            width: 14,
-                                            height: 14,
-                                            indicatorXY: 0.15,
-                                            indicator: Container(
-                                              width: 14,
-                                              height: 14,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: data.topic![i]
-                                                            .verificationStatus ==
-                                                        'VERIFIED'
-                                                    ? successColor
-                                                    : secondaryTextColor,
-                                              ),
-                                              child: Center(
-                                                child: data.topic![i]
-                                                            .verificationStatus ==
-                                                        'VERIFIED'
-                                                    ? Icon(
-                                                        Icons.check,
-                                                        size: 14,
-                                                        color: Colors.white,
-                                                      )
-                                                    : null,
-                                              ),
-                                            ),
-                                          ),
-                                          afterLineStyle: LineStyle(
-                                            thickness: 1,
-                                            color: secondaryTextColor,
-                                          ),
-                                          beforeLineStyle: LineStyle(
-                                            thickness: 1,
-                                            color: secondaryTextColor,
-                                          ),
-                                          alignment: TimelineAlign.start,
-                                          isFirst: i == 0,
-                                          isLast: i == data.topic!.length - 1,
-                                          endChild: Container(
-                                            margin: EdgeInsets.only(
-                                                left: 16, bottom: 12),
-                                            child: Text(
-                                              data.topic![i].topicName!
-                                                  .join(', '),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "(${Utils.epochToStringTime(startTime: data.startTime!, endTime: data.endTime)})",
                                               style: textTheme.bodyMedium
                                                   ?.copyWith(
-                                                height: 1.1,
+                                                      color: primaryTextColor),
+                                            ),
+                                            SizedBox(
+                                              width: 6,
+                                            ),
+                                            Text(
+                                              Utils.datetimeToString(
+                                                  data.createdAt!,
+                                                  format: 'EEE, dd MMM yyyy'),
+                                              style: textTheme.bodyMedium
+                                                  ?.copyWith(
+                                                      color: primaryTextColor),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        for (int i = 0;
+                                            i < data.topic!.length;
+                                            i++)
+                                          TimelineTile(
+                                            indicatorStyle: IndicatorStyle(
+                                              width: 14,
+                                              height: 14,
+                                              indicatorXY: 0.15,
+                                              indicator: Container(
+                                                width: 14,
+                                                height: 14,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: data.topic![i]
+                                                              .verificationStatus ==
+                                                          'VERIFIED'
+                                                      ? successColor
+                                                      : secondaryTextColor,
+                                                ),
+                                                child: Center(
+                                                  child: data.topic![i]
+                                                              .verificationStatus ==
+                                                          'VERIFIED'
+                                                      ? Icon(
+                                                          Icons.check,
+                                                          size: 14,
+                                                          color: Colors.white,
+                                                        )
+                                                      : null,
+                                                ),
+                                              ),
+                                            ),
+                                            afterLineStyle: LineStyle(
+                                              thickness: 1,
+                                              color: secondaryTextColor,
+                                            ),
+                                            beforeLineStyle: LineStyle(
+                                              thickness: 1,
+                                              color: secondaryTextColor,
+                                            ),
+                                            alignment: TimelineAlign.start,
+                                            isFirst: i == 0,
+                                            isLast: i == data.topic!.length - 1,
+                                            endChild: Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 16, bottom: 12),
+                                              child: Text(
+                                                data.topic![i].topicName!
+                                                    .join(', '),
+                                                style: textTheme.bodyMedium
+                                                    ?.copyWith(
+                                                  height: 1.1,
+                                                ),
                                               ),
                                             ),
                                           ),
+                                        SizedBox(
+                                          height: 12,
                                         ),
-                                      SizedBox(
-                                        height: 12,
-                                      ),
-                                      ItemDivider(),
-                                      SizedBox(
-                                        height: 12,
-                                      ),
-                                      TextButton.icon(
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            barrierLabel: '',
-                                            barrierDismissible: false,
-                                            builder: (_) => AddTopicDialog(
-                                              type: TopicDialogType.sgl,
-                                              date: data.createdAt!,
-                                              id: data.sglId!,
-                                              supervisorId: '',
+                                        ItemDivider(),
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        TextButton.icon(
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              barrierLabel: '',
+                                              barrierDismissible: false,
+                                              builder: (_) => AddTopicDialog(
+                                                type: TopicDialogType.sgl,
+                                                date: data.createdAt!,
+                                                id: data.sglId!,
+                                                supervisorId: '',
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(Icons.add_rounded),
+                                          label: Text(
+                                            'Add Topic',
+                                            style:
+                                                textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: primaryColor,
                                             ),
-                                          );
-                                        },
-                                        icon: Icon(Icons.add_rounded),
-                                        label: Text(
-                                          'Add Topic',
-                                          style:
-                                              textTheme.titleMedium?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: primaryColor,
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  height: 16,
-                                );
-                              },
-                              itemCount: state.sglDetail!.sgls!.length);
-                        }
-                        return SizedBox(height: 300, child: CustomLoading());
-                      },
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                  ],
+                                      ],
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    height: 16,
+                                  );
+                                },
+                                itemCount: state.sglDetail!.sgls!.length);
+                          }
+                          return SizedBox(height: 300, child: CustomLoading());
+                        },
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      }),
     );
   }
 

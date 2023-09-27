@@ -5,6 +5,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
+import 'package:elogbook/src/presentation/features/common/no_internet/check_internet_onetime.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/add_special_report_page.dart';
 import 'package:elogbook/src/presentation/features/students/special_reports/widgets/special_report_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -43,99 +44,102 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
         title: Text("Problem Constultation"),
       ),
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            await Future.wait([
-              BlocProvider.of<SpecialReportCubit>(context)
-                  .getStudentSpecialReport(),
-            ]);
-          },
-          child: CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                sliver: SliverToBoxAdapter(
-                  child: SpacingColumn(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    onlyPading: true,
-                    horizontalPadding: 16,
-                    children: [
-                      DepartmentHeader(
-                        unitName: widget.activeDepartmentModel.unitName!,
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      if (widget.credential.student?.supervisingDPKId == null)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Please select a supervisor first in the profile menu before creating a self reflection',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: errorColor,
+        child: CheckInternetOnetime(child: (context) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              await Future.wait([
+                BlocProvider.of<SpecialReportCubit>(context)
+                    .getStudentSpecialReport(),
+              ]);
+            },
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  sliver: SliverToBoxAdapter(
+                    child: SpacingColumn(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      onlyPading: true,
+                      horizontalPadding: 16,
+                      children: [
+                        DepartmentHeader(
+                          unitName: widget.activeDepartmentModel.unitName!,
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        if (widget.credential.student?.supervisingDPKId == null)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Please select a supervisor first in the profile menu before creating a self reflection',
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: errorColor,
+                              ),
                             ),
                           ),
-                        ),
-                      if (widget.credential.student?.supervisingDPKId != null)
-                        if (widget.activeDepartmentModel.countCheckIn! == 0)
-                          AddNewConsultionCard(),
-                      BlocBuilder<SpecialReportCubit, SpecialReportState>(
-                        builder: (context, state) {
-                          if (state.specialReport != null) {
-                            if (state.specialReport!.listProblemConsultations!
-                                .isEmpty) {
-                              return EmptyData(
-                                  title: 'No Problem Consultation Data',
-                                  subtitle:
-                                      'Please upload the problem consultation first');
-                            }
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 12,
-                                ),
-                                Text(
-                                  'List of Consultation on Encountered Issues',
-                                  style: textTheme.titleMedium?.copyWith(
-                                    height: 1.1,
-                                    color: secondaryColor,
+                        if (widget.credential.student?.supervisingDPKId != null)
+                          if (widget.activeDepartmentModel.countCheckIn! == 0)
+                            AddNewConsultionCard(),
+                        BlocBuilder<SpecialReportCubit, SpecialReportState>(
+                          builder: (context, state) {
+                            if (state.specialReport != null) {
+                              if (state.specialReport!.listProblemConsultations!
+                                  .isEmpty) {
+                                return EmptyData(
+                                    title: 'No Problem Consultation Data',
+                                    subtitle:
+                                        'Please upload the problem consultation first');
+                              }
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 12,
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 12,
-                                ),
-                                ListView.separated(
-                                  itemBuilder: (context, index) {
-                                    return SpecialReportCard(
-                                      data: state.specialReport!
-                                          .listProblemConsultations![index],
-                                      index: index + 1,
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return SizedBox(
-                                      height: 12,
-                                    );
-                                  },
-                                  itemCount: state.specialReport!
-                                      .listProblemConsultations!.length,
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                ),
-                              ],
-                            );
-                          }
-                          return SizedBox(height: 300, child: CustomLoading());
-                        },
-                      ),
-                    ],
+                                  Text(
+                                    'List of Consultation on Encountered Issues',
+                                    style: textTheme.titleMedium?.copyWith(
+                                      height: 1.1,
+                                      color: secondaryColor,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  ListView.separated(
+                                    itemBuilder: (context, index) {
+                                      return SpecialReportCard(
+                                        data: state.specialReport!
+                                            .listProblemConsultations![index],
+                                        index: index + 1,
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return SizedBox(
+                                        height: 12,
+                                      );
+                                    },
+                                    itemCount: state.specialReport!
+                                        .listProblemConsultations!.length,
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                  ),
+                                ],
+                              );
+                            }
+                            return SizedBox(
+                                height: 300, child: CustomLoading());
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }

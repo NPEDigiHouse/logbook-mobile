@@ -5,6 +5,7 @@ import 'package:elogbook/src/data/models/competences/list_cases_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
+import 'package:elogbook/src/presentation/features/common/no_internet/check_internet_onetime.dart';
 import 'package:elogbook/src/presentation/features/students/competences/widgets/add_competence_dialog.dart';
 import 'package:elogbook/src/presentation/widgets/chip_verified.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
@@ -74,108 +75,111 @@ class _ListCasesPageState extends State<ListCasesPage> {
             )
           : null,
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            isMounted = false;
-            await Future.wait([
-              BlocProvider.of<CompetenceCubit>(context).getListCases(),
-            ]);
-          },
-          child: ValueListenableBuilder(
-              valueListenable: listData,
-              builder: (context, s, _) {
-                return CustomScrollView(
-                  slivers: [
-                    SliverPadding(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      sliver: SliverFillRemaining(
-                        child: BlocConsumer<CompetenceCubit, CompetenceState>(
-                          listener: (context, state) {
-                            if (state.isCaseSuccessAdded) {
-                              isMounted = false;
-                            }
-                            if (state.listCasesModel != null &&
-                                state.caseState == RequestState.data) {
-                              if (!isMounted) {
-                                Future.microtask(() {
-                                  listData.value = [
-                                    ...state.listCasesModel!.listCases!
-                                  ];
-                                  isMounted = true;
-                                });
+        child: CheckInternetOnetime(child: (context) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              isMounted = false;
+              await Future.wait([
+                BlocProvider.of<CompetenceCubit>(context).getListCases(),
+              ]);
+            },
+            child: ValueListenableBuilder(
+                valueListenable: listData,
+                builder: (context, s, _) {
+                  return CustomScrollView(
+                    slivers: [
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        sliver: SliverFillRemaining(
+                          child: BlocConsumer<CompetenceCubit, CompetenceState>(
+                            listener: (context, state) {
+                              if (state.isCaseSuccessAdded) {
+                                isMounted = false;
                               }
-                            }
-                          },
-                          builder: (context, state) {
-                            if (state.listCasesModel != null) {
-                              final data = state.listCasesModel!.listCases!;
-                              if (data.isEmpty) {
-                                return EmptyData(
-                                  subtitle: 'Please add case data first!',
-                                  title: 'Data Still Empty',
-                                );
+                              if (state.listCasesModel != null &&
+                                  state.caseState == RequestState.data) {
+                                if (!isMounted) {
+                                  Future.microtask(() {
+                                    listData.value = [
+                                      ...state.listCasesModel!.listCases!
+                                    ];
+                                    isMounted = true;
+                                  });
+                                }
                               }
-                              return SingleChildScrollView(
-                                child: SpacingColumn(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  onlyPading: true,
-                                  horizontalPadding: 16,
-                                  children: [
-                                    DepartmentHeader(
-                                        unitName: widget.model.unitName!),
-                                    SizedBox(
-                                      height: 12,
-                                    ),
-                                    buildSearchFilterSection(
-                                      verifiedCount: state
-                                          .listCasesModel!.listCases!
-                                          .where((element) =>
-                                              element.verificationStatus ==
-                                              'VERIFIED')
-                                          .length,
-                                      unverifiedCount: state
-                                          .listCasesModel!.listCases!
-                                          .where((element) =>
-                                              element.verificationStatus !=
-                                              'VERIFIED')
-                                          .length,
-                                    ),
-                                    SizedBox(
-                                      height: 16,
-                                    ),
-                                    ListView.separated(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) =>
-                                          TestGradeScoreCard(
-                                        caseName: s[index].caseName!,
-                                        caseType: s[index].caseType!,
-                                        isVerified:
-                                            s[index].verificationStatus ==
-                                                'VERIFIED',
+                            },
+                            builder: (context, state) {
+                              if (state.listCasesModel != null) {
+                                final data = state.listCasesModel!.listCases!;
+                                if (data.isEmpty) {
+                                  return EmptyData(
+                                    subtitle: 'Please add case data first!',
+                                    title: 'Data Still Empty',
+                                  );
+                                }
+                                return SingleChildScrollView(
+                                  child: SpacingColumn(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    onlyPading: true,
+                                    horizontalPadding: 16,
+                                    children: [
+                                      DepartmentHeader(
+                                          unitName: widget.model.unitName!),
+                                      SizedBox(
+                                        height: 12,
                                       ),
-                                      separatorBuilder: (context, index) =>
-                                          SizedBox(height: 12),
-                                      itemCount: s.length,
-                                    ),
-                                    SizedBox(
-                                      height: 12,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else {
-                              return CustomLoading();
-                            }
-                          },
+                                      buildSearchFilterSection(
+                                        verifiedCount: state
+                                            .listCasesModel!.listCases!
+                                            .where((element) =>
+                                                element.verificationStatus ==
+                                                'VERIFIED')
+                                            .length,
+                                        unverifiedCount: state
+                                            .listCasesModel!.listCases!
+                                            .where((element) =>
+                                                element.verificationStatus !=
+                                                'VERIFIED')
+                                            .length,
+                                      ),
+                                      SizedBox(
+                                        height: 16,
+                                      ),
+                                      ListView.separated(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) =>
+                                            TestGradeScoreCard(
+                                          caseName: s[index].caseName!,
+                                          caseType: s[index].caseType!,
+                                          isVerified:
+                                              s[index].verificationStatus ==
+                                                  'VERIFIED',
+                                        ),
+                                        separatorBuilder: (context, index) =>
+                                            SizedBox(height: 12),
+                                        itemCount: s.length,
+                                      ),
+                                      SizedBox(
+                                        height: 12,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return CustomLoading();
+                              }
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                );
-              }),
-        ),
+                    ],
+                  );
+                }),
+          );
+        }),
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
+import 'package:elogbook/src/presentation/features/common/no_internet/check_internet_onetime.dart';
 import 'package:elogbook/src/presentation/features/students/daily_activity/pages/daily_activity_week_status_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
@@ -48,62 +49,64 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
       appBar: AppBar(
         title: Text('Daily Activity'),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Future.wait([
-            BlocProvider.of<DailyActivityCubit>(context)
-                .getStudentDailyActivities(),
-          ]);
-        },
-        child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
-          builder: (context, state) {
-            if (state.studentDailyActivity != null)
-              return SingleChildScrollView(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: SpacingColumn(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  horizontalPadding: 16,
-                  spacing: 20,
-                  children: [
-                    DepartmentHeader(
-                      unitName: widget.activeDepartmentModel.unitName!,
-                    ),
-                    ...List.generate(state.studentDailyActivity!.weeks!.length,
-                        (index) {
-                      final i = state.studentDailyActivity!.dailyActivities!
-                          .indexWhere((element) =>
-                              element.weekName ==
-                              state.studentDailyActivity!.weeks![index]
-                                  .weekName);
-
-                      final endDate = DateTime.fromMillisecondsSinceEpoch(
-                          state.studentDailyActivity!.weeks![index].endDate! *
-                              1000);
-                      return DailyActivityHomeCard(
-                        startDate: DateTime.fromMillisecondsSinceEpoch(state
-                                .studentDailyActivity!
-                                .weeks![index]
-                                .startDate! *
-                            1000),
-                        endDate: endDate,
-                        week: state.studentDailyActivity!.weeks![index],
-                        status:
-                            state.studentDailyActivity!.weeks![index].status ??
-                                false,
-                        checkInCount:
-                            widget.activeDepartmentModel.countCheckIn!,
-                        dailyActivity: i == -1
-                            ? null
-                            : state.studentDailyActivity!.dailyActivities![i],
-                      );
-                    })
-                  ],
-                ),
-              );
-            return CustomLoading();
+      body: CheckInternetOnetime(child: (context) {
+        return RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<DailyActivityCubit>(context)
+                  .getStudentDailyActivities(),
+            ]);
           },
-        ),
-      ),
+          child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
+            builder: (context, state) {
+              if (state.studentDailyActivity != null)
+                return SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: SpacingColumn(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    horizontalPadding: 16,
+                    spacing: 20,
+                    children: [
+                      DepartmentHeader(
+                        unitName: widget.activeDepartmentModel.unitName!,
+                      ),
+                      ...List.generate(
+                          state.studentDailyActivity!.weeks!.length, (index) {
+                        final i = state.studentDailyActivity!.dailyActivities!
+                            .indexWhere((element) =>
+                                element.weekName ==
+                                state.studentDailyActivity!.weeks![index]
+                                    .weekName);
+
+                        final endDate = DateTime.fromMillisecondsSinceEpoch(
+                            state.studentDailyActivity!.weeks![index].endDate! *
+                                1000);
+                        return DailyActivityHomeCard(
+                          startDate: DateTime.fromMillisecondsSinceEpoch(state
+                                  .studentDailyActivity!
+                                  .weeks![index]
+                                  .startDate! *
+                              1000),
+                          endDate: endDate,
+                          week: state.studentDailyActivity!.weeks![index],
+                          status: state
+                                  .studentDailyActivity!.weeks![index].status ??
+                              false,
+                          checkInCount:
+                              widget.activeDepartmentModel.countCheckIn!,
+                          dailyActivity: i == -1
+                              ? null
+                              : state.studentDailyActivity!.dailyActivities![i],
+                        );
+                      })
+                    ],
+                  ),
+                );
+              return CustomLoading();
+            },
+          ),
+        );
+      }),
     );
   }
 }

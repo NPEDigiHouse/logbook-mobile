@@ -6,7 +6,9 @@ import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/history_cubit/history_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/onetime_internet_check/onetime_internet_check_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/realtime_internet_check/realtime_internet_check_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/reference/reference_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
@@ -49,6 +51,8 @@ class App extends StatelessWidget {
     );
     return MultiProvider(
       providers: [
+        BlocProvider(create: (_) => di.locator<OnetimeInternetCheckCubit>()),
+        BlocProvider(create: (_) => di.locator<RealtimeInternetCheckCubit>()),
         BlocProvider(create: (_) => di.locator<AuthCubit>()),
         BlocProvider(create: (_) => di.locator<DepartmentCubit>()),
         BlocProvider(create: (_) => di.locator<SupervisorsCubit>()),

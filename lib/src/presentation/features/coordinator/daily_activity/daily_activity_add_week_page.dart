@@ -293,6 +293,7 @@ class _DailyActivtyWeekCardState extends State<DailyActivtyWeekCard> {
                   ];
                 },
               ),
+              
             ],
           ),
           Builder(builder: (context) {

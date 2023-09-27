@@ -36,7 +36,7 @@ class _InputDateTimeFieldState extends State<InputDateTimeField> {
       onTap: () async {
         final time = await showTimePicker(
           context: context,
-          initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+          initialTime: TimeOfDay.fromDateTime(widget.initialDate),
         );
 
         if (time == null) return;

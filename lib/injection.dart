@@ -1,22 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/utils/api_header.dart';
-import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/activity_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/assesment_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/auth_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/clinical_record_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/competence_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/daily_activity_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/history_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/reference_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/scientific_session_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/self_reflection_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/sglcst_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/special_report_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/student_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/supervisors_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/unit_datasource.dart';
-import 'package:elogbook/src/data/datasources/remote_datasources/user_datasource.dart';
 import 'package:elogbook/src/presentation/blocs/activity_cubit/activity_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
@@ -25,7 +8,9 @@ import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/history_cubit/history_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/onetime_internet_check/onetime_internet_check_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/realtime_internet_check/realtime_internet_check_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/reference/reference_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
@@ -40,6 +25,8 @@ import 'package:elogbook/src/presentation/features/students/clinical_record/prov
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
 import 'package:get_it/get_it.dart';
+
+import 'src/data/datasources/datasources.export.dart';
 
 final locator = GetIt.instance;
 
@@ -240,11 +227,19 @@ void _injectStateManagement() {
       dataSourceSp: locator(),
     ),
   );
+
   locator.registerFactory(
     () => HistoryCubit(
       dataSource: locator(),
     ),
   );
+  locator.registerFactory(
+    () => OnetimeInternetCheckCubit(),
+  );
+  locator.registerFactory(
+    () => RealtimeInternetCheckCubit(),
+  );
+
   locator.registerFactory(
     () => MiniCexProvider(),
   );
