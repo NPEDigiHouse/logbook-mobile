@@ -19,7 +19,7 @@ class DailyActivityCard extends StatelessWidget {
       child: InkWell(
         onTap: () => context.navigateTo(
           SupervisorDailyActivityDetailPage(
-            data: dailyActivityStudent,
+            id: dailyActivityStudent.id ?? '',
           ),
         ),
         child: Padding(

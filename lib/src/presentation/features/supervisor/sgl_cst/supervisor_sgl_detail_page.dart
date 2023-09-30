@@ -171,7 +171,7 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                             Utils.datetimeToString(
                                                 data.createdAt ??
                                                     DateTime.now(),
-                                                format: 'EEEE, dd MMM yyyy'),
+                                                format: 'EEE, dd MMM yyyy'),
                                             style: textTheme.bodyMedium
                                                 ?.copyWith(
                                                     color: primaryTextColor),
@@ -365,8 +365,8 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                                                 isSubmit: true,
                                                               ));
                                                     },
-                                                    child: Text(
-                                                        'Verify  All Topics'),
+                                                    child:
+                                                        Text('Verify Topics'),
                                                   );
                                                 } else {
                                                   return OutlinedButton(

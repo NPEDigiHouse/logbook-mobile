@@ -21,7 +21,10 @@ class StudentDepartmentCard extends StatelessWidget {
       child: InkWell(
         onTap: () {
           context.navigateTo(SupervisorFinalGrade(
-            finalGrade: data,
+            studentId: data.studentId ?? '',
+            studentName: data.studentName ?? '',
+            departmentId: data.activeDepartmentId ?? '',
+            departmentName: data.activeDepartmentName ?? '',
           ));
         },
         child: Padding(

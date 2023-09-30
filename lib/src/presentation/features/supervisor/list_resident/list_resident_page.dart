@@ -186,41 +186,43 @@ class _ListResidentPageState extends State<ListResidentPage> {
           SizedBox(
             width: 12,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                student.studentName ?? '',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: primaryTextColor,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  student.studentName ?? '',
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: primaryTextColor,
+                  ),
                 ),
-              ),
-              Text(
-                student.studentId ?? '',
-                style: textTheme.bodyMedium?.copyWith(
-                  color: secondaryTextColor,
-                ),
-              ),
-              RichText(
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                text: TextSpan(
-                  style: textTheme.bodySmall?.copyWith(
+                Text(
+                  student.studentId ?? '',
+                  style: textTheme.bodyMedium?.copyWith(
                     color: secondaryTextColor,
                   ),
-                  children: <TextSpan>[
-                    const TextSpan(
-                      text: 'Department:\t',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    TextSpan(text: student.activeDepartmentName),
-                  ],
                 ),
-              ),
-            ],
+                RichText(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    style: textTheme.bodySmall?.copyWith(
+                      color: secondaryTextColor,
+                    ),
+                    children: <TextSpan>[
+                      const TextSpan(
+                        text: 'Department:\t',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      TextSpan(text: student.activeDepartmentName),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       ),

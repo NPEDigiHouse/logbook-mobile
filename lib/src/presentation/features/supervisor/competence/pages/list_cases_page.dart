@@ -85,12 +85,12 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
             state.requestState == RequestState.data) {
           listData.value = [...state.listCasesModel!.listCases!];
 
-          if (listData.value.indexWhere(
-                  (element) => element.verificationStatus == 'INPROCESS') ==
-              -1) {
-            BlocProvider.of<CompetenceCubit>(context)..getCaseStudents();
-            context.back();
-          }
+          // if (listData.value.indexWhere(
+          //         (element) => element.verificationStatus == 'INPROCESS') ==
+          //     -1) {
+          //   BlocProvider.of<CompetenceCubit>(context)..getCaseStudents();
+          //   context.back();
+          // }
         }
       },
       builder: (context, state) {

@@ -3,6 +3,7 @@ import 'package:elogbook/src/data/models/self_reflection/self_reflection_model.d
 import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/self_reflection_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
@@ -58,55 +59,61 @@ class _SupervisorListSelfReflectionsPageState
                       });
                       isMounted = true;
                     }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: CustomScrollView(
-                        slivers: [
-                          SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: 16,
+                    if (state.listData!.isNotEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: CustomScrollView(
+                          slivers: [
+                            SliverToBoxAdapter(
+                              child: SizedBox(
+                                height: 16,
+                              ),
                             ),
-                          ),
-                          SliverToBoxAdapter(
-                            child: SearchField(
-                              onChanged: (value) {
-                                final data = state.listData!
-                                    .where((element) => element.studentName!
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase()))
-                                    .toList();
-                                if (value.isEmpty) {
-                                  listStudent.value.clear();
-                                  listStudent.value = [...state.listData!];
-                                } else {
-                                  listStudent.value = [...data];
-                                }
-                              },
-                              text: '',
-                              hint: 'Search for student',
+                            SliverToBoxAdapter(
+                              child: SearchField(
+                                onChanged: (value) {
+                                  final data = state.listData!
+                                      .where((element) => element.studentName!
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase()))
+                                      .toList();
+                                  if (value.isEmpty) {
+                                    listStudent.value.clear();
+                                    listStudent.value = [...state.listData!];
+                                  } else {
+                                    listStudent.value = [...data];
+                                  }
+                                },
+                                text: '',
+                                hint: 'Search for student',
+                              ),
                             ),
-                          ),
-                          SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: 12,
-                            ),
-                          ),
-                          SliverList.separated(
-                            itemCount: s!.length,
-                            itemBuilder: (context, index) {
-                              return SelfReflectionCard(
-                                selfReflection: s![index],
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return SizedBox(
+                            SliverToBoxAdapter(
+                              child: SizedBox(
                                 height: 12,
-                              );
-                            },
-                          )
-                        ],
-                      ),
-                    );
+                              ),
+                            ),
+                            SliverList.separated(
+                              itemCount: s!.length,
+                              itemBuilder: (context, index) {
+                                return SelfReflectionCard(
+                                  selfReflection: s![index],
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  height: 12,
+                                );
+                              },
+                            )
+                          ],
+                        ),
+                      );
+                    } else {
+                      return EmptyData(
+                          title: 'No Self Reflection Submitted',
+                          subtitle: 'wait for submission from students');
+                    }
                   },
                 );
               }),

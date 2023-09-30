@@ -50,7 +50,12 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
           SupervisorHistoryPage(
               isKabag:
                   credential.badges!.indexWhere((e) => e.name == 'HEAD_DIV') !=
-                      -1),
+                      -1,
+              isCeu:
+                  credential.badges!.indexWhere((e) => e.name == 'CEU') != -1,
+                  departmentName: credential.supervisor?.units??[],
+                  supervisorId: credential.supervisor?.supervisorId??'',
+                  ),
           // SizedBox(),
           ProfilePage(
             credential: credential,

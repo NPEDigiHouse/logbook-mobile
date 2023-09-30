@@ -5,6 +5,8 @@ import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/exception_handler.dart';
 import 'package:elogbook/core/utils/failure.dart';
+import 'package:elogbook/src/data/models/history/history_cst_model.dart';
+import 'package:elogbook/src/data/models/history/history_sgl_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sglcst.export.dart';
 
 abstract class SglCstDataSource {
@@ -16,14 +18,20 @@ abstract class SglCstDataSource {
   Future<Either<Failure, bool>> deleteSgl({
     required String id,
   });
+  Future<Either<Failure, bool>> deleteCst({
+    required String id,
+  });
+  Future<Either<Failure, HistorySglModel>> getSgl({
+    required String id,
+  });
+  Future<Either<Failure, HistoryCstModel>> getCst({
+    required String id,
+  });
   Future<Either<Failure, bool>> editCst(
       {required String id,
       int? startTime,
       int? endTime,
       List<Map<String, dynamic>>? topics});
-  Future<Either<Failure, bool>> deleteCst({
-    required String id,
-  });
   Future<Either<Failure, void>> uploadSgl({
     required SglCstPostModel postModel,
   });
@@ -370,6 +378,32 @@ class SglCstDataSourceImpl implements SglCstDataSource {
               ],
           });
       return Right(true);
+    } catch (e) {
+      return Left(failure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, HistoryCstModel>> getCst({required String id}) async {
+    try {
+      final response = await dio.get(ApiService.baseUrl + '/csts/$id/',
+          options: await apiHeader.userOptions());
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+      final result = HistoryCstModel.fromJson(dataResponse.data);
+      return Right(result);
+    } catch (e) {
+      return Left(failure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, HistorySglModel>> getSgl({required String id}) async {
+    try {
+      final response = await dio.get(ApiService.baseUrl + '/sgls/$id/',
+          options: await apiHeader.userOptions());
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+      final result = HistorySglModel.fromJson(dataResponse.data);
+      return Right(result);
     } catch (e) {
       return Left(failure(e));
     }

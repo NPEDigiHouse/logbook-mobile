@@ -127,7 +127,8 @@ class _SupervisorScientificAssignmentDetailPageState
                     }
                   },
                   builder: (context, state) {
-                    if (state.scientificAssignmentDetail != null) {
+                    if (state.scientificAssignmentDetail != null &&
+                        provider.isAlreadyInit) {
                       return Builder(builder: (context) {
                         if (state.scientificGradeItems != null) {
                           if (state.scientificGradeItems!.isNotEmpty)

@@ -171,7 +171,7 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
                                             Utils.datetimeToString(
                                                 data.createdAt ??
                                                     DateTime.now(),
-                                                format: 'EEEE, dd MMM yyyy'),
+                                                format: 'EEE, dd MMM yyyy'),
                                             style: textTheme.bodyMedium
                                                 ?.copyWith(
                                                     color: primaryTextColor),

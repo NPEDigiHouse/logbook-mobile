@@ -37,10 +37,6 @@ class _CoordinatorHistoryPageState extends State<CoordinatorHistoryPage> {
       'All',
       'Clinical Record',
       'Scientific Session',
-      'Self Reflection',
-      'Daily Activity',
-      'SGL',
-      'CST',
     ];
 
     Future.microtask(() {
@@ -96,7 +92,7 @@ class _CoordinatorHistoryPageState extends State<CoordinatorHistoryPage> {
             if (state.histories != null &&
                 state.requestState == RequestState.data) {
               final data = HistoryHelper.convertHistoryToActivity(
-                  state.histories!, RoleHistory.supervisor);
+                  state.histories!, RoleHistory.supervisor, context);
               return CustomScrollView(
                 slivers: <Widget>[
                   SliverGroupedListView<Activity, DateTime>(
@@ -178,7 +174,7 @@ class _CoordinatorHistoryPageState extends State<CoordinatorHistoryPage> {
                                                 ),
                                               ),
                                               TextSpan(
-                                                  text: activity.supervisor ??
+                                                  text: activity.supervisorId ??
                                                       '-'),
                                             ],
                                           ),

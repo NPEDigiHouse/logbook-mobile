@@ -208,13 +208,13 @@ class _DailyActivityWeekStatusPageState
                               data.sort(
                                 (a, b) {
                                   final daysOfWeek = [
-                                    'SUNDAY',
                                     'MONDAY',
                                     'TUESDAY',
                                     'WEDNESDAY',
                                     'THURSDAY',
                                     'FRIDAY',
-                                    'SATURDAY'
+                                    'SATURDAY',
+                                    'SUNDAY',
                                   ];
                                   return daysOfWeek
                                       .indexOf(a.day!)

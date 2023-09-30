@@ -1,7 +1,6 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/supervisor_personal_behavior_detail_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/supervisor_scientific_assignment_detail_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,8 @@ class _ListPersonalBehaviorPageState extends State<ListPersonalBehaviorPage> {
             if (state.personalBehaviorStudent != null &&
                 state.personalBehaviorStudent!.isNotEmpty) {
               context.replace(SupervisorPersonalBehaviorDetailPage(
-                  unitName: widget.unitName, id: state.personalBehaviorStudent!.first.id!));
+                  unitName: widget.unitName,
+                  id: state.personalBehaviorStudent!.first.id!));
             }
           },
           builder: (context, state) {
@@ -52,7 +52,8 @@ class _ListPersonalBehaviorPageState extends State<ListPersonalBehaviorPage> {
                 state.personalBehaviorStudent!.isEmpty) {
               return EmptyData(
                 title: 'No Data',
-                subtitle: 'no personal behavior data',
+                subtitle:
+                    'All personal behaviors data has been verified, please check history',
               );
             }
             return CustomLoading();

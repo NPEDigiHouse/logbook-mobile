@@ -24,8 +24,7 @@ abstract class DailyActivityDataSource {
       {required String studentId});
   Future<StudentActivityPerweekResponse> getStudentActivityPerweek(
       {required String id});
-  Future<StudentActivityPerweekResponse> getActivityOfDailyActivity(
-      {required String id});
+  Future<DailyActivityStudent> getActivityOfDailyActivity({required String id});
   Future<void> updateDailyActiviy(
       {required String dayId, required DailyActivityPostModel model});
   Future<void> verifiyDailyActivityById(
@@ -112,7 +111,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
   }
 
   @override
-  Future<StudentActivityPerweekResponse> getActivityOfDailyActivity(
+  Future<DailyActivityStudent> getActivityOfDailyActivity(
       {required String id}) async {
     try {
       final response = await dio.get(
@@ -120,7 +119,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         options: await apiHeader.userOptions(),
       );
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
-      final result = StudentActivityPerweekResponse.fromJson(dataResponse.data);
+      final result = DailyActivityStudent.fromJson(dataResponse.data);
       return result;
     } catch (e) {
       throw ClientFailure(e.toString());

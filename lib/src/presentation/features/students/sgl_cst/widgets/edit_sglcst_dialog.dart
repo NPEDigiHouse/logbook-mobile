@@ -6,7 +6,6 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_on_sglcst.dart';
-import 'package:elogbook/src/data/models/sglcst/topic_post_model.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/widgets/add_topic_dialog.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
@@ -70,12 +69,12 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
   Widget build(BuildContext context) {
     return BlocListener<SglCstCubit, SglCstState>(
       listener: (context, state) {
-        if (state.isSglEditSuccess) {
-          if (widget.type == TopicDialogType.cst) {
-            BlocProvider.of<SglCstCubit>(context)..getStudentCstDetail();
-          } else {
-            BlocProvider.of<SglCstCubit>(context)..getStudentSglDetail();
-          }
+        if (widget.type == TopicDialogType.cst && state.isCstEditSuccess) {
+          BlocProvider.of<SglCstCubit>(context)..getStudentCstDetail();
+          context.back();
+        } else if (state.isSglEditSuccess &&
+            widget.type == TopicDialogType.sgl) {
+          BlocProvider.of<SglCstCubit>(context)..getStudentSglDetail();
           context.back();
         }
       },

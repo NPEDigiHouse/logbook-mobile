@@ -11,7 +11,6 @@ import 'package:elogbook/src/presentation/features/students/menu/widgets/menu_sw
 import 'package:elogbook/src/presentation/features/supervisor/assesment/assesment_list_student_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/clinical_record/list_clinical_record_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/competence/supervisor_competence_page.dart';
-import 'package:elogbook/src/presentation/features/supervisor/daily_activity/supervisor_daily_activity_home_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/daily_activity/supervisor_list_daily_activity_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/supervisor_list_student_unit_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/scientific_session/list_scientific_session_page.dart';

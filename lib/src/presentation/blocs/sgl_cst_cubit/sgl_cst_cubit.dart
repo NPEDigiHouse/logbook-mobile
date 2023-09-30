@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/sglcst_datasource.dart';
 import 'package:elogbook/src/data/datasources/remote_datasources/student_datasource.dart';
+import 'package:elogbook/src/data/models/history/history_cst_model.dart';
+import 'package:elogbook/src/data/models/history/history_sgl_model.dart';
 import 'package:elogbook/src/data/models/sglcst/cst_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_model.dart';
@@ -18,6 +20,10 @@ class SglCstCubit extends Cubit<SglCstState> {
     required this.dataSource,
     required this.studentDataSource,
   }) : super(SglCstState());
+
+  void reset() {
+    emit(state.copyWith(isCstEditSuccess: false, isSglEditSuccess: false));
+  }
 
   Future<void> uploadSgl({required SglCstPostModel model}) async {
     emit(state.copyWith(
@@ -63,6 +69,34 @@ class SglCstCubit extends Cubit<SglCstState> {
     result.fold(
       (l) => emit(state.copyWith(requestState: RequestState.error)),
       (r) => emit(state.copyWith(isSglDeleteSuccess: true)),
+    );
+  }
+
+  Future<void> getSgl({required String id}) async {
+    emit(state.copyWith(
+      requestState: RequestState.loading,
+    ));
+    final result = await dataSource.getSgl(
+      id: id,
+    );
+    result.fold(
+      (l) => emit(state.copyWith(requestState: RequestState.error)),
+      (r) => emit(
+          state.copyWith(historySglData: r, requestState: RequestState.data)),
+    );
+  }
+
+  Future<void> getCst({required String id}) async {
+    emit(state.copyWith(
+      requestState: RequestState.loading,
+    ));
+    final result = await dataSource.getCst(
+      id: id,
+    );
+    result.fold(
+      (l) => emit(state.copyWith(requestState: RequestState.error)),
+      (r) => emit(
+          state.copyWith(historyCstData: r, requestState: RequestState.data)),
     );
   }
 

@@ -16,9 +16,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SupervisorFinalGrade extends StatefulWidget {
-  final StudentDepartmentModel finalGrade;
+  final String studentId;
+  final String studentName;
+  final String departmentId;
+  final String departmentName;
 
-  const SupervisorFinalGrade({super.key, required this.finalGrade});
+  const SupervisorFinalGrade(
+      {super.key,
+      required this.studentName,
+      required this.studentId,
+      required this.departmentId,
+      required this.departmentName});
 
   @override
   State<SupervisorFinalGrade> createState() => _SupervisorFinalGradeState();
@@ -29,9 +37,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
   void initState() {
     super.initState();
     BlocProvider.of<AssesmentCubit>(context)
-      ..getFinalScore(
-          unitId: widget.finalGrade.activeDepartmentId ?? '',
-          studentId: widget.finalGrade.studentId!);
+      ..getFinalScore(unitId: widget.departmentId, studentId: widget.studentId);
   }
 
   final Map<String, String> mapTitle = {
@@ -94,8 +100,7 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
         onRefresh: () async {
           await Future.wait([
             BlocProvider.of<AssesmentCubit>(context).getFinalScore(
-                unitId: widget.finalGrade.activeDepartmentId!,
-                studentId: widget.finalGrade.studentId!)
+                unitId: widget.departmentId!, studentId: widget.studentId!)
           ]);
         },
         child: BlocConsumer<AssesmentCubit, AssesmentState>(
@@ -103,8 +108,8 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
             if (state.isSubmitFinalScoreSuccess) {
               BlocProvider.of<AssesmentCubit>(context)
                 ..getFinalScore(
-                    unitId: widget.finalGrade.activeDepartmentId ?? '',
-                    studentId: widget.finalGrade.studentId!);
+                    unitId: widget.departmentId ?? '',
+                    studentId: widget.studentId!);
             }
           },
           builder: (context, state) {
@@ -118,9 +123,9 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                       height: 16,
                     ),
                     StudentDepartmentHeader(
-                        unitName: widget.finalGrade.activeDepartmentName ?? '',
-                        studentName: widget.finalGrade.studentName ?? '',
-                        studentId: widget.finalGrade.studentId ?? ''),
+                        unitName: widget.departmentName ?? '',
+                        studentName: widget.studentName ?? '',
+                        studentId: widget.studentId ?? ''),
                     SizedBox(
                       height: 12,
                     ),
@@ -130,11 +135,10 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                       for (var element in state.finalScore!.assesments!) {
                         if (element.score != null &&
                             !((element.type == 'OSCE' &&
-                                (widget.finalGrade.activeDepartmentName!
+                                (widget.departmentName!
                                         .toUpperCase()
                                         .contains('FORENSIK') ||
-                                    widget.finalGrade.activeDepartmentName!
-                                            .toUpperCase() ==
+                                    widget.departmentName!.toUpperCase() ==
                                         'IKM-IKK')))) {
                           score += element.score! * element.weight!;
                         }
@@ -151,11 +155,10 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                         Builder(builder: (context) {
                           if (state.finalScore!.assesments![i].type!
                                   .contains('OSCE') &&
-                              (widget.finalGrade.activeDepartmentName!
+                              (widget.departmentName!
                                       .toUpperCase()
                                       .contains('FORENSIK') ||
-                                  widget.finalGrade.activeDepartmentName
-                                          ?.toUpperCase() ==
+                                  widget.departmentName?.toUpperCase() ==
                                       'IKM-IKK')) {
                             return SizedBox.shrink();
                           }
@@ -188,9 +191,8 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                                     barrierLabel: '',
                                     barrierDismissible: false,
                                     builder: (_) => InputFinalScoreDialog(
-                                      studentId: widget.finalGrade.studentId!,
-                                      unitId:
-                                          widget.finalGrade.activeDepartmentId!,
+                                      studentId: widget.studentId!,
+                                      unitId: widget.departmentId!,
                                       type: FinalScoreType.cbt,
                                       initScore: state.finalScore!.assesments!
                                                   .indexWhere((element) =>
@@ -209,11 +211,10 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                                 },
                                 child: Text('Update CBT')),
                           ),
-                          if (!(widget.finalGrade.activeDepartmentName!
+                          if (!(widget.departmentName!
                                   .toUpperCase()
                                   .contains('FORENSIK') ||
-                              widget.finalGrade.activeDepartmentName!
-                                      .toUpperCase() ==
+                              widget.departmentName!.toUpperCase() ==
                                   'IKM-IKK')) ...[
                             SizedBox(
                               width: 4,
@@ -227,9 +228,8 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                                     barrierLabel: '',
                                     barrierDismissible: false,
                                     builder: (_) => InputFinalScoreDialog(
-                                      studentId: widget.finalGrade.studentId!,
-                                      unitId:
-                                          widget.finalGrade.activeDepartmentId!,
+                                      studentId: widget.studentId!,
+                                      unitId: widget.departmentId!,
                                       type: FinalScoreType.osce,
                                       initScore: state.finalScore!.assesments!
                                                   .indexWhere((element) =>
@@ -267,9 +267,8 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                               onPressed: () {
                                 BlocProvider.of<AssesmentCubit>(context)
                                   ..submitFinalScore(
-                                      studentId: widget.finalGrade.studentId!,
-                                      unitId:
-                                          widget.finalGrade.activeDepartmentId!,
+                                      studentId: widget.studentId!,
+                                      unitId: widget.departmentId!,
                                       status: true);
                               },
                               child: Text('Submit Final Score'),
@@ -280,9 +279,8 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                                 print("va");
                                 BlocProvider.of<AssesmentCubit>(context)
                                   ..submitFinalScore(
-                                      studentId: widget.finalGrade.studentId!,
-                                      unitId:
-                                          widget.finalGrade.activeDepartmentId!,
+                                      studentId: widget.studentId!,
+                                      unitId: widget.departmentId!,
                                       status: false);
                               },
                               child: Text('Cancel Submit'),

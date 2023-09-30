@@ -32,6 +32,7 @@ class EmptyData extends StatelessWidget {
             ),
             Text(
               title,
+              textAlign: TextAlign.center,
               style: textTheme.titleLarge?.copyWith(
                   color: primaryTextColor, fontWeight: FontWeight.bold),
             ),

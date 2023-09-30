@@ -10,6 +10,12 @@ class HistoryModel {
   String? studentName;
   @JsonKey(name: "supervisorName")
   String? supervisorName;
+  @JsonKey(name: "supervisorId")
+  String? supervisorId;
+  @JsonKey(name: "unitName")
+  String? unitName;
+  @JsonKey(name: "unitId")
+  String? unitId;
   @JsonKey(name: "timestamp")
   int? timestamp;
   @JsonKey(name: "patientName")
@@ -26,8 +32,11 @@ class HistoryModel {
     this.studentName,
     this.supervisorName,
     this.timestamp,
+    this.supervisorId,
     this.patientName,
     this.rating,
+    this.unitId,
+    this.unitName,
     this.attachment,
     this.studentId,
   });

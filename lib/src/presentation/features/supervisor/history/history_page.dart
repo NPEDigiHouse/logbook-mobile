@@ -17,9 +17,15 @@ import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 
 class SupervisorHistoryPage extends StatefulWidget {
   final bool isKabag;
+  final bool isCeu;
+  final String supervisorId;
+  final List<String> departmentName;
   const SupervisorHistoryPage({
     super.key,
+    required this.departmentName,
+    required this.supervisorId,
     required this.isKabag,
+    required this.isCeu,
   });
 
   @override
@@ -40,10 +46,18 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
       'All',
       'Clinical Record',
       'Scientific Session',
-      'Self Reflection',
-      'Daily Activity',
       'SGL',
       'CST',
+      'Self Reflection',
+      'Case',
+      'Skill',
+      'Mini Cex',
+      'Personal Behavior',
+      'Scientific Assesment',
+      'Problem Consultation',
+      'Daily Activity',
+      if (widget.isKabag) 'Check-in',
+      if (widget.isKabag) 'Check-Out',
     ];
 
     Future.microtask(() {
@@ -105,7 +119,14 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                       Future.microtask(() {
                         listData.value = [
                           ...HistoryHelper.convertHistoryToActivity(
-                              state.histories!, RoleHistory.supervisor)
+                            state.histories!,
+                            isCeu: widget.isCeu,
+                            isHeadDiv: widget.isKabag,
+                            unitIds: widget.departmentName,
+                            supervisorId: widget.supervisorId,
+                            RoleHistory.supervisor,
+                            context,
+                          )
                         ];
                       });
                       isMounted = true;
@@ -126,7 +147,7 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                             return Material(
                               color: Colors.transparent,
                               child: InkWell(
-                                onTap: () {},
+                                onTap: activity.onTap,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 12,
@@ -180,7 +201,6 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                                 ),
                                               ],
                                             ),
-
                                             if (widget.isKabag) ...[
                                               const SizedBox(height: 12),
                                               RichText(
@@ -201,7 +221,7 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                                     ),
                                                     TextSpan(
                                                         text: activity
-                                                                .supervisor ??
+                                                                .supervisorId ??
                                                             '-'),
                                                   ],
                                                 ),
@@ -282,41 +302,7 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                                 ),
                                               ),
                                             ],
-
                                             const SizedBox(height: 8),
-                                            // if (activity is ClinicalRecord)
-                                            //   if (activity.hasAttachment)
-                                            //     Container(
-                                            //       padding: const EdgeInsets.symmetric(
-                                            //         vertical: 4,
-                                            //         horizontal: 12,
-                                            //       ),
-                                            //       decoration: BoxDecoration(
-                                            //         border:
-                                            //             Border.all(color: dividerColor),
-                                            //         borderRadius:
-                                            //             BorderRadius.circular(99),
-                                            //       ),
-                                            //       child: Row(
-                                            //         mainAxisSize: MainAxisSize.min,
-                                            //         children: <Widget>[
-                                            //           const Icon(
-                                            //             Icons.attachment_rounded,
-                                            //             size: 14,
-                                            //           ),
-                                            //           const SizedBox(width: 6),
-                                            //           Text(
-                                            //             'attachment_file.pdf',
-                                            //             style: textTheme.labelSmall
-                                            //                 ?.copyWith(
-                                            //               fontWeight: FontWeight.w500,
-                                            //               letterSpacing: 0,
-                                            //               height: 0,
-                                            //             ),
-                                            //           ),
-                                            //         ],
-                                            //       ),
-                                            //     ),
                                           ],
                                         ),
                                       ),
@@ -388,22 +374,6 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                   fontWeight: FontWeight.w700,
                   color: primaryColor,
                 ),
-              ),
-              IconButton(
-                onPressed: () async {
-                  // final data = await showModalBottomSheet<Map<String, String>?>(
-                  //   context: context,
-                  //   isScrollControlled: true,
-                  //   builder: (context) => const HistoryFilterBottomSheet(),
-                  // );
-
-                  // if (data != null) _dataFilters.value = data;
-                },
-                icon: const Icon(
-                  Icons.filter_list_rounded,
-                  color: primaryColor,
-                ),
-                tooltip: 'Filter',
               ),
             ],
           ),
@@ -519,12 +489,22 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                           listData.value.clear();
                           listData.value = [
                             ...HistoryHelper.convertHistoryToActivity(
-                                state.histories!, RoleHistory.supervisor)
+                                state.histories!,
+                                RoleHistory.supervisor,
+                                context,
+                                isCeu: widget.isCeu,
+                                isHeadDiv: widget.isKabag,
+                                unitIds: widget.departmentName,
+                                supervisorId: widget.supervisorId)
                           ];
                         } else {
                           listData.value = [
                             ...HistoryHelper.convertHistoryToActivity(
-                                data, RoleHistory.supervisor)
+                                data, RoleHistory.supervisor, context,
+                                isCeu: widget.isCeu,
+                                isHeadDiv: widget.isKabag,
+                                unitIds: widget.departmentName,
+                                supervisorId: widget.supervisorId)
                           ];
                         }
                       },
@@ -574,7 +554,13 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          data, RoleHistory.supervisor)
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
                                     ];
                                     break;
                                   case 2:
@@ -585,32 +571,17 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          data, RoleHistory.supervisor)
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
                                     ];
+
                                     break;
                                   case 3:
-                                    final data = state.histories!
-                                        .where((element) =>
-                                            element.type!.toUpperCase() ==
-                                            'SELF REFLECTION'.toUpperCase())
-                                        .toList();
-                                    listData.value = [
-                                      ...HistoryHelper.convertHistoryToActivity(
-                                          data, RoleHistory.supervisor)
-                                    ];
-                                    break;
-                                  case 4:
-                                    final data = state.histories!
-                                        .where((element) =>
-                                            element.type!.toUpperCase() ==
-                                            'DAILY ACTIVITY'.toUpperCase())
-                                        .toList();
-                                    listData.value = [
-                                      ...HistoryHelper.convertHistoryToActivity(
-                                          data, RoleHistory.supervisor)
-                                    ];
-                                    break;
-                                  case 5:
                                     final data = state.histories!
                                         .where((element) =>
                                             element.type!.toUpperCase() ==
@@ -618,10 +589,16 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          data, RoleHistory.supervisor)
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
                                     ];
                                     break;
-                                  case 6:
+                                  case 4:
                                     final data = state.histories!
                                         .where((element) =>
                                             element.type!.toUpperCase() ==
@@ -629,7 +606,185 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          data, RoleHistory.supervisor)
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
+                                    ];
+                                    break;
+                                  case 5:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'SELF_REFLECTION'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
+                                    ];
+                                    break;
+                                  case 6:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'CASE'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
+                                    ];
+                                    break;
+                                  case 7:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'SKILL'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
+                                    ];
+                                    break;
+                                  case 8:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'MINI_CEX'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
+                                    ];
+                                    break;
+                                  case 9:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'PERSONAL_BEHAVIOUR'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
+                                    ];
+                                    break;
+                                  case 10:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'SCIENTIFIC_ASSESMENT'
+                                                .toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
+                                    ];
+                                    break;
+                                  case 11:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'Problem Consultation'
+                                                .toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
+                                    ];
+                                    break;
+                                  case 12:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'DAILY_ACTIVITY'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
+                                    ];
+                                    break;
+                                  case 13:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'Check-in'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
+                                    ];
+                                    break;
+                                  case 14:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'Check-out'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
                                     ];
                                     break;
                                   case 0:
@@ -637,7 +792,12 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
                                           state.histories!,
-                                          RoleHistory.supervisor),
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
+                                          RoleHistory.supervisor,
+                                          context),
                                     ];
                                   default:
                                 }

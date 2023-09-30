@@ -45,15 +45,18 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
   @override
   void initState() {
     super.initState();
-    weekNumController.text = widget.weekNum.toString();
 
     if (widget.isEdit) {
+      weekNumController.text = (widget.weekNum).toString();
+
       if (widget.startDate != null) {
         startDateController.text = Utils.datetimeToString(widget.startDate!);
       }
       if (widget.endDate != null) {
         endDateController.text = Utils.datetimeToString(widget.endDate!);
       }
+    } else {
+      weekNumController.text = (widget.weekNum + 1).toString();
     }
   }
 

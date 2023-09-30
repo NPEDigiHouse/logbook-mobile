@@ -311,7 +311,9 @@ class _ListSglPageState extends State<ListSglPage> {
                                         SizedBox(
                                           height: 12,
                                         ),
-                                        ItemDivider(),
+                                        if (data.verificationStatus !=
+                                            'VERIFIED')
+                                          ...[ItemDivider(),
                                         SizedBox(
                                           height: 12,
                                         ),
@@ -338,7 +340,7 @@ class _ListSglPageState extends State<ListSglPage> {
                                               color: primaryColor,
                                             ),
                                           ),
-                                        ),
+                                        ),],
                                       ],
                                     ),
                                   );

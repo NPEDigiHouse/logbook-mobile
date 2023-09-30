@@ -6,7 +6,7 @@ class DailyActivityState {
   final StudentDailyActivityResponse? studentDailyActivity;
   final StudentDailyActivityResponse? dailyActivityBySupervisor;
   final StudentActivityPerweekResponse? studentActivityPerweek;
-  final StudentActivityPerweekResponse? activityPerweekBySupervisor;
+  final DailyActivityStudent? activityPerweekBySupervisor;
   final bool isDailyActivityUpdated;
   final bool isDailyActivityVerifiedById;
   final bool isAddWeekSuccess;
@@ -40,7 +40,7 @@ class DailyActivityState {
     StudentDailyActivityResponse? studentDailyActivity,
     StudentDailyActivityResponse? dailyActivityBySupervisor,
     StudentActivityPerweekResponse? studentActivityPerweek,
-    StudentActivityPerweekResponse? activityPerweekBySupervisor,
+    DailyActivityStudent? activityPerweekBySupervisor,
     StudentDailyActivityPerDays? activityPerDays,
     bool isDailyActivityUpdated = false,
     bool isDailyActivityVerifiedById = false,

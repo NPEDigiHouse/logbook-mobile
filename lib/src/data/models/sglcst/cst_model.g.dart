@@ -46,19 +46,3 @@ Map<String, dynamic> _$CstToJson(Cst instance) => <String, dynamic>{
       'supervisorId': instance.supervisorId,
       'supervisorName': instance.supervisorName,
     };
-
-Topic _$TopicFromJson(Map<String, dynamic> json) => Topic(
-      topicName: (json['topicName'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      verificationStatus: json['verificationStatus'] as String?,
-      notes: json['notes'],
-      id: json['id'] as String?,
-    );
-
-Map<String, dynamic> _$TopicToJson(Topic instance) => <String, dynamic>{
-      'topicName': instance.topicName,
-      'verificationStatus': instance.verificationStatus,
-      'notes': instance.notes,
-      'id': instance.id,
-    };

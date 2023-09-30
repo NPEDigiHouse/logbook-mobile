@@ -17,6 +17,14 @@ class CompetenceCubit extends Cubit<CompetenceState> {
   CompetenceCubit({required this.competenceDataSource})
       : super(CompetenceState());
 
+  void reset() {
+    emit(state.copyWith(
+        isSkillSuccessVerify: false,
+        isAllSkillsSuccessVerify: false,
+        isSkillSuccessAdded: false,
+        isAllCasesSuccessVerify: false));
+  }
+
   Future<void> getListSkills() async {
     try {
       emit(state.copyWith(

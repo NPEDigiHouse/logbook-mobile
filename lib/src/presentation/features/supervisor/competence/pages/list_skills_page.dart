@@ -72,7 +72,8 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
           BlocProvider.of<CompetenceCubit>(context)
             ..getSkillsByStudentId(
               studentId: widget.studentId,
-            );
+            )
+            ..reset();
           isMounted = false;
         }
         if (state.listSkillsModel != null &&
@@ -80,12 +81,12 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
             state.requestState == RequestState.data) {
           listData.value = [...state.listSkillsModel!.listSkills!];
 
-          if (listData.value.indexWhere(
-                  (element) => element.verificationStatus == 'INPROCESS') ==
-              -1) {
-            BlocProvider.of<CompetenceCubit>(context)..getSkillStudents();
-            context.back();
-          }
+          // if (listData.value.indexWhere(
+          //         (element) => element.verificationStatus == 'INPROCESS') ==
+          //     -1) {
+          //   BlocProvider.of<CompetenceCubit>(context)..getSkillStudents();
+          //   context.back();
+          // }
         }
       },
       builder: (context, state) {

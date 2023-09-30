@@ -45,6 +45,16 @@ class _HistoryPageState extends State<HistoryPage> {
       'Scientific Session',
       'SGL',
       'CST',
+      'Self Reflection',
+      'Case',
+      'Skill',
+      'Mini Cex',
+      'Personal Behavior',
+      'Scientific Assesment',
+      'Problem Consultation',
+      'Daily Activity',
+      'Check-in',
+      'Check-Out',
     ];
 
     Future.microtask(() {
@@ -109,7 +119,10 @@ class _HistoryPageState extends State<HistoryPage> {
                       Future.microtask(() {
                         listData.value = [
                           ...HistoryHelper.convertHistoryToActivity(
-                              state.histories!, RoleHistory.student)
+                              isStudent: true,
+                              state.histories!,
+                              RoleHistory.student,
+                              context)
                         ];
                       });
                       isMounted = true;
@@ -131,39 +144,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             return Material(
                               color: Colors.transparent,
                               child: InkWell(
-                                onTap: () {
-                                  switch (activity.title) {
-                                    case 'SGL':
-                                      context.navigateTo(
-                                        ListSglPage(
-                                            activeDepartmentModel:
-                                                activeDepartment
-                                                    .activeDepartment),
-                                      );
-                                      break;
-                                    case 'CST':
-                                      context.navigateTo(
-                                        ListCstPage(
-                                            activeDepartmentModel:
-                                                activeDepartment
-                                                    .activeDepartment),
-                                      );
-                                      break;
-                                    case 'Scientific Session':
-                                      context.navigateTo(
-                                        DetailScientificSessionPage(
-                                            id: activity.id),
-                                      );
-                                      break;
-                                    case 'Clinical Record':
-                                      context.navigateTo(
-                                        DetailClinicalRecordPage(
-                                            id: activity.id),
-                                      );
-                                      break;
-                                    default:
-                                  }
-                                },
+                                onTap: activity.onTap,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 12,
@@ -210,12 +191,11 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   ),
                                                 ),
                                                 const SizedBox(width: 4),
-                                                if (activity.isVerified)
-                                                  const Icon(
-                                                    Icons.verified_rounded,
-                                                    size: 16,
-                                                    color: primaryColor,
-                                                  ),
+                                                const Icon(
+                                                  Icons.verified_rounded,
+                                                  size: 16,
+                                                  color: primaryColor,
+                                                ),
                                               ],
                                             ),
                                             const SizedBox(height: 12),
@@ -236,9 +216,9 @@ class _HistoryPageState extends State<HistoryPage> {
                                                     ),
                                                   ),
                                                   TextSpan(
-                                                      text:
-                                                          activity.supervisor ??
-                                                              '-'),
+                                                      text: activity
+                                                              .supervisorId ??
+                                                          '-'),
                                                 ],
                                               ),
                                             ),
@@ -522,7 +502,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       builder: (context, query, child) {
                         return SearchField(
                           text: '',
-                          hint: 'Search Student',
+                          hint: 'Search History',
                           onChanged: (value) {
                             final data = state.histories!
                                 .where((element) => element.studentName!
@@ -533,12 +513,18 @@ class _HistoryPageState extends State<HistoryPage> {
                               listData.value.clear();
                               listData.value = [
                                 ...HistoryHelper.convertHistoryToActivity(
-                                    state.histories!, RoleHistory.student)
+                                    isStudent: true,
+                                    state.histories!,
+                                    RoleHistory.student,
+                                    context)
                               ];
                             } else {
                               listData.value = [
                                 ...HistoryHelper.convertHistoryToActivity(
-                                    data, RoleHistory.student)
+                                    isStudent: true,
+                                    data,
+                                    RoleHistory.student,
+                                    context)
                               ];
                             }
                           },
@@ -590,7 +576,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          data, RoleHistory.supervisor)
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
                                     ];
                                     break;
                                   case 2:
@@ -601,7 +590,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          data, RoleHistory.supervisor)
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
                                     ];
 
                                     break;
@@ -613,7 +605,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          data, RoleHistory.supervisor)
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
                                     ];
                                     break;
                                   case 4:
@@ -624,15 +619,162 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          data, RoleHistory.supervisor)
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
+                                    ];
+                                    break;
+                                  case 5:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'SELF_REFLECTION'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
+                                    ];
+                                    break;
+                                  case 6:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'CASE'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
+                                    ];
+                                    break;
+                                  case 7:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'SKILL'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
+                                    ];
+                                    break;
+                                  case 8:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'MINI_CEX'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
+                                    ];
+                                    break;
+                                  case 9:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'PERSONAL_BEHAVIOUR'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
+                                    ];
+                                    break;
+                                  case 10:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'SCIENTIFIC_ASSESMENT'
+                                                .toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
+                                    ];
+                                    break;
+                                  case 11:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'Problem Consultation'
+                                                .toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
+                                    ];
+                                    break;
+                                  case 12:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'DAILY_ACTIVITY'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
+                                    ];
+                                    break;
+                                  case 13:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'Check-in'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
+                                    ];
+                                    break;
+                                  case 14:
+                                    final data = state.histories!
+                                        .where((element) =>
+                                            element.type!.toUpperCase() ==
+                                            'Check-out'.toUpperCase())
+                                        .toList();
+                                    listData.value = [
+                                      ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
+                                          data,
+                                          RoleHistory.supervisor,
+                                          context)
                                     ];
                                     break;
                                   case 0:
                                     listData.value.clear();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
+                                          isStudent: true,
                                           state.histories!,
-                                          RoleHistory.supervisor),
+                                          RoleHistory.supervisor,
+                                          context),
                                     ];
                                   default:
                                 }

@@ -1,9 +1,9 @@
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/daily_activity/daily_activity_student.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
@@ -12,8 +12,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SupervisorDailyActivityDetailPage extends StatefulWidget {
-  final DailyActivityStudent data;
-  const SupervisorDailyActivityDetailPage({super.key, required this.data});
+  final String id;
+  final bool isHistory;
+  const SupervisorDailyActivityDetailPage(
+      {super.key, required this.id, this.isHistory = false});
 
   @override
   State<SupervisorDailyActivityDetailPage> createState() =>
@@ -22,15 +24,11 @@ class SupervisorDailyActivityDetailPage extends StatefulWidget {
 
 class _SupervisorDailyActivityDetailPageState
     extends State<SupervisorDailyActivityDetailPage> {
-  late ValueNotifier<bool> isVerify;
   @override
   void initState() {
     super.initState();
-    if (widget.data.verificationStatus == 'VERIFIED') {
-      isVerify = ValueNotifier(true);
-    } else {
-      isVerify = ValueNotifier(false);
-    }
+    Future.microtask(() => BlocProvider.of<DailyActivityCubit>(context)
+      ..getActivityDetailBySupervisor(id: widget.id));
   }
 
   Map<String, String> emoji = {
@@ -50,52 +48,52 @@ class _SupervisorDailyActivityDetailPageState
         listener: (context, state) {
           if (state.stateVerifyDailyActivity == RequestState.data) {
             BlocProvider.of<DailyActivityCubit>(context)
-              ..getDailyActivityStudentBySupervisor();
-            isVerify.value = !isVerify.value;
+              ..getActivityDetailBySupervisor(id: widget.id);
           }
         },
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 16,
-              ),
-              StudentDepartmentHeader(
-                unitName: widget.data.unitName ?? '',
-                studentName: widget.data.studentName ?? '',
-                studentId: widget.data.studentId ?? '',
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        offset: Offset(0, 0),
-                        spreadRadius: 0,
-                        blurRadius: 6,
-                        color: Color(0xFFD4D4D4).withOpacity(.25)),
-                    BoxShadow(
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                        blurRadius: 24,
-                        color: Color(0xFFD4D4D4).withOpacity(.25)),
-                  ],
-                ),
-                child: ValueListenableBuilder(
-                    valueListenable: isVerify,
-                    builder: (context, val, _) {
-                      return Column(
+        child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
+          builder: (context, state) {
+            if (state.activityPerweekBySupervisor != null &&
+                state.requestState == RequestState.data) {
+              final data = state.activityPerweekBySupervisor;
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 16,
+                    ),
+                    StudentDepartmentHeader(
+                      unitName: data?.unitName ?? '',
+                      studentName: data?.studentName ?? '',
+                      studentId: data?.studentId ?? '',
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              offset: Offset(0, 0),
+                              spreadRadius: 0,
+                              blurRadius: 6,
+                              color: Color(0xFFD4D4D4).withOpacity(.25)),
+                          BoxShadow(
+                              offset: Offset(0, 4),
+                              spreadRadius: 0,
+                              blurRadius: 24,
+                              color: Color(0xFFD4D4D4).withOpacity(.25)),
+                        ],
+                      ),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SvgPicture.asset(
-                            AssetPath.getIcon(
-                                emoji[widget.data.activityStatus]!),
+                            AssetPath.getIcon(emoji[data?.activityStatus]!),
                             width: 50,
                             height: 50,
                             fit: BoxFit.cover,
@@ -106,12 +104,12 @@ class _SupervisorDailyActivityDetailPageState
                           Row(
                             children: [
                               Text(
-                                '${widget.data.day} (Week ${widget.data.weekNum})',
+                                '${data?.day} (Week ${data?.weekNum})',
                                 style: textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              if (val) ...[
+                              if (widget.isHistory) ...[
                                 SizedBox(
                                   width: 4,
                                 ),
@@ -122,7 +120,7 @@ class _SupervisorDailyActivityDetailPageState
                               ],
                             ],
                           ),
-                          if (widget.data.activityStatus == 'ATTEND')
+                          if (data?.activityStatus == 'ATTEND')
                             Row(
                               children: [
                                 Icon(
@@ -134,7 +132,7 @@ class _SupervisorDailyActivityDetailPageState
                                   width: 4,
                                 ),
                                 Text(
-                                  widget.data.location ?? '',
+                                  data?.location ?? '',
                                   style: textTheme.bodyMedium?.copyWith(
                                     color: onFormDisableColor,
                                   ),
@@ -148,18 +146,18 @@ class _SupervisorDailyActivityDetailPageState
                           SizedBox(
                             height: 12,
                           ),
-                          if (widget.data.activityStatus == 'ATTEND') ...[
+                          if (data?.activityStatus == 'ATTEND') ...[
                             Text('Activity', style: textTheme.bodyMedium),
                             Text(
-                              widget.data.activityName ?? '',
+                              data?.activityName ?? '',
                               style: textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ] else
                             Text(
-                              widget.data.activityStatus![0].toUpperCase() +
-                                  widget.data.activityStatus!
+                              data!.activityStatus![0].toUpperCase() +
+                                  data.activityStatus!
                                       .substring(1)
                                       .toLowerCase(),
                               style: textTheme.titleMedium?.copyWith(
@@ -169,70 +167,74 @@ class _SupervisorDailyActivityDetailPageState
                           SizedBox(
                             height: 16,
                           ),
-                          ValueListenableBuilder(
-                            valueListenable: isVerify,
-                            builder: (context, value, child) {
-                              if (value) {
-                                return SizedBox(
-                                  width: double.infinity,
-                                  child: OutlinedButton(
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          barrierLabel: '',
-                                          barrierDismissible: false,
-                                          builder: (_) => VerifyDialog(
-                                                onTap: () {
-                                                  BlocProvider.of<
-                                                              DailyActivityCubit>(
-                                                          context)
-                                                      .verifiyDailyActivityById(
-                                                          id: widget.data.id!,
-                                                          verifiedStatus:
-                                                              false);
-                                                  Navigator.pop(context);
-                                                },
-                                                isSubmit: false,
-                                              ));
-                                    },
-                                    child: Text('Cancel'),
-                                  ),
-                                );
-                              } else {
-                                return SizedBox(
-                                  width: double.infinity,
-                                  child: FilledButton.icon(
-                                    icon: Icon(Icons.verified),
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          barrierLabel: '',
-                                          barrierDismissible: false,
-                                          builder: (_) => VerifyDialog(
-                                                onTap: () {
-                                                  BlocProvider.of<
-                                                              DailyActivityCubit>(
-                                                          context)
-                                                      .verifiyDailyActivityById(
-                                                          id: widget.data.id!,
-                                                          verifiedStatus: true);
-                                                  Navigator.pop(context);
-                                                },
-                                                isSubmit: true,
-                                              ));
-                                    },
-                                    label: Text('Verify'),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
+                          if (!widget.isHistory)
+                            Builder(
+                              builder: (context) {
+                                if (data?.verificationStatus == "VERIFIED") {
+                                  return SizedBox(
+                                    width: double.infinity,
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            barrierLabel: '',
+                                            barrierDismissible: false,
+                                            builder: (_) => VerifyDialog(
+                                                  onTap: () {
+                                                    BlocProvider.of<
+                                                                DailyActivityCubit>(
+                                                            context)
+                                                        .verifiyDailyActivityById(
+                                                            id: data!.id!,
+                                                            verifiedStatus:
+                                                                false);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  isSubmit: false,
+                                                ));
+                                      },
+                                      child: Text('Cancel'),
+                                    ),
+                                  );
+                                } else {
+                                  return SizedBox(
+                                    width: double.infinity,
+                                    child: FilledButton.icon(
+                                      icon: Icon(Icons.verified),
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            barrierLabel: '',
+                                            barrierDismissible: false,
+                                            builder: (_) => VerifyDialog(
+                                                  onTap: () {
+                                                    BlocProvider.of<
+                                                                DailyActivityCubit>(
+                                                            context)
+                                                        .verifiyDailyActivityById(
+                                                            id: data!.id!,
+                                                            verifiedStatus:
+                                                                true);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  isSubmit: true,
+                                                ));
+                                      },
+                                      label: Text('Verify'),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
                         ],
-                      );
-                    }),
-              ),
-            ],
-          ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return Center(child: CustomLoading());
+          },
         ),
       ),
     );

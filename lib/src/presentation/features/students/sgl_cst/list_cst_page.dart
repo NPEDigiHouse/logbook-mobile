@@ -68,7 +68,14 @@ class _ListCstPageState extends State<ListCstPage> {
                   child: SpacingColumn(
                     horizontalPadding: 16,
                     children: [
-                      BlocBuilder<SglCstCubit, SglCstState>(
+                      BlocConsumer<SglCstCubit, SglCstState>(
+                        listener: (context, state) {
+                          if (state.isCstDeleteSuccess ||
+                              state.isCstEditSuccess) {
+                            BlocProvider.of<SglCstCubit>(context)
+                              ..getStudentSglDetail();
+                          }
+                        },
                         builder: (context, state) {
                           if (state.cstDetail != null) {
                             if (state.cstDetail!.csts!.isEmpty) {
@@ -305,34 +312,37 @@ class _ListCstPageState extends State<ListCstPage> {
                                         SizedBox(
                                           height: 12,
                                         ),
-                                        ItemDivider(),
-                                        SizedBox(
-                                          height: 12,
-                                        ),
-                                        TextButton.icon(
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              barrierLabel: '',
-                                              barrierDismissible: false,
-                                              builder: (_) => AddTopicDialog(
-                                                type: TopicDialogType.cst,
-                                                date: data.createdAt!,
-                                                id: data.cstId!,
-                                                supervisorId: '',
+                                        if (data.verificationStatus !=
+                                            'VERIFIED') ...[
+                                          ItemDivider(),
+                                          SizedBox(
+                                            height: 12,
+                                          ),
+                                          TextButton.icon(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                barrierLabel: '',
+                                                barrierDismissible: false,
+                                                builder: (_) => AddTopicDialog(
+                                                  type: TopicDialogType.cst,
+                                                  date: data.createdAt!,
+                                                  id: data.cstId!,
+                                                  supervisorId: '',
+                                                ),
+                                              );
+                                            },
+                                            icon: Icon(Icons.add_rounded),
+                                            label: Text(
+                                              'Add Topic',
+                                              style: textTheme.titleMedium
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: primaryColor,
                                               ),
-                                            );
-                                          },
-                                          icon: Icon(Icons.add_rounded),
-                                          label: Text(
-                                            'Add Topic',
-                                            style:
-                                                textTheme.titleMedium?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: primaryColor,
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ],
                                     ),
                                   );

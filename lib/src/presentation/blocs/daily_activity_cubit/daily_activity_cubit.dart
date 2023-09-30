@@ -265,7 +265,7 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
-  Future<void> getActivityPerweekBySupervisor({required String id}) async {
+  Future<void> getActivityDetailBySupervisor({required String id}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
@@ -274,7 +274,7 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       final result = await dataSource.getActivityOfDailyActivity(id: id);
       try {
         emit(state.copyWith(
-          studentActivityPerweek: result,
+          activityPerweekBySupervisor: result,
           requestState: RequestState.data,
         ));
       } catch (e) {

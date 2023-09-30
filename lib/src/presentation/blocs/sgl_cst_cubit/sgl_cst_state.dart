@@ -17,6 +17,8 @@ class SglCstState {
   final CstResponse? cstDetail;
   final RequestState requestState;
   final bool isNewTopicAddSuccess;
+  final HistoryCstModel? historyCstData;
+  final HistorySglModel? historySglData;
 
   SglCstState(
       {this.isSglPostSuccess = false,
@@ -25,6 +27,8 @@ class SglCstState {
       this.isSglEditSuccess = false,
       this.isCstDeleteSuccess = false,
       this.isCstEditSuccess = false,
+      this.historyCstData,
+      this.historySglData,
       this.isNewTopicAddSuccess = false,
       this.sglStudents,
       this.requestState = RequestState.init,
@@ -50,6 +54,8 @@ class SglCstState {
     bool isSglDeleteSuccess = false,
     bool isCstEditSuccess = false,
     bool isCstDeleteSuccess = false,
+    HistoryCstModel? historyCstData,
+    HistorySglModel? historySglData,
     SglResponse? sglDetail,
     CstResponse? cstDetail,
     List<TopicModel>? topics,
@@ -64,6 +70,8 @@ class SglCstState {
       isSglDeleteSuccess: isSglDeleteSuccess,
       isSglEditSuccess: isSglEditSuccess,
       isCstDeleteSuccess: isCstDeleteSuccess,
+      historyCstData: historyCstData ?? this.historyCstData,
+      historySglData: historySglData ?? this.historySglData,
       isCstEditSuccess: isCstEditSuccess,
       cstStudents: cstStudents ?? this.cstStudents,
       sglStudents: sglStudents ?? this.sglStudents,
