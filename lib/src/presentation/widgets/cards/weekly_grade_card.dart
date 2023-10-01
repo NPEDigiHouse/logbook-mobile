@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
@@ -13,11 +14,13 @@ class WeeklyGradeCard extends StatelessWidget {
   final String status;
   final double? score;
   final VoidCallback? onTap;
+  final TotalGradeHelper totalGrade;
 
   const WeeklyGradeCard({
     super.key,
     this.attendNum,
     this.notAttendNum,
+    required this.totalGrade,
     required this.week,
     // required this.date,
     required this.status,
@@ -78,23 +81,62 @@ class WeeklyGradeCard extends StatelessWidget {
                   SizedBox(
                     height: 8,
                   ),
-                  // Text(
-                  //   date,
-                  //   style: textTheme.titleMedium?.copyWith(
-                  //     color: secondaryTextColor,
-                  //   ),
-                  // ),
-                  Text(
-                    '${attendNum ?? 0}× Attend',
-                    style: textTheme.titleSmall?.copyWith(
-                      color: primaryColor,
-                    ),
-                  ),
-                  Text(
-                    '${notAttendNum ?? 0}× Not Attend',
-                    style: textTheme.titleSmall?.copyWith(
-                      color: secondaryColor,
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: successColor,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              '${attendNum ?? 0}',
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: scaffoldBackgroundColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              'Attend',
+                              style: textTheme.labelSmall?.copyWith(
+                                color: scaffoldBackgroundColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: errorColor,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              '${notAttendNum ?? 0}',
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: scaffoldBackgroundColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              'Not Attend',
+                              style: textTheme.labelSmall?.copyWith(
+                                color: scaffoldBackgroundColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -105,18 +147,18 @@ class WeeklyGradeCard extends StatelessWidget {
                 child: CircularPercentIndicator(
                   radius: 38.0,
                   lineWidth: 5.0,
-                  backgroundColor: const Color(0xFFADDAE7),
+                  backgroundColor: onDisableColor,
                   animation: true,
                   percent: score! / 100,
                   center: Container(
                     width: 60,
                     height: 60,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          Color(0xFF2489B4),
-                          Color(0xFF29C5F6),
+                          totalGrade.gradientScore.color,
+                          totalGrade.gradientScore.color.withOpacity(.75),
                         ],
                       ),
                     ),
@@ -131,7 +173,7 @@ class WeeklyGradeCard extends StatelessWidget {
                     ),
                   ),
                   circularStrokeCap: CircularStrokeCap.round,
-                  progressColor: primaryColor,
+                  progressColor: totalGrade.gradientScore.color,
                 ),
               )
             else
