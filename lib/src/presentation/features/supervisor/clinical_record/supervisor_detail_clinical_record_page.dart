@@ -187,7 +187,7 @@ class _SupervisorDetailClinicalRecordPageState
                             height: 8,
                           ),
                           Text(
-                            'Unit',
+                            'Department',
                             style: textTheme.bodyMedium?.copyWith(
                               color: secondaryTextColor,
                             ),

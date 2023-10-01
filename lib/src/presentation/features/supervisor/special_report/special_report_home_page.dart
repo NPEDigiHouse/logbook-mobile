@@ -3,6 +3,7 @@ import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/special_report/widgets/special_report_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,43 +56,50 @@ class _SpecialReportDetailPageState extends State<SpecialReportDetailPage> {
                     ),
                     BlocBuilder<SpecialReportCubit, SpecialReportState>(
                       builder: (context, state) {
-                        if (state.specialReport != null)
-                          return Column(
-                            children: [
-                              SizedBox(
-                                height: 12,
-                              ),
-                              Text(
-                                'List of Consultation on Encountered Issues',
-                                style: textTheme.titleMedium?.copyWith(
-                                  height: 1.1,
-                                  color: secondaryColor,
+                        if (state.specialReport != null) {
+                          if (state.specialReport!.listProblemConsultations!
+                              .isNotEmpty) {
+                            return Column(
+                              children: [
+                                SizedBox(
+                                  height: 12,
                                 ),
-                              ),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              ListView.separated(
-                                itemBuilder: (context, index) {
-                                  return SupervisorSpecialReportCard(
-                                    data: state.specialReport!
-                                        .listProblemConsultations![index],
-                                    studentId: widget.studentId,
-                                    index: index + 1,
-                                  );
-                                },
-                                separatorBuilder: (context, index) {
-                                  return SizedBox(
-                                    height: 12,
-                                  );
-                                },
-                                itemCount: state.specialReport!
-                                    .listProblemConsultations!.length,
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                              ),
-                            ],
-                          );
+                                Text(
+                                  'List of Consultation on Encountered Issues',
+                                  style: textTheme.titleMedium?.copyWith(
+                                    height: 1.1,
+                                    color: secondaryColor,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                ListView.separated(
+                                  itemBuilder: (context, index) {
+                                    return SupervisorSpecialReportCard(
+                                      data: state.specialReport!
+                                          .listProblemConsultations![index],
+                                      studentId: widget.studentId,
+                                      index: index + 1,
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return SizedBox(
+                                      height: 12,
+                                    );
+                                  },
+                                  itemCount: state.specialReport!
+                                      .listProblemConsultations!.length,
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                ),
+                              ],
+                            );
+                          }
+                          return EmptyData(
+                              title: 'Empty Data',
+                              subtitle: 'No Problem Consultations submitted');
+                        }
                         return CustomLoading();
                       },
                     )

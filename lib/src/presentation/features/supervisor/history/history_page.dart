@@ -106,9 +106,11 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
         ];
       },
       body: RefreshIndicator(
-        onRefresh: () => Future.wait([
-          BlocProvider.of<HistoryCubit>(context).getHistories(),
-        ]),
+        onRefresh: () {
+          isMounted = false;
+          return Future.wait(
+              [BlocProvider.of<HistoryCubit>(context).getHistories()]);
+        },
         child: ValueListenableBuilder(
             valueListenable: listData,
             builder: (context, s, _) {
@@ -632,7 +634,7 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                     final data = state.histories!
                                         .where((element) =>
                                             element.type!.toUpperCase() ==
-                                            'SELF_REFLECTION'.toUpperCase())
+                                            'Self-Reflection'.toUpperCase())
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(

@@ -155,7 +155,7 @@ class _DetailScientificSessionPageState
                             height: 8,
                           ),
                           Text(
-                            'Unit',
+                            'Department',
                             style: textTheme.bodyMedium?.copyWith(
                               color: secondaryTextColor,
                             ),

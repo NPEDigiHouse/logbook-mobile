@@ -1,10 +1,6 @@
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/history_cubit/history_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
-import 'package:elogbook/src/presentation/features/students/clinical_record/pages/detail_clinical_record_page.dart';
-import 'package:elogbook/src/presentation/features/students/scientific_session/detail_scientific_session_page.dart';
-import 'package:elogbook/src/presentation/features/students/sgl_cst/list_cst_page.dart';
-import 'package:elogbook/src/presentation/features/students/sgl_cst/list_sgl_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:flutter/material.dart';
@@ -640,7 +636,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                     final data = state.histories!
                                         .where((element) =>
                                             element.type!.toUpperCase() ==
-                                            'SELF_REFLECTION'.toUpperCase())
+                                            'Self-Reflection'.toUpperCase())
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(

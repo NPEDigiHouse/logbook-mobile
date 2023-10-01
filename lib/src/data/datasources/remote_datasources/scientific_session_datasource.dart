@@ -86,9 +86,9 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
           },
         ),
       );
-      return await response.data['data'];
+      return Right(await response.data['data']);
     } catch (e) {
-      throw ClientFailure(e.toString());
+      return Left(failure(e));
     }
   }
 
@@ -104,7 +104,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
       final result = ScientificSessionDetailModel.fromJson(dataResponse.data);
       return Right(result);
     } catch (e) {
-      return Left(ClientFailure(e.toString()));
+      return Left(failure(e));
     }
   }
 

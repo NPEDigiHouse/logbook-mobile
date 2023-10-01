@@ -106,6 +106,7 @@ class HistoryHelper {
           continue;
         }
       }
+      print(element.type);
       DateTime? date;
       if (element.timestamp != null)
         date = DateTime.fromMillisecondsSinceEpoch(element.timestamp! * 1000);
@@ -141,7 +142,7 @@ class HistoryHelper {
                   ),
                 ),
             pathIcon: 'wifi_protected_setup_rounded.svg'),
-        'SELF_REFLECTION': HistoryData(
+        'Self-Reflection': HistoryData(
             name: 'Self Reflection',
             onTap: isStudent
                 ? () {}

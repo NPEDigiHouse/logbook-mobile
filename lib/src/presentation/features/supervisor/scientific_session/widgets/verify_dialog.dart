@@ -37,6 +37,8 @@ class _AddTopicDialogState extends State<VerifyScientificSessionDialog> {
         if (state.successVerify) {
           BlocProvider.of<ScientificSessionSupervisorCubit>(context)
             ..getScientificSessionDetail(id: widget.id);
+          BlocProvider.of<ScientificSessionSupervisorCubit>(context)
+            ..getScientificSessionList();
           Navigator.pop(context);
         }
       },

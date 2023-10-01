@@ -3,6 +3,7 @@ import 'package:elogbook/src/data/models/clinical_records/clinical_record_list_m
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/clinical_record/clinical_record_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,19 +91,25 @@ class _SupervisorListClinicalRecordState
                               height: 16,
                             ),
                           ),
-                          SliverList.separated(
-                            itemCount: s.length,
-                            itemBuilder: (context, index) {
-                              return ClinicalRecordCard(
-                                clinicalRecord: s[index],
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return SizedBox(
-                                height: 12,
-                              );
-                            },
-                          )
+                          s.isNotEmpty
+                              ? SliverList.separated(
+                                  itemCount: s.length,
+                                  itemBuilder: (context, index) {
+                                    return ClinicalRecordCard(
+                                      clinicalRecord: s[index],
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return SizedBox(
+                                      height: 12,
+                                    );
+                                  },
+                                )
+                              : SliverToBoxAdapter(
+                                  child: EmptyData(
+                                      title: 'Empty Data',
+                                      subtitle: 'No clinical record found'),
+                                )
                         ],
                       ),
                     );

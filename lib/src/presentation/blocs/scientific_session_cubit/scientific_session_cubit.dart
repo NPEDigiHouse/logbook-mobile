@@ -38,21 +38,32 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
     }
   }
 
+  Future<void> resetAttachment() async {
+    emit(state.copyWith(
+      attachState: RequestState.init,
+      attachment: null,
+    ));
+  }
+
   Future<void> uploadAttachment({required String path}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        attachState: RequestState.loading,
+        attachment: null,
       ));
 
       final result = await ds.uploadScientificSessionAttachment(filePath: path);
 
-      result.fold((l) => emit(state.copyWith(requestState: RequestState.error)),
-          (r) => emit(state.copyWith(attachment: r)));
+      result.fold(
+          (l) => emit(state.copyWith(attachState: RequestState.error)),
+          (r) => emit(state.copyWith(
+                attachment: r,
+                attachState: RequestState.data,
+              )));
     } catch (e) {
-      print(e.toString());
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          attachState: RequestState.error,
         ),
       );
     }

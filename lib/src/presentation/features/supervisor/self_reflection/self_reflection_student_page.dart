@@ -6,6 +6,7 @@ import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/supervisor_self_reflection_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -66,37 +67,10 @@ class _SupervisorSelfReflectionStudentPageState
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Name',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            state.data!.studentName ?? '',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'NIM',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            state.data!.studentId ?? '',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                        ],
+                      child: StudentDepartmentHeader(
+                        unitName: state.data?.activeDepartmentName ?? '...',
+                        studentId: widget.studentId,
+                        studentName: state.data?.studentName ?? '...',
                       ),
                     ),
                   ),

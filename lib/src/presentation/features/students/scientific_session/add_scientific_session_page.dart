@@ -8,9 +8,11 @@ import 'package:elogbook/src/data/models/scientific_session/scientific_session_p
 import 'package:elogbook/src/data/models/scientific_session/session_types_model.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
@@ -25,6 +27,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 
 class AddScientificSessionPage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
@@ -65,7 +68,13 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
 
       if (result != null) {
         File file = File(result.files.single.path!);
+        int maxSizeInBytes = 5 * 1024 * 1024; // 5MB dalam byte
+        print(result.files.first.size);
 
+        if (result.files.first.size > maxSizeInBytes) {
+          CustomAlert.error(message: 'Max file size is 5mb', context: context);
+          return;
+        }
         try {
           BlocProvider.of<ScientificSessionCubit>(context)
             ..uploadAttachment(path: file.path);
@@ -159,7 +168,6 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                             _supervisors.addAll(state.supervisors);
                           }
                           return CustomDropdown<SupervisorModel>(
-                             
                               errorNotifier: supervisorValue,
                               onSubmit: (text, controller) {
                                 if (_supervisors.indexWhere((element) =>
@@ -234,16 +242,16 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                         ),
                         BuildTextField(
                           onChanged: (v) {},
-                          label: 'Topics',
-                          controller: topicController,
+                          label: 'Title',
+                          controller: titleController,
                           validator: FormBuilderValidators.required(
                             errorText: 'This field is required',
                           ),
                         ),
                         BuildTextField(
                           onChanged: (v) {},
-                          label: 'Title',
-                          controller: titleController,
+                          label: 'Topics',
+                          controller: topicController,
                           validator: FormBuilderValidators.required(
                             errorText: 'This field is required',
                           ),
@@ -280,38 +288,58 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                           onTap: () => uploadFile(context),
                           child: Row(
                             children: [
-                              SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: IconButton(
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all(primaryColor),
-                                  ),
-                                  padding: new EdgeInsets.all(0.0),
-                                  iconSize: 14,
-                                  onPressed: () => uploadFile(context),
-                                  icon: Icon(
-                                    Icons.add_rounded,
-                                    color: backgroundColor,
-                                    size: 16,
+                              if (state.attachState == RequestState.init) ...[
+                                SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: IconButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              primaryColor),
+                                    ),
+                                    padding: new EdgeInsets.all(0.0),
+                                    iconSize: 14,
+                                    onPressed: () => uploadFile(context),
+                                    icon: Icon(
+                                      Icons.add_rounded,
+                                      color: backgroundColor,
+                                      size: 16,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              if (state.attachment == null) ...[
+                                SizedBox(
+                                  width: 8,
+                                ),
                                 Text('Upload image or PDF'),
                                 Spacer(),
                                 Text('(max. 5 MB)')
                               ],
-                              if (state.attachment != null) ...[
+                              if (state.attachState == RequestState.loading)
                                 Expanded(
-                                    child: Text(
-                                  path.basename(state.attachment!),
-                                  maxLines: 1,
-                                ))
+                                    child:
+                                        Center(child: Text('Processing...'))),
+                              if (state.attachment != null &&
+                                  state.attachState == RequestState.data) ...[
+                                Expanded(
+                                  child: Text(
+                                    path.basename(state.attachment!),
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: InkWell(
+                                    onTap: () {
+                                      BlocProvider.of<ScientificSessionCubit>(
+                                          context)
+                                        ..resetAttachment();
+                                    },
+                                    child: Center(
+                                        child: Icon(Icons.close_rounded)),
+                                  ),
+                                )
                               ],
                             ],
                           ),

@@ -1,10 +1,9 @@
-import 'package:elogbook/core/styles/color_palette.dart';
-import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/supervisors/supervisor_student_model.dart';
 import 'package:elogbook/src/presentation/blocs/special_report/special_report_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/widgets/head_resident_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/special_report/widgets/special_report_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -63,34 +62,42 @@ class _SpecialReportStudentPageState extends State<SpecialReportStudentPage> {
             SliverToBoxAdapter(
               child: BlocBuilder<SpecialReportCubit, SpecialReportState>(
                 builder: (context, state) {
-                  if (state.specialReport != null)
-                    return Column(
-                      children: [
-                        SizedBox(
-                          height: 12,
-                        ),
-                        ListView.separated(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          itemBuilder: (context, index) {
-                            return SupervisorSpecialReportCard(
-                              data: state.specialReport!
-                                  .listProblemConsultations![index],
-                              studentId: widget.student.studentId!,
-                              index: index + 1,
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return SizedBox(
-                              height: 12,
-                            );
-                          },
-                          itemCount: state
-                              .specialReport!.listProblemConsultations!.length,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                        ),
-                      ],
-                    );
+                  if (state.specialReport != null) {
+                    if (state
+                        .specialReport!.listProblemConsultations!.isNotEmpty)
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: 12,
+                          ),
+                          ListView.separated(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            itemBuilder: (context, index) {
+                              return SupervisorSpecialReportCard(
+                                data: state.specialReport!
+                                    .listProblemConsultations![index],
+                                studentId: widget.student.studentId!,
+                                index: index + 1,
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                height: 12,
+                              );
+                            },
+                            itemCount: state.specialReport!
+                                .listProblemConsultations!.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                          ),
+                        ],
+                      );
+                    else {
+                      return EmptyData(
+                          title: 'Empty Data',
+                          subtitle: 'No Problem Consultations submitted');
+                    }
+                  }
                   return CustomLoading();
                 },
               ),

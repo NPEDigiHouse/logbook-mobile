@@ -29,6 +29,7 @@ class StudentCubit extends Cubit<StudentState> {
 
       final result =
           await dataSource.getStudentClinicalRecordOfActiveDepartment();
+
       try {
         emit(state.copyWith(
           clinicalRecordResponse: result,

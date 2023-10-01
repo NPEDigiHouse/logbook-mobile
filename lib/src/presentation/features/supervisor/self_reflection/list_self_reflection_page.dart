@@ -94,10 +94,10 @@ class _SupervisorListSelfReflectionsPageState
                               ),
                             ),
                             SliverList.separated(
-                              itemCount: s!.length,
+                              itemCount: s.length,
                               itemBuilder: (context, index) {
                                 return SelfReflectionCard(
-                                  selfReflection: s![index],
+                                  selfReflection: s[index],
                                 );
                               },
                               separatorBuilder: (context, index) {

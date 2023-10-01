@@ -37,6 +37,8 @@ class _AddTopicDialogState extends State<VerifyClinicalRecordDialog> {
         if (state.successVerifyClinicalRecords) {
           BlocProvider.of<ClinicalRecordSupervisorCubit>(context)
             ..getDetailClinicalRecord(id: widget.id);
+          BlocProvider.of<ClinicalRecordSupervisorCubit>(context)
+            ..getClinicalRecords();
           Navigator.pop(context);
         }
       },

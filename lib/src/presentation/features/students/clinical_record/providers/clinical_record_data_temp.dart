@@ -14,6 +14,10 @@ class ClinicalRecordData {
     _clinicalRecordPostModel.attachment = path;
   }
 
+  void removeAttachment() {
+    _clinicalRecordPostModel.attachment = null;
+  }
+
   void addNotes(String notes) {
     _clinicalRecordPostModel.notes = notes;
   }

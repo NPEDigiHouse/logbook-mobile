@@ -6,6 +6,7 @@ import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_r
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier2.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_temp.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 
 class CreateClinicalRecordThirdPage extends StatefulWidget {
   final ClinicalRecordData clinicalRecordData;
@@ -40,9 +42,16 @@ class _CreateClinicalRecordThirdPageState
     if (status.isGranted) {
       // Izin diberikan, lanjutkan dengan tindakan yang diperlukan
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-          allowedExtensions: ['pdf', 'jpg', 'png'], type: FileType.custom);
+        allowedExtensions: ['pdf', 'jpg', 'png'],
+        type: FileType.custom,
+      );
 
       if (result != null) {
+        int maxSizeInBytes = 5 * 1024 * 1024; // 5MB dalam byte
+        if (result.files.first.size > maxSizeInBytes) {
+          CustomAlert.error(context: context, message: 'Max file size is 5mb');
+          return;
+        }
         File file = File(result.files.single.path!);
 
         fileName.value = basename(file.path);
@@ -95,6 +104,8 @@ class _CreateClinicalRecordThirdPageState
                 if (state.pathAttachment != null) {
                   widget.clinicalRecordData
                       .addAttachment(state.pathAttachment!);
+                } else {
+                  widget.clinicalRecordData.removeAttachment();
                 }
               },
               builder: (context, state) {
@@ -117,60 +128,60 @@ class _CreateClinicalRecordThirdPageState
                       onTap: () => uploadFile(context),
                       child: Row(
                         children: [
-                          SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: IconButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(primaryColor),
-                              ),
-                              padding: new EdgeInsets.all(0.0),
-                              iconSize: 14,
-                              onPressed: () => uploadFile(context),
-                              icon: Icon(
-                                Icons.add_rounded,
-                                color: backgroundColor,
-                                size: 16,
+                          if (state.attachState == RequestState.init) ...[
+                            SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: IconButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(primaryColor),
+                                ),
+                                padding: new EdgeInsets.all(0.0),
+                                iconSize: 14,
+                                onPressed: () => uploadFile(context),
+                                icon: Icon(
+                                  Icons.add_rounded,
+                                  color: backgroundColor,
+                                  size: 16,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          // ValueListenableBuilder(
-                          //   valueListenable: fileName,
-                          //   builder: (context, value, child) {
-                          //     if (value.isEmpty) {
-                          //       return Expanded(
-                          //         child: Row(
-                          //           children: [
-                          //             Text('Upload image or PDF'),
-                          //             Spacer(),
-                          //             Text('(max. 5 MB)')
-                          //           ],
-                          //         ),
-                          //       );
-                          //     } else {
-                          //       return Expanded(
-                          //           child: Text(
-                          //         value,
-                          //         maxLines: 1,
-                          //         overflow: TextOverflow.ellipsis,
-                          //       ));
-                          //     }
-                          //   },
-                          // )
-                          if (state.pathAttachment == null) ...[
+                            SizedBox(
+                              width: 8,
+                            ),
                             Text('Upload image or PDF'),
                             Spacer(),
                             Text('(max. 5 MB)')
                           ],
-                          if (state.pathAttachment != null) ...[
+                          if (state.attachState == RequestState.loading)
                             Expanded(
-                                child: Text(
-                              basename(state.pathAttachment!),
-                              maxLines: 1,
+                                child: Center(child: Text('Processing...'))),
+                          if (state.pathAttachment != null &&
+                              state.attachState == RequestState.data) ...[
+                            Expanded(
+                                child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    basename(state.pathAttachment!),
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: InkWell(
+                                    onTap: () {
+                                      BlocProvider.of<ClinicalRecordCubit>(
+                                          context)
+                                        ..resetAttachment();
+                                    },
+                                    child: Center(
+                                        child: Icon(Icons.close_rounded)),
+                                  ),
+                                )
+                              ],
                             ))
                           ],
                         ],
