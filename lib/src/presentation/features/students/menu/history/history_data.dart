@@ -2,13 +2,16 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/data/models/history/history_model.dart';
+import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/presentation/features/common/history/cst/cst_history_detail.dart';
 import 'package:elogbook/src/presentation/features/common/history/sgl/sgl_history_detail.dart';
+import 'package:elogbook/src/presentation/features/coordinator/weekly_grade/weekly_grade_detail_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/final_score/student_final_score_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_mini_cex_detail.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_test_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/personal_behavior/student_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/student_scientific_assignment_page.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/weekly_assesment/student_weekly_assesment_page.dart';
 import 'package:elogbook/src/presentation/features/students/competences/list_cases_page.dart';
 import 'package:elogbook/src/presentation/features/students/competences/list_skills_page.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/detail_scientific_session_page.dart';
@@ -78,38 +81,11 @@ class HistoryHelper {
   }) {
     List<Activity> activityList = [];
     for (var element in history) {
-      if (isCoordinator) {
-        if (element.type != 'Weekly Assesemnt') {
-          continue;
-        }
-      }
-
       if (onlyInOut) {
         if (element.type != 'Check-in' && element.type != 'Check-out') {
           continue;
         }
       }
-
-      // if (isCeu && element.supervisorId != supervisorId) {
-      //   if (element.type != 'SGL' &&
-      //       element.type != 'CST' &&
-      //       element.type != 'Assesment') {
-      //     continue;
-      //   }
-      // }
-
-      if (!((isHeadDiv &&
-              (unitIds ?? ['']).indexWhere((e) =>
-                      e.trim().toLowerCase() ==
-                      element.unitName?.trim().toLowerCase()) !=
-                  -1) ||
-          isStudent ||
-          onlyInOut)) {
-        if (element.type == 'Check-in' || element.type == 'Check-out') {
-          continue;
-        }
-      }
-      print(element.type);
       DateTime? date;
       if (element.timestamp != null)
         date = DateTime.fromMillisecondsSinceEpoch(element.timestamp! * 1000);
@@ -254,6 +230,19 @@ class HistoryHelper {
                   id: element.attachment ?? '',
                   isHistory: true,
                 )),
+            pathIcon: 'wifi_protected_setup_rounded.svg'),
+        'WEEKLY_ASSESMENT': HistoryData(
+            name: 'Weekly Assesment',
+            onTap: isStudent
+                ? () => context.navigateTo(StudentWeeklyAssementPage())
+                : () => context.navigateTo(WeeklyGradeDetailPage(
+                      student: StudentDepartmentModel(
+                        studentId: element.studentId,
+                        studentName: element.studentName,
+                        activeDepartmentId: element.unitId,
+                        activeDepartmentName: element.unitName,
+                      ),
+                    )),
             pathIcon: 'wifi_protected_setup_rounded.svg'),
       };
 

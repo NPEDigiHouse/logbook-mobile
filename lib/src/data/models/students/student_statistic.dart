@@ -21,7 +21,7 @@ class StudentStatistic {
   @JsonKey(name: "skills")
   final List<Skill>? skills;
   @JsonKey(name: "finalScore")
-  final dynamic finalScore;
+  final FinalScoreModel? finalScore;
   final StudentCredentialProfile? student;
   final WeeklyAssesmentResponse? weeklyAssesment;
   final MiniCexStudentDetailModel? miniCex;
@@ -96,4 +96,48 @@ class Skill {
   factory Skill.fromJson(Map<String, dynamic> json) => _$SkillFromJson(json);
 
   Map<String, dynamic> toJson() => _$SkillToJson(this);
+}
+
+@JsonSerializable()
+class FinalScoreModel {
+  @JsonKey(name: "finalScore")
+  final double? finalScore;
+  @JsonKey(name: "osce")
+  final Cbt? osce;
+  @JsonKey(name: "cbt")
+  final Cbt? cbt;
+  @JsonKey(name: "miniCex")
+  final Cbt? miniCex;
+  @JsonKey(name: "sa")
+  final Cbt? sa;
+
+  FinalScoreModel({
+    this.finalScore,
+    this.osce,
+    this.cbt,
+    this.miniCex,
+    this.sa,
+  });
+
+  factory FinalScoreModel.fromJson(Map<String, dynamic> json) =>
+      _$FinalScoreModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FinalScoreModelToJson(this);
+}
+
+@JsonSerializable()
+class Cbt {
+  @JsonKey(name: "score")
+  final double? score;
+  @JsonKey(name: "percentage")
+  final double? percentage;
+
+  Cbt({
+    this.score,
+    this.percentage,
+  });
+
+  factory Cbt.fromJson(Map<String, dynamic> json) => _$CbtFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CbtToJson(this);
 }

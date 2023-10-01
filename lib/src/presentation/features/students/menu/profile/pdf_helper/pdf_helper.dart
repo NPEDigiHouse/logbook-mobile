@@ -39,14 +39,14 @@ class PdfHelper {
       header: (context) => buildHeader(image),
       build: (context) => [
         buildCompetence(caseStat, skillStat, data),
-        SizedBox(height: 48),
+        SizedBox(height: 24),
         buildWeeklyScore(data),
-        SizedBox(height: 48),
+        SizedBox(height: 24),
         buildScienceScore(data),
-        SizedBox(height: 48),
+        SizedBox(height: 24),
         buildMiniCexScore(data),
-        SizedBox(height: 48),
-        // buildFinalScore(data),
+        SizedBox(height: 24),
+        buildFinalScore(data),
       ],
     ));
 
@@ -310,7 +310,7 @@ class PdfHelper {
               ),
             ),
             Text(
-              '${data.scientificAssesement?.grade ?? 0}',
+              '${data.finalScore?.sa?.score ?? 0}',
               style: TextStyle(
                 fontSize: 14,
                 color: PdfColors.black,
@@ -387,7 +387,7 @@ class PdfHelper {
                     TableRow(
                       children: [
                         Text(' ${i + 1}. ${data.miniCex?.scores?[i].name}'),
-                        Text('${data.miniCex?.scores?[i].score}')
+                        Text(' ${data.miniCex?.scores?[i].score}')
                       ],
                     ),
                 ],
@@ -406,7 +406,7 @@ class PdfHelper {
               ),
             ),
             Text(
-              '${data.miniCex?.grade ?? 0.0}',
+              '${data.finalScore?.miniCex?.score ?? 0.0}',
               style: TextStyle(
                 fontSize: 14,
                 color: PdfColors.black,
@@ -420,119 +420,125 @@ class PdfHelper {
     return SizedBox.shrink();
   }
 
-  // static Widget buildFinalScore(StudentStatistic? data) {
-  //   if (data != null && data.finalScore != null)
-  //     return Column(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         SizedBox(height: 12),
-  //         Text(
-  //           'E. FINAL SCORE',
-  //           style: TextStyle(
-  //             fontSize: 16,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //         SizedBox(height: 12),
-  //         Table(
-  //             tableWidth: TableWidth.min,
-  //             border: TableBorder.all(width: 1.2),
-  //             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-  //             columnWidths: {
-  //               0: FixedColumnWidth(150),
-  //               1: FixedColumnWidth(80),
-  //               2: FixedColumnWidth(70),
-  //             },
-  //             children: [
-  //               TableRow(
-  //                 decoration: BoxDecoration(
-  //                   color: PdfColors.black,
-  //                 ),
-  //                 children: [
-  //                   Center(
-  //                     child: Text(
-  //                       'Grade Item',
-  //                       style: TextStyle(
-  //                         fontSize: 12,
-  //                         color: PdfColors.white,
-  //                         fontWeight: FontWeight.bold,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   Center(
-  //                     child: Text(
-  //                       'Score',
-  //                       style: TextStyle(
-  //                         fontSize: 12,
-  //                         color: PdfColors.white,
-  //                         fontWeight: FontWeight.bold,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   Center(
-  //                     child: Text(
-  //                       '%',
-  //                       style: TextStyle(
-  //                         fontSize: 12,
-  //                         color: PdfColors.white,
-  //                         fontWeight: FontWeight.bold,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //               ...[
-  //                 for (int i = 0; i < data.finalScore!.scores!.length; i++)
-  //                   TableRow(
-  //                     children: [
-  //                       Text(' ${data.finalScore?.scores?[i]}'),
-  //                       Text('90'),
-  //                       Text('10%'),
-  //                     ],
-  //                   ),
-  //               ],
-  //               TableRow(
-  //                 children: [
-  //                   Text('Bla bla bla'),
-  //                   Text('90'),
-  //                   Text('10%'),
-  //                 ],
-  //               ),
-  //               TableRow(
-  //                 children: [
-  //                   Text('Bla bla bla'),
-  //                   Text('90'),
-  //                   Text('10%'),
-  //                 ],
-  //               ),
-  //             ]),
-  //         SizedBox(height: 8),
-  //         Row(children: [
-  //           SizedBox(
-  //             width: 230,
-  //             child: Text(
-  //               'Total Score : ',
-  //               style: TextStyle(
-  //                 fontSize: 14,
-  //                 color: PdfColors.black,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //           ),
-  //           Text(
-  //             '95',
-  //             style: TextStyle(
-  //               fontSize: 14,
-  //               color: PdfColors.black,
-  //               fontWeight: FontWeight.bold,
-  //             ),
-  //           ),
-  //         ]),
-  //         SizedBox(height: 8),
-  //       ],
-  //     );
-  // }
+  static Widget buildFinalScore(StudentStatistic? data) {
+    if (data != null)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 12),
+          Text(
+            'E. FINAL SCORE',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 12),
+          Table(
+              tableWidth: TableWidth.min,
+              border: TableBorder.all(width: 1.2),
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              columnWidths: {
+                0: FixedColumnWidth(150),
+                1: FixedColumnWidth(80),
+                2: FixedColumnWidth(70),
+              },
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(
+                    color: PdfColors.black,
+                  ),
+                  children: [
+                    Center(
+                      child: Text(
+                        'Grade Item',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        'Score',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        '%',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(' Mini-Cex'),
+                    Text(' ${data.finalScore?.miniCex?.score}'),
+                    Text(
+                        ' ${(data.finalScore?.miniCex?.percentage ?? 0) * 100}%'),
+                  ], 
+                ),
+                TableRow(
+                  children: [
+                    Text(' Scientific Assignment'),
+                    Text(' ${data.finalScore?.sa?.score}'),
+                    Text(' ${(data.finalScore?.sa?.percentage ?? 0) * 100}%'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(' CBT'),
+                    Text(' ${data.finalScore?.cbt?.score}'),
+                    Text(' ${(data.finalScore?.cbt?.percentage ?? 0) * 100}%'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(' OSCE'),
+                    Text(' ${data.finalScore?.osce?.score}'),
+                    Text(' ${(data.finalScore?.osce?.percentage ?? 0) * 100}%'),
+                  ],
+                ),
+              ]),
+          SizedBox(height: 8),
+          Row(children: [
+            SizedBox(
+              width: 230,
+              child: Text(
+                'Total Score : ',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: PdfColors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Text(
+              '${data.finalScore?.finalScore}',
+              style: TextStyle(
+                fontSize: 14,
+                color: PdfColors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ]),
+          SizedBox(height: 8),
+        ],
+      );
+    return SizedBox.shrink();
+  }
 
   static Widget buildWeeklyScore(StudentStatistic? data) {
     if (data != null && data.weeklyAssesment != null)

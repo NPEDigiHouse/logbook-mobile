@@ -18,7 +18,10 @@ StudentStatistic _$StudentStatisticFromJson(Map<String, dynamic> json) =>
       skills: (json['skills'] as List<dynamic>?)
           ?.map((e) => Skill.fromJson(e as Map<String, dynamic>))
           .toList(),
-      finalScore: json['finalScore'],
+      finalScore: json['finalScore'] == null
+          ? null
+          : FinalScoreModel.fromJson(
+              json['finalScore'] as Map<String, dynamic>),
       scientificAssesement: json['scientificAssesement'] == null
           ? null
           : ListScientificAssignment.fromJson(
@@ -82,4 +85,40 @@ Map<String, dynamic> _$SkillToJson(Skill instance) => <String, dynamic>{
       'skillType': instance.skillType,
       'skillTypeId': instance.skillTypeId,
       'verificationStatus': instance.verificationStatus,
+    };
+
+FinalScoreModel _$FinalScoreModelFromJson(Map<String, dynamic> json) =>
+    FinalScoreModel(
+      finalScore: (json['finalScore'] as num?)?.toDouble(),
+      osce: json['osce'] == null
+          ? null
+          : Cbt.fromJson(json['osce'] as Map<String, dynamic>),
+      cbt: json['cbt'] == null
+          ? null
+          : Cbt.fromJson(json['cbt'] as Map<String, dynamic>),
+      miniCex: json['miniCex'] == null
+          ? null
+          : Cbt.fromJson(json['miniCex'] as Map<String, dynamic>),
+      sa: json['sa'] == null
+          ? null
+          : Cbt.fromJson(json['sa'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$FinalScoreModelToJson(FinalScoreModel instance) =>
+    <String, dynamic>{
+      'finalScore': instance.finalScore,
+      'osce': instance.osce,
+      'cbt': instance.cbt,
+      'miniCex': instance.miniCex,
+      'sa': instance.sa,
+    };
+
+Cbt _$CbtFromJson(Map<String, dynamic> json) => Cbt(
+      score: (json['score'] as num?)?.toDouble(),
+      percentage: (json['percentage'] as num?)?.toDouble(),
+    );
+
+Map<String, dynamic> _$CbtToJson(Cbt instance) => <String, dynamic>{
+      'score': instance.score,
+      'percentage': instance.percentage,
     };
