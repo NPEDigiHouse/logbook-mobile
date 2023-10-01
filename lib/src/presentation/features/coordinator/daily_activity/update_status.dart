@@ -16,10 +16,11 @@ class UpdateStatusDialog extends StatefulWidget {
   const UpdateStatusDialog({
     super.key,
     this.status,
+        this.isExpired,
+    this.isExpiredDate,
     required this.weekNum,
     required this.departmentId,
-    this.isExpired,
-    this.isExpiredDate,
+
     required this.id,
   });
 

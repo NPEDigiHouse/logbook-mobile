@@ -1,4 +1,3 @@
-import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,6 +7,7 @@ class BuildTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? initialValue;
   final bool isOnlyNumber;
+  final bool isDisable;
   final bool isOnlyDigit;
   final String? Function(dynamic data)? validator;
 
@@ -16,6 +16,7 @@ class BuildTextField extends StatefulWidget {
       this.controller,
       this.initialValue,
       this.validator,
+      this.isDisable = false,
       this.isOnlyDigit = false,
       this.isOnlyNumber = false,
       required this.onChanged,
@@ -29,6 +30,7 @@ class _BuildTextFieldState extends State<BuildTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: widget.isDisable,
       controller: widget.controller,
       validator: widget.validator,
       onChanged: widget.onChanged,
