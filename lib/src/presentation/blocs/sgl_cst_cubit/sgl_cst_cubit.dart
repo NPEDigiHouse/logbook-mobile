@@ -43,6 +43,7 @@ class SglCstCubit extends Cubit<SglCstState> {
       {required id,
       int? startTime,
       int? endTime,
+      String? date,
       List<Map<String, dynamic>>? topics}) async {
     emit(state.copyWith(
       requestState: RequestState.loading,
@@ -50,6 +51,7 @@ class SglCstCubit extends Cubit<SglCstState> {
     final result = await dataSource.editSgl(
       startTime: startTime,
       id: id,
+      date: date,
       endTime: endTime,
       topics: topics,
     );
@@ -104,6 +106,7 @@ class SglCstCubit extends Cubit<SglCstState> {
       {required id,
       int? startTime,
       int? endTime,
+      String? date,
       List<Map<String, dynamic>>? topics}) async {
     emit(state.copyWith(
       requestState: RequestState.loading,
@@ -113,6 +116,7 @@ class SglCstCubit extends Cubit<SglCstState> {
       id: id,
       endTime: endTime,
       topics: topics,
+      date: date,
     );
     result.fold(
       (l) => emit(state.copyWith(requestState: RequestState.error)),

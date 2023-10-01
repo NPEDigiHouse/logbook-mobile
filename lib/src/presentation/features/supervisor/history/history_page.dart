@@ -1,6 +1,7 @@
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/history_cubit/history_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -136,72 +137,101 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                 builder: (context, state) {
                   if (state.histories != null &&
                       state.requestState == RequestState.data) {
-                    return CustomScrollView(
-                      slivers: <Widget>[
-                        SliverGroupedListView<Activity, DateTime>(
-                          elements: s,
-                          groupBy: (activity) => activity.date!,
-                          groupComparator: (date1, date2) =>
-                              date1.compareTo(date2) * -1,
-                          itemBuilder: (context, activity) {
-                            return Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: activity.onTap,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                    horizontal: 20,
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Container(
-                                          width: 68,
-                                          height: 68,
-                                          color: primaryColor.withOpacity(.1),
-                                          child: Center(
-                                            child: SvgPicture.asset(
-                                              activity.iconPath,
-                                              color: primaryColor,
-                                              width: 32,
+                    if (s.isNotEmpty) {
+                      return CustomScrollView(
+                        slivers: <Widget>[
+                          SliverGroupedListView<Activity, DateTime>(
+                            elements: s,
+                            groupBy: (activity) => activity.date!,
+                            groupComparator: (date1, date2) =>
+                                date1.compareTo(date2) * -1,
+                            itemBuilder: (context, activity) {
+                              return Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: activity.onTap,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                      horizontal: 20,
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          child: Container(
+                                            width: 68,
+                                            height: 68,
+                                            color: primaryColor.withOpacity(.1),
+                                            child: Center(
+                                              child: SvgPicture.asset(
+                                                activity.iconPath,
+                                                color: primaryColor,
+                                                width: 32,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Row(
-                                              children: <Widget>[
-                                                Text(
-                                                  activity.title,
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                    activity.title,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: textTheme.titleSmall
+                                                        ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  const Icon(
+                                                    Icons.verified_rounded,
+                                                    size: 16,
+                                                    color: primaryColor,
+                                                  ),
+                                                ],
+                                              ),
+                                              if (widget.isKabag) ...[
+                                                const SizedBox(height: 12),
+                                                RichText(
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: textTheme.titleSmall
-                                                      ?.copyWith(
-                                                    fontWeight: FontWeight.bold,
+                                                  text: TextSpan(
+                                                    style: textTheme.bodySmall
+                                                        ?.copyWith(
+                                                      color: secondaryTextColor,
+                                                    ),
+                                                    children: <TextSpan>[
+                                                      const TextSpan(
+                                                        text: 'Supervisor:\t',
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                          text: activity
+                                                                  .supervisorId ??
+                                                              '-'),
+                                                    ],
                                                   ),
                                                 ),
-                                                const SizedBox(width: 4),
-                                                const Icon(
-                                                  Icons.verified_rounded,
-                                                  size: 16,
-                                                  color: primaryColor,
-                                                ),
                                               ],
-                                            ),
-                                            if (widget.isKabag) ...[
                                               const SizedBox(height: 12),
                                               RichText(
                                                 maxLines: 1,
@@ -213,7 +243,7 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                                   ),
                                                   children: <TextSpan>[
                                                     const TextSpan(
-                                                      text: 'Supervisor:\t',
+                                                      text: 'Student Name:\t',
                                                       style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w700,
@@ -221,129 +251,112 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                                                     ),
                                                     TextSpan(
                                                         text: activity
-                                                                .supervisorId ??
-                                                            '-'),
+                                                            .studentName),
                                                   ],
                                                 ),
                                               ),
-                                            ],
-                                            const SizedBox(height: 12),
-                                            RichText(
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              text: TextSpan(
-                                                style: textTheme.bodySmall
-                                                    ?.copyWith(
-                                                  color: secondaryTextColor,
-                                                ),
-                                                children: <TextSpan>[
-                                                  const TextSpan(
-                                                    text: 'Student Name:\t',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w700,
+                                              ...[
+                                                const SizedBox(height: 4),
+                                                RichText(
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  text: TextSpan(
+                                                    style: textTheme.bodySmall
+                                                        ?.copyWith(
+                                                      color: secondaryTextColor,
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                      text:
-                                                          activity.studentName),
-                                                ],
-                                              ),
-                                            ),
-                                            ...[
-                                              const SizedBox(height: 4),
-                                              RichText(
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  style: textTheme.bodySmall
-                                                      ?.copyWith(
-                                                    color: secondaryTextColor,
-                                                  ),
-                                                  children: <TextSpan>[
-                                                    TextSpan(
-                                                      text: 'Student Id: ',
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w700,
+                                                    children: <TextSpan>[
+                                                      TextSpan(
+                                                        text: 'Student Id: ',
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: activity.studentId,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                            if (activity.patientName !=
-                                                null) ...[
-                                              const SizedBox(height: 4),
-                                              RichText(
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                text: TextSpan(
-                                                  style: textTheme.bodySmall
-                                                      ?.copyWith(
-                                                    color: secondaryTextColor,
-                                                  ),
-                                                  children: <TextSpan>[
-                                                    TextSpan(
-                                                      text: 'Patient: ',
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w700,
+                                                      TextSpan(
+                                                        text:
+                                                            activity.studentId,
                                                       ),
-                                                    ),
-                                                    TextSpan(
-                                                      text:
-                                                          activity.patientName,
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
+                                              ],
+                                              if (activity.patientName !=
+                                                  null) ...[
+                                                const SizedBox(height: 4),
+                                                RichText(
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  text: TextSpan(
+                                                    style: textTheme.bodySmall
+                                                        ?.copyWith(
+                                                      color: secondaryTextColor,
+                                                    ),
+                                                    children: <TextSpan>[
+                                                      TextSpan(
+                                                        text: 'Patient: ',
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: activity
+                                                            .patientName,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                              const SizedBox(height: 8),
                                             ],
-                                            const SizedBox(height: 8),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          groupSeparatorBuilder: (date) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                const Divider(
-                                  height: 6,
-                                  thickness: 6,
-                                  color: onDisableColor,
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                                  child: Text(
-                                    timeago.format(date),
-                                    style: textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.w600,
+                                      ],
                                     ),
                                   ),
                                 ),
-                              ],
-                            );
-                          },
-                          separator: const Divider(
-                            height: 1,
-                            thickness: 1,
-                            indent: 20,
-                            endIndent: 20,
-                            color: Color(0xFFEFF0F9),
+                              );
+                            },
+                            groupSeparatorBuilder: (date) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  const Divider(
+                                    height: 6,
+                                    thickness: 6,
+                                    color: onDisableColor,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        20, 16, 20, 8),
+                                    child: Text(
+                                      timeago.format(date),
+                                      style: textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                            separator: const Divider(
+                              height: 1,
+                              thickness: 1,
+                              indent: 20,
+                              endIndent: 20,
+                              color: Color(0xFFEFF0F9),
+                            ),
                           ),
-                        ),
-                      ],
-                    );
+                        ],
+                      );
+                    } else {
+                      return EmptyData(
+                          title: 'No Activity Yet',
+                          subtitle: 'there is no activity history yet');
+                    }
                   }
                   return CustomLoading();
                 },

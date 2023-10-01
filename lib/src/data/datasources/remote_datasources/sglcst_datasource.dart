@@ -12,6 +12,7 @@ import 'package:elogbook/src/data/models/sglcst/sglcst.export.dart';
 abstract class SglCstDataSource {
   Future<Either<Failure, bool>> editSgl(
       {required String id,
+      String? date,
       int? startTime,
       int? endTime,
       List<Map<String, dynamic>>? topics});
@@ -30,6 +31,7 @@ abstract class SglCstDataSource {
   Future<Either<Failure, bool>> editCst(
       {required String id,
       int? startTime,
+      String? date,
       int? endTime,
       List<Map<String, dynamic>>? topics});
   Future<Either<Failure, void>> uploadSgl({
@@ -323,11 +325,13 @@ class SglCstDataSourceImpl implements SglCstDataSource {
       {required String id,
       int? startTime,
       int? endTime,
+      String? date,
       List<Map<String, dynamic>>? topics}) async {
     try {
       await dio.put(ApiService.baseUrl + '/sgls/$id/edit',
           options: await apiHeader.userOptions(),
           data: {
+            "date": date,
             if (startTime != null) "startTime": startTime,
             if (endTime != null) "endTime": endTime,
             if (topics != null && topics.isNotEmpty)
@@ -360,12 +364,14 @@ class SglCstDataSourceImpl implements SglCstDataSource {
   Future<Either<Failure, bool>> editCst(
       {required String id,
       int? startTime,
+      String? date,
       int? endTime,
       List<Map<String, dynamic>>? topics}) async {
     try {
       await dio.put(ApiService.baseUrl + '/csts/$id/edit',
           options: await apiHeader.userOptions(),
           data: {
+            "date": date,
             if (startTime != null) "startTime": startTime,
             if (endTime != null) "endTime": endTime,
             if (topics != null && topics.isNotEmpty)

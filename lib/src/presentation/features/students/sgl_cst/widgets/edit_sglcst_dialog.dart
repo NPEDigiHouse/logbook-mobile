@@ -298,6 +298,7 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
             id: widget.id,
             startTime: start.millisecondsSinceEpoch ~/ 1000,
             endTime: end.millisecondsSinceEpoch ~/ 1000,
+            date: Utils.datetimeToString(widget.date, format: 'yyyy-MM-dd'),
             topics: [
               for (int i = 0; i < topicId.length; i++)
                 if (widget.topics[i].topicName != topicNames[i])
@@ -313,6 +314,7 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
             id: widget.id,
             startTime: start.millisecondsSinceEpoch ~/ 1000,
             endTime: end.millisecondsSinceEpoch ~/ 1000,
+            date: Utils.datetimeToString(widget.date, format: 'yyyy-MM-dd'),
             topics: [
               for (int i = 0; i < topicId.length; i++)
                 if (widget.topics[i].topicName != topicNames[i])

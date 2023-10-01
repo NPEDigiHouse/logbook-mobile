@@ -194,6 +194,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
       final result = PersonalBehaviorDetailModel.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

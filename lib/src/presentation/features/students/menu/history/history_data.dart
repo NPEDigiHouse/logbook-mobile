@@ -67,12 +67,26 @@ class HistoryHelper {
     BuildContext context, {
     bool isCeu = false,
     String? supervisorId,
+    bool isCoordinator = false,
+    bool onlyInOut = false,
     bool isHeadDiv = false,
     List<String>? unitIds,
     bool isStudent = false,
   }) {
     List<Activity> activityList = [];
     for (var element in history) {
+      if (isCoordinator) {
+        if (element.type != 'Weekly Assesemnt') {
+          continue;
+        }
+      }
+
+      if (onlyInOut) {
+        if (element.type != 'Check-in' && element.type != 'Check-out') {
+          continue;
+        }
+      }
+
       // if (isCeu && element.supervisorId != supervisorId) {
       //   if (element.type != 'SGL' &&
       //       element.type != 'CST' &&
@@ -86,7 +100,8 @@ class HistoryHelper {
                       e.trim().toLowerCase() ==
                       element.unitName?.trim().toLowerCase()) !=
                   -1) ||
-          isStudent)) {
+          isStudent ||
+          onlyInOut)) {
         if (element.type == 'Check-in' || element.type == 'Check-out') {
           continue;
         }

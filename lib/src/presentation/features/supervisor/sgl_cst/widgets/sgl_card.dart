@@ -92,6 +92,32 @@ class SglOnListCard extends StatelessWidget {
                         color: secondaryColor,
                       ),
                     ),
+                    if (isCeu) ...[
+                      SizedBox(
+                        height: 4,
+                      ),
+                      RichText(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(
+                          style: textTheme.bodySmall?.copyWith(
+                            color: secondaryTextColor,
+                          ),
+                          children: <TextSpan>[
+                            const TextSpan(
+                              text: 'Department:\t',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            TextSpan(
+                              text: sglCst.activeDepartmentName ??
+                                  'No Active Department',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

@@ -8,6 +8,7 @@ import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cub
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/resident_menu_page.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/custom_shimmer.dart';
+import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/inkwell_container.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class _ListResidentPageState extends State<ListResidentPage> {
                     }
                   },
                   builder: (context, state) {
-                    if (state.students != null)
+                    if (state.students != null) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CustomScrollView(
@@ -103,20 +104,29 @@ class _ListResidentPageState extends State<ListResidentPage> {
                                 height: 16,
                               ),
                             ),
-                            SliverList.separated(
-                              itemCount: s.length,
-                              itemBuilder: (context, index) {
-                                return _buildStudentCard(context, s[index]);
-                              },
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  height: 12,
-                                );
-                              },
-                            )
+                            s.isNotEmpty
+                                ? SliverList.separated(
+                                    itemCount: s.length,
+                                    itemBuilder: (context, index) {
+                                      return _buildStudentCard(
+                                          context, s[index]);
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return SizedBox(
+                                        height: 12,
+                                      );
+                                    },
+                                  )
+                                : SliverToBoxAdapter(
+                                    child: EmptyData(
+                                        title: 'No Students',
+                                        subtitle:
+                                            'You don\'t have student guidance or assistance yet'),
+                                  )
                           ],
                         ),
                       );
+                    }
                     return CustomLoading();
                   },
                 );

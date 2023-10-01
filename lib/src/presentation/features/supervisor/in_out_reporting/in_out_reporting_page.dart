@@ -1,5 +1,7 @@
+import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/presentation/features/supervisor/in_out_reporting/check_in_students_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/in_out_reporting/check_out_student_page.dart';
+import 'package:elogbook/src/presentation/features/supervisor/in_out_reporting/in_out_history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -67,33 +69,47 @@ class _InOutReportingPageState extends State<InOutReportingPage>
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const SizedBox(height: 24),
-                          Text(
-                            'Verification',
-                            style: textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: primaryColor,
-                            ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              const SizedBox(height: 24),
+                              Text(
+                                'Verification',
+                                style: textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: primaryColor,
+                                ),
+                              ),
+                              Text(
+                                'In-Out Reporting',
+                                style: textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              // const SizedBox(height: 14),
+                              // ValueListenableBuilder(
+                              //   valueListenable: _query,
+                              //   builder: (context, query, child) {
+                              //     return SearchField(
+                              //       text: query,
+                              //       onChanged: (value) => _query.value = value,
+                              //     );
+                              //   },
+                              // ),
+                            ],
                           ),
-                          Text(
-                            'In-Out Reporting',
-                            style: textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
+                          Spacer(),
+                          IconButton(
+                            onPressed: () {
+                              context.navigateTo(InOutHistoryPage());
+                            },
+                            icon: Icon(
+                              Icons.history_rounded,
                             ),
-                          ),
-                          // const SizedBox(height: 14),
-                          // ValueListenableBuilder(
-                          //   valueListenable: _query,
-                          //   builder: (context, query, child) {
-                          //     return SearchField(
-                          //       text: query,
-                          //       onChanged: (value) => _query.value = value,
-                          //     );
-                          //   },
-                          // ),
+                          )
                         ],
                       ),
                     ),
