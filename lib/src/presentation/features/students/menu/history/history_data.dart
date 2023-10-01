@@ -4,10 +4,13 @@ import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/data/models/history/history_model.dart';
 import 'package:elogbook/src/presentation/features/common/history/cst/cst_history_detail.dart';
 import 'package:elogbook/src/presentation/features/common/history/sgl/sgl_history_detail.dart';
+import 'package:elogbook/src/presentation/features/students/assesment/pages/final_score/student_final_score_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_mini_cex_detail.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/mini_cex/student_test_grade_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/personal_behavior/student_personal_behavior_page.dart';
 import 'package:elogbook/src/presentation/features/students/assesment/pages/scientific_assigment/student_scientific_assignment_page.dart';
+import 'package:elogbook/src/presentation/features/students/competences/list_cases_page.dart';
+import 'package:elogbook/src/presentation/features/students/competences/list_skills_page.dart';
 import 'package:elogbook/src/presentation/features/students/scientific_session/detail_scientific_session_page.dart';
 
 import 'package:elogbook/src/presentation/features/supervisor/assesment/pages/supervisor_mini_cex_detail_page.dart';
@@ -153,7 +156,11 @@ class HistoryHelper {
         'CASE': HistoryData(
             name: 'CASE',
             onTap: () => isStudent
-                ? {}
+                ? context.navigateTo(ListCasesPage(
+                    unitName: element.unitName ?? '',
+                    unitId: element.unitId ?? '',
+                    countCheckIn: 1,
+                  ))
                 : context.navigateTo(SupervisorListCasesPage(
                     studentName: element.studentName ?? '',
                     unitName: element.unitName ?? '',
@@ -162,7 +169,11 @@ class HistoryHelper {
         'SKILL': HistoryData(
             name: 'SKILL',
             onTap: () => isStudent
-                ? {}
+                ? context.navigateTo(ListSkillsPage(
+                    unitName: element.unitName ?? '',
+                    unitId: element.unitId ?? '',
+                    countCheckIn: 1,
+                  ))
                 : context.navigateTo(SupervisorListSkillsPage(
                     studentName: element.studentName ?? '',
                     unitName: element.unitName ?? '',
@@ -228,7 +239,8 @@ class HistoryHelper {
         'Assesment': HistoryData(
             name: 'Final Score',
             onTap: isStudent
-                ? () {}
+                ? () => context.navigateTo(StudentFinalScorePage(
+                    departmentName: element.unitName ?? ''))
                 : () => context.navigateTo(SupervisorFinalGrade(
                       departmentId: element.unitId ?? '',
                       departmentName: element.unitName ?? '',

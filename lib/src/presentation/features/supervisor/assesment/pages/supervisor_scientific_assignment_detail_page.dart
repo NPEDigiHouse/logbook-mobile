@@ -41,10 +41,10 @@ class _SupervisorScientificAssignmentDetailPageState
     Future.microtask(
       () {
         BlocProvider.of<AssesmentCubit>(context)
+          ..getScientificGradeItems()
           ..getScientiicAssignmentDetail(
             id: widget.id,
-          )
-          ..getScientificGradeItems();
+          );
 
         context.read<ScientificAssignmentProvider>()..reset();
       },
@@ -112,6 +112,9 @@ class _SupervisorScientificAssignmentDetailPageState
                         );
                       setState(() {});
                     }
+                    print(state.scientificAssignmentDetail != null);
+                    print(state.stateSa);
+                    print(state.scientificGradeItems != null);
                     if (state.scientificAssignmentDetail != null &&
                         state.stateSa == RequestState.data &&
                         state.scientificGradeItems != null) {
@@ -475,6 +478,20 @@ class ScientificAssignmentHeadCard extends StatelessWidget {
           ),
           Text(
             scientificAssignment.studentId ?? '',
+            style: textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Text(
+            'Case Title',
+            style: textTheme.bodySmall
+                ?.copyWith(color: secondaryTextColor, height: 1),
+          ),
+          Text(
+            scientificAssignment.listScientificAssignmentCase ?? '-',
             style: textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),

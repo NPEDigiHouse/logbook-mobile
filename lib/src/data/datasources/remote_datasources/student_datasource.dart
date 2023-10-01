@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
+import 'package:elogbook/core/utils/exception_handler.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/models/assessment/final_score_response.dart';
 import 'package:elogbook/src/data/models/assessment/mini_cex_list_model.dart';
@@ -332,7 +333,7 @@ class StudentDataSourceImpl implements StudentDataSource {
       final result = StudentStatistic.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      throw ClientFailure(e.toString());
+      throw failure(e);
     }
   }
 

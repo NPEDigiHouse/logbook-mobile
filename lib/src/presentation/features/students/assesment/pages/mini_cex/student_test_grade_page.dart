@@ -91,20 +91,22 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
                           );
                         }
                         final miniCex = state.studentMiniCexs!.first;
-                        return SpacingColumn(
-                          onlyPading: true,
-                          horizontalPadding: 16,
-                          spacing: 12,
-                          children: [
-                            SizedBox(
-                              height: 16,
-                            ),
-                            TitleAssesmentCard(
-                              title: miniCex.miniCexListModelCase ?? '',
-                              subtitle: miniCex.location ?? '',
-                            ),
-                            StudentMiniCexDetail(id: miniCex.id!),
-                          ],
+                        return SingleChildScrollView(
+                          child: SpacingColumn(
+                            onlyPading: true,
+                            horizontalPadding: 16,
+                            spacing: 12,
+                            children: [
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TitleAssesmentCard(
+                                title: miniCex.miniCexListModelCase ?? '',
+                                subtitle: miniCex.location ?? '',
+                              ),
+                              StudentMiniCexDetail(id: miniCex.id!),
+                            ],
+                          ),
                         );
                       } else {
                         return CustomLoading();

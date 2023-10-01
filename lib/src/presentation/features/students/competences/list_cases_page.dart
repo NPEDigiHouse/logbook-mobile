@@ -17,10 +17,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ListCasesPage extends StatefulWidget {
-  final ActiveDepartmentModel model;
+  final String unitName;
+  final int countCheckIn;
 
   final String unitId;
-  const ListCasesPage({super.key, required this.model, required this.unitId});
+  const ListCasesPage(
+      {super.key,
+      required this.unitName,
+      required this.unitId,
+      required this.countCheckIn});
 
   @override
   State<ListCasesPage> createState() => _ListCasesPageState();
@@ -59,7 +64,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
       appBar: AppBar(
         title: Text("List Cases"),
       ),
-      floatingActionButton: widget.model.countCheckIn! == 0
+      floatingActionButton: widget.countCheckIn! == 0
           ? FloatingActionButton(
               onPressed: () => showDialog(
                   context: context,
@@ -126,7 +131,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                     horizontalPadding: 16,
                                     children: [
                                       DepartmentHeader(
-                                          unitName: widget.model.unitName!),
+                                          unitName: widget.unitName!),
                                       SizedBox(
                                         height: 12,
                                       ),

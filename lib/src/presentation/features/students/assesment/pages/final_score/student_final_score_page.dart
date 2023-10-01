@@ -15,10 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StudentFinalScorePage extends StatefulWidget {
-  final ActiveDepartmentModel model;
+  final String departmentName;
   const StudentFinalScorePage({
     super.key,
-    required this.model,
+    required this.departmentName,
   });
 
   @override
@@ -123,10 +123,10 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
                                     builder: (context) {
                                       if (state.finalScore!.assesments![i].type!
                                               .contains('OSCE') &&
-                                          (widget.model.unitName!
+                                          (widget.departmentName!
                                                   .toUpperCase()
                                                   .contains('FORENSIK') ||
-                                              widget.model.unitName
+                                              widget.departmentName
                                                       ?.toUpperCase() ==
                                                   'IKM-IKK')) {
                                         return SizedBox.shrink();
@@ -158,7 +158,7 @@ class _StudentFinalScorePageState extends State<StudentFinalScorePage> {
                       }),
                     );
                   }
-                  return CustomLoading();
+                  return SliverToBoxAdapter(child: CustomLoading());
                 },
               ),
             ],

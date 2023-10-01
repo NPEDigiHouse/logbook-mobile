@@ -36,7 +36,7 @@ class _FinalGradeCardState extends State<FinalGradeCard> {
             builder: (context, constraints) {
               return InkWellContainer(
                 onTap: () => context.navigateTo(StudentFinalScorePage(
-                  model: widget.model,
+                  departmentName: widget.model.unitName ?? '',
                 )),
                 color: Color(0xFF219ABF),
                 radius: 12,

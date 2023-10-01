@@ -2,13 +2,11 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/supervisors/student_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/input_score_modal.dart';
 import 'package:elogbook/src/presentation/features/supervisor/final_score/widgets/top_stat_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
-import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -276,7 +274,6 @@ class _SupervisorFinalGradeState extends State<SupervisorFinalGrade> {
                           } else {
                             return OutlinedButton(
                               onPressed: () {
-                                print("va");
                                 BlocProvider.of<AssesmentCubit>(context)
                                   ..submitFinalScore(
                                       studentId: widget.studentId!,
@@ -423,7 +420,7 @@ class FinalGradeScoreCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      score.toStringAsFixed(0),
+                      proportion != 0 ? score.toStringAsFixed(0) : '-',
                       style: textTheme.headlineSmall?.copyWith(
                         color: primaryTextColor,
                         fontWeight: FontWeight.bold,

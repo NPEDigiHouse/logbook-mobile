@@ -3,7 +3,6 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
-import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/pdf_helper/pdf_helper.dart';
 import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
@@ -63,11 +62,6 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
     loadImageFromAssets(AssetPath.getImage('logo_umi.png'));
     Future.microtask(() {
       BlocProvider.of<StudentCubit>(context)..getStudentStatistic();
-      BlocProvider.of<CompetenceCubit>(context)
-        ..getStudentCases(unitId: widget.activeDepartmentModel.unitId!)
-        ..getStudentSkills(unitId: widget.activeDepartmentModel.unitId!)
-        ..getListCases()
-        ..getListSkills();
     });
   }
 
@@ -176,103 +170,89 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
               ),
             ),
             const SizedBox(height: 16),
-            BlocBuilder<CompetenceCubit, CompetenceState>(
-              builder: (context, state1) {
-                return BlocBuilder<StudentCubit, StudentState>(
-                  builder: (context, state) {
-                    if (state1.listCasesModel != null &&
-                        state1.listSkillsModel != null &&
-                        state1.studentCasesModel != null &&
-                        state1.studentSkillsModel != null &&
-                        state.studentStatistic != null) {
-                      final stData = state.studentStatistic!;
-                      return DepartmentStatisticsCard(
-                        padding: const EdgeInsets.symmetric(vertical: 24),
-                        child: Column(
-                          children: <Widget>[
-                            Text(
-                              'Current Department',
-                              style: textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: primaryColor,
-                              ),
-                            ),
-                            Text(widget.activeDepartmentModel.unitName ?? ''),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              child: Divider(
-                                height: 6,
-                                thickness: 6,
-                                color: onDisableColor,
-                              ),
-                            ),
-                            DepartmentStatisticsSection(
-                              repaintKey: keySkill,
-                              titleText: 'Diagnosis Skills',
-                              titleIconPath: 'skill_outlined.svg',
-                              percentage: (stData.verifiedSkills! /
-                                      state1.studentSkillsModel!.length) *
-                                  100,
-                              statistics: {
-                                'Total Diagnosis Skill':
-                                    state1.studentSkillsModel?.length,
-                                'Performed': stData.verifiedSkills,
-                                'Not Performed':
-                                    state1.studentSkillsModel!.length -
-                                        stData.verifiedSkills!,
-                              },
-                              detailStatistics: {
-                                1: [
-                                  ...state1.listSkillsModel!.listSkills!
-                                      .where((element) =>
-                                          element.verificationStatus ==
-                                          'VERIFIED')
-                                      .map((e) => e.skillName ?? '')
-                                      .toList(),
-                                ],
-                              },
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              child: Divider(
-                                height: 6,
-                                thickness: 6,
-                                color: onDisableColor,
-                              ),
-                            ),
-                            DepartmentStatisticsSection(
-                              repaintKey: keyCase,
-                              titleText: 'Acquired Cases',
-                              titleIconPath: 'attach_resume_male_outlined.svg',
-                              percentage: (stData.verifiedCases! /
-                                      state1.studentCasesModel!.length) *
-                                  100,
-                              statistics: {
-                                'Total Acquired Case':
-                                    state1.studentCasesModel?.length,
-                                'Identified Case': stData.verifiedCases,
-                                'Unidentified Case':
-                                    state1.studentCasesModel!.length -
-                                        stData.verifiedCases!,
-                              },
-                              detailStatistics: {
-                                1: [
-                                  ...state1.listCasesModel!.listCases!
-                                      .where((element) =>
-                                          element.verificationStatus ==
-                                          'VERIFIED')
-                                      .map((e) => e.caseName ?? '')
-                                      .toList(),
-                                ],
-                              },
-                            ),
-                          ],
+            BlocBuilder<StudentCubit, StudentState>(
+              builder: (context, state) {
+                if (state.studentStatistic != null) {
+                  final stData = state.studentStatistic!;
+                  return DepartmentStatisticsCard(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          'Current Department',
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: primaryColor,
+                          ),
                         ),
-                      );
-                    }
-                    return CustomLoading();
-                  },
-                );
+                        Text(widget.activeDepartmentModel.unitName ?? ''),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: Divider(
+                            height: 6,
+                            thickness: 6,
+                            color: onDisableColor,
+                          ),
+                        ),
+                        DepartmentStatisticsSection(
+                          repaintKey: keySkill,
+                          titleText: 'Diagnosis Skills',
+                          titleIconPath: 'skill_outlined.svg',
+                          percentage: (stData.verifiedSkills! /
+                                  (stData.totalSkills ?? 1)) *
+                              100,
+                          statistics: {
+                            'Total Diagnosis Skill': stData.totalSkills,
+                            'Performed': stData.verifiedSkills,
+                            'Not Performed': (stData.totalSkills ?? 0) -
+                                stData.verifiedSkills!,
+                          },
+                          detailStatistics: {
+                            1: [
+                              ...stData.skills!
+                                  .where((element) =>
+                                      element.verificationStatus == 'VERIFIED')
+                                  .map((e) => e.skillName ?? '')
+                                  .toList(),
+                            ],
+                          },
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: Divider(
+                            height: 6,
+                            thickness: 6,
+                            color: onDisableColor,
+                          ),
+                        ),
+                        DepartmentStatisticsSection(
+                          repaintKey: keyCase,
+                          titleText: 'Acquired Cases',
+                          titleIconPath: 'attach_resume_male_outlined.svg',
+                          percentage: (stData.verifiedCases! /
+                                  (stData.totalCases ?? 1)) *
+                              100,
+                          statistics: {
+                            'Total Acquired Case': (stData.totalCases ?? 0),
+                            'Identified Case': stData.verifiedCases,
+                            'Unidentified Case': (stData.totalCases ?? 0) -
+                                stData.verifiedCases!,
+                          },
+                          detailStatistics: {
+                            1: [
+                              ...(stData.cases ?? [])
+                                  .where((element) =>
+                                      element.verificationStatus == 'VERIFIED')
+                                  .map((e) => e.caseName ?? '')
+                                  .toList(),
+                            ],
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return CustomLoading();
               },
             ),
           ],

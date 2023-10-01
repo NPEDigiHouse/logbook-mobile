@@ -60,7 +60,7 @@ class AssesmentState {
     ListScientificAssignment? scientificAssignmentDetail,
     List<StudentScientificAssignment>? scientificAssignmentStudents,
     bool isAssementScientificAssignmentSuccess = false,
-    RequestState stateSa = RequestState.init,
+    RequestState? stateSa,
     List<ScientificGradeItem>? scientificGradeItems,
     FinalScoreResponse? finalScore,
     List<StudentScientificAssignment>? personalBehaviorStudent,
@@ -84,7 +84,7 @@ class AssesmentState {
       isAssementScientificAssignmentSuccess:
           isAssementScientificAssignmentSuccess,
       isUploadAssignmentSuccess: isUploadAssignmentSuccess,
-      stateSa: stateSa,
+      stateSa: stateSa ?? this.stateSa,
       isPersonalBehaviorVerify: isPersonalBehaviorVerify,
       personalBehaviorDetail:
           personalBehaviorDetail ?? this.personalBehaviorDetail,
