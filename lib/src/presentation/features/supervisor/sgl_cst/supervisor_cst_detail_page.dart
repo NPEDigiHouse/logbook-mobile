@@ -108,7 +108,7 @@ class _SupervisorCstDetailPageState extends State<SupervisorCstDetailPage> {
                                       Row(
                                         children: [
                                           Text(
-                                            'CST #${state.cstDetail!.csts!.length - index}',
+                                            'CST #${state.cstDetail!.csts?[index].cstId?.substring(0, 5).toUpperCase()}',
                                             style:
                                                 textTheme.titleMedium?.copyWith(
                                               color: primaryColor,

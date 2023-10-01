@@ -4,10 +4,8 @@ import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/data/models/sglcst/cst_model.dart';
 import 'package:elogbook/src/data/models/sglcst/topic_on_sglcst.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
-import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/no_internet/check_internet_onetime.dart';
 import 'package:elogbook/src/presentation/features/students/sgl_cst/create_sgl_page.dart';
@@ -63,6 +61,7 @@ class _ListSglPageState extends State<ListSglPage> {
                     context.navigateTo(
                       CreateSglPage(
                         model: widget.activeDepartmentModel,
+                        date: DateTime.now(),
                       ),
                     );
                   },
@@ -112,7 +111,7 @@ class _ListSglPageState extends State<ListSglPage> {
                                         Row(
                                           children: [
                                             Text(
-                                              'SGL #${state.sglDetail!.sgls!.length - index}',
+                                              'SGL #${state.sglDetail!.sgls![index].sglId?.substring(0, 5).toUpperCase()}',
                                               style: textTheme.titleMedium
                                                   ?.copyWith(
                                                 color: primaryColor,
@@ -143,22 +142,21 @@ class _ListSglPageState extends State<ListSglPage> {
                                                       context: context,
                                                       barrierLabel: '',
                                                       barrierDismissible: false,
-                                                      builder: (_) =>
-                                                          EditSglCstDialog(
-                                                              type:
-                                                                  TopicDialogType
-                                                                      .sgl,
-                                                              id: data.sglId ??
-                                                                  '',
-                                                              startTime:
-                                                                  data.startTime ??
-                                                                      -1,
-                                                              endTime:
-                                                                  data.endTime ??
-                                                                      -1,
-                                                              topics: data
-                                                                      .topic ??
-                                                                  <Topic>[]),
+                                                      builder: (_) => EditSglCstDialog(
+                                                          date: data
+                                                                  .createdAt ??
+                                                              DateTime.now(),
+                                                          type: TopicDialogType
+                                                              .sgl,
+                                                          id: data.sglId ?? '',
+                                                          startTime:
+                                                              data.startTime ??
+                                                                  -1,
+                                                          endTime:
+                                                              data.endTime ??
+                                                                  -1,
+                                                          topics: data.topic ??
+                                                              <Topic>[]),
                                                     );
                                                   }
 
@@ -312,35 +310,40 @@ class _ListSglPageState extends State<ListSglPage> {
                                           height: 12,
                                         ),
                                         if (data.verificationStatus !=
-                                            'VERIFIED')
-                                          ...[ItemDivider(),
-                                        SizedBox(
-                                          height: 12,
-                                        ),
-                                        TextButton.icon(
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              barrierLabel: '',
-                                              barrierDismissible: false,
-                                              builder: (_) => AddTopicDialog(
-                                                type: TopicDialogType.sgl,
-                                                date: data.createdAt!,
-                                                id: data.sglId!,
-                                                supervisorId: '',
+                                            'VERIFIED') ...[
+                                          ItemDivider(),
+                                          SizedBox(
+                                            height: 12,
+                                          ),
+                                          TextButton.icon(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                barrierLabel: '',
+                                                barrierDismissible: false,
+                                                builder: (_) => AddTopicDialog(
+                                                  type: TopicDialogType.sgl,
+                                                  date: data.createdAt!,
+                                                  id: data.sglId!,
+                                                  departmentId: widget
+                                                          .activeDepartmentModel
+                                                          .unitId ??
+                                                      '',
+                                                  supervisorId: '',
+                                                ),
+                                              );
+                                            },
+                                            icon: Icon(Icons.add_rounded),
+                                            label: Text(
+                                              'Add Topic',
+                                              style: textTheme.titleMedium
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: primaryColor,
                                               ),
-                                            );
-                                          },
-                                          icon: Icon(Icons.add_rounded),
-                                          label: Text(
-                                            'Add Topic',
-                                            style:
-                                                textTheme.titleMedium?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: primaryColor,
                                             ),
                                           ),
-                                        ),],
+                                        ],
                                       ],
                                     ),
                                   );

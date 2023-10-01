@@ -108,7 +108,7 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                       Row(
                                         children: [
                                           Text(
-                                            'SGL #${state.sglDetail!.sgls!.length - index}',
+                                            'SGL #${state.sglDetail!.sgls![index].sglId?.substring(0,5).toUpperCase()}',
                                             style:
                                                 textTheme.titleMedium?.copyWith(
                                               color: primaryColor,

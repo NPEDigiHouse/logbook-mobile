@@ -6,7 +6,6 @@ import 'package:elogbook/src/data/models/supervisors/supervisor_model.dart';
 import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
-import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/custom_dropdown.dart';
@@ -20,7 +19,8 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 
 class CreateSglPage extends StatefulWidget {
   final ActiveDepartmentModel model;
-  const CreateSglPage({super.key, required this.model});
+  final DateTime date;
+  const CreateSglPage({super.key, required this.model, required this.date});
 
   @override
   State<CreateSglPage> createState() => _CreateSglPageState();
@@ -157,9 +157,19 @@ class _CreateSglPageState extends State<CreateSglPage> {
                         Expanded(
                           child: InputDateTimeField(
                               action: (d) {},
-                              validator: FormBuilderValidators.required(
-                                errorText: 'This field is required',
-                              ),
+                              validator: (data) {
+                                if (data == null || data.toString().isEmpty) {
+                                  return 'This field is required';
+                                }
+                                if (Utils.stringTimeToDateTime(
+                                  widget.date,
+                                  startTimeController.text,
+                                ).isAfter(Utils.stringTimeToDateTime(
+                                    widget.date, data))) {
+                                  return 'end data cannot be before the start date';
+                                }
+                                return null;
+                              },
                               initialDate: DateTime.now(),
                               controller: endTimeController,
                               hintText: 'End Time'),

@@ -60,6 +60,7 @@ class _ListCstPageState extends State<ListCstPage> {
                   onBtnPressed: () {
                     context.navigateTo(CreateCstPage(
                       model: widget.activeDepartmentModel,
+                      date: DateTime.now(),
                     ));
                   },
                 ),
@@ -113,7 +114,7 @@ class _ListCstPageState extends State<ListCstPage> {
                                         Row(
                                           children: [
                                             Text(
-                                              'CST #${state.cstDetail!.csts!.length - index}',
+                                              'CST #${state.cstDetail!.csts![index].cstId?.substring(0, 5).toUpperCase()}',
                                               style: textTheme.titleMedium
                                                   ?.copyWith(
                                                 color: primaryColor,
@@ -144,22 +145,21 @@ class _ListCstPageState extends State<ListCstPage> {
                                                       context: context,
                                                       barrierLabel: '',
                                                       barrierDismissible: false,
-                                                      builder: (_) =>
-                                                          EditSglCstDialog(
-                                                              type:
-                                                                  TopicDialogType
-                                                                      .cst,
-                                                              id: data.cstId ??
-                                                                  '',
-                                                              startTime:
-                                                                  data.startTime ??
-                                                                      -1,
-                                                              endTime:
-                                                                  data.endTime ??
-                                                                      -1,
-                                                              topics: data
-                                                                      .topic ??
-                                                                  <Topic>[]),
+                                                      builder: (_) => EditSglCstDialog(
+                                                          date: data
+                                                                  .createdAt ??
+                                                              DateTime.now(),
+                                                          type: TopicDialogType
+                                                              .cst,
+                                                          id: data.cstId ?? '',
+                                                          startTime:
+                                                              data.startTime ??
+                                                                  -1,
+                                                          endTime:
+                                                              data.endTime ??
+                                                                  -1,
+                                                          topics: data.topic ??
+                                                              <Topic>[]),
                                                     );
                                                   }
 
@@ -328,6 +328,10 @@ class _ListCstPageState extends State<ListCstPage> {
                                                   type: TopicDialogType.cst,
                                                   date: data.createdAt!,
                                                   id: data.cstId!,
+                                                  departmentId: widget
+                                                          .activeDepartmentModel
+                                                          .unitId ??
+                                                      '',
                                                   supervisorId: '',
                                                 ),
                                               );

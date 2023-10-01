@@ -17,6 +17,7 @@ enum TopicDialogType {
 
 class AddTopicDialog extends StatefulWidget {
   final TopicDialogType type;
+  final String departmentId;
   final String id;
   final DateTime date;
   final String supervisorId;
@@ -24,6 +25,7 @@ class AddTopicDialog extends StatefulWidget {
     super.key,
     required this.type,
     required this.id,
+    required this.departmentId,
     required this.date,
     required this.supervisorId,
   });
@@ -39,7 +41,9 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
   @override
   void initState() {
     _controller = TextEditingController();
-    BlocProvider.of<SglCstCubit>(context, listen: false)..getTopics();
+    BlocProvider.of<SglCstCubit>(context, listen: false)..getTopicsByDepartmentId(
+      unitId: widget.departmentId,
+    );
     super.initState();
   }
 

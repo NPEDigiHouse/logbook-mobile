@@ -6,7 +6,7 @@ class InputDateTimeField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final DateTime initialDate;
-  final String? Function(dynamic data)? validator;
+  final String? Function(String? data)? validator;
   final FutureOr<void> Function(DateTime date)? action;
 
   const InputDateTimeField(
@@ -57,6 +57,7 @@ class _InputDateTimeFieldState extends State<InputDateTimeField> {
       },
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
+        errorMaxLines: 2,
         hintText: widget.hintText,
         filled: true,
         fillColor: Colors.white,

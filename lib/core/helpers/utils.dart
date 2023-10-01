@@ -23,6 +23,16 @@ class Utils {
         : DateFormat("EEEE, dd MMMM yyyy", "en_EN").parse(date);
   }
 
+  /// Convert String to DateTime
+  static DateTime stringTimeToDateTime(DateTime date, String time,
+      {bool isShowTime = true}) {
+    return isShowTime
+        ? DateFormat('HH:mm, EEEE, dd MMMM yyyy', "en_EN")
+            .parse('$time, ${datetimeToString(date)}')
+        : DateFormat("EEEE, dd MMMM yyyy", "en_EN")
+            .parse('$time, ${datetimeToString(date)}');
+  }
+
   static String epochToStringTime({required int? startTime, int? endTime}) {
     String time = '';
     DateTime startDate = DateTime.fromMillisecondsSinceEpoch(
