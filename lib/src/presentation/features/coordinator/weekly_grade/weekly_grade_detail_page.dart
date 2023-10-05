@@ -127,6 +127,8 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                                   final grades =
                                       state.weeklyAssesment!.assesments![i];
                                   return WeeklyGradeCard(
+                                    startTime: grades.startDate,
+                                    endTime: grades.endDate,
                                     totalGrade: getTotalGrades(
                                         (grades.score ?? 0).toDouble())!,
                                     attendNum: grades.attendNum ?? 0,

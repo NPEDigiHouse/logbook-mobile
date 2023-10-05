@@ -1,7 +1,6 @@
 import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/data/models/daily_activity/post_week_model.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
-import 'package:elogbook/src/presentation/widgets/inputs/build_text_field.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/input_date_field.dart';
 import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 
 class AddWeekDialog extends StatefulWidget {
   final bool? isExpired;
@@ -126,7 +124,7 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
                             padding: const EdgeInsets.only(top: 20),
                             child: Center(
                               child: Text(
-                                widget.isEdit ? 'Edit Week' : 'Add Week',
+                                widget.isEdit ? 'Edit Week' : 'Add New Week',
                                 style: textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: primaryColor,
@@ -136,20 +134,20 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                        child: BuildTextField(
-                          onChanged: (s) {},
-                          isOnlyDigit: true,
-                          isDisable: true,
-                          isOnlyNumber: true,
-                          label: 'Week Num',
-                          controller: weekNumController,
-                          validator: FormBuilderValidators.required(
-                            errorText: 'This field is required',
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                      //   child: BuildTextField(
+                      //     onChanged: (s) {},
+                      //     isOnlyDigit: true,
+                      //     isDisable: true,
+                      //     isOnlyNumber: true,
+                      //     label: 'Week Num',
+                      //     controller: weekNumController,
+                      //     validator: FormBuilderValidators.required(
+                      //       errorText: 'This field is required',
+                      //     ),
+                      //   ),
+                      // ),
                       if (widget.isEdit)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
@@ -215,15 +213,18 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
                           contentPadding: EdgeInsets.symmetric(horizontal: 12),
                         ),
                       if (state) ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            'If you change the week\'s data, all previous daily activities for this week will be reset!',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: errorColor,
+                        if (widget.isEdit) ...[
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(
+                              'If you change the week\'s data, all previous daily activities for this week will be reset!',
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: errorColor,
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                         SizedBox(
                           height: 12,
                         ),

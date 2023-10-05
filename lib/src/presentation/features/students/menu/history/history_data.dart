@@ -96,13 +96,13 @@ class HistoryHelper {
             onTap: () => context.navigateTo(HistorySglPage(
                   id: element.attachment ?? '',
                 )),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'diversity_3_rounded.svg'),
         'CST': HistoryData(
             name: 'CST',
             onTap: () => context.navigateTo(HistoryCstPage(
                   id: element.attachment ?? '',
                 )),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'medical_information_rounded.svg'),
         'Clinical Record': HistoryData(
             name: 'Clinical Record',
             onTap: () {
@@ -112,7 +112,7 @@ class HistoryHelper {
                 ),
               );
             },
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'clinical_notes_rounded.svg'),
         'Scientific Session': HistoryData(
             name: 'Scientific Session',
             onTap: () => context.navigateTo(
@@ -120,7 +120,7 @@ class HistoryHelper {
                     id: element.attachment ?? '',
                   ),
                 ),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'biotech_rounded.svg'),
         'Self-Reflection': HistoryData(
             name: 'Self Reflection',
             onTap: isStudent
@@ -128,7 +128,7 @@ class HistoryHelper {
                 : () => context.navigateTo(SupervisorSelfReflectionStudentPage(
                       studentId: element.studentId ?? '',
                     )),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'emoji_objects_rounded.svg'),
         'CASE': HistoryData(
             name: 'CASE',
             onTap: () => isStudent
@@ -141,7 +141,7 @@ class HistoryHelper {
                     studentName: element.studentName ?? '',
                     unitName: element.unitName ?? '',
                     studentId: element.studentId ?? '')),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'case_icon.svg'),
         'SKILL': HistoryData(
             name: 'SKILL',
             onTap: () => isStudent
@@ -154,7 +154,7 @@ class HistoryHelper {
                     studentName: element.studentName ?? '',
                     unitName: element.unitName ?? '',
                     studentId: element.studentId ?? '')),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'skill_icon.svg'),
         'MINI_CEX': HistoryData(
             name: 'Mini Cex',
             onTap: () => isStudent
@@ -166,7 +166,7 @@ class HistoryHelper {
                     unitName: element.unitName ?? '',
                     supervisorId: element.supervisorId ?? '',
                     id: element.attachment ?? '')),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'icon_test.svg'),
         'PERSONAL_BEHAVIOUR': HistoryData(
             name: 'Personal Behavior',
             onTap: () => isStudent
@@ -175,7 +175,7 @@ class HistoryHelper {
                 : context.navigateTo(SupervisorPersonalBehaviorDetailPage(
                     unitName: element.unitName ?? '',
                     id: element.attachment ?? '')),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'icon_personal_behavior.svg'),
         'SCIENTIFIC_ASSESMENT': HistoryData(
             name: 'Scientific Assesment',
             onTap: () => isStudent
@@ -187,7 +187,7 @@ class HistoryHelper {
                     id: element.attachment ?? '',
                     supervisorId: element.supervisorId ?? '',
                   )),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'icon_scientific_assignment.svg'),
         'Problem Consultation': HistoryData(
             name: 'Problem Consultation',
             onTap: isStudent
@@ -195,7 +195,7 @@ class HistoryHelper {
                 : () => context.navigateTo(SpecialReportDetailPage(
                       studentId: element.studentId ?? '',
                     )),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'consultation_icon.svg'),
         'Check-in': HistoryData(
             name: 'CHECK-IN',
             onTap: () {},
@@ -223,14 +223,14 @@ class HistoryHelper {
                       studentId: element.studentId ?? '',
                       studentName: element.studentName ?? '',
                     )),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'feed_rounded.svg'),
         'DAILY_ACTIVITY': HistoryData(
             name: 'Daily Activity',
             onTap: () => context.navigateTo(SupervisorDailyActivityDetailPage(
                   id: element.attachment ?? '',
                   isHistory: true,
                 )),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'summarize_rounded.svg'),
         'WEEKLY_ASSESMENT': HistoryData(
             name: 'Weekly Assesment',
             onTap: isStudent
@@ -243,7 +243,7 @@ class HistoryHelper {
                         activeDepartmentName: element.unitName,
                       ),
                     )),
-            pathIcon: 'wifi_protected_setup_rounded.svg'),
+            pathIcon: 'icon_weekly.svg'),
       };
 
       activityList.add(Activity(

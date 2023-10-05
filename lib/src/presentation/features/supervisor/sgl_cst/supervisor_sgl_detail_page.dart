@@ -108,7 +108,7 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                       Row(
                                         children: [
                                           Text(
-                                            'SGL #${state.sglDetail!.sgls![index].sglId?.substring(0,5).toUpperCase()}',
+                                            'SGL #${state.sglDetail!.sgls![index].sglId?.substring(0, 5).toUpperCase()}',
                                             style:
                                                 textTheme.titleMedium?.copyWith(
                                               color: primaryColor,
@@ -365,8 +365,7 @@ class _SupervisorSglDetailPageState extends State<SupervisorSglDetailPage> {
                                                                 isSubmit: true,
                                                               ));
                                                     },
-                                                    child:
-                                                        Text('Verify Topics'),
+                                                    child: Text('Verify All'),
                                                   );
                                                 } else {
                                                   return OutlinedButton(

@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -10,6 +11,8 @@ class WeeklyGradeCard extends StatelessWidget {
   // final String date;
   // final String place;
   final int? attendNum;
+  final int? startTime;
+  final int? endTime;
   final int? notAttendNum;
   final String status;
   final double? score;
@@ -19,6 +22,8 @@ class WeeklyGradeCard extends StatelessWidget {
   const WeeklyGradeCard({
     super.key,
     this.attendNum,
+    this.startTime,
+    this.endTime,
     this.notAttendNum,
     required this.totalGrade,
     required this.week,
@@ -78,6 +83,8 @@ class WeeklyGradeCard extends StatelessWidget {
                       ]
                     ],
                   ),
+                  Text(Utils.epochToStringDate(
+                      startTime: (startTime ?? 0), endTime: (endTime ?? 0))),
                   SizedBox(
                     height: 8,
                   ),

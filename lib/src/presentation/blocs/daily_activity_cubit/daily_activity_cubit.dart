@@ -114,7 +114,7 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
 
       final result = await dataSource.getWeekByCoordinator(unitId: unitId);
       result.sort(
-        (a, b) => a.weekName!.compareTo(b.weekName!),
+        (a, b) => b.startDate!.compareTo(a.startDate!),
       );
       try {
         emit(state.copyWith(weekItems: result));

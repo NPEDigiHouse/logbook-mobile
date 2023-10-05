@@ -31,6 +31,11 @@ class Assesment {
   String? verificationStatus;
   @JsonKey(name: "weekNum")
   int? weekNum;
+
+  @JsonKey(name: "startDate")
+  int? startDate;
+  @JsonKey(name: "endDate")
+  int? endDate;
   @JsonKey(name: "id")
   String? id;
   int? attendNum;

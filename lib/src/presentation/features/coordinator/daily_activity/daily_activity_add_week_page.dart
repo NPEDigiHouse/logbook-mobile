@@ -84,7 +84,13 @@ class _DailyActivityAddWeekPageState extends State<DailyActivityAddWeekPage> {
                   height: 16,
                 ),
               ),
-              BlocBuilder<DailyActivityCubit, DailyActivityState>(
+              BlocConsumer<DailyActivityCubit, DailyActivityState>(
+                listener: (context, state) {
+                  if (state.isRemoveWeekSuccess) {
+                    BlocProvider.of<DailyActivityCubit>(context)
+                        .getListWeek(unitId: widget.unit.id);
+                  }
+                },
                 builder: (context, state) {
                   if (state.weekItems != null) {
                     if (state.weekItems!.isNotEmpty) {
@@ -208,14 +214,19 @@ class _DailyActivtyWeekCardState extends State<DailyActivtyWeekCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Week #${widget.weekItem.weekName}',
-                      style: textTheme.titleMedium?.copyWith(
-                        color: secondaryColor,
-                        fontWeight: FontWeight.bold,
-                        height: 1,
-                      ),
-                    ),
+                    Builder(builder: (context) {
+                      return Text(
+                        Utils.epochToStringDate(
+                            startTime: widget.weekItem.startDate ??
+                                DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                            endTime: widget.weekItem.endDate ??
+                                DateTime.now().millisecondsSinceEpoch ~/ 1000),
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: secondaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    }),
                     Text(
                       'Status: ${expired ? "Expired" : "Active"}',
                       style: textTheme.bodySmall?.copyWith(
@@ -248,7 +259,7 @@ class _DailyActivtyWeekCardState extends State<DailyActivtyWeekCard> {
                       ),
                     );
                   }
-               
+
                   if (value == 'Delete') {
                     showDialog(
                       context: context,
@@ -279,15 +290,6 @@ class _DailyActivtyWeekCardState extends State<DailyActivtyWeekCard> {
               ),
             ],
           ),
-          Builder(builder: (context) {
-            return Text(
-              Utils.epochToStringDate(
-                  startTime: widget.weekItem.startDate ??
-                      DateTime.now().millisecondsSinceEpoch ~/ 1000,
-                  endTime: widget.weekItem.endDate ??
-                      DateTime.now().millisecondsSinceEpoch ~/ 1000),
-            );
-          }),
           SizedBox(
             height: 6,
           ),

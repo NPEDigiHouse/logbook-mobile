@@ -280,6 +280,8 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
       );
       final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
       final result = WeeklyAssesmentResponse.fromJson(dataResponse.data);
+      print(response.data);
+
       return result;
     } catch (e) {
       throw ClientFailure(e.toString());

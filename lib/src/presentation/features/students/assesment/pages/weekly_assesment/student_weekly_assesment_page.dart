@@ -129,6 +129,8 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
                               ...state.weeklyAssesment!.assesments!
                                   .map((element) {
                                 return WeeklyGradeCard(
+                                  startTime: element.startDate,
+                                  endTime: element.endDate,
                                   totalGrade: getTotalGrades(
                                       (element.score ?? 0).toDouble() / 100)!,
                                   week: element.weekNum ?? 0,

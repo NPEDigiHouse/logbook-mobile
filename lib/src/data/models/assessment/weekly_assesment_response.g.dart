@@ -31,12 +31,16 @@ Assesment _$AssesmentFromJson(Map<String, dynamic> json) => Assesment(
       id: json['id'] as String?,
       attendNum: json['attendNum'] as int?,
       notAttendNum: json['notAttendNum'] as int?,
-    );
+    )
+      ..startDate = json['startDate'] as int?
+      ..endDate = json['endDate'] as int?;
 
 Map<String, dynamic> _$AssesmentToJson(Assesment instance) => <String, dynamic>{
       'score': instance.score,
       'verificationStatus': instance.verificationStatus,
       'weekNum': instance.weekNum,
+      'startDate': instance.startDate,
+      'endDate': instance.endDate,
       'id': instance.id,
       'attendNum': instance.attendNum,
       'notAttendNum': instance.notAttendNum,

@@ -387,22 +387,22 @@ class _HistoryPageState extends State<HistoryPage> {
                   color: primaryColor,
                 ),
               ),
-              IconButton(
-                onPressed: () async {
-                  // final data = await showModalBottomSheet<Map<String, String>?>(
-                  //   context: context,
-                  //   isScrollControlled: true,
-                  //   builder: (context) => const HistoryFilterBottomSheet(),
-                  // );
+              // IconButton(
+              //   onPressed: () async {
+              //     // final data = await showModalBottomSheet<Map<String, String>?>(
+              //     //   context: context,
+              //     //   isScrollControlled: true,
+              //     //   builder: (context) => const HistoryFilterBottomSheet(),
+              //     // );
 
-                  // if (data != null) _dataFilters.value = data;
-                },
-                icon: const Icon(
-                  Icons.filter_list_rounded,
-                  color: primaryColor,
-                ),
-                tooltip: 'Filter',
-              ),
+              //     // if (data != null) _dataFilters.value = data;
+              //   },
+              //   icon: const Icon(
+              //     Icons.filter_list_rounded,
+              //     color: primaryColor,
+              //   ),
+              //   tooltip: 'Filter',
+              // ),
             ],
           ),
         ),

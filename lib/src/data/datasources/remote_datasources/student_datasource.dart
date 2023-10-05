@@ -103,7 +103,7 @@ class StudentDataSourceImpl implements StudentDataSource {
   @override
   Future<void> updateStudentProfile(StudentProfile model) async {
     try {
-      final response = await dio.put(
+      await dio.put(
         ApiService.baseUrl + '/students',
         options: await apiHeader.userOptions(),
         data: {
