@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/utils.dart';
@@ -30,13 +32,18 @@ class SupervisorDetailClinicalRecordPage extends StatefulWidget {
 class _SupervisorDetailClinicalRecordPageState
     extends State<SupervisorDetailClinicalRecordPage> {
   Future<bool> checkAndRequestPermission() async {
-    final plugin = DeviceInfoPlugin();
-    final android = await plugin.androidInfo;
+    PermissionStatus? status;
 
-    final status = android.version.sdkInt < 33
-        ? await Permission.storage.request()
-        : PermissionStatus.granted;
+    if (Platform.isAndroid) {
+      final plugin = DeviceInfoPlugin();
+      final android = await plugin.androidInfo;
 
+      status = android.version.sdkInt < 33
+          ? await Permission.storage.request()
+          : PermissionStatus.granted;
+    } else {
+      status = await Permission.storage.request();
+    }
     return status.isGranted;
   }
 

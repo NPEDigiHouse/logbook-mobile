@@ -214,19 +214,19 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                           onTap: () async {
                             final caseImage = await captureWidget(keyCase);
                             final skillImage = await captureWidget(keySkill);
-                            PdfHelper.generate(
-                                    image: image,
-                                    profilePhoto: widget.student.profileImage,
-                                    caseStat: caseImage,
-                                    skillStat: skillImage,
-                                    data: state.studentStatistic,
-                                    activeUnitName:
-                                        widget.student.activeDepartmentName)
-                                .whenComplete(() {
+                            final data = await PdfHelper.generate(
+                                image: image,
+                                profilePhoto: widget.student.profileImage,
+                                caseStat: caseImage,
+                                skillStat: skillImage,
+                                data: state.studentStatistic,
+                                activeUnitName:
+                                    widget.student.activeDepartmentName);
+                            if (data != null) {
                               CustomAlert.success(
                                   message: 'Success Download Student Statistic',
                                   context: context);
-                            });
+                            }
                           },
                           color: scaffoldBackgroundColor,
                           boxShadow: <BoxShadow>[

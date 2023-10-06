@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
@@ -30,13 +32,18 @@ class _ReferencePageState extends State<ReferencePage> {
   bool isMounted = false;
 
   Future<bool> checkAndRequestPermission() async {
-    final plugin = DeviceInfoPlugin();
-    final android = await plugin.androidInfo;
+    PermissionStatus? status;
 
-    final status = android.version.sdkInt < 33
-        ? await Permission.storage.request()
-        : PermissionStatus.granted;
+    if (Platform.isAndroid) {
+      final plugin = DeviceInfoPlugin();
+      final android = await plugin.androidInfo;
 
+      status = android.version.sdkInt < 33
+          ? await Permission.storage.request()
+          : PermissionStatus.granted;
+    } else {
+      status = await Permission.storage.request();
+    }
     return status.isGranted;
   }
 

@@ -28,13 +28,21 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController userIdController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  Future<void> uploadFile(BuildContext context) async {
-    final plugin = DeviceInfoPlugin();
-    final android = await plugin.androidInfo;
 
-    final status = android.version.sdkInt < 33
-        ? await Permission.storage.request()
-        : PermissionStatus.granted;
+  Future<void> uploadFile(BuildContext context) async {
+    PermissionStatus? status;
+
+    if (Platform.isAndroid) {
+      final plugin = DeviceInfoPlugin();
+      final android = await plugin.androidInfo;
+
+      status = android.version.sdkInt < 33
+          ? await Permission.storage.request()
+          : PermissionStatus.granted;
+    } else {
+      status = await Permission.storage.request();
+    }
+
     if (status.isGranted) {
       // Izin diberikan, lanjutkan dengan tindakan yang diperlukan
       FilePickerResult? result =
@@ -57,17 +65,6 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
       // Pengguna secara permanen menolak izin, arahkan pengguna ke pengaturan aplikasi
       openAppSettings();
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    Future.microtask(() {
-      BlocProvider.of<UserCubit>(context)
-        ..getUserCredential()
-        ..getProfilePic();
-    });
   }
 
   @override

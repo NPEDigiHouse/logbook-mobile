@@ -7,6 +7,7 @@ import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/models/reference/reference_on_list_model.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 abstract class ReferenceDataSource {
@@ -67,7 +68,7 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
         );
       } else {
         savePath = await FileSaver.instance.saveAs(
-          name: filename,
+          name: basename(filename),
           ext: 'pdf',
           link: LinkDetails(
             link: ApiService.baseUrl + '/references/$id',

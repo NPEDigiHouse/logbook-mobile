@@ -132,7 +132,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
         );
       } else {
         savePath = await FileSaver.instance.saveAs(
-          name: filename,
+          name: basename(filename),
           ext: 'pdf',
           link: LinkDetails(
             link: ApiService.baseUrl + '/scientific-sessions/$crId/attachments',

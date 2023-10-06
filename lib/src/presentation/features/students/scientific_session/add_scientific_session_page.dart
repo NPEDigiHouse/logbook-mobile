@@ -54,13 +54,18 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
   List<SessionTypesModel> _sessionTypes = [];
 
   Future<void> uploadFile(BuildContext context) async {
-    final plugin = DeviceInfoPlugin();
-    final android = await plugin.androidInfo;
+    PermissionStatus? status;
 
-    final status = android.version.sdkInt < 33
-        ? await Permission.storage.request()
-        : PermissionStatus.granted;
+    if (Platform.isAndroid) {
+      final plugin = DeviceInfoPlugin();
+      final android = await plugin.androidInfo;
 
+      status = android.version.sdkInt < 33
+          ? await Permission.storage.request()
+          : PermissionStatus.granted;
+    } else {
+      status = await Permission.storage.request();
+    }
     if (status.isGranted) {
       // Izin diberikan, lanjutkan dengan tindakan yang diperlukan
       FilePickerResult? result = await FilePicker.platform.pickFiles(

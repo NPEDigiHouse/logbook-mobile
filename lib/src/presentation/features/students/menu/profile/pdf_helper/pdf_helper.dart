@@ -2,14 +2,16 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/data/models/students/student_statistic.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PdfHelper {
-  static Future<File> generate({
+  static Future<File?> generate({
     required Uint8List image,
     required Uint8List? profilePhoto,
     Uint8List? skillStat,
@@ -50,7 +52,8 @@ class PdfHelper {
       ],
     ));
 
-    return PdfApi.saveDocument(name: 'Statistic', pdf: pdf);
+    return PdfApi.saveDocument(
+        name: 'Statistic ${data?.student?.studentId}', pdf: pdf);
   }
 
   static Widget buildHeader(Uint8List image) {
@@ -488,7 +491,7 @@ class PdfHelper {
                     Text(' ${data.finalScore?.miniCex?.score}'),
                     Text(
                         ' ${(data.finalScore?.miniCex?.percentage ?? 0) * 100}%'),
-                  ], 
+                  ],
                 ),
                 TableRow(
                   children: [
@@ -827,39 +830,62 @@ class PdfHelper {
 }
 
 Future<bool> checkAndRequestPermission() async {
-  final plugin = DeviceInfoPlugin();
-  final android = await plugin.androidInfo;
+  PermissionStatus? status;
 
-  var status = android.version.sdkInt < 33
-      ? await Permission.storage.request()
-      : PermissionStatus.granted;
-  if (!status.isGranted) {
+  if (Platform.isAndroid) {
+    final plugin = DeviceInfoPlugin();
+    final android = await plugin.androidInfo;
+
+    status = android.version.sdkInt < 33
+        ? await Permission.storage.request()
+        : PermissionStatus.granted;
+  } else {
     status = await Permission.storage.request();
   }
   return status.isGranted;
 }
 
 class PdfApi {
-  static Future<File> saveDocument({
+  static Future<File?> saveDocument({
     required String name,
     required Document pdf,
   }) async {
     final bytes = await pdf.save();
-    Directory _directory = Directory("");
+
     if (Platform.isAndroid) {
-      // Redirects it to download folder in android
-      _directory = Directory("/storage/emulated/0/Download");
+      final directory = Directory("/storage/emulated/0/Download");
+      final file = File('${directory.path}/$name.pdf');
+
+      if (await checkAndRequestPermission()) {
+        await file.writeAsBytes(bytes);
+        return file;
+      } else {
+        return null;
+      }
+    } else if (Platform.isIOS) {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$name.pdf');
+
+      if (await checkAndRequestPermission()) {
+        await file.writeAsBytes(bytes);
+
+        try {
+          final result = await FileSaver.instance.saveFile(
+            name: basename(file.path),
+            bytes: bytes,
+            mimeType: MimeType.pdf,
+          );
+          print(result);
+        } on PlatformException catch (e) {
+          print("Error saving PDF: $e");
+        }
+
+        return file;
+      } else {
+        return null;
+      }
     } else {
-      _directory = await getApplicationDocumentsDirectory();
+      throw Exception("Platform not supported");
     }
-    // final dir = await getApplicationDocumentsDirectory();
-    String? savePath = '${_directory.path}/$name.pdf';
-    File file = File(savePath);
-
-    if (await checkAndRequestPermission()) {
-      await file.writeAsBytes(bytes);
-    }
-
-    return file;
   }
 }

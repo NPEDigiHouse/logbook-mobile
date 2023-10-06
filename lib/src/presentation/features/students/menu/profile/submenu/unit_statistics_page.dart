@@ -88,19 +88,20 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
                     onPressed: () async {
                       final caseImage = await captureWidget(keyCase);
                       final skillImage = await captureWidget(keySkill);
-                      PdfHelper.generate(
-                              image: image,
-                              profilePhoto: widget.profilePic,
-                              caseStat: caseImage,
-                              skillStat: skillImage,
-                              data: state.studentStatistic,
-                              activeUnitName:
-                                  widget.activeDepartmentModel.unitName)
-                          .whenComplete(() {
+                      final data = await PdfHelper.generate(
+                          image: image,
+                          profilePhoto: widget.profilePic,
+                          caseStat: caseImage,
+                          skillStat: skillImage,
+                          data: state.studentStatistic,
+                          activeUnitName:
+                              widget.activeDepartmentModel.unitName);
+
+                      if (data != null) {
                         CustomAlert.success(
                             message: 'Success Download Student Statistic',
                             context: context);
-                      });
+                      }
                     },
                     icon: Icon(Icons.print));
               return SizedBox.shrink();

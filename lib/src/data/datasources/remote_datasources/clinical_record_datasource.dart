@@ -311,7 +311,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         );
       } else {
         savePath = await FileSaver.instance.saveAs(
-          name: filename,
+          name: basename(filename),
           ext: 'pdf',
           link: LinkDetails(
             link: ApiService.baseUrl + '/clinical-records/$crId/attachments',
