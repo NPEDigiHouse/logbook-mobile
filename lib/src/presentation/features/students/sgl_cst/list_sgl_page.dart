@@ -65,6 +65,12 @@ class _ListSglPageState extends State<ListSglPage> {
                       ),
                     );
                   },
+                )
+              else
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 16,
+                  ),
                 ),
               SliverFillRemaining(
                 child: SingleChildScrollView(

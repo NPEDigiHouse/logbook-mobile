@@ -302,8 +302,9 @@ class DailyActivityHomeCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: listDays.map(
                     (e) {
-                      print(e.dailyActivity);
-
+                      print(week.weekName);
+                      print(e.dailyActivity?.day);
+                      print(e.dailyActivity?.activityStatus);
                       return Column(
                         children: [
                           Text(

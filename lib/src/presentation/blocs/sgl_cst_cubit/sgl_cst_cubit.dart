@@ -243,8 +243,8 @@ class SglCstCubit extends Cubit<SglCstState> {
     );
   }
 
-  Future<void> getListSglStudents() async {
-    final result = await dataSource.getSglBySupervisor();
+  Future<void> getListSglStudents({String? unitId}) async {
+    final result = await dataSource.getSglBySupervisor(unitId: unitId);
     result.fold(
       (l) => emit(state.copyWith(requestState: RequestState.error)),
       (r) {
@@ -255,8 +255,8 @@ class SglCstCubit extends Cubit<SglCstState> {
     );
   }
 
-  Future<void> getListCstStudents() async {
-    final result = await dataSource.getCstBySupervisor();
+  Future<void> getListCstStudents({String? unitId}) async {
+    final result = await dataSource.getCstBySupervisor(unitId: unitId);
     result.fold(
       (l) => emit(state.copyWith(requestState: RequestState.error)),
       (r) {

@@ -33,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
             BlocProvider.of<AuthCubit>(context).isSignIn();
           });
           context.replace(const Wrapper());
-          state = Initial();
         }
 
         if (state is Failed) {

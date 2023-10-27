@@ -4,14 +4,16 @@ import 'package:elogbook/src/presentation/widgets/headers/form_section_header.da
 import 'package:flutter/material.dart';
 
 class StudentDepartmentHeader extends StatelessWidget {
-  final String unitName;
+  final String? unitName;
   final String studentName;
-  final String studentId;
+  final String? studentId;
+  final String? supervisorName;
   const StudentDepartmentHeader(
       {super.key,
-      required this.unitName,
+      this.unitName,
       required this.studentName,
-      required this.studentId});
+      this.supervisorName,
+      this.studentId});
 
   @override
   Widget build(BuildContext context) {
@@ -63,38 +65,59 @@ class StudentDepartmentHeader extends StatelessWidget {
                     height: 1,
                   ),
                 ),
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  'ID',
-                  style:
-                      textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
-                ),
-                Text(
-                  studentId,
-                  style: textTheme.titleMedium?.copyWith(
-                    color: primaryTextColor,
-                    height: 1,
+                if (studentId != null) ...[
+                  SizedBox(
+                    height: 4,
                   ),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  'Department',
-                  style:
-                      textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
-                ),
-                Text(
-                  unitName,
-                  style: textTheme.titleMedium?.copyWith(
-                    color: primaryTextColor,
-                    height: 1,
+                  Text(
+                    'ID',
+                    style: textTheme.bodyMedium
+                        ?.copyWith(color: secondaryTextColor),
                   ),
-                ),
+                  Text(
+                    studentId!,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: primaryTextColor,
+                      height: 1,
+                    ),
+                  ),
+                ],
+                if (supervisorName != null) ...[
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    'Supervisor',
+                    style: textTheme.bodyMedium
+                        ?.copyWith(color: secondaryTextColor),
+                  ),
+                  Text(
+                    supervisorName!,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: primaryTextColor,
+                      height: 1,
+                    ),
+                  ),
+                ],
+                if (unitName != null) ...[
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    'Department',
+                    style: textTheme.bodyMedium
+                        ?.copyWith(color: secondaryTextColor),
+                  ),
+                  Text(
+                    unitName!,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: primaryTextColor,
+                      height: 1,
+                    ),
+                  ),
+                ],
                 SizedBox(
-                  height: 24,
+                  height: 20,
                 ),
               ],
             ),

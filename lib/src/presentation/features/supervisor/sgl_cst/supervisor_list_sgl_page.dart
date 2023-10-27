@@ -1,9 +1,11 @@
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
+import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/widgets/select_department_sheet.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/widgets/sgl_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,13 +20,20 @@ class SupervisorListSglPage extends StatefulWidget {
 }
 
 class _SupervisorListSglPageState extends State<SupervisorListSglPage> {
-  ValueNotifier<List<SglCstOnList>> listSglCstStudents = ValueNotifier([]);
+  String? filterUnitId;
+  final ValueNotifier<List<SglCstOnList>> listSglCstStudents =
+      ValueNotifier([]);
   bool isMounted = false;
+
   @override
   void initState() {
     super.initState();
+    filterUnitId = null;
+    isMounted = false;
+
     Future.microtask(
-        () => BlocProvider.of<SglCstCubit>(context)..getListSglStudents());
+      () => BlocProvider.of<SglCstCubit>(context)..getListSglStudents(),
+    );
   }
 
   @override
@@ -32,13 +41,37 @@ class _SupervisorListSglPageState extends State<SupervisorListSglPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Small Group Learning'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isDismissible: true,
+                builder: (ctx) => SelectDepartmentSheet(
+                  initUnit: filterUnitId,
+                  onTap: (f) {
+                    filterUnitId = f;
+                    isMounted = false;
+                    BlocProvider.of<SglCstCubit>(context)
+                        .getListSglStudents(unitId: f);
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            },
+            icon: Icon(
+              CupertinoIcons.line_horizontal_3_decrease,
+            ),
+          )
+        ],
       ).variant(),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
             isMounted = false;
             await Future.wait([
-              BlocProvider.of<SglCstCubit>(context).getListSglStudents(),
+              BlocProvider.of<SglCstCubit>(context)
+                  .getListSglStudents(unitId: filterUnitId),
             ]);
           },
           child: ValueListenableBuilder(

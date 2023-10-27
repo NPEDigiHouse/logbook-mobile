@@ -252,7 +252,7 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                                             .isNotEmpty)) ...[
                                   Align(
                                     child: Text(
-                                      'Department & Location',
+                                      'Department',
                                       style: textTheme.titleMedium?.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),

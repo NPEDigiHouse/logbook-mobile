@@ -129,6 +129,9 @@ class AuthDataSourceImpl implements AuthDataSource {
       UserToken? credential = await preferenceHandler.getCredential();
       return Right(credential != null);
     } catch (e) {
+      if (e is DioException) {
+        print(e.message);
+      }
       return Left(ClientFailure(e.toString()));
     }
   }

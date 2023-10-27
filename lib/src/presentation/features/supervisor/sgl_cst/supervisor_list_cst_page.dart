@@ -2,8 +2,10 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/src/data/models/sglcst/sgl_cst_on_list_model.dart';
 import 'package:elogbook/src/presentation/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/widgets/cst_card.dart';
+import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/widgets/select_department_sheet.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,18 +20,21 @@ class SupervisorListCstPage extends StatefulWidget {
 }
 
 class _SupervisorListCstPageState extends State<SupervisorListCstPage> {
+  String? filterUnitId;
+
   ValueNotifier<List<SglCstOnList>> listSglCstStudents = ValueNotifier([]);
   bool isMounted = false;
   @override
   void initState() {
     super.initState();
+    filterUnitId = null;
+    isMounted = false;
     Future.microtask(
-        () => BlocProvider.of<SglCstCubit>(context)..getListCstStudents());
+        () => BlocProvider.of<SglCstCubit>(context).getListCstStudents());
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     listSglCstStudents.dispose();
   }
@@ -39,12 +44,36 @@ class _SupervisorListCstPageState extends State<SupervisorListCstPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Clinical Skill Training'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isDismissible: true,
+                builder: (ctx) => SelectDepartmentSheet(
+                  initUnit: filterUnitId,
+                  onTap: (f) {
+                    filterUnitId = f;
+                    isMounted = false;
+                    BlocProvider.of<SglCstCubit>(context)
+                        .getListCstStudents(unitId: f);
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            },
+            icon: Icon(
+              CupertinoIcons.line_horizontal_3_decrease,
+            ),
+          )
+        ],
       ).variant(),
       body: RefreshIndicator(
         onRefresh: () async {
           isMounted = false;
           await Future.wait([
-            BlocProvider.of<SglCstCubit>(context).getListCstStudents(),
+            BlocProvider.of<SglCstCubit>(context)
+                .getListCstStudents(unitId: filterUnitId),
           ]);
         },
         child: SafeArea(

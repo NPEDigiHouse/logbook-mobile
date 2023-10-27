@@ -48,8 +48,10 @@ abstract class SglCstDataSource {
   Future<Either<Failure, List<TopicModel>>> getTopics();
   Future<Either<Failure, List<TopicModel>>> getTopicsByDepartmentId(
       {required String unitId});
-  Future<Either<Failure, List<SglCstOnList>>> getSglBySupervisor();
-  Future<Either<Failure, List<SglCstOnList>>> getCstBySupervisor();
+  Future<Either<Failure, List<SglCstOnList>>> getSglBySupervisor(
+      {String? unitId});
+  Future<Either<Failure, List<SglCstOnList>>> getCstBySupervisor(
+      {String? unitId});
 
   Future<Either<Failure, SglResponse>> getSglByStudentId(
       {required String studentId});
@@ -139,12 +141,12 @@ class SglCstDataSourceImpl implements SglCstDataSource {
   }
 
   @override
-  Future<Either<Failure, List<SglCstOnList>>> getCstBySupervisor() async {
+  Future<Either<Failure, List<SglCstOnList>>> getCstBySupervisor(
+      {String? unitId}) async {
     try {
-      final response = await dio.get(
-        ApiService.baseUrl + '/csts',
-        options: await apiHeader.userOptions(),
-      );
+      final response = await dio.get(ApiService.baseUrl + '/csts',
+          options: await apiHeader.userOptions(),
+          queryParameters: {if (unitId != null) "unit": unitId});
 
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
@@ -173,12 +175,12 @@ class SglCstDataSourceImpl implements SglCstDataSource {
   }
 
   @override
-  Future<Either<Failure, List<SglCstOnList>>> getSglBySupervisor() async {
+  Future<Either<Failure, List<SglCstOnList>>> getSglBySupervisor(
+      {String? unitId}) async {
     try {
-      final response = await dio.get(
-        ApiService.baseUrl + '/sgls',
-        options: await apiHeader.userOptions(),
-      );
+      final response = await dio.get(ApiService.baseUrl + '/sgls',
+          options: await apiHeader.userOptions(),
+          queryParameters: {if (unitId != null) "unit": unitId});
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<SglCstOnList> listData =

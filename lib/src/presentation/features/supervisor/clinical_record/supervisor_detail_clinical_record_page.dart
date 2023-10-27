@@ -12,6 +12,7 @@ import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -140,6 +141,19 @@ class _SupervisorDetailClinicalRecordPageState
                     SizedBox(
                       height: 24,
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: StudentDepartmentHeader(
+                        studentName:
+                            state.detailClinicalRecordModel?.studentName ?? '',
+                        unitName: state.detailClinicalRecordModel?.unit ?? '',
+                        supervisorName:
+                            state.detailClinicalRecordModel?.supervisorName ?? '',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 24),
                       padding: EdgeInsets.all(20),
@@ -162,53 +176,6 @@ class _SupervisorDetailClinicalRecordPageState
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Student',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            state.detailClinicalRecordModel!.studentName ?? '',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Supervisor',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            state.detailClinicalRecordModel!.supervisorName ??
-                                '',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Department',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            widget.unitName ?? '',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          SectionDivider(),
                           FormSectionHeader(
                               label: 'Patient',
                               pathPrefix: 'icon_patient.svg',
@@ -264,7 +231,7 @@ class _SupervisorDetailClinicalRecordPageState
                     ),
 
                     SizedBox(
-                      height: 24,
+                      height: 16,
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 24),

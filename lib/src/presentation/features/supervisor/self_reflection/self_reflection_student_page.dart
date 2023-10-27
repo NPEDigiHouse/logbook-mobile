@@ -68,7 +68,7 @@ class _SupervisorSelfReflectionStudentPageState
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: StudentDepartmentHeader(
-                        unitName: state.data?.activeDepartmentName ?? '...',
+                        unitName: state.data?.activeDepartmentName,
                         studentId: widget.studentId,
                         studentName: state.data?.studentName ?? '...',
                       ),

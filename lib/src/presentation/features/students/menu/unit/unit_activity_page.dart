@@ -138,7 +138,6 @@ class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
                   );
                 }
                 if (state is CheckOutFailed) {
-                 
                   CustomAlert.error(message: state.message, context: context);
                 }
               },

@@ -142,6 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                       ),
+                                      maxLines: 1,
                                     ),
                                     Text(
                                       'ID. ${widget.credential.supervisor?.supervisorId}',

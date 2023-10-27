@@ -6,6 +6,8 @@ import 'package:elogbook/src/presentation/features/supervisor/scientific_session
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
+import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
+import 'package:elogbook/src/presentation/widgets/headers/unit_student_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -116,10 +118,21 @@ class _DetailScientificSessionPageState
                     SizedBox(
                       height: 24,
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: StudentDepartmentHeader(
+                        studentName: state.detail?.studentName ?? '',
+                        unitName: state.detail?.unit ?? '',
+                        supervisorName: state.detail?.supervisorName ?? '',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
                     Container(
                       width: double.infinity,
                       margin: EdgeInsets.symmetric(horizontal: 24),
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
                         color: scaffoldBackgroundColor,
                         borderRadius: BorderRadius.circular(12),
@@ -139,51 +152,10 @@ class _DetailScientificSessionPageState
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Student',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            state.detail!.studentName ?? '',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Department',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            widget.unitName ?? '-',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Supervisor',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Text(
-                            state.detail!.supervisorName ?? '',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: primaryTextColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
+                          FormSectionHeader(
+                              label: 'Session',
+                              pathPrefix: 'biotech_rounded.svg',
+                              padding: 0),
                           Text(
                             'Role',
                             style: textTheme.bodyMedium?.copyWith(
@@ -240,6 +212,9 @@ class _DetailScientificSessionPageState
                             style: textTheme.titleMedium?.copyWith(
                               color: primaryTextColor,
                             ),
+                          ),
+                          SizedBox(
+                            height: 20,
                           ),
                         ],
                       ),

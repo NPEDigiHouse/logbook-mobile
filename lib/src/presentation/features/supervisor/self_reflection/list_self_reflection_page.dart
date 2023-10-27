@@ -4,7 +4,6 @@ import 'package:elogbook/src/presentation/blocs/self_reflection_supervisor_cubit
 import 'package:elogbook/src/presentation/features/supervisor/self_reflection/self_reflection_card.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/empty_data.dart';
-import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
