@@ -13,29 +13,22 @@ import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
-
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  final _formKey = GlobalKey<FormBuilderState>();
+  late GlobalKey<FormBuilderState> _formKey;
+  @override
+  void initState() {
+    _formKey = GlobalKey<FormBuilderState>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) {
-        if (state is GenerateTokenResetPassword) {
-          context.navigateTo(
-            ResetPasswordPage(
-              email: _formKey.currentState!.value['email'],
-              token: state.token,
-            ),
-          );
-
-          state = Initial();
-        }
-      },
+      listener: (context, state) => onTokenGenerated(state),
       builder: (context, state) {
         return Scaffold(
           appBar: ForgotPasswordHeader(),
@@ -45,50 +38,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 horizontalPadding: 24,
                 children: [
-                  SvgPicture.asset(
-                    AssetPath.getVector('forgot_password_vector.svg'),
-                  ),
-                  Text(
-                    'Forgot\nPassword?',
-                    textAlign: TextAlign.left,
-                    style: textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      height: 1,
-                    ),
-                  ),
+                  _titleSection(),
                   const SizedBox(height: 24),
-                  Text(
-                    'Don’t worry! It happens. Please enter the address associated with your account.',
-                    style: textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  FormBuilder(
-                    key: _formKey,
-                    child: FormBuilderTextField(
-                      name: 'email',
-                      decoration: const InputDecoration(
-                        label: Text('Email'),
-                      ),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(
-                          errorText: 'This field is required',
-                        ),
-                        FormBuilderValidators.email(
-                          errorText: 'Invalid Email Address',
-                        ),
-                      ]),
-                    ),
-                  ),
+                  _emailFieldSection(),
                   const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: onResetPasswordSubmit,
-                      child: const Text('Submit'),
-                    ),
-                  ),
+                  _submitButton(),
                 ],
               ),
             ),
@@ -98,13 +52,80 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
+  Column _titleSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SvgPicture.asset(
+          AssetPath.getVector('forgot_password_vector.svg'),
+        ),
+        Text(
+          'Forgot\nPassword?',
+          textAlign: TextAlign.left,
+          style: textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.w900,
+            height: 1,
+          ),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'Don’t worry! It happens. Please enter the address associated with your account.',
+          style: textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    );
+  }
+
+  SizedBox _submitButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton(
+        onPressed: onResetPasswordSubmit,
+        child: const Text('Submit'),
+      ),
+    );
+  }
+
+  FormBuilder _emailFieldSection() {
+    return FormBuilder(
+      key: _formKey,
+      child: FormBuilderTextField(
+        name: 'email',
+        decoration: const InputDecoration(
+          label: Text('Email'),
+        ),
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(
+            errorText: 'This field is required',
+          ),
+          FormBuilderValidators.email(
+            errorText: 'Invalid Email Address',
+          ),
+        ]),
+      ),
+    );
+  }
+
   void onResetPasswordSubmit() {
     FocusScope.of(context).unfocus();
-
     if (_formKey.currentState!.saveAndValidate()) {
       BlocProvider.of<AuthCubit>(context).generateTokenResetPassword(
         email: _formKey.currentState!.value['email'],
       );
+    }
+  }
+
+  void onTokenGenerated(AuthState state) {
+    if (state is GenerateTokenResetPassword) {
+      context.navigateTo(
+        ResetPasswordPage(
+          email: _formKey.currentState!.value['email'],
+          token: state.token,
+        ),
+      );
+      state = Initial();
     }
   }
 }

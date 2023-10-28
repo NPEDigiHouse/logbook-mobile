@@ -1,12 +1,11 @@
 import 'dart:io';
 
+import 'package:elogbook/src/presentation/features/common/auth/widgets/otp_field.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
@@ -35,16 +34,15 @@ class EnterOtpPage extends StatefulWidget {
 }
 
 class _EnterOtpPageState extends State<EnterOtpPage> {
-  final _formKey = GlobalKey<FormBuilderState>();
-
+  late GlobalKey<FormBuilderState> _formKey;
   late List<FocusNode> _focusNodes;
   late List<TextEditingController> _controllers;
 
   @override
   void initState() {
+    _formKey = GlobalKey<FormBuilderState>();
     _focusNodes = List.generate(5, (_) => FocusNode());
     _controllers = List.generate(5, (_) => TextEditingController());
-
     super.initState();
   }
 
@@ -53,7 +51,6 @@ class _EnterOtpPageState extends State<EnterOtpPage> {
     for (var controller in _controllers) {
       controller.dispose();
     }
-
     super.dispose();
   }
 
@@ -74,82 +71,13 @@ class _EnterOtpPageState extends State<EnterOtpPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 horizontalPadding: 24,
                 children: [
-                  SvgPicture.asset(
-                    AssetPath.getVector('enter_otp_vector.svg'),
-                  ),
+                  _titleSection(),
                   const SizedBox(height: 24),
-                  Text(
-                    'Enter OTP',
-                    textAlign: TextAlign.left,
-                    style: textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      height: 1,
-                    ),
-                  ),
+                  _emaiLinkSection(),
                   const SizedBox(height: 24),
-                  RichText(
-                    text: TextSpan(
-                      style: textTheme.bodyLarge?.copyWith(
-                        color: primaryTextColor,
-                      ),
-                      text: 'A 5 digit code has been sent to\n',
-                      children: [
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              if (Platform.isAndroid) {
-                                launchUrlString('googlegmail://');
-                              } else {
-                                if (await canLaunchUrlString(
-                                    'googlegmail://')) {
-                                  launchUrlString('googlegmail://');
-                                }
-                              }
-                            },
-                          text: widget.email,
-                          style: textTheme.bodyLarge?.copyWith(
-                            color: secondaryColor,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  FormBuilder(
-                    key: _formKey,
-                    child: SpacingRow(
-                      spacing: 6,
-                      children: [
-                        for (var i = 0; i < 5; i++)
-                          OtpField(
-                            name: i.toString(),
-                            focusNode: _focusNodes[i],
-                            controller: _controllers[i],
-                            onChanged: (e) {
-                              if (_controllers[i].text.isNotEmpty) {
-                                if (i < _focusNodes.length - 1) {
-                                  FocusScope.of(context)
-                                      .requestFocus(_focusNodes[i + 1]);
-                                } else {
-                                  FocusScope.of(context).unfocus();
-
-                                  onOtpSubmitted();
-                                }
-                              }
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
+                  _inputOtpSection(context),
                   const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: onOtpSubmitted,
-                      child: const Text('Submit'),
-                    ),
-                  ),
+                  _submitButton(),
                 ],
               ),
             ),
@@ -159,78 +87,105 @@ class _EnterOtpPageState extends State<EnterOtpPage> {
     );
   }
 
+  Column _titleSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SvgPicture.asset(
+          AssetPath.getVector('enter_otp_vector.svg'),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'Enter OTP',
+          textAlign: TextAlign.left,
+          style: textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.w900,
+            height: 1,
+          ),
+        ),
+      ],
+    );
+  }
+
+  RichText _emaiLinkSection() {
+    return RichText(
+      text: TextSpan(
+        style: textTheme.bodyLarge?.copyWith(
+          color: primaryTextColor,
+        ),
+        text: 'A 5 digit code has been sent to\n',
+        children: [
+          TextSpan(
+            recognizer: TapGestureRecognizer()
+              ..onTap = () async {
+                if (Platform.isAndroid) {
+                  launchUrlString('googlegmail://');
+                } else {
+                  if (await canLaunchUrlString('googlegmail://')) {
+                    launchUrlString('googlegmail://');
+                  }
+                }
+              },
+            text: widget.email,
+            style: textTheme.bodyLarge?.copyWith(
+              color: secondaryColor,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  FormBuilder _inputOtpSection(BuildContext context) {
+    return FormBuilder(
+      key: _formKey,
+      child: SpacingRow(
+        spacing: 6,
+        children: [
+          for (var i = 0; i < 5; i++)
+            OtpField(
+              name: i.toString(),
+              focusNode: _focusNodes[i],
+              controller: _controllers[i],
+              onChanged: (e) => onOtpValueChange(e, i),
+            ),
+        ],
+      ),
+    );
+  }
+
+  SizedBox _submitButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton(
+        onPressed: onOtpSubmitted,
+        child: const Text('Submit'),
+      ),
+    );
+  }
+
+  void onOtpValueChange(String? e, int i) {
+    if (_controllers[i].text.isNotEmpty) {
+      if (i < _focusNodes.length - 1) {
+        FocusScope.of(context).requestFocus(_focusNodes[i + 1]);
+      } else {
+        FocusScope.of(context).unfocus();
+        onOtpSubmitted();
+      }
+    }
+  }
+
   void onOtpSubmitted() {
     if (_formKey.currentState!.saveAndValidate()) {
       final values =
           _formKey.currentState!.value.values.map((e) => e.toString()).toList();
-
       final otp = values.join('').trim();
-
       BlocProvider.of<AuthCubit>(context).resetPassword(
         otp: otp,
         newPassword: widget.newPassword,
         token: widget.token,
       );
     }
-  }
-}
-
-class OtpField extends StatelessWidget {
-  final String name;
-  final FocusNode focusNode;
-  final TextEditingController controller;
-  final void Function(String?)? onChanged;
-
-  const OtpField({
-    super.key,
-    required this.name,
-    required this.focusNode,
-    required this.controller,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: dividerColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: FormBuilderTextField(
-          name: name,
-          focusNode: focusNode,
-          controller: controller,
-          onChanged: onChanged,
-          maxLength: 1,
-          keyboardType: TextInputType.number,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 24,
-          ),
-          decoration: InputDecoration(
-            counterText: '',
-            errorStyle: const TextStyle(height: 0),
-            border: const OutlineInputBorder(
-              borderSide: BorderSide.none,
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: errorColor),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: errorColor),
-            ),
-          ),
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-          ],
-          validator: FormBuilderValidators.required(
-            errorText: '',
-          ),
-        ),
-      ),
-    );
   }
 }

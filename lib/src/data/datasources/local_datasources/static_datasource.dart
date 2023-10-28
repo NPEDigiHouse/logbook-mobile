@@ -110,27 +110,8 @@ final List<MenuModel> listSupervisorMenu = [
       desc: 'Management of student final grades'),
 ];
 
-// final List<Widget> pagesStudent = [
-//   SizedBox(),
-//   SizedBox(),
-//   const CreateSelfReflectionPage(),
-//   const DailyActivityPage(),
-//   const AddTrainingPage(),
-//   const SglCstHomePage(),
-//   SizedBox(),
-//   const ReferencePage(),
-//   const AssesmentHomePage(),
-// ];
-
 final List<Widget> pagesGlobal = [
   const CreateProfessionalActivityPage(),
   const AddThesisPage(),
 ];
 
-final List<String> descriptions = List.generate(9, (_) {
-  return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et.';
-});
-
-// List<VoidCallback> onTaps(BuildContext context) {
-//   return pagesStudent.map((e) => () => context.navigateTo(e)).toList();
-// }

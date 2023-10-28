@@ -1,4 +1,5 @@
 import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
+import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -27,19 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) {
-        if (state is LoginSuccess) {
-          Future.microtask(() {
-            BlocProvider.of<AuthCubit>(context).isSignIn();
-          });
-          context.replace(const Wrapper());
-        }
-
-        if (state is Failed) {
-          CustomAlert.error(message: state.message, context: context);
-          state = Initial();
-        }
-      },
+      listener: (context, state) => onStateChange(state),
       builder: (context, state) {
         return Scaffold(
           body: SafeArea(
@@ -51,91 +40,31 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     const AuthHeader(height: 240),
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 28),
-                        child: Column(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Login",
-                                style: textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
+                      child: SpacingColumn(
+                        onlyPading: true,
+                        horizontalPadding: 28,
+                        children: <Widget>[
+                          _titleSection(),
+                          const SizedBox(height: 20),
+                          FormBuilder(
+                            key: _formKey,
+                            child: Column(
+                              children: <Widget>[
+                                _usernameFieldSection(),
+                                const SizedBox(height: 16),
+                                _passwordFieldSection(),
+                              ],
                             ),
-                            const SizedBox(height: 20),
-                            FormBuilder(
-                              key: _formKey,
-                              child: Column(
-                                children: <Widget>[
-                                  FormBuilderTextField(
-                                    name: 'username',
-                                    decoration: const InputDecoration(
-                                      label: Text('Username or ID'),
-                                    ),
-                                    validator: FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(
-                                        errorText: 'This field is required',
-                                      ),
-                                    ]),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  InputPassword(
-                                    name: 'password',
-                                    label: 'Passsword',
-                                    validator: FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(
-                                        errorText: 'This field is required',
-                                      ),
-                                    ]),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: InkWell(
-                                onTap: () {
-                                  context.navigateTo(
-                                    const ForgotPasswordPage(),
-                                  );
-                                },
-                                child: Text(
-                                  'Forgot your password?',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: primaryColor,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 28),
-                            SizedBox(
-                              width: AppSize.getAppWidth(context),
-                              child: FilledButton(
-                                onPressed: onLoginClick,
-                                child: Text(
-                                    state is Loading ? "Loading..." : "Login"),
-                              ),
-                            ),
-                            const Spacer(),
-                            const Text('Don\'t Have an Account?'),
-                            InkWell(
-                              onTap: () {
-                                context.replace(const RegisterPage());
-                              },
-                              child: Text(
-                                'Register',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: primaryColor,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 28),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 4),
+                          _forgotPasswordLinkSection(context),
+                          const SizedBox(height: 28),
+                          _submitButtonSection(context, state),
+                          const Spacer(),
+                          const Text('Don\'t Have an Account?'),
+                          _registerLinkSection(context),
+                          const SizedBox(height: 28),
+                        ],
                       ),
                     ),
                   ],
@@ -148,18 +77,115 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Column _registerLinkSection(BuildContext context) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            context.replace(const RegisterPage());
+          },
+          child: Text(
+            'Register',
+            style: textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: primaryColor,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  SizedBox _submitButtonSection(BuildContext context, AuthState state) {
+    return SizedBox(
+      width: AppSize.getAppWidth(context),
+      child: FilledButton(
+        onPressed: onLoginClick,
+        child: Text(state is Loading ? "Loading..." : "Login"),
+      ),
+    );
+  }
+
+  Align _forgotPasswordLinkSection(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: InkWell(
+        onTap: () {
+          context.navigateTo(
+            const ForgotPasswordPage(),
+          );
+        },
+        child: Text(
+          'Forgot your password?',
+          style: textTheme.bodyMedium?.copyWith(
+            color: primaryColor,
+          ),
+        ),
+      ),
+    );
+  }
+
+  InputPassword _passwordFieldSection() {
+    return InputPassword(
+      name: 'password',
+      label: 'Passsword',
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(
+          errorText: 'This field is required',
+        ),
+      ]),
+    );
+  }
+
+  FormBuilderTextField _usernameFieldSection() {
+    return FormBuilderTextField(
+      name: 'username',
+      decoration: const InputDecoration(
+        label: Text('Username or ID'),
+      ),
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(
+          errorText: 'This field is required',
+        ),
+      ]),
+    );
+  }
+
+  Align _titleSection() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        "Login",
+        style: textTheme.headlineSmall?.copyWith(
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+
   void onLoginClick() {
     FocusScope.of(context).unfocus();
-
     if (_formKey.currentState!.saveAndValidate()) {
       final data = _formKey.currentState!.value;
-
       final authCubit = BlocProvider.of<AuthCubit>(context);
-
       authCubit.login(
         username: data['username'],
         password: data['password'],
       );
+    }
+  }
+
+  void onStateChange(AuthState state) {
+    if (state is LoginSuccess) {
+      Future.microtask(() {
+        BlocProvider.of<AuthCubit>(context).isSignIn();
+      });
+      context.replace(const Wrapper());
+    }
+
+    if (state is Failed) {
+      CustomAlert.error(message: state.message, context: context);
+      state = Initial();
     }
   }
 }
