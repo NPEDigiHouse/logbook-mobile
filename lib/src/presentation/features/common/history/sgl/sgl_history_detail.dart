@@ -25,7 +25,6 @@ class HistorySglPage extends StatefulWidget {
 class _HistorySglPageState extends State<HistorySglPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<SglCstCubit>(context)..getSgl(id: widget.id);
   }

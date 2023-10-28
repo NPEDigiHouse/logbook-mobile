@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/services/token_manager.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
-import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/special_reports/special_report_detail.dart';
 import 'package:elogbook/src/data/models/special_reports/special_report_on_list.dart';
 import 'package:elogbook/src/data/models/special_reports/special_report_response.dart';
@@ -21,8 +21,14 @@ abstract class SpecialReportDataSource {
 class SpecialReportDataSourceImpl implements SpecialReportDataSource {
   final Dio dio;
   final ApiHeader apiHeader;
+  final TokenInterceptor tokenInterceptor;
 
-  SpecialReportDataSourceImpl({required this.dio, required this.apiHeader});
+  SpecialReportDataSourceImpl(
+      {required this.tokenInterceptor,
+      required this.dio,
+      required this.apiHeader}) {
+    dio.interceptors.add(tokenInterceptor);
+  }
 
   @override
   Future<SpecialReportDetail> getSpecialReportDetail(

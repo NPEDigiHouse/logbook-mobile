@@ -65,7 +65,7 @@ class AuthCubit extends Cubit<AuthState> {
           if (r) {
             final credentialResult = await authDataSource.getUserCredential();
             credentialResult.fold(
-              (l) => emit(Failed(message: l.message)),
+              (l) => emit(CredentialNotExist()),
               (r) => emit(CredentialExist(credential: r)),
             );
           } else {

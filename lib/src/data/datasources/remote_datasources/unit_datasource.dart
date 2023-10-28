@@ -1,7 +1,7 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/services/token_manager.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
@@ -22,11 +22,15 @@ class DepartmentDatasourceImpl implements DepartmentDatasource {
   final Dio dio;
   final AuthDataSource authDataSource;
   final ApiHeader apiHeader;
+  final TokenInterceptor tokenInterceptor;
 
   DepartmentDatasourceImpl(
       {required this.dio,
+      required this.tokenInterceptor,
       required this.authDataSource,
-      required this.apiHeader});
+      required this.apiHeader}) {
+    dio.interceptors.add(tokenInterceptor);
+  }
 
   @override
   Future<Either<Failure, List<DepartmentModel>>> fetchAllDepartment() async {

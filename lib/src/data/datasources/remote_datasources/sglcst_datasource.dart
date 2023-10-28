@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/services/token_manager.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/exception_handler.dart';
@@ -74,8 +75,14 @@ abstract class SglCstDataSource {
 class SglCstDataSourceImpl implements SglCstDataSource {
   final Dio dio;
   final ApiHeader apiHeader;
+  final TokenInterceptor tokenInterceptor;
 
-  SglCstDataSourceImpl({required this.dio, required this.apiHeader});
+  SglCstDataSourceImpl(
+      {required this.tokenInterceptor,
+      required this.dio,
+      required this.apiHeader}) {
+    dio.interceptors.add(tokenInterceptor);
+  }
 
   @override
   Future<Either<Failure, void>> uploadSgl(

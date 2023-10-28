@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/services/token_manager.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/exception_handler.dart';
@@ -21,7 +22,7 @@ abstract class AuthDataSource {
     required String username,
     required String password,
   });
-  Future<void> refreshToken();
+  // Future<void> refreshToken();
   Future<Either<Failure, UserCredential>> getUserCredential();
 
   Future<Either<Failure, bool>> isSignIn();
@@ -39,11 +40,15 @@ class AuthDataSourceImpl implements AuthDataSource {
   final Dio dio;
   final AuthPreferenceHandler preferenceHandler;
   final ApiHeader apiHeader;
+  final TokenInterceptor tokenInterceptor;
 
   AuthDataSourceImpl(
       {required this.dio,
+      required this.tokenInterceptor,
       required this.preferenceHandler,
-      required this.apiHeader});
+      required this.apiHeader}) {
+    dio.interceptors.add(tokenInterceptor);
+  }
 
   @override
   Future<Either<Failure, void>> register({
@@ -99,39 +104,12 @@ class AuthDataSourceImpl implements AuthDataSource {
     }
   }
 
-  Future<void> refreshToken() async {
-    try {
-      UserToken? credential = await preferenceHandler.getCredential();
-      String? refreshToken = credential!.refreshToken;
-      if (refreshToken == null) {
-        return;
-      }
-      final response = await dio.post(
-          ApiService.baseUrl + '/users/refresh-token',
-          options: apiHeader.adminOptions(),
-          data: {
-            'refreshToken': refreshToken,
-          });
-
-      final responseData =
-          await DataResponse<Map<String, dynamic>>.fromJson(response.data);
-      final newAccessToken = responseData.data['accessToken'];
-      await preferenceHandler.setUserData(
-          UserToken(accessToken: newAccessToken, refreshToken: refreshToken));
-    } catch (e) {
-      throw ClientFailure(e.toString());
-    }
-  }
-
   @override
   Future<Either<Failure, bool>> isSignIn() async {
     try {
       UserToken? credential = await preferenceHandler.getCredential();
       return Right(credential != null);
     } catch (e) {
-      if (e is DioException) {
-        print(e.message);
-      }
       return Left(ClientFailure(e.toString()));
     }
   }
@@ -199,7 +177,6 @@ class AuthDataSourceImpl implements AuthDataSource {
           UserCredential.fromJson(dataResponse.data);
       return Right(userCredential);
     } catch (e) {
-      print(e.toString());
       return Left(ClientFailure(e.toString()));
     }
   }

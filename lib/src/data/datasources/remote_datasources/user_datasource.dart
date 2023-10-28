@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/services/token_manager.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
@@ -29,10 +30,17 @@ abstract class UserDataSource {
 class UserDataSourceImpl implements UserDataSource {
   final Dio dio;
   final AuthPreferenceHandler pref;
+  final TokenInterceptor tokenInterceptor;
+
   final ApiHeader apiHeader;
 
   UserDataSourceImpl(
-      {required this.dio, required this.apiHeader, required this.pref});
+      {required this.tokenInterceptor,
+      required this.dio,
+      required this.apiHeader,
+      required this.pref}) {
+    dio.interceptors.add(tokenInterceptor);
+  }
 
   @override
   Future<Either<Failure, UserCredential>> getUserCredential() async {

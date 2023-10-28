@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/services/token_manager.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
@@ -53,8 +54,14 @@ abstract class AssesmentDataSource {
 class AssesmentDataSourceImpl implements AssesmentDataSource {
   final Dio dio;
   final ApiHeader apiHeader;
+  final TokenInterceptor tokenInterceptor;
 
-  AssesmentDataSourceImpl({required this.dio, required this.apiHeader});
+  AssesmentDataSourceImpl(
+      {required this.tokenInterceptor,
+      required this.dio,
+      required this.apiHeader}) {
+    dio.interceptors.add(tokenInterceptor);
+  }
   @override
   Future<void> addMiniCex({required MiniCexPostModel model}) async {
     try {

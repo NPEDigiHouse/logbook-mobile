@@ -38,7 +38,7 @@ class ApiHeader {
     final credential = CredentialSaver.credential;
     final headers = {
       "content-type": 'application/json',
-      "authorization": 'Bearer ${credential?.accessToken}'
+      // "authorization": 'Bearer ${credential?.accessToken}'
     };
     return onlyHeader ? headers : Options(headers: headers);
   }
@@ -47,7 +47,7 @@ class ApiHeader {
     final credential = CredentialSaver.credential;
     final headers = {
       "content-type": 'multipart/form-data',
-      "authorization": 'Bearer ${credential?.accessToken}'
+      // "authorization": 'Bearer ${credential?.accessToken}'
     };
 
     return withType

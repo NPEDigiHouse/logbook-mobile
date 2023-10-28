@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/services/token_manager.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
-import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/history/history_model.dart';
 
 abstract class HistoryDataSource {
@@ -13,8 +13,14 @@ abstract class HistoryDataSource {
 class HistoryDataSourceImpl extends HistoryDataSource {
   final Dio dio;
   final ApiHeader apiHeader;
+  final TokenInterceptor tokenInterceptor;
 
-  HistoryDataSourceImpl({required this.dio, required this.apiHeader});
+  HistoryDataSourceImpl(
+      {required this.tokenInterceptor,
+      required this.dio,
+      required this.apiHeader}) {
+    dio.interceptors.add(tokenInterceptor);
+  }
 
   @override
   Future<List<HistoryModel>> getHistory() async {

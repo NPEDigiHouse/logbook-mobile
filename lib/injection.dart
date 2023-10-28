@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:elogbook/core/services/token_manager.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/src/presentation/blocs/activity_cubit/activity_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
@@ -40,12 +41,14 @@ void _injectDatasource() {
   locator.registerLazySingleton<AuthDataSource>(
     () => AuthDataSourceImpl(
       dio: locator(),
+      tokenInterceptor: locator(),
       preferenceHandler: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<DepartmentDatasource>(
     () => DepartmentDatasourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       authDataSource: locator<AuthDataSource>(),
       apiHeader: locator(),
@@ -53,54 +56,63 @@ void _injectDatasource() {
   );
   locator.registerLazySingleton<SupervisorsDataSource>(
     () => SupervisorsDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<HistoryDataSource>(
     () => HistoryDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<ClinicalRecordsDatasource>(
     () => ClinicalRecordsDatasourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<ReferenceDataSource>(
     () => ReferenceDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<SpecialReportDataSource>(
     () => SpecialReportDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<ScientificSessionDataSource>(
     () => ScientificSessionDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<SelfReflectionDataSource>(
     () => SelfReflectionDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<CompetenceDataSource>(
     () => CompetenceDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<SglCstDataSource>(
     () => SglCstDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
@@ -108,24 +120,28 @@ void _injectDatasource() {
 
   locator.registerLazySingleton<DailyActivityDataSource>(
     () => DailyActivityDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<ActivityDataSource>(
     () => ActivityDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<StudentDataSource>(
     () => StudentDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
   );
   locator.registerLazySingleton<UserDataSource>(
     () => UserDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
       pref: locator(),
@@ -133,6 +149,7 @@ void _injectDatasource() {
   );
   locator.registerLazySingleton<AssesmentDataSource>(
     () => AssesmentDataSourceImpl(
+      tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),
     ),
@@ -263,6 +280,10 @@ void _injectStateManagement() {
 }
 
 void _injectExternalResources() {
+  locator.registerLazySingleton<TokenManager>(() => TokenManager(
+      dio: locator(), apiHeader: locator(), preferenceHandler: locator()));
+  locator.registerLazySingleton<TokenInterceptor>(
+      () => TokenInterceptor(tokenManager: locator()));
   locator.registerLazySingleton(() => Dio());
   locator.registerLazySingleton(() => ApiHeader(preference: locator()));
   locator.registerLazySingleton<AuthPreferenceHandler>(

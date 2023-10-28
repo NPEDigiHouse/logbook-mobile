@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
+import 'package:elogbook/core/services/token_manager.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
 import 'package:elogbook/core/utils/failure.dart';
-import 'package:elogbook/src/data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:elogbook/src/data/models/self_reflection/self_reflection_model.dart';
 import 'package:elogbook/src/data/models/self_reflection/self_reflection_post_model.dart';
 import 'package:elogbook/src/data/models/self_reflection/student_self_reflection_model.dart';
@@ -25,8 +25,14 @@ abstract class SelfReflectionDataSource {
 class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
   final Dio dio;
   final ApiHeader apiHeader;
+  final TokenInterceptor tokenInterceptor;
 
-  SelfReflectionDataSourceImpl({required this.dio, required this.apiHeader});
+  SelfReflectionDataSourceImpl(
+      {required this.tokenInterceptor,
+      required this.dio,
+      required this.apiHeader}) {
+    dio.interceptors.add(tokenInterceptor);
+  }
 
   @override
   Future<Either<Failure, void>> uploadSelfReflection(
