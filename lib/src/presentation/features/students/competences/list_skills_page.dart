@@ -158,6 +158,8 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                                           isVerified:
                                               s[index].verificationStatus ==
                                                   'VERIFIED',
+                                          supervisorName:
+                                              s[index].supervisorName ?? '',
                                         ),
                                         separatorBuilder: (context, index) =>
                                             SizedBox(height: 12),
@@ -297,10 +299,12 @@ class TestGradeScoreCard extends StatelessWidget {
     required this.caseName,
     required this.caseType,
     required this.isVerified,
+    required this.supervisorName,
   });
 
   final String caseName;
   final String caseType;
+  final String supervisorName;
   final bool isVerified;
 
   @override
@@ -345,6 +349,26 @@ class TestGradeScoreCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: textTheme.bodySmall?.copyWith(
+                          color: secondaryTextColor,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Supervisor:\t',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          TextSpan(
+                            text: supervisorName,
+                          ),
+                        ],
+                      ),
+                    ),
                     Text(
                       caseName,
                       maxLines: 2,

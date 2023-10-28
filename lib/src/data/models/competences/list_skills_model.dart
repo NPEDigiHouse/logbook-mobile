@@ -25,10 +25,15 @@ class SkillModel {
   final String? skillId;
   final String? skillName;
   final String? skillType;
+  final String? supervisorName;
   final String? verificationStatus;
 
   SkillModel(
-      {this.skillId, this.skillName, this.skillType, this.verificationStatus});
+      {this.supervisorName,
+      this.skillId,
+      this.skillName,
+      this.skillType,
+      this.verificationStatus});
   factory SkillModel.fromJson(Map<String, dynamic> json) =>
       _$SkillModelFromJson(json);
 

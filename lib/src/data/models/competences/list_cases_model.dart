@@ -22,13 +22,14 @@ class ListCasesModel {
 
 @JsonSerializable()
 class CaseModel {
+  final String? supervisorName;
   final String? caseId;
   final String? caseName;
   final String? caseType;
   final String? verificationStatus;
 
   CaseModel(
-      {this.caseId, this.caseName, this.caseType, this.verificationStatus});
+      {this.supervisorName, this.caseId, this.caseName, this.caseType, this.verificationStatus});
 
   factory CaseModel.fromJson(Map<String, dynamic> json) =>
       _$CaseModelFromJson(json);

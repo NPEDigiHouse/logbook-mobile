@@ -2,7 +2,6 @@ import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/data/models/competences/list_cases_model.dart';
-import 'package:elogbook/src/data/models/units/active_unit_model.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/no_internet/check_internet_onetime.dart';
@@ -131,7 +130,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                     horizontalPadding: 16,
                                     children: [
                                       DepartmentHeader(
-                                          unitName: widget.unitName!),
+                                          unitName: widget.unitName),
                                       SizedBox(
                                         height: 12,
                                       ),
@@ -159,6 +158,8 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                             TestGradeScoreCard(
                                           caseName: s[index].caseName!,
                                           caseType: s[index].caseType!,
+                                          supervisorName:
+                                              s[index].supervisorName ?? '',
                                           isVerified:
                                               s[index].verificationStatus ==
                                                   'VERIFIED',
@@ -298,6 +299,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
 class TestGradeScoreCard extends StatelessWidget {
   const TestGradeScoreCard({
     super.key,
+    required this.supervisorName,
     required this.caseName,
     required this.caseType,
     required this.isVerified,
@@ -305,6 +307,7 @@ class TestGradeScoreCard extends StatelessWidget {
 
   final String caseName;
   final String caseType;
+  final String supervisorName;
   final bool isVerified;
 
   @override
@@ -349,6 +352,26 @@ class TestGradeScoreCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: textTheme.bodySmall?.copyWith(
+                          color: secondaryTextColor,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Supervisor:\t',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          TextSpan(
+                            text: supervisorName,
+                          ),
+                        ],
+                      ),
+                    ),
                     Text(
                       caseName,
                       maxLines: 2,

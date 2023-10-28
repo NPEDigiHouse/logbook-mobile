@@ -23,6 +23,7 @@ Map<String, dynamic> _$ListCasesModelToJson(ListCasesModel instance) =>
     };
 
 CaseModel _$CaseModelFromJson(Map<String, dynamic> json) => CaseModel(
+      supervisorName: json['supervisorName'] as String?,
       caseId: json['caseId'] as String?,
       caseName: json['caseName'] as String?,
       caseType: json['caseType'] as String?,
@@ -30,6 +31,7 @@ CaseModel _$CaseModelFromJson(Map<String, dynamic> json) => CaseModel(
     );
 
 Map<String, dynamic> _$CaseModelToJson(CaseModel instance) => <String, dynamic>{
+      'supervisorName': instance.supervisorName,
       'caseId': instance.caseId,
       'caseName': instance.caseName,
       'caseType': instance.caseType,
