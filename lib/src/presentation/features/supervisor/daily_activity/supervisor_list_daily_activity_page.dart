@@ -3,8 +3,10 @@ import 'package:elogbook/src/data/models/daily_activity/daily_activity_student.d
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:elogbook/src/presentation/features/supervisor/daily_activity/widgets/daily_activity_card.dart';
+import 'package:elogbook/src/presentation/features/supervisor/sgl_cst/widgets/select_department_sheet.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,11 +20,15 @@ class SupervisorStudentsDailyActivityPage extends StatefulWidget {
 
 class _SupervisorStudentsDailyActivityPageState
     extends State<SupervisorStudentsDailyActivityPage> {
+  String? filterUnitId;
+
   ValueNotifier<List<DailyActivityStudent>> listStudent = ValueNotifier([]);
   bool isMounted = false;
   @override
   void initState() {
     super.initState();
+    filterUnitId = null;
+    isMounted = false;
     Future.microtask(() => BlocProvider.of<DailyActivityCubit>(context)
       ..getDailyActivityStudentBySupervisor());
   }
@@ -32,6 +38,29 @@ class _SupervisorStudentsDailyActivityPageState
     return Scaffold(
       appBar: AppBar(
         title: Text('Submitted Daily Activity'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isDismissible: true,
+                builder: (ctx) => SelectDepartmentSheet(
+                  initUnit: filterUnitId,
+                  onTap: (f) {
+                    filterUnitId = f;
+                    isMounted = false;
+                    BlocProvider.of<DailyActivityCubit>(context)
+                        .getDailyActivityStudentBySupervisor(unitId: f);
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            },
+            icon: Icon(
+              CupertinoIcons.line_horizontal_3_decrease,
+            ),
+          )
+        ],
       ).variant(),
       body: SafeArea(
         child: RefreshIndicator(
@@ -39,7 +68,7 @@ class _SupervisorStudentsDailyActivityPageState
             isMounted = false;
             await Future.wait([
               BlocProvider.of<DailyActivityCubit>(context)
-                  .getDailyActivityStudentBySupervisor(),
+                  .getDailyActivityStudentBySupervisor(unitId: filterUnitId),
             ]);
           },
           child: ValueListenableBuilder(
@@ -50,7 +79,8 @@ class _SupervisorStudentsDailyActivityPageState
                     if (state.stateVerifyDailyActivity == RequestState.data) {
                       isMounted = false;
                       BlocProvider.of<DailyActivityCubit>(context)
-                          .getDailyActivityStudentBySupervisor();
+                          .getDailyActivityStudentBySupervisor(
+                              unitId: filterUnitId);
                     }
                   },
                   builder: (context, state) {

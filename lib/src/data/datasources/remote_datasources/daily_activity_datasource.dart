@@ -19,7 +19,8 @@ abstract class DailyActivityDataSource {
       {required String weekId});
   Future<void> addWeekByCoordinator({required PostWeek postWeek});
   Future<List<ListWeekItem>> getWeekByCoordinator({required String unitId});
-  Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor();
+  Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor(
+      {String? unitId});
   Future<StudentDailyActivityResponse> getDailyActivityBySupervisor(
       {required String studentId});
   Future<StudentActivityPerweekResponse> getStudentActivityPerweek(
@@ -189,12 +190,12 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
   }
 
   @override
-  Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor() async {
+  Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor(
+      {String? unitId}) async {
     try {
-      final response = await dio.get(
-        ApiService.baseUrl + '/daily-activities/',
-        options: await apiHeader.userOptions(),
-      );
+      final response = await dio.get(ApiService.baseUrl + '/daily-activities/',
+          options: await apiHeader.userOptions(),
+          queryParameters: {if (unitId != null) "unit": unitId});
       final dataResponse =
           await DataResponse<List<dynamic>>.fromJson(response.data);
       List<DailyActivityStudent> listData = dataResponse.data
