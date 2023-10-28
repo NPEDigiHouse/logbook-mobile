@@ -16,9 +16,6 @@ class CredentialSaver {
 }
 
 class ApiHeader {
-  final AuthPreferenceHandler preference;
-  ApiHeader({required this.preference});
-
   Options adminOptions() => Options(
         headers: {
           "content-type": 'application/json',
@@ -35,7 +32,6 @@ class ApiHeader {
       );
 
   dynamic userOptions({bool onlyHeader = false}) {
-    final credential = CredentialSaver.credential;
     final headers = {
       "content-type": 'application/json',
       // "authorization": 'Bearer ${credential?.accessToken}'
@@ -44,7 +40,6 @@ class ApiHeader {
   }
 
   dynamic fileOptions({bool withType = false}) {
-    final credential = CredentialSaver.credential;
     final headers = {
       "content-type": 'multipart/form-data',
       // "authorization": 'Bearer ${credential?.accessToken}'

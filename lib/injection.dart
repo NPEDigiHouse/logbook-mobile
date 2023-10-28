@@ -285,7 +285,7 @@ void _injectExternalResources() {
   locator.registerLazySingleton<TokenInterceptor>(
       () => TokenInterceptor(tokenManager: locator()));
   locator.registerLazySingleton(() => Dio());
-  locator.registerLazySingleton(() => ApiHeader(preference: locator()));
+  locator.registerLazySingleton(() => ApiHeader());
   locator.registerLazySingleton<AuthPreferenceHandler>(
       () => AuthPreferenceHandler());
 }
