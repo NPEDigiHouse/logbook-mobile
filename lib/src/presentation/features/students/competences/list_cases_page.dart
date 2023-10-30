@@ -17,14 +17,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ListCasesPage extends StatefulWidget {
   final String unitName;
-  final int countCheckIn;
+  // final int countCheckIn;
 
   final String unitId;
-  const ListCasesPage(
-      {super.key,
-      required this.unitName,
-      required this.unitId,
-      required this.countCheckIn});
+  const ListCasesPage({
+    super.key,
+    required this.unitName,
+    required this.unitId,
+    // required this.countCheckIn,
+  });
 
   @override
   State<ListCasesPage> createState() => _ListCasesPageState();
@@ -63,21 +64,19 @@ class _ListCasesPageState extends State<ListCasesPage> {
       appBar: AppBar(
         title: Text("List Cases"),
       ),
-      floatingActionButton: widget.countCheckIn! == 0
-          ? FloatingActionButton(
-              onPressed: () => showDialog(
-                  context: context,
-                  barrierLabel: '',
-                  barrierDismissible: false,
-                  builder: (_) => AddCompetenceDialog(
-                        type: CompetenceType.caseType,
-                        unitId: widget.unitId,
-                      )).then((value) {}),
-              child: Icon(
-                Icons.add_rounded,
-              ),
-            )
-          : null,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showDialog(
+            context: context,
+            barrierLabel: '',
+            barrierDismissible: false,
+            builder: (_) => AddCompetenceDialog(
+                  type: CompetenceType.caseType,
+                  unitId: widget.unitId,
+                )).then((value) {}),
+        child: Icon(
+          Icons.add_rounded,
+        ),
+      ),
       body: SafeArea(
         child: CheckInternetOnetime(child: (context) {
           return RefreshIndicator(

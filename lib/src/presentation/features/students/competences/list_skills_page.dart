@@ -18,12 +18,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ListSkillsPage extends StatefulWidget {
   final String unitName;
   final String unitId;
-  final int countCheckIn;
-  const ListSkillsPage(
-      {super.key,
-      required this.unitName,
-      required this.unitId,
-      required this.countCheckIn});
+  // final int countCheckIn;
+  const ListSkillsPage({
+    super.key,
+    required this.unitName,
+    required this.unitId,
+    // required this.countCheckIn,
+  });
 
   @override
   State<ListSkillsPage> createState() => _ListSkillsPageState();
@@ -61,21 +62,19 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
       appBar: AppBar(
         title: Text("List Skills"),
       ),
-      floatingActionButton: widget.countCheckIn! == 0
-          ? FloatingActionButton(
-              onPressed: () => showDialog(
-                  context: context,
-                  barrierLabel: '',
-                  barrierDismissible: false,
-                  builder: (_) => AddCompetenceDialog(
-                        type: CompetenceType.skillType,
-                        unitId: widget.unitId,
-                      )).then((value) {}),
-              child: Icon(
-                Icons.add_rounded,
-              ),
-            )
-          : null,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showDialog(
+            context: context,
+            barrierLabel: '',
+            barrierDismissible: false,
+            builder: (_) => AddCompetenceDialog(
+                  type: CompetenceType.skillType,
+                  unitId: widget.unitId,
+                )).then((value) {}),
+        child: Icon(
+          Icons.add_rounded,
+        ),
+      ),
       body: SafeArea(
         child: CheckInternetOnetime(child: (context) {
           return RefreshIndicator(

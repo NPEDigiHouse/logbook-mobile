@@ -58,8 +58,7 @@ class _StudentSelfReflectionHomePageState
       appBar: AppBar(
         title: Text("Self Reflections"),
       ),
-      floatingActionButton: widget.activeDepartmentModel.countCheckIn! == 0 &&
-              (widget.credential.student?.examinerDPKId != null)
+      floatingActionButton: (widget.credential.student?.examinerDPKId != null)
           ? FloatingActionButton(
               onPressed: () => context.navigateTo(CreateSelfReflectionPage(
                 credential: widget.credential,
@@ -70,100 +69,99 @@ class _StudentSelfReflectionHomePageState
             )
           : null,
       body: SafeArea(
-        child: CheckInternetOnetime(
-          child: (context) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                await Future.wait([
-                  BlocProvider.of<StudentCubit>(context)
-                      .getStudentSelfReflections(),
-                ]);
-              },
-              child: CustomScrollView(
-                slivers: [
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    sliver: SliverFillRemaining(
-                      child: BlocBuilder<StudentCubit, StudentState>(
-                        builder: (context, state) {
-                          if (state.selfReflectionResponse != null) {
-                            return SingleChildScrollView(
-                              child: SpacingColumn(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                onlyPading: true,
-                                horizontalPadding: 16,
-                                children: [
-                                  DepartmentHeader(
-                                      unitName:
-                                          widget.activeDepartmentModel.unitName!),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
-                                  ItemDivider(),
-                                  if (widget.credential.student?.examinerDPKId ==
-                                      null)
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Please select a supervisor first in the profile menu before creating a self reflection',
-                                        style: textTheme.bodyMedium?.copyWith(
-                                          color: errorColor,
-                                        ),
+        child: CheckInternetOnetime(child: (context) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              await Future.wait([
+                BlocProvider.of<StudentCubit>(context)
+                    .getStudentSelfReflections(),
+              ]);
+            },
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  sliver: SliverFillRemaining(
+                    child: BlocBuilder<StudentCubit, StudentState>(
+                      builder: (context, state) {
+                        if (state.selfReflectionResponse != null) {
+                          return SingleChildScrollView(
+                            child: SpacingColumn(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              onlyPading: true,
+                              horizontalPadding: 16,
+                              children: [
+                                DepartmentHeader(
+                                    unitName:
+                                        widget.activeDepartmentModel.unitName!),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                ItemDivider(),
+                                if (widget.credential.student?.examinerDPKId ==
+                                    null)
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'Please select a supervisor first in the profile menu before creating a self reflection',
+                                      style: textTheme.bodyMedium?.copyWith(
+                                        color: errorColor,
                                       ),
                                     ),
-                                  Builder(
-                                    builder: (context) {
-                                      if (state.selfReflectionResponse != null) {
-                                        final data = state.selfReflectionResponse!
-                                            .listSelfReflections!;
-                                        if (data.isEmpty) {
-                                          return EmptyData(
-                                            subtitle:
-                                                'Please add self reflection first!',
-                                            title: 'Data Still Empty',
-                                          );
-                                        }
-                                        return Column(
-                                          children: [
-                                            SizedBox(
-                                              height: 16,
-                                            ),
-                                            ListView.separated(
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              itemBuilder: (context, index) =>
-                                                  StudentSelfReflectionCard(
-                                                model: state.selfReflectionResponse!
-                                                    .listSelfReflections![index],
-                                              ),
-                                              separatorBuilder: (context, index) =>
-                                                  SizedBox(
-                                                child: ItemDivider(),
-                                              ),
-                                              itemCount: data.length,
-                                            ),
-                                          ],
+                                  ),
+                                Builder(
+                                  builder: (context) {
+                                    if (state.selfReflectionResponse != null) {
+                                      final data = state.selfReflectionResponse!
+                                          .listSelfReflections!;
+                                      if (data.isEmpty) {
+                                        return EmptyData(
+                                          subtitle:
+                                              'Please add self reflection first!',
+                                          title: 'Data Still Empty',
                                         );
-                                      } else {
-                                        return SizedBox.shrink();
                                       }
-                                    },
-                                  )
-                                ],
-                              ),
-                            );
-                          }
-                          return CustomLoading();
-                        },
-                      ),
+                                      return Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 16,
+                                          ),
+                                          ListView.separated(
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) =>
+                                                StudentSelfReflectionCard(
+                                              model: state
+                                                  .selfReflectionResponse!
+                                                  .listSelfReflections![index],
+                                            ),
+                                            separatorBuilder:
+                                                (context, index) => SizedBox(
+                                              child: ItemDivider(),
+                                            ),
+                                            itemCount: data.length,
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      return SizedBox.shrink();
+                                    }
+                                  },
+                                )
+                              ],
+                            ),
+                          );
+                        }
+                        return CustomLoading();
+                      },
                     ),
                   ),
-                ],
-              ),
-            );
-          }
-        ),
+                ),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }

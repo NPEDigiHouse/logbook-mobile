@@ -41,11 +41,9 @@ class _ListCstPageState extends State<ListCstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: (widget.activeDepartmentModel.countCheckIn! > 0)
-          ? AppBar(
-              title: Text('Clinical Skill Training (CST)'),
-            )
-          : null,
+      // appBar: AppBar(
+      //   title: Text('Clinical Skill Training (CST)'),
+      // ),
       body: CheckInternetOnetime(child: (context) {
         return RefreshIndicator(
           onRefresh: () async {
@@ -54,22 +52,22 @@ class _ListCstPageState extends State<ListCstPage> {
           },
           child: CustomScrollView(
             slivers: [
-              if (widget.activeDepartmentModel.countCheckIn! == 0)
-                SglCstAppBar(
-                  title: 'Clinical Skill Training (CST)',
-                  onBtnPressed: () {
-                    context.navigateTo(CreateCstPage(
-                      model: widget.activeDepartmentModel,
-                      date: DateTime.now(),
-                    ));
-                  },
-                )
-              else
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 16,
-                  ),
-                ),
+              // if (widget.activeDepartmentModel.countCheckIn! == 0)
+              SglCstAppBar(
+                title: 'Clinical Skill Training (CST)',
+                onBtnPressed: () {
+                  context.navigateTo(CreateCstPage(
+                    model: widget.activeDepartmentModel,
+                    date: DateTime.now(),
+                  ));
+                },
+              ),
+              // else
+              //   SliverToBoxAdapter(
+              //     child: SizedBox(
+              //       height: 16,
+              //     ),
+              //   ),
               SliverFillRemaining(
                 child: SingleChildScrollView(
                   child: SpacingColumn(

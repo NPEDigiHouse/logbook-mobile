@@ -60,15 +60,14 @@ class _StudentListScientificSessionPageState
       appBar: AppBar(
         title: Text("Scientific Session"),
       ),
-      floatingActionButton: widget.activeDepartmentModel.countCheckIn == 0
-          ? FloatingActionButton(
-              onPressed: () => context.navigateTo(AddScientificSessionPage(
-                  activeDepartmentModel: widget.activeDepartmentModel)),
-              child: Icon(
-                Icons.add_rounded,
-              ),
-            )
-          : null,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.navigateTo(AddScientificSessionPage(
+            activeDepartmentModel: widget.activeDepartmentModel)),
+        child: Icon(
+          Icons.add_rounded,
+        ),
+      ),
+      // : null,
       body: SafeArea(
         child: CheckInternetOnetime(child: (context) {
           return RefreshIndicator(

@@ -41,11 +41,9 @@ class _ListSglPageState extends State<ListSglPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: (widget.activeDepartmentModel.countCheckIn! > 0)
-          ? AppBar(
-              title: Text('Small Group Learning (SGL)'),
-            )
-          : null,
+      // appBar: AppBar(
+      //   title: Text('Small Group Learning (SGL)'),
+      // ),
       body: CheckInternetOnetime(child: (context) {
         return RefreshIndicator(
           onRefresh: () async {
@@ -54,24 +52,24 @@ class _ListSglPageState extends State<ListSglPage> {
           },
           child: CustomScrollView(
             slivers: [
-              if (widget.activeDepartmentModel.countCheckIn! == 0)
-                SglCstAppBar(
-                  title: 'Small Group Learning (SGL)',
-                  onBtnPressed: () {
-                    context.navigateTo(
-                      CreateSglPage(
-                        model: widget.activeDepartmentModel,
-                        date: DateTime.now(),
-                      ),
-                    );
-                  },
-                )
-              else
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 16,
-                  ),
-                ),
+              // if (widget.activeDepartmentModel.countCheckIn! == 0)
+              SglCstAppBar(
+                title: 'Small Group Learning (SGL)',
+                onBtnPressed: () {
+                  context.navigateTo(
+                    CreateSglPage(
+                      model: widget.activeDepartmentModel,
+                      date: DateTime.now(),
+                    ),
+                  );
+                },
+              ),
+              // else
+              //   SliverToBoxAdapter(
+              //     child: SizedBox(
+              //       height: 16,
+              //     ),
+              //   ),
               SliverFillRemaining(
                 child: SingleChildScrollView(
                   child: SpacingColumn(

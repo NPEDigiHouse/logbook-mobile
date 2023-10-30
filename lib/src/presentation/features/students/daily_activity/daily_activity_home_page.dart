@@ -94,8 +94,8 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                           status: state
                                   .studentDailyActivity!.weeks![index].status ??
                               false,
-                          checkInCount:
-                              widget.activeDepartmentModel.countCheckIn!,
+                          // checkInCount:
+                          //     widget.activeDepartmentModel.countCheckIn!,
                           dailyActivity: i == -1
                               ? null
                               : state.studentDailyActivity!.dailyActivities![i],
@@ -114,7 +114,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
 }
 
 class DailyActivityHomeCard extends StatelessWidget {
-  final int checkInCount;
+  // final int checkInCount;
   final Week week;
   final DateTime startDate;
   final DateTime endDate;
@@ -126,7 +126,7 @@ class DailyActivityHomeCard extends StatelessWidget {
       required this.endDate,
       required this.startDate,
       required this.week,
-      required this.checkInCount,
+      // required this.checkInCount,
       this.dailyActivity});
 
   @override
@@ -144,7 +144,7 @@ class DailyActivityHomeCard extends StatelessWidget {
               DailyActivityWeekStatusPage(
                 week: week,
                 weekName: week.weekName!,
-                checkInCount: checkInCount,
+                // checkInCount: checkInCount,
                 startDate: startDate,
                 status: status ||
                     (!endDate.isBefore(DateTime(

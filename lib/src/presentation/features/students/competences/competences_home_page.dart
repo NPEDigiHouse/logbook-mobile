@@ -51,7 +51,7 @@ class _CompetenceHomePageState extends State<CompetenceHomePage> {
                         child: CompetenceCard(
                           onTap: () => context.navigateTo(ListCasesPage(
                             unitName: widget.model.unitName ?? '',
-                            countCheckIn: widget.model.countCheckIn ?? 0,
+                            // countCheckIn: widget.model.countCheckIn ?? 0,
                             unitId: widget.unitId,
                           )),
                           title: 'Cases',
@@ -66,7 +66,7 @@ class _CompetenceHomePageState extends State<CompetenceHomePage> {
                         child: CompetenceCard(
                           onTap: () => context.navigateTo(ListSkillsPage(
                             unitName: widget.model.unitName ?? '',
-                            countCheckIn: widget.model.countCheckIn ?? 0,
+                            // countCheckIn: widget.model.countCheckIn ?? 0,
                             unitId: widget.unitId,
                           )),
                           title: 'Skills',

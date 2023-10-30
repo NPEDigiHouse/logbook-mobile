@@ -135,7 +135,7 @@ class HistoryHelper {
                 ? context.navigateTo(ListCasesPage(
                     unitName: element.unitName ?? '',
                     unitId: element.unitId ?? '',
-                    countCheckIn: 1,
+                    // countCheckIn: 1,
                   ))
                 : context.navigateTo(SupervisorListCasesPage(
                     studentName: element.studentName ?? '',
@@ -148,7 +148,7 @@ class HistoryHelper {
                 ? context.navigateTo(ListSkillsPage(
                     unitName: element.unitName ?? '',
                     unitId: element.unitId ?? '',
-                    countCheckIn: 1,
+                    // countCheckIn: 1,
                   ))
                 : context.navigateTo(SupervisorListSkillsPage(
                     studentName: element.studentName ?? '',

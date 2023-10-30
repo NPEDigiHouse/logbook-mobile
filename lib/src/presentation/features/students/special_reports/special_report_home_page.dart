@@ -79,8 +79,8 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                             ),
                           ),
                         if (widget.credential.student?.supervisingDPKId != null)
-                          if (widget.activeDepartmentModel.countCheckIn! == 0)
-                            AddNewConsultionCard(),
+                          // if (widget.activeDepartmentModel.countCheckIn! == 0)
+                          AddNewConsultionCard(),
                         BlocBuilder<SpecialReportCubit, SpecialReportState>(
                           builder: (context, state) {
                             if (state.specialReport != null) {

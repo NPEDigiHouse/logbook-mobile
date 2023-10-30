@@ -96,7 +96,7 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
                                   status: state.studentDailyActivity!
                                           .weeks![index].status ??
                                       false,
-                                  checkInCount: 2,
+                                  // checkInCount: 2,
                                   week:
                                       state.studentDailyActivity!.weeks![index],
                                   dailyActivity: i == -1

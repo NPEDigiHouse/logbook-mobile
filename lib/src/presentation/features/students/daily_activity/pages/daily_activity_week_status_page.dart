@@ -19,7 +19,7 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
   final Week week;
   final int weekName;
   final DateTime startDate;
-  final int checkInCount;
+  // final int checkInCount;
   final bool status;
 
   const DailyActivityWeekStatusPage(
@@ -28,7 +28,9 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
       required this.startDate,
       required this.week,
       required this.weekName,
-      required this.checkInCount});
+      // required this.checkInCount
+      
+      });
 
   @override
   State<DailyActivityWeekStatusPage> createState() =>
@@ -267,7 +269,7 @@ class _DailyActivityWeekStatusPageState
                                     : listDays[index]
                                         .dailyActivity!
                                         .activityStatus,
-                                checkInCount: widget.checkInCount,
+                                // checkInCount: widget.checkInCount,
                                 detail: listDays[index].dailyActivity == null
                                     ? null
                                     : listDays[index].dailyActivity?.detail,
@@ -309,7 +311,7 @@ class DailyActivityStatusCard extends StatefulWidget {
   final String verificationStatus;
   final String? status;
   final String? supervisorName;
-  final int checkInCount;
+  // final int checkInCount;
   final String? detail;
   final ActivitiesStatus? activitiesStatus;
   final bool activeStatus;
@@ -325,7 +327,7 @@ class DailyActivityStatusCard extends StatefulWidget {
     this.detail,
     required this.verificationStatus,
     required this.day,
-    required this.checkInCount,
+    // required this.checkInCount,
     required this.status,
   });
 
@@ -355,8 +357,7 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
     return InkWellContainer(
       padding: EdgeInsets.all(16),
       radius: 12,
-      onTap: widget.checkInCount == 0 &&
-              widget.activeStatus &&
+      onTap: widget.activeStatus &&
               widget.verificationStatus != 'VERIFIED'
           ? () => context.navigateTo(CreateDailyActivityPage(
                 dayId: widget.id,
