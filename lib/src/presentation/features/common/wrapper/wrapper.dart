@@ -21,7 +21,6 @@ class _WrapperState extends State<Wrapper> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      print("fall");
       BlocProvider.of<AuthCubit>(context)
         ..reset()
         ..isSignIn();
@@ -41,11 +40,9 @@ class _WrapperState extends State<Wrapper> {
         }
       },
       builder: (context, state) {
-        if (state is SuccessDeleteAccount) {
-          return LoginPage();
-        }
-
-        if (state is CredentialNotExist) {
+        if (state is CredentialNotExist ||
+            state is Failed ||
+            state is SuccessDeleteAccount) {
           return LoginPage();
         }
 
@@ -59,6 +56,7 @@ class _WrapperState extends State<Wrapper> {
             case 'STUDENT':
               return MainMenu();
             default:
+              return LoginPage();
           }
         }
 
