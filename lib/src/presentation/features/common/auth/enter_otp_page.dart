@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:elogbook/src/presentation/blocs/reset_password_cubit/reset_password_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/widgets/otp_field.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
 import 'package:elogbook/src/presentation/widgets/auth/forgot_password_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -56,7 +56,7 @@ class _EnterOtpPageState extends State<EnterOtpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthState>(
+    return BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
       listener: (context, state) {
         if (state is ResetPasswordSuccess) {
           context.removeUntil(const LoginPage());
@@ -181,7 +181,7 @@ class _EnterOtpPageState extends State<EnterOtpPage> {
       final values =
           _formKey.currentState!.value.values.map((e) => e.toString()).toList();
       final otp = values.join('').trim();
-      BlocProvider.of<AuthCubit>(context).resetPassword(
+      BlocProvider.of<ResetPasswordCubit>(context).resetPassword(
         otp: otp,
         newPassword: widget.newPassword,
         token: widget.token,

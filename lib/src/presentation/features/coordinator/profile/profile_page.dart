@@ -4,8 +4,8 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:elogbook/core/app/app_settings.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/utils.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/coordinator/profile/personal_data_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/about_page.dart';
@@ -399,7 +399,7 @@ class _CoordinatorProfilePageState extends State<CoordinatorProfilePage> {
                           text: "Are you sure to sign out?",
                           onConfirmBtnTap: () async {
                             await BlocProvider.of<UserCubit>(context).reset();
-                            await BlocProvider.of<AuthCubit>(context).logout();
+                            await BlocProvider.of<LogoutCubit>(context).logout();
                           },
                           confirmBtnColor: primaryColor,
                         );

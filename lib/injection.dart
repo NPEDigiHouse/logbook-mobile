@@ -3,16 +3,20 @@ import 'package:elogbook/core/services/token_manager.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/src/presentation/blocs/activity_cubit/activity_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/assesment_cubit/assesment_cubit.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/competence_cubit/competence_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/delete_account_cubit/delete_account_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/history_cubit/history_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/login_cubit/login_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/onetime_internet_check/onetime_internet_check_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/realtime_internet_check/realtime_internet_check_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/reference/reference_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/register_cubit/register_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/reset_password_cubit/reset_password_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/self_reflection_cubit/self_reflection_cubit.dart';
@@ -22,6 +26,7 @@ import 'package:elogbook/src/presentation/blocs/special_report/special_report_cu
 import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/wrapper_cubit/wrapper_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/clinical_record/providers/clinical_record_data_notifier2.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/mini_cex_provider.dart';
 import 'package:elogbook/src/presentation/features/supervisor/assesment/providers/scientific_assignment_provider.dart';
@@ -159,7 +164,32 @@ void _injectDatasource() {
 void _injectStateManagement() {
   //Auth
   locator.registerFactory(
-    () => AuthCubit(
+    () => DeleteAccountCubit(
+      userDataSource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => LoginCubit(
+      authDataSource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => LogoutCubit(
+      authDataSource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => RegisterCubit(
+      authDataSource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => ResetPasswordCubit(
+      authDataSource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => WrapperCubit(
       authDataSource: locator(),
       userDataSource: locator(),
     ),

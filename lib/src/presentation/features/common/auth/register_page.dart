@@ -1,3 +1,4 @@
+import 'package:elogbook/src/presentation/blocs/register_cubit/register_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +8,6 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
 import 'package:elogbook/src/presentation/widgets/auth/auth_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/input_password.dart';
@@ -37,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthState>(
+    return BlocConsumer<RegisterCubit, RegisterState>(
       listener: (context, state) => onStateChange(state),
       builder: (context, state) {
         return Scaffold(
@@ -109,13 +109,13 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _submitButton(BuildContext context, AuthState state) {
+  Widget _submitButton(BuildContext context, RegisterState state) {
     return SizedBox(
       width: AppSize.getAppWidth(context),
       child: FilledButton(
         onPressed: onRegisterClick,
         child: Text(
-          state is Loading ? "Loading..." : "Sign Up",
+          state is RegisterLoading ? "Loading..." : "Sign Up",
         ),
       ),
     );
@@ -230,7 +230,7 @@ class _RegisterPageState extends State<RegisterPage> {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.saveAndValidate()) {
       final data = _formKey.currentState!.value;
-      final authCubit = BlocProvider.of<AuthCubit>(context);
+      final authCubit = BlocProvider.of<RegisterCubit>(context);
       authCubit.register(
         username: data['username'],
         studentId: data['studentId'],
@@ -241,15 +241,15 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void onStateChange(AuthState state) {
+  void onStateChange(RegisterState state) {
     if (state is RegisterSuccess) {
       CustomAlert.success(message: 'Register success', context: context);
-      state = Initial();
+      state = RegisterInitial();
       context.replace(const LoginPage());
     }
-    if (state is Failed) {
+    if (state is RegisterFailed) {
       CustomAlert.error(message: state.message, context: context);
-      state = Initial();
+      state = RegisterInitial();
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cool_alert/cool_alert.dart';
+import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 
 class MainAppBar extends StatelessWidget {
   final bool withLogout;
@@ -48,7 +48,7 @@ class MainAppBar extends StatelessWidget {
                   text: "Are you sure to sign out?",
                   onConfirmBtnTap: () async {
                     await BlocProvider.of<UserCubit>(context).reset();
-                    await BlocProvider.of<AuthCubit>(context).logout();
+                    await BlocProvider.of<LogoutCubit>(context).logout();
                   },
                   confirmBtnColor: primaryColor,
                 );

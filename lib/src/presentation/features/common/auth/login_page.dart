@@ -1,3 +1,5 @@
+import 'package:elogbook/src/presentation/blocs/login_cubit/login_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/wrapper_cubit/wrapper_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,6 @@ import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/forgot_password_page.dart';
 import 'package:elogbook/src/presentation/features/common/auth/register_page.dart';
 import 'package:elogbook/src/presentation/features/common/wrapper/wrapper.dart';
@@ -27,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthState>(
+    return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) => onStateChange(state),
       builder: (context, state) {
         return Scaffold(
@@ -96,12 +97,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  SizedBox _submitButtonSection(BuildContext context, AuthState state) {
+  SizedBox _submitButtonSection(BuildContext context, LoginState state) {
     return SizedBox(
       width: AppSize.getAppWidth(context),
       child: FilledButton(
-        onPressed: onLoginClick,
-        child: Text(state is Loading ? "Loading..." : "Login"),
+        onPressed: state is LoginLoading ? null : onLoginClick,
+        child: Text(state is LoginLoading ? "Loading..." : "Login"),
       ),
     );
   }
@@ -167,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.saveAndValidate()) {
       final data = _formKey.currentState!.value;
-      final authCubit = BlocProvider.of<AuthCubit>(context);
+      final authCubit = BlocProvider.of<LoginCubit>(context);
       authCubit.login(
         username: data['username'],
         password: data['password'],
@@ -175,17 +176,19 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void onStateChange(AuthState state) {
+  void onStateChange(LoginState state) {
     if (state is LoginSuccess) {
       Future.microtask(() {
-        BlocProvider.of<AuthCubit>(context).isSignIn();
+        BlocProvider.of<WrapperCubit>(context).isSignIn();
       });
       context.replace(const Wrapper());
     }
 
-    if (state is Failed) {
+    if (state is LoginFailed) {
       CustomAlert.error(message: state.message, context: context);
-      state = Initial();
+      Future.microtask(() {
+        BlocProvider.of<LoginCubit>(context).reset();
+      });
     }
   }
 }

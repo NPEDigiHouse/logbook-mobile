@@ -106,6 +106,8 @@ class UserDataSourceImpl implements UserDataSource {
       );
 
       await pref.removeCredential();
+      CredentialSaver.credential = null;
+
       return Right(true);
     } catch (e) {
       return Left(ClientFailure(e.toString()));
@@ -151,6 +153,10 @@ class UserDataSourceImpl implements UserDataSource {
           data: userProfilePostModel.toJson());
       return Right(true);
     } catch (e) {
+      print(e.toString());
+      if (e is DioException) {
+        print(e.message);
+      }
       return Left(ClientFailure(e.toString()));
     }
   }

@@ -1,3 +1,4 @@
+import 'package:elogbook/src/presentation/blocs/reset_password_cubit/reset_password_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -6,7 +7,6 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/text_style.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/reset_password_page.dart';
 import 'package:elogbook/src/presentation/widgets/auth/forgot_password_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
@@ -27,7 +27,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthState>(
+    return BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
       listener: (context, state) => onTokenGenerated(state),
       builder: (context, state) {
         return Scaffold(
@@ -111,13 +111,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   void onResetPasswordSubmit() {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.saveAndValidate()) {
-      BlocProvider.of<AuthCubit>(context).generateTokenResetPassword(
+      BlocProvider.of<ResetPasswordCubit>(context).generateTokenResetPassword(
         email: _formKey.currentState!.value['email'],
       );
     }
   }
 
-  void onTokenGenerated(AuthState state) {
+  void onTokenGenerated(ResetPasswordState state) {
     if (state is GenerateTokenResetPassword) {
       context.navigateTo(
         ResetPasswordPage(
@@ -125,7 +125,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           token: state.token,
         ),
       );
-      state = Initial();
+      state = ResetInitial();
     }
   }
 }

@@ -25,14 +25,15 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       try {
         emit(state.copyWith(isAddWeekSuccess: true));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(
+            requestState: RequestState.error,
+            errorMessage: "Week already created"));
       }
     } catch (e) {
-      print(e.toString());
       emit(
         state.copyWith(
-          requestState: RequestState.error,
-        ),
+            requestState: RequestState.error,
+            errorMessage: "Week already created"),
       );
     }
   }

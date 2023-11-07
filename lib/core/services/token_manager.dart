@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:elogbook/core/services/api_service.dart';
 import 'package:elogbook/core/utils/api_header.dart';
 import 'package:elogbook/core/utils/data_response.dart';
-import 'package:elogbook/core/utils/failure.dart';
 import 'package:elogbook/src/data/datasources/datasources.export.dart';
 import 'package:elogbook/src/data/models/user/user_token.dart';
 
@@ -58,11 +57,17 @@ class TokenInterceptor extends Interceptor {
       RequestOptions options, RequestInterceptorHandler handler) async {
     final excludedUrls = [
       "${ApiService.baseUrl}/users/login",
-      "${ApiService.baseUrl}/students",
-      "${ApiService.baseUrl}/students/reset-password",
       "${ApiService.baseUrl}/units",
     ];
-    if (!excludedUrls.contains(options.uri.toString())) {
+    bool firstCondition = !excludedUrls.contains(options.uri.toString());
+    bool secondCondition =
+        !("${ApiService.baseUrl}/students" == options.uri.toString() &&
+            options.method == "POST");
+    bool thirdCondition = !(options.uri
+        .toString()
+        .contains("${ApiService.baseUrl}/students/reset-password"));
+
+    if (firstCondition && secondCondition && thirdCondition) {
       final accessToken = tokenManager.getAccessToken();
       if (accessToken != null) {
         options.headers['authorization'] = 'Bearer $accessToken';
@@ -73,11 +78,16 @@ class TokenInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
+    final excludedUrls = [
+      "${ApiService.baseUrl}/users/login",
+      "${ApiService.baseUrl}/students",
+      "${ApiService.baseUrl}/students/reset-password",
+      "${ApiService.baseUrl}/units",
+    ];
+    if (err.response?.statusCode == 401 &&
+        !excludedUrls.contains(err.requestOptions.uri.toString())) {
       final newAccessToken = await tokenManager.refreshAccessToken();
       if (newAccessToken != null) {
-        print("new");
-        print(newAccessToken);
         err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
         handler.next(err);
       }

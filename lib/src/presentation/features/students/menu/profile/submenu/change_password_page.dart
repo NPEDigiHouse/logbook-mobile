@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               message: 'Success reset password', context: context);
 
           await BlocProvider.of<UserCubit>(context).reset();
-          await BlocProvider.of<AuthCubit>(context).logout();
+          await BlocProvider.of<LogoutCubit>(context).logout();
         }
       },
       child: Scaffold(

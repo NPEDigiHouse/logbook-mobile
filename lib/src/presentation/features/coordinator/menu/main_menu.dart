@@ -1,4 +1,5 @@
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/coordinator/history/history_page.dart';
 import 'package:elogbook/src/presentation/features/coordinator/home/home_page.dart';
@@ -8,7 +9,6 @@ import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
 
 class MainMenuCoordinator extends StatefulWidget {
@@ -48,7 +48,7 @@ class _MainMenuCoordinatorState extends State<MainMenuCoordinator> {
           CoordinatorProfilePage(),
         ];
 
-    return BlocConsumer<AuthCubit, AuthState>(
+    return BlocConsumer<LogoutCubit, LogoutState>(
       listener: (context, state) {
         if (state is LogoutSuccess) {
           context.replace(const LoginPage());

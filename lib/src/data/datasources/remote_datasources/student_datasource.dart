@@ -110,6 +110,7 @@ class StudentDataSourceImpl implements StudentDataSource {
   @override
   Future<void> updateStudentProfile(StudentProfile model) async {
     try {
+      print(model.toJson());
       await dio.put(
         ApiService.baseUrl + '/students',
         options: await apiHeader.userOptions(),
@@ -132,6 +133,9 @@ class StudentDataSourceImpl implements StudentDataSource {
         },
       );
     } catch (e) {
+      if (e is DioException) {
+        print(e.message);
+      }
       throw ClientFailure(e.toString());
     }
   }
@@ -367,7 +371,9 @@ class StudentDataSourceImpl implements StudentDataSource {
           options: await apiHeader.userOptions(),
           data: studentDataPostModel.toJson());
     } catch (e) {
-      print(e.toString());
+      if (e is DioException) {
+        print(e.message);
+      }
       throw ClientFailure(e.toString());
     }
   }

@@ -5,8 +5,8 @@ import 'package:elogbook/core/app/app_settings.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
 import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/coordinator/profile/personal_data_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/about_page.dart';
@@ -23,7 +23,6 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/profile_item_menu_card.dart';
 import 'package:elogbook/src/presentation/widgets/main_app_bar.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class ProfilePage extends StatefulWidget {
   final UserCredential credential;
@@ -381,7 +380,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       text: "Are you sure to sign out?",
                       onConfirmBtnTap: () async {
                         await BlocProvider.of<UserCubit>(context).reset();
-                        await BlocProvider.of<AuthCubit>(context).logout();
+                        await BlocProvider.of<LogoutCubit>(context).logout();
                       },
                       confirmBtnColor: primaryColor,
                     );

@@ -1,10 +1,11 @@
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/delete_account_cubit/delete_account_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/history/history_page.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/profile_page.dart';
@@ -50,47 +51,54 @@ class _MainMenuState extends State<MainMenu> {
             credential: credential,
           ),
         ];
-    return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) {
-        if (state is LogoutSuccess || state is SuccessDeleteAccount) {
-          context.replace(const LoginPage());
-        }
-      },
-      builder: (context, state) {
-        return ValueListenableBuilder(
-          valueListenable: _selectedIndex,
-          builder: (context, value, _) {
-            return BlocBuilder<UserCubit, UserState>(builder: (context, s) {
-              if (s.userCredential != null)
+    return BlocConsumer<DeleteAccountCubit, DeleteAccountState>(
+        listener: (context, deleteStatte) {
+      if (deleteStatte is DeleteSuccess) {
+        context.replace(const LoginPage());
+      }
+    }, builder: (context, logoutState) {
+      return BlocConsumer<LogoutCubit, LogoutState>(
+        listener: (context, logoutState) {
+          if (logoutState is LogoutSuccess) {
+            context.replace(const LoginPage());
+          }
+        },
+        builder: (context, state) {
+          return ValueListenableBuilder(
+            valueListenable: _selectedIndex,
+            builder: (context, value, _) {
+              return BlocBuilder<UserCubit, UserState>(builder: (context, s) {
+                if (s.userCredential != null)
+                  return Scaffold(
+                    body: IndexedStack(
+                      index: value,
+                      children: _listPage(s.userCredential!),
+                    ),
+                    bottomNavigationBar: CustomNavigationBar(
+                      listIconPath: const [
+                        "icon_unit.svg",
+                        // "icon_globe.svg",
+                        "icon_history.svg",
+                        "icon_user.svg"
+                      ],
+                      listTitle: const [
+                        "Department\nActivity",
+                        // "Global\nActivity",
+                        "History",
+                        "Profile"
+                      ],
+                      selectedIndex: _selectedIndex,
+                      value: value,
+                    ),
+                  );
                 return Scaffold(
-                  body: IndexedStack(
-                    index: value,
-                    children: _listPage(s.userCredential!),
-                  ),
-                  bottomNavigationBar: CustomNavigationBar(
-                    listIconPath: const [
-                      "icon_unit.svg",
-                      // "icon_globe.svg",
-                      "icon_history.svg",
-                      "icon_user.svg"
-                    ],
-                    listTitle: const [
-                      "Department\nActivity",
-                      // "Global\nActivity",
-                      "History",
-                      "Profile"
-                    ],
-                    selectedIndex: _selectedIndex,
-                    value: value,
-                  ),
+                  body: CustomLoading(),
                 );
-              return Scaffold(
-                body: CustomLoading(),
-              );
-            });
-          },
-        );
-      },
-    );
+              });
+            },
+          );
+        },
+      );
+    });
   }
 }

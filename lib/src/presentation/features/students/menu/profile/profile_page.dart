@@ -5,8 +5,9 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:elogbook/core/app/app_settings.dart';
 import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/data/models/user/user_credential.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/delete_account_cubit/delete_account_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/unit_cubit/unit_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/profile/submenu/about_page.dart';
@@ -53,9 +54,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
+    return BlocListener<DeleteAccountCubit, DeleteAccountState>(
       listener: (context, state) {
-        if (state is SuccessDeleteAccount) {
+        if (state is DeleteSuccess) {
           CustomAlert.success(
               message: 'Success Delete Account', context: context);
         }
@@ -304,7 +305,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         text: "Are you sure to sign out?",
                         onConfirmBtnTap: () async {
                           await BlocProvider.of<UserCubit>(context).reset();
-                          await BlocProvider.of<AuthCubit>(context).logout();
+                          await BlocProvider.of<LogoutCubit>(context).logout();
                         },
                         confirmBtnColor: primaryColor,
                       );
@@ -477,7 +478,8 @@ class _AddTopicDialogState extends State<DeleteAccountDialog> {
                   onPressed: () {
                     if (textController.text == keyConfirm) {
                       _focusScopeNode.unfocus();
-                      BlocProvider.of<AuthCubit>(context)..deleteAccount();
+                      BlocProvider.of<DeleteAccountCubit>(context)
+                        ..deleteAccount();
                       context.back();
                     }
                   },

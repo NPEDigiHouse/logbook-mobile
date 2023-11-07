@@ -5,8 +5,10 @@ import 'package:elogbook/core/helpers/app_size.dart';
 import 'package:elogbook/core/helpers/asset_path.dart';
 import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
+import 'package:elogbook/src/presentation/blocs/wrapper_cubit/wrapper_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/wrapper/wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SplashPage extends StatefulWidget {
@@ -17,6 +19,16 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      BlocProvider.of<WrapperCubit>(context)
+        ..reset()
+        ..isSignIn();
+    });
+  }
+
   @override
   void didChangeDependencies() {
     // Will change page after two second

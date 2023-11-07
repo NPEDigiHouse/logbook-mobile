@@ -1,4 +1,5 @@
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
 import 'package:elogbook/src/presentation/features/supervisor/history/history_page.dart';
@@ -10,7 +11,6 @@ import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:elogbook/core/context/navigation_extension.dart';
-import 'package:elogbook/src/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/auth/login_page.dart';
 
 class MainMenuSupervisor extends StatefulWidget {
@@ -48,21 +48,20 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
             InOutReportingPage(),
           ListResidentPage(),
           SupervisorHistoryPage(
-              isKabag:
-                  credential.badges!.indexWhere((e) => e.name == 'HEAD_DIV') !=
-                      -1,
-              isCeu:
-                  credential.badges!.indexWhere((e) => e.name == 'CEU') != -1,
-                  departmentName: credential.supervisor?.units??[],
-                  supervisorId: credential.supervisor?.supervisorId??'',
-                  ),
+            isKabag:
+                credential.badges!.indexWhere((e) => e.name == 'HEAD_DIV') !=
+                    -1,
+            isCeu: credential.badges!.indexWhere((e) => e.name == 'CEU') != -1,
+            departmentName: credential.supervisor?.units ?? [],
+            supervisorId: credential.supervisor?.supervisorId ?? '',
+          ),
           // SizedBox(),
           ProfilePage(
             credential: credential,
           ),
         ];
 
-    return BlocConsumer<AuthCubit, AuthState>(
+    return BlocConsumer<LogoutCubit, LogoutState>(
       listener: (context, state) {
         if (state is LogoutSuccess) {
           context.replace(const LoginPage());

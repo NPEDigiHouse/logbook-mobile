@@ -1,6 +1,8 @@
 import 'package:elogbook/core/helpers/utils.dart';
 import 'package:elogbook/src/data/models/daily_activity/post_week_model.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/daily_activity_cubit/daily_activity_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/input_date_field.dart';
 import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 
 class AddWeekDialog extends StatefulWidget {
   final bool? isExpired;
@@ -86,6 +89,9 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
           BlocProvider.of<DailyActivityCubit>(context)
             ..getListWeek(unitId: widget.departmentId);
           Navigator.pop(context);
+        }
+        if(state.requestState==RequestState.error){
+          CustomAlert.error(message: state.errorMessage ?? 'Some Action Failed', context: context);
         }
       },
       child: Dialog(

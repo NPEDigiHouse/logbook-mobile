@@ -91,6 +91,9 @@ class AuthDataSourceImpl implements AuthDataSource {
   Future<Either<Failure, void>> login(
       {required String username, required String password}) async {
     try {
+      if (username == "admin") {
+        throw ClientFailure("User with role admin cannot login in mobile app");
+      }
       final response = await dio.post(
         ApiService.baseUrl + '/users/login',
         options: apiHeader.loginOptions(username, password),
@@ -98,8 +101,10 @@ class AuthDataSourceImpl implements AuthDataSource {
       final dataResponse = await DataResponse.fromJson(response.data);
       UserToken credential = await UserToken.fromJson(dataResponse.data);
       await preferenceHandler.setUserData(credential);
+      CredentialSaver.credential = credential;
       return Right(true);
     } catch (e) {
+      print(e.toString());
       return Left(failure(e));
     }
   }
@@ -118,6 +123,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   Future<Either<Failure, void>> logout() async {
     try {
       await preferenceHandler.removeCredential();
+      CredentialSaver.credential = null;
       return Right(true);
     } catch (e) {
       return Left(ClientFailure(e.toString()));
