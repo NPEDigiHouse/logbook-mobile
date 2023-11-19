@@ -16,6 +16,8 @@ class CompetenceState {
   final bool isCaseSuccessVerify;
   final bool isAllCasesSuccessVerify;
   final bool isAllSkillsSuccessVerify;
+  final bool isDeleteCaseSuccess;
+  final bool isDeleteSkillSuccess;
 
   CompetenceState({
     this.isSkillSuccessAdded = false,
@@ -28,6 +30,8 @@ class CompetenceState {
     this.listCasesModel,
     this.listSkillsModel,
     this.caseListStudent,
+    this.isDeleteCaseSuccess = false,
+    this.isDeleteSkillSuccess = false,
     this.skillListStudent,
     this.isSkillSuccessVerify = false,
     this.isCaseSuccessVerify = false,
@@ -51,6 +55,8 @@ class CompetenceState {
     bool isCaseSuccessVerify = false,
     bool isAllCasesSuccessVerify = false,
     bool isAllSkillsSuccessVerify = false,
+    bool isDeleteCaseSuccess = false,
+    bool isDeleteSkillSuccess = false,
   }) {
     return CompetenceState(
       isSkillSuccessAdded: isSkillSuccessAdded,
@@ -68,6 +74,8 @@ class CompetenceState {
       isAllSkillsSuccessVerify: isAllSkillsSuccessVerify,
       caseState: addCaseState,
       skillState: addSkillState,
+      isDeleteCaseSuccess: isDeleteCaseSuccess,
+      isDeleteSkillSuccess: isDeleteSkillSuccess,
     );
   }
 }

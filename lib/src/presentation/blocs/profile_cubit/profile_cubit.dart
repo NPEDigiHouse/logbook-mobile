@@ -78,20 +78,21 @@ class UserCubit extends Cubit<UserState> {
   Future<void> getUserCredential() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        initState: RequestState.loading,
       ));
 
       final result = await dataSource.getUserCredential();
       result.fold(
-        (l) => emit(state.copyWith(requestState: RequestState.error)),
+        (l) => emit(state.copyWith(initState: RequestState.error)),
         (r) => emit(state.copyWith(
           userCredential: r,
+          initState: RequestState.data
         )),
       );
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          initState: RequestState.error,
         ),
       );
     }

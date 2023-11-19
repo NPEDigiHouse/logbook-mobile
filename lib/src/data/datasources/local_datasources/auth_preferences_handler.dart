@@ -43,21 +43,26 @@ class AuthPreferenceHandler {
 
   /// For Get Use Credential Data
   Future<UserToken?> getCredential() async {
-    final pr = await preferences;
-    if (pr!.containsKey(accessTokenKey)) {
-      String accessToken = pr.getString(accessTokenKey) ?? '';
-      String refreshToken = pr.getString(refreshTokenKey) ?? '';
-      if (CredentialSaver.credential == null) {
-        CredentialSaver.credential = UserToken(
+    try {
+      final pr = await preferences;
+      if (pr!.containsKey(accessTokenKey)) {
+        String accessToken = pr.getString(accessTokenKey) ?? '';
+        String refreshToken = pr.getString(refreshTokenKey) ?? '';
+        if (CredentialSaver.credential == null) {
+          CredentialSaver.credential = UserToken(
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+          );
+        }
+        return UserToken(
           accessToken: accessToken,
           refreshToken: refreshToken,
         );
+      } else {
+        return null;
       }
-      return UserToken(
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      );
-    } else {
+    } catch (e) {
+      print('Error: $e'); // Handle or log the error as needed
       return null;
     }
   }

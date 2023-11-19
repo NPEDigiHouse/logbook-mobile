@@ -45,6 +45,7 @@ abstract class ClinicalRecordsDatasource {
       required VerifyClinicalRecordModel model});
   Future<void> makeFeedback({required String feedback, required crId});
   Future<String> downloadFile({required String crId, required String filename});
+  Future<bool> deleteClinicalRecord(String id);
 }
 
 class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
@@ -328,6 +329,20 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       }
       return savePath ?? '';
     } catch (e) {
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> deleteClinicalRecord(String id) async {
+    try {
+      await dio.delete(
+        ApiService.baseUrl + '/clinical-records/$id',
+        options: await apiHeader.userOptions(),
+      );
+      return true;
+    } catch (e) {
+      print(e.toString());
       throw ClientFailure(e.toString());
     }
   }

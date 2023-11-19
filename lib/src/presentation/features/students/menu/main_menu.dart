@@ -1,7 +1,9 @@
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/delete_account_cubit/delete_account_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +28,6 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(
         () => BlocProvider.of<UserCubit>(context)..getUserCredential());
@@ -67,8 +68,15 @@ class _MainMenuState extends State<MainMenu> {
           return ValueListenableBuilder(
             valueListenable: _selectedIndex,
             builder: (context, value, _) {
-              return BlocBuilder<UserCubit, UserState>(builder: (context, s) {
-                if (s.userCredential != null)
+              return BlocConsumer<UserCubit, UserState>(
+                  listener: (context, ss) {
+                if (ss.initState == RequestState.error) {
+                  CustomAlert.error(
+                      message: "Failed Load Credential", context: context);
+                }
+              }, builder: (context, s) {
+                if (s.initState == RequestState.data &&
+                    s.userCredential != null) {
                   return Scaffold(
                     body: IndexedStack(
                       index: value,
@@ -77,13 +85,11 @@ class _MainMenuState extends State<MainMenu> {
                     bottomNavigationBar: CustomNavigationBar(
                       listIconPath: const [
                         "icon_unit.svg",
-                        // "icon_globe.svg",
                         "icon_history.svg",
                         "icon_user.svg"
                       ],
                       listTitle: const [
                         "Department\nActivity",
-                        // "Global\nActivity",
                         "History",
                         "Profile"
                       ],
@@ -91,9 +97,13 @@ class _MainMenuState extends State<MainMenu> {
                       value: value,
                     ),
                   );
-                return Scaffold(
-                  body: CustomLoading(),
-                );
+                } else if (s.initState == RequestState.loading) {
+                  return Scaffold(
+                    body: CustomLoading(),
+                  );
+                } else {
+                  return Scaffold(body: SizedBox.shrink());
+                }
               });
             },
           );

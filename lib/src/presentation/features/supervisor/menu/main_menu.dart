@@ -1,4 +1,5 @@
 import 'package:elogbook/src/data/models/user/user_credential.dart';
+import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/logout_cubit/logout_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/profile_cubit/profile_cubit.dart';
 import 'package:elogbook/src/presentation/features/students/menu/widgets/custom_navigation_bar.dart';
@@ -7,6 +8,7 @@ import 'package:elogbook/src/presentation/features/supervisor/in_out_reporting/i
 import 'package:elogbook/src/presentation/features/supervisor/menu/unit/supervisor_menu_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/profile/profile_page.dart';
 import 'package:elogbook/src/presentation/features/supervisor/list_resident/list_resident_page.dart';
+import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,7 +73,13 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
         return ValueListenableBuilder(
           valueListenable: _selectedIndex,
           builder: (context, value, _) {
-            return BlocBuilder<UserCubit, UserState>(
+            return BlocConsumer<UserCubit, UserState>(
+              listener: (context, ss) {
+                if (ss.initState == RequestState.error) {
+                  CustomAlert.error(
+                      message: "Failed Load Credential", context: context);
+                }
+              },
               builder: (context, s) {
                 if (s.userCredential != null)
                   return Scaffold(

@@ -59,6 +59,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode 26
         versionName flutterVersionName
+        multiDexEnabled = true
     }
 
     signingConfigs {

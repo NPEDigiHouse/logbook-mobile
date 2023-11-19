@@ -37,6 +37,7 @@ abstract class ScientificSessionDataSource {
   Future<void> verifyScientificSession(
       {required String id, required VerifyScientificSessionModel model});
   Future<String> downloadFile({required String crId, required String filename});
+  Future<bool> deleteScientificSession(String id);
 }
 
 class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
@@ -237,6 +238,19 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
         options: await apiHeader.userOptions(),
         data: model.toJson(),
       );
+    } catch (e) {
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> deleteScientificSession(String id) async {
+    try {
+      await dio.delete(
+        ApiService.baseUrl + '/scientific-sessions/$id',
+        options: await apiHeader.userOptions(),
+      );
+      return true;
     } catch (e) {
       throw ClientFailure(e.toString());
     }

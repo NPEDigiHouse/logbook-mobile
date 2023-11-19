@@ -7,12 +7,14 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/features/common/no_internet/check_internet_onetime.dart';
 import 'package:elogbook/src/presentation/widgets/custom_alert.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -56,9 +58,46 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final cr = context.read<ClinicalRecordSupervisorCubit>().state;
     return Scaffold(
       appBar: AppBar(
         title: Text("Entry Detail"),
+        actions: [
+          if (cr.detailClinicalRecordModel != null &&
+              cr.detailClinicalRecordModel?.verificationStatus != "VERIFIED")
+            PopupMenuButton<String>(
+              icon: Icon(
+                Icons.more_vert_rounded,
+              ),
+              onSelected: (value) {
+                if (value == 'Delete') {
+                  showDialog(
+                    context: context,
+                    barrierLabel: '',
+                    barrierDismissible: false,
+                    builder: (_) => VerifyDialog(
+                      onTap: () {
+                        BlocProvider.of<ClinicalRecordCubit>(context)
+                          ..deleteClinicalRecord(id: widget.id);
+                        BlocProvider.of<StudentCubit>(context)
+                          ..getStudentClinicalRecordOfActiveDepartment();
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'Delete',
+                    child: Text('Delete'),
+                  ),
+                ];
+              },
+            ),
+        ],
       ).variant(),
       body: BlocListener<ClinicalRecordCubit, ClinicalRecordState>(
         listener: (context, state) {

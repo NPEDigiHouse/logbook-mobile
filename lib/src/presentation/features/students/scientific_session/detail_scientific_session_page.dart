@@ -7,10 +7,12 @@ import 'package:elogbook/core/styles/color_palette.dart';
 import 'package:elogbook/core/styles/text_style.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:elogbook/src/presentation/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
+import 'package:elogbook/src/presentation/blocs/student_cubit/student_cubit.dart';
 import 'package:elogbook/src/presentation/widgets/custom_loading.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/item_divider.dart';
 import 'package:elogbook/src/presentation/widgets/dividers/section_divider.dart';
 import 'package:elogbook/src/presentation/widgets/headers/form_section_header.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -47,7 +49,6 @@ class _DetailScientificSessionPageState
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<ScientificSessionSupervisorCubit>(context)
       ..getScientificSessionDetail(id: widget.id);
@@ -55,9 +56,46 @@ class _DetailScientificSessionPageState
 
   @override
   Widget build(BuildContext context) {
+    final cr = context.read<ScientificSessionSupervisorCubit>().state;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Entry Detail"),
+        actions: [
+          if (cr.detail != null && cr.detail?.verificationStatus != "VERIFIED")
+            PopupMenuButton<String>(
+              icon: Icon(
+                Icons.more_vert_rounded,
+              ),
+              onSelected: (value) {
+                if (value == 'Delete') {
+                  showDialog(
+                    context: context,
+                    barrierLabel: '',
+                    barrierDismissible: false,
+                    builder: (_) => VerifyDialog(
+                      onTap: () {
+                        BlocProvider.of<ScientificSessionCubit>(context)
+                          ..deleteScientificSessionById(id: widget.id);
+                        BlocProvider.of<StudentCubit>(context)
+                          ..getStudentScientificSessionOfActiveDepartment();
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'Delete',
+                    child: Text('Delete'),
+                  ),
+                ];
+              },
+            ),
+        ],
       ).variant(),
       body: SafeArea(
         child: BlocBuilder<ScientificSessionSupervisorCubit,

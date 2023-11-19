@@ -27,6 +27,8 @@ abstract class CompetenceDataSource {
   Future<void> addCase({required CasePostModel casePostModel});
   Future<ListCasesModel> getListCase();
   Future<ListSkillsModel> getListSkill();
+  Future<bool> deleteCase(String id);
+  Future<bool> deleteSkill(String id);
 }
 
 class CompetenceDataSourceImpl implements CompetenceDataSource {
@@ -254,6 +256,32 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
           "rating": rating,
         },
       );
+    } catch (e) {
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> deleteCase(String id) async {
+    try {
+      await dio.delete(
+        ApiService.baseUrl + '/competencies/cases/$id',
+        options: await apiHeader.userOptions(),
+      );
+      return true;
+    } catch (e) {
+      throw ClientFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> deleteSkill(String id) async {
+    try {
+      await dio.delete(
+        ApiService.baseUrl + '/competencies/skills/$id',
+        options: await apiHeader.userOptions(),
+      );
+      return true;
     } catch (e) {
       throw ClientFailure(e.toString());
     }

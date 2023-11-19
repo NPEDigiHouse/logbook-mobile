@@ -12,6 +12,7 @@ import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -155,6 +156,17 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) =>
                                             TestGradeScoreCard(
+                                          onDelete: () {
+                                            isMounted = false;
+                                            BlocProvider.of<CompetenceCubit>(
+                                                    context)
+                                                .deleteCaseById(
+                                                    id: s[index].caseId!);
+                                            BlocProvider.of<CompetenceCubit>(
+                                                    context)
+                                                .getListCases();
+                                            Navigator.pop(context);
+                                          },
                                           caseName: s[index].caseName!,
                                           caseType: s[index].caseType!,
                                           supervisorName:
@@ -302,10 +314,12 @@ class TestGradeScoreCard extends StatelessWidget {
     required this.caseName,
     required this.caseType,
     required this.isVerified,
+    required this.onDelete,
   });
 
   final String caseName;
   final String caseType;
+  final VoidCallback onDelete;
   final String supervisorName;
   final bool isVerified;
 
@@ -396,6 +410,29 @@ class TestGradeScoreCard extends StatelessWidget {
                   ],
                 ),
               ),
+              if (!isVerified)
+                InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierLabel: '',
+                      barrierDismissible: false,
+                      builder: (_) => VerifyDialog(
+                        onTap: onDelete,
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Center(
+                      child: Icon(
+                        Icons.delete_rounded,
+                        color: errorColor,
+                      ),
+                    ),
+                  ),
+                )
             ],
           ),
         ),

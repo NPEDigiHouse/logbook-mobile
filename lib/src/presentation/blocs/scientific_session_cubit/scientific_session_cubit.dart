@@ -69,6 +69,23 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
     }
   }
 
+  Future<void> deleteScientificSessionById({required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+      await ds.deleteScientificSession(id);
+      emit(state.copyWith(
+          requestState: RequestState.data, isDeleteScientificSession: true));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> downloadAttachment(
       {required String id, required String filename}) async {
     try {

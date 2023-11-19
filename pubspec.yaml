@@ -58,6 +58,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   json_serializable: ^6.7.0
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true

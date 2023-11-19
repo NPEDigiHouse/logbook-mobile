@@ -128,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
 
   InputPassword _passwordFieldSection() {
     return InputPassword(
+      key: Key('password_field'),
       name: 'password',
       label: 'Passsword',
       validator: FormBuilderValidators.compose([
@@ -140,6 +141,7 @@ class _LoginPageState extends State<LoginPage> {
 
   FormBuilderTextField _usernameFieldSection() {
     return FormBuilderTextField(
+      key: Key('username_field'),
       name: 'username',
       decoration: const InputDecoration(
         label: Text('Username or ID'),

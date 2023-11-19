@@ -55,6 +55,23 @@ class ClinicalRecordCubit extends Cubit<ClinicalRecordState> {
     }
   }
 
+  Future<void> deleteClinicalRecord({required String id}) async {
+    try {
+      emit(state.copyWith(requestState: RequestState.loading));
+
+      await clinicalRecordsDatasource.deleteClinicalRecord(id);
+      emit(state.copyWith(
+          requestState: RequestState.data, isDeleteClinicalRecord: true));
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getExaminationTypes({required String unitId}) async {
     try {
       emit(state.copyWith(requestState: RequestState.error));

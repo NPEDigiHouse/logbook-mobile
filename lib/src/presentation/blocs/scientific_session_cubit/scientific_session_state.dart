@@ -7,6 +7,7 @@ class ScientifcSessionState {
   final RequestState attachState;
   final bool postSuccess;
   final bool downloadAttachmentSuccess;
+  final bool isDeleteScientificSession;
   final String? attachment;
 
   ScientifcSessionState({
@@ -15,6 +16,7 @@ class ScientifcSessionState {
     this.postSuccess = false,
     this.attachment,
     this.downloadAttachmentSuccess = false,
+    this.isDeleteScientificSession = false,
     this.requestState = RequestState.init,
     this.attachState = RequestState.init,
   });
@@ -26,6 +28,7 @@ class ScientifcSessionState {
     RequestState? attachState,
     bool postSuccess = false,
     bool downloadAttachmentSuccess = false,
+    bool isDeleteScientificSession = false,
     String? attachment,
   }) {
     return ScientifcSessionState(
@@ -33,6 +36,7 @@ class ScientifcSessionState {
         scientificRoles: scientificRoles ?? this.scientificRoles,
         downloadAttachmentSuccess: downloadAttachmentSuccess,
         postSuccess: postSuccess,
+        isDeleteScientificSession: isDeleteScientificSession,
         requestState: requestState ?? RequestState.init,
         attachState: attachState ?? RequestState.init,
         attachment: attachment);

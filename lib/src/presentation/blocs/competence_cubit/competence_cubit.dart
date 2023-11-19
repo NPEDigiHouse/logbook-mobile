@@ -7,6 +7,7 @@ import 'package:elogbook/src/data/models/competences/list_student_cases_model.da
 import 'package:elogbook/src/data/models/competences/list_student_skills_model.dart';
 import 'package:elogbook/src/data/models/competences/skill_post_model.dart';
 import 'package:elogbook/src/data/models/competences/student_competence_model.dart';
+import 'package:elogbook/src/data/models/students/student_statistic.dart';
 import 'package:elogbook/src/presentation/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
 part 'competence_state.dart';
@@ -247,6 +248,52 @@ class CompetenceCubit extends Cubit<CompetenceState> {
         emit(state.copyWith(
           listCasesModel: result,
           requestState: RequestState.data,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> deleteSkillById({required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+      await competenceDataSource.deleteSkill(id);
+      try {
+        emit(state.copyWith(
+          isDeleteSkillSuccess: true,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> deleteCaseById({required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+      await competenceDataSource.deleteCase(id);
+      try {
+        emit(state.copyWith(
+          isDeleteSkillSuccess: true,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));

@@ -12,6 +12,7 @@ import 'package:elogbook/src/presentation/widgets/empty_data.dart';
 import 'package:elogbook/src/presentation/widgets/headers/unit_header.dart';
 import 'package:elogbook/src/presentation/widgets/spacing_column.dart';
 import 'package:elogbook/src/presentation/widgets/inputs/search_field.dart';
+import 'package:elogbook/src/presentation/widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,7 +53,6 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
   void dispose() {
     _query.dispose();
     _selectedMenu.dispose();
-
     super.dispose();
   }
 
@@ -152,6 +152,18 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) =>
                                             TestGradeScoreCard(
+                                          onDelete: () {
+                                            isMounted = false;
+                                            BlocProvider.of<CompetenceCubit>(
+                                                context)
+                                              ..deleteSkillById(
+                                                  id: s[index].skillId!);
+                                            BlocProvider.of<CompetenceCubit>(
+                                                context)
+                                              ..getListSkills();
+
+                                            Navigator.pop(context);
+                                          },
                                           caseName: s[index].skillName!,
                                           caseType: s[index].skillType!,
                                           isVerified:
@@ -299,12 +311,14 @@ class TestGradeScoreCard extends StatelessWidget {
     required this.caseType,
     required this.isVerified,
     required this.supervisorName,
+    required this.onDelete,
   });
 
   final String caseName;
   final String caseType;
   final String supervisorName;
   final bool isVerified;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -393,6 +407,29 @@ class TestGradeScoreCard extends StatelessWidget {
                   ],
                 ),
               ),
+              if(!isVerified)
+              InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierLabel: '',
+                    barrierDismissible: false,
+                    builder: (_) => VerifyDialog(
+                      onTap: onDelete,
+                    ),
+                  );
+                },
+                child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: Center(
+                    child: Icon(
+                      Icons.delete_rounded,
+                      color: errorColor,
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),
