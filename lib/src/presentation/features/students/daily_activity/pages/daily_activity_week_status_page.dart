@@ -19,18 +19,21 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
   final Week week;
   final int weekName;
   final DateTime startDate;
+  final bool isSupervisor;
+  final String? studentId;
   // final int checkInCount;
   final bool status;
 
-  const DailyActivityWeekStatusPage(
-      {super.key,
-      required this.status,
-      required this.startDate,
-      required this.week,
-      required this.weekName,
-      // required this.checkInCount
-      
-      });
+  const DailyActivityWeekStatusPage({
+    super.key,
+    required this.status,
+    required this.isSupervisor,
+    required this.startDate,
+    required this.week,
+    this.studentId,
+    required this.weekName,
+    // required this.checkInCount
+  });
 
   @override
   State<DailyActivityWeekStatusPage> createState() =>
@@ -42,8 +45,14 @@ class _DailyActivityWeekStatusPageState
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<DailyActivityCubit>(context)
-      ..getDailyActivityDays(weekId: widget.week.id!);
+    if (widget.isSupervisor) {
+      BlocProvider.of<DailyActivityCubit>(context)
+        ..getActivitiesByWeekIdStudentId(
+            weekId: widget.week.id!, studentId: widget.studentId ?? '');
+    } else {
+      BlocProvider.of<DailyActivityCubit>(context)
+        ..getDailyActivityDays(weekId: widget.week.id!);
+    }
   }
 
   @override
@@ -61,8 +70,16 @@ class _DailyActivityWeekStatusPageState
                 child: BlocConsumer<DailyActivityCubit, DailyActivityState>(
                   listener: (context, state) {
                     if (state.isDailyActivityUpdated) {
-                      BlocProvider.of<DailyActivityCubit>(context)
-                        ..getDailyActivityDays(weekId: widget.week.id!);
+                      if (widget.isSupervisor) {
+                        BlocProvider.of<DailyActivityCubit>(context)
+                          ..getActivitiesByWeekIdStudentId(
+                              weekId: widget.week.id!,
+                              studentId: widget.studentId ?? '');
+                      } else {
+                        BlocProvider.of<DailyActivityCubit>(context)
+                          ..getDailyActivityDays(weekId: widget.week.id!);
+                      }
+
                       BlocProvider.of<DailyActivityCubit>(context)
                           .getStudentDailyActivities();
                     }
@@ -246,6 +263,7 @@ class _DailyActivityWeekStatusPageState
                                 start = start.add(Duration(days: 1));
                               }
                               return DailyActivityStatusCard(
+                                isSupervisor: widget.isSupervisor,
                                 activeStatus: widget.status,
                                 id: listDays[index].id!,
                                 date: listDays[index].dateTime,
@@ -303,6 +321,7 @@ class _DailyActivityWeekStatusPageState
 }
 
 class DailyActivityStatusCard extends StatefulWidget {
+  final bool isSupervisor;
   final DateTime? date;
   final String? dailyActivityId;
   final String id;
@@ -318,6 +337,7 @@ class DailyActivityStatusCard extends StatefulWidget {
   const DailyActivityStatusCard({
     super.key,
     this.supervisorName,
+    required this.isSupervisor,
     required this.date,
     required this.dailyActivityId,
     required this.id,
@@ -358,7 +378,8 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
       padding: EdgeInsets.all(16),
       radius: 12,
       onTap: widget.activeStatus &&
-              widget.verificationStatus != 'VERIFIED'
+              widget.verificationStatus != 'VERIFIED' &&
+              !widget.isSupervisor
           ? () => context.navigateTo(CreateDailyActivityPage(
                 dayId: widget.id,
                 id: widget.dailyActivityId!,

@@ -85,8 +85,11 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
                                         element.weekName ==
                                         state.studentDailyActivity!
                                             .weeks![index].weekName);
-                                print(i);
+                                print(state.studentDailyActivity!.weeks![index]
+                                    .toJson());
                                 return DailyActivityHomeCard(
+                                  studentId: widget.student.id,
+                                  isSupervisor: true,
                                   startDate:
                                       DateTime.fromMillisecondsSinceEpoch(state
                                               .studentDailyActivity!

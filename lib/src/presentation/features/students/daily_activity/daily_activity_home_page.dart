@@ -83,7 +83,10 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                         final endDate = DateTime.fromMillisecondsSinceEpoch(
                             state.studentDailyActivity!.weeks![index].endDate! *
                                 1000);
+                        print(
+                            state.studentDailyActivity!.weeks![index].toJson());
                         return DailyActivityHomeCard(
+                          isSupervisor: false,
                           startDate: DateTime.fromMillisecondsSinceEpoch(state
                                   .studentDailyActivity!
                                   .weeks![index]
@@ -114,19 +117,21 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
 }
 
 class DailyActivityHomeCard extends StatelessWidget {
-  // final int checkInCount;
   final Week week;
   final DateTime startDate;
   final DateTime endDate;
   final DailyActivity? dailyActivity;
   final bool status;
+  final bool isSupervisor;
+  final String? studentId;
   const DailyActivityHomeCard(
       {super.key,
+      this.studentId,
       required this.status,
+      required this.isSupervisor,
       required this.endDate,
       required this.startDate,
       required this.week,
-      // required this.checkInCount,
       this.dailyActivity});
 
   @override
@@ -143,8 +148,10 @@ class DailyActivityHomeCard extends StatelessWidget {
             context.navigateTo(
               DailyActivityWeekStatusPage(
                 week: week,
+                isSupervisor: isSupervisor,
                 weekName: week.weekName!,
                 // checkInCount: checkInCount,
+                studentId: studentId,
                 startDate: startDate,
                 status: status ||
                     (!endDate.isBefore(DateTime(

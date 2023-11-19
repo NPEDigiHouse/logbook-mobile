@@ -156,6 +156,31 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
+  Future<void> getActivitiesByWeekIdStudentId(
+      {required String weekId, required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getActivitiesByStudentIdAndWeekId(
+          weekId: weekId, studentId: studentId);
+
+      try {
+        emit(state.copyWith(activityPerDays: result));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getDailyActivityStudentBySupervisor({String? unitId}) async {
     try {
       emit(state.copyWith(

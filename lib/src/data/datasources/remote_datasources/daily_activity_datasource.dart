@@ -18,6 +18,8 @@ abstract class DailyActivityDataSource {
   Future<StudentDailyActivityResponse> getStudentDailyActivities();
   Future<StudentDailyActivityPerDays> getStudentDailyPerDaysActivities(
       {required String weekId});
+  Future<StudentDailyActivityPerDays> getActivitiesByStudentIdAndWeekId(
+      {required String weekId, required String studentId});
   Future<void> addWeekByCoordinator({required PostWeek postWeek});
   Future<List<ListWeekItem>> getWeekByCoordinator({required String unitId});
   Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor(
@@ -261,6 +263,24 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       return Right(true);
     } catch (e) {
       return Left(failure(e));
+    }
+  }
+
+  @override
+  Future<StudentDailyActivityPerDays> getActivitiesByStudentIdAndWeekId(
+      {required String weekId, required String studentId}) async {
+    print("ha?");
+    try {
+      final response = await dio.get(
+        ApiService.baseUrl +
+            '/daily-activities/students/$studentId/weeks/$weekId',
+        options: await apiHeader.userOptions(),
+      );
+      final dataResponse = await DataResponse<dynamic>.fromJson(response.data);
+      final result = StudentDailyActivityPerDays.fromJson(dataResponse.data);
+      return result;
+    } catch (e) {
+      throw ClientFailure(e.toString());
     }
   }
 }
