@@ -1,4 +1,4 @@
-import 'package:common/no_internet/check_internet_onetime.dart';
+import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
@@ -137,7 +137,8 @@ class _StudentSelfReflectionHomePageState
                                                   .listSelfReflections![index],
                                             ),
                                             separatorBuilder:
-                                                (context, index) => const SizedBox(
+                                                (context, index) =>
+                                                    const SizedBox(
                                               child: ItemDivider(),
                                             ),
                                             itemCount: data.length,

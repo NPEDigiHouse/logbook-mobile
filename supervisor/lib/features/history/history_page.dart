@@ -1,4 +1,4 @@
-
+import 'package:common/features/history/history_data.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
@@ -10,23 +10,29 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grouped_list/sliver_grouped_list.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/history_cubit/history_cubit.dart';
-import 'package:main/blocs/unit_cubit/unit_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/inputs/search_field.dart';
-import 'package:common/features/history/history_data.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class HistoryPage extends StatefulWidget {
-  const HistoryPage({
+class SupervisorHistoryPage extends StatefulWidget {
+  final bool isKabag;
+  final bool isCeu;
+  final String supervisorId;
+  final List<String> departmentName;
+  const SupervisorHistoryPage({
     super.key,
+    required this.departmentName,
+    required this.supervisorId,
+    required this.isKabag,
+    required this.isCeu,
   });
 
   @override
-  State<HistoryPage> createState() => _HistoryPageState();
+  State<SupervisorHistoryPage> createState() => _SupervisorHistoryPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
+class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
   ValueNotifier<List<Activity>> listData = ValueNotifier([]);
   bool isMounted = false;
   late final List<String> _menuList;
@@ -50,13 +56,11 @@ class _HistoryPageState extends State<HistoryPage> {
       'Scientific Assesment',
       'Problem Consultation',
       'Daily Activity',
-      'Check-in',
-      'Check-Out',
+      if (widget.isKabag) 'Check-in',
+      if (widget.isKabag) 'Check-Out',
     ];
 
     Future.microtask(() {
-      BlocProvider.of<DepartmentCubit>(context, listen: false)
-        .getActiveDepartment();
       BlocProvider.of<HistoryCubit>(context).getHistories();
     });
     _query = ValueNotifier('');
@@ -77,7 +81,6 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final activeDepartment = context.watch<DepartmentCubit>().state;
     return NestedScrollView(
       floatHeaderSlivers: true,
       headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -102,9 +105,11 @@ class _HistoryPageState extends State<HistoryPage> {
         ];
       },
       body: RefreshIndicator(
-        onRefresh: () => Future.wait([
-          BlocProvider.of<HistoryCubit>(context).getHistories(),
-        ]),
+        onRefresh: () {
+          isMounted = false;
+          return Future.wait(
+              [BlocProvider.of<HistoryCubit>(context).getHistories()]);
+        },
         child: ValueListenableBuilder(
             valueListenable: listData,
             builder: (context, s, _) {
@@ -116,10 +121,14 @@ class _HistoryPageState extends State<HistoryPage> {
                       Future.microtask(() {
                         listData.value = [
                           ...HistoryHelper.convertHistoryToActivity(
-                              isStudent: true,
-                              state.histories!,
-                              RoleHistory.student,
-                              context)
+                            state.histories!,
+                            isCeu: widget.isCeu,
+                            isHeadDiv: widget.isKabag,
+                            unitIds: widget.departmentName,
+                            supervisorId: widget.supervisorId,
+                            RoleHistory.supervisor,
+                            context,
+                          )
                         ];
                       });
                       isMounted = true;
@@ -128,8 +137,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 },
                 builder: (context, state) {
                   if (state.histories != null &&
-                      state.requestState == RequestState.data &&
-                      activeDepartment is GetActiveDepartmentSuccess) {
+                      state.requestState == RequestState.data) {
                     if (s.isNotEmpty) {
                       return CustomScrollView(
                         slivers: <Widget>[
@@ -198,6 +206,33 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   ),
                                                 ],
                                               ),
+                                              if (widget.isKabag) ...[
+                                                const SizedBox(height: 12),
+                                                RichText(
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  text: TextSpan(
+                                                    style: textTheme.bodySmall
+                                                        ?.copyWith(
+                                                      color: secondaryTextColor,
+                                                    ),
+                                                    children: <TextSpan>[
+                                                      const TextSpan(
+                                                        text: 'Supervisor:\t',
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                          text: activity
+                                                                  .supervisorId ??
+                                                              '-'),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                               const SizedBox(height: 12),
                                               RichText(
                                                 maxLines: 1,
@@ -209,7 +244,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   ),
                                                   children: <TextSpan>[
                                                     const TextSpan(
-                                                      text: 'Supervisor:\t',
+                                                      text: 'Student Name:\t',
                                                       style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w700,
@@ -217,11 +252,37 @@ class _HistoryPageState extends State<HistoryPage> {
                                                     ),
                                                     TextSpan(
                                                         text: activity
-                                                                .supervisorId ??
-                                                            '-'),
+                                                            .studentName),
                                                   ],
                                                 ),
                                               ),
+                                              ...[
+                                                const SizedBox(height: 4),
+                                                RichText(
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  text: TextSpan(
+                                                    style: textTheme.bodySmall
+                                                        ?.copyWith(
+                                                      color: secondaryTextColor,
+                                                    ),
+                                                    children: <TextSpan>[
+                                                      const TextSpan(
+                                                        text: 'Student Id: ',
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            activity.studentId,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                               if (activity.patientName !=
                                                   null) ...[
                                                 const SizedBox(height: 4),
@@ -250,66 +311,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   ),
                                                 ),
                                               ],
-                                              ...[
-                                                const SizedBox(height: 4),
-                                                RichText(
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  text: TextSpan(
-                                                    style: textTheme.bodySmall
-                                                        ?.copyWith(
-                                                      color: secondaryTextColor,
-                                                    ),
-                                                    children: <TextSpan>[
-                                                      const TextSpan(
-                                                        text: 'Latest: ',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                        ),
-                                                      ),
-                                                      TextSpan(
-                                                        text: activity.dateTime,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
                                               const SizedBox(height: 8),
-                                              // if (activity is ClinicalRecord)
-                                              //   if (activity.hasAttachment)
-                                              //     Container(
-                                              //       padding: const EdgeInsets.symmetric(
-                                              //         vertical: 4,
-                                              //         horizontal: 12,
-                                              //       ),
-                                              //       decoration: BoxDecoration(
-                                              //         border:
-                                              //             Border.all(color: dividerColor),
-                                              //         borderRadius:
-                                              //             BorderRadius.circular(99),
-                                              //       ),
-                                              //       child: Row(
-                                              //         mainAxisSize: MainAxisSize.min,
-                                              //         children: <Widget>[
-                                              //           const Icon(
-                                              //             Icons.attachment_rounded,
-                                              //             size: 14,
-                                              //           ),
-                                              //           const SizedBox(width: 6),
-                                              //           Text(
-                                              //             'attachment_file.pdf',
-                                              //             style: textTheme.labelSmall
-                                              //                 ?.copyWith(
-                                              //               fontWeight: FontWeight.w500,
-                                              //               letterSpacing: 0,
-                                              //               height: 0,
-                                              //             ),
-                                              //           ),
-                                              //         ],
-                                              //       ),
-                                              //     ),
                                             ],
                                           ),
                                         ),
@@ -387,22 +389,6 @@ class _HistoryPageState extends State<HistoryPage> {
                   color: primaryColor,
                 ),
               ),
-              // IconButton(
-              //   onPressed: () async {
-              //     // final data = await showModalBottomSheet<Map<String, String>?>(
-              //     //   context: context,
-              //     //   isScrollControlled: true,
-              //     //   builder: (context) => const HistoryFilterBottomSheet(),
-              //     // );
-
-              //     // if (data != null) _dataFilters.value = data;
-              //   },
-              //   icon: const Icon(
-              //     Icons.filter_list_rounded,
-              //     color: primaryColor,
-              //   ),
-              //   tooltip: 'Filter',
-              // ),
             ],
           ),
         ),
@@ -504,38 +490,37 @@ class _HistoryPageState extends State<HistoryPage> {
                       vertical: 8,
                       horizontal: 20,
                     ),
-                    child: ValueListenableBuilder(
-                      valueListenable: _query,
-                      builder: (context, query, child) {
-                        return SearchField(
-                          text: '',
-                          hint: 'Search History',
-                          onChanged: (value) {
-                            final data = state.histories!
-                                .where((element) => element.studentName!
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase()))
-                                .toList();
-                            if (value.isEmpty) {
-                              listData.value.clear();
-                              listData.value = [
-                                ...HistoryHelper.convertHistoryToActivity(
-                                    isStudent: true,
-                                    state.histories!,
-                                    RoleHistory.student,
-                                    context)
-                              ];
-                            } else {
-                              listData.value = [
-                                ...HistoryHelper.convertHistoryToActivity(
-                                    isStudent: true,
-                                    data,
-                                    RoleHistory.student,
-                                    context)
-                              ];
-                            }
-                          },
-                        );
+                    child: SearchField(
+                      text: '',
+                      hint: 'Search Student',
+                      onChanged: (value) {
+                        final data = state.histories!
+                            .where((element) => element.studentName!
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
+                        if (value.isEmpty) {
+                          listData.value.clear();
+                          listData.value = [
+                            ...HistoryHelper.convertHistoryToActivity(
+                                state.histories!,
+                                RoleHistory.supervisor,
+                                context,
+                                isCeu: widget.isCeu,
+                                isHeadDiv: widget.isKabag,
+                                unitIds: widget.departmentName,
+                                supervisorId: widget.supervisorId)
+                          ];
+                        } else {
+                          listData.value = [
+                            ...HistoryHelper.convertHistoryToActivity(
+                                data, RoleHistory.supervisor, context,
+                                isCeu: widget.isCeu,
+                                isHeadDiv: widget.isKabag,
+                                unitIds: widget.departmentName,
+                                supervisorId: widget.supervisorId)
+                          ];
+                        }
                       },
                     ),
                   ),
@@ -583,10 +568,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 2:
@@ -597,10 +585,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
 
                                     break;
@@ -612,10 +603,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 4:
@@ -626,10 +620,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 5:
@@ -640,10 +637,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 6:
@@ -654,10 +654,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 7:
@@ -668,10 +671,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 8:
@@ -682,10 +688,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 9:
@@ -696,10 +705,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 10:
@@ -711,10 +723,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 11:
@@ -726,10 +741,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 12:
@@ -740,10 +758,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 13:
@@ -754,10 +775,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 14:
@@ -768,18 +792,24 @@ class _HistoryPageState extends State<HistoryPage> {
                                         .toList();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           data,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
-                                          context)
+                                          context),
                                     ];
                                     break;
                                   case 0:
                                     listData.value.clear();
                                     listData.value = [
                                       ...HistoryHelper.convertHistoryToActivity(
-                                          isStudent: true,
                                           state.histories!,
+                                          isCeu: widget.isCeu,
+                                          isHeadDiv: widget.isKabag,
+                                          unitIds: widget.departmentName,
+                                          supervisorId: widget.supervisorId,
                                           RoleHistory.supervisor,
                                           context),
                                     ];

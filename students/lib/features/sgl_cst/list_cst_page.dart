@@ -1,4 +1,4 @@
-import 'package:common/no_internet/check_internet_onetime.dart';
+import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/helpers/utils.dart';
@@ -76,7 +76,7 @@ class _ListCstPageState extends State<ListCstPage> {
                           if (state.isCstDeleteSuccess ||
                               state.isCstEditSuccess) {
                             BlocProvider.of<SglCstCubit>(context)
-                              .getStudentSglDetail();
+                                .getStudentSglDetail();
                           }
                         },
                         builder: (context, state) {
@@ -174,11 +174,11 @@ class _ListCstPageState extends State<ListCstPage> {
                                                           VerifyDialog(
                                                         onTap: () {
                                                           BlocProvider.of<
-                                                                  SglCstCubit>(
-                                                              context)
-                                                            .deleteCst(
-                                                                id: data.cstId ??
-                                                                    '');
+                                                                      SglCstCubit>(
+                                                                  context)
+                                                              .deleteCst(
+                                                                  id: data.cstId ??
+                                                                      '');
                                                           Navigator.pop(
                                                               context);
                                                         },
@@ -361,7 +361,8 @@ class _ListCstPageState extends State<ListCstPage> {
                                 itemCount: state.cstDetail!.csts!.length);
                           }
 
-                          return const SizedBox(height: 300, child: CustomLoading());
+                          return const SizedBox(
+                              height: 300, child: CustomLoading());
                         },
                       ),
                       const SizedBox(
@@ -377,5 +378,4 @@ class _ListCstPageState extends State<ListCstPage> {
       }),
     );
   }
-
 }

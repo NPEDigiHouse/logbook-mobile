@@ -46,9 +46,8 @@ import 'package:main/blocs/unit_cubit/unit_cubit.dart';
 import 'package:main/blocs/wrapper_cubit/wrapper_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:students/features/clinical_record/providers/clinical_record_data_notifier2.dart';
-import 'package:supervisor/assesment/providers/mini_cex_provider.dart';
-import 'package:supervisor/assesment/providers/scientific_assignment_provider.dart';
-
+import 'package:supervisor/features/assesment/providers/mini_cex_provider.dart';
+import 'package:supervisor/features/assesment/providers/scientific_assignment_provider.dart';
 
 final locator = GetIt.instance;
 

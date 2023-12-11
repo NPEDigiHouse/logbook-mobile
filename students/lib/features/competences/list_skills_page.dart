@@ -1,4 +1,4 @@
-import 'package:common/no_internet/check_internet_onetime.dart';
+import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
@@ -149,19 +149,20 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                                         height: 16,
                                       ),
                                       ListView.separated(
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) =>
                                             TestGradeScoreCard(
                                           onDelete: () {
                                             isMounted = false;
                                             BlocProvider.of<CompetenceCubit>(
-                                                context)
-                                              .deleteSkillById(
-                                                  id: s[index].skillId!);
+                                                    context)
+                                                .deleteSkillById(
+                                                    id: s[index].skillId!);
                                             BlocProvider.of<CompetenceCubit>(
-                                                context)
-                                              .getListSkills();
+                                                    context)
+                                                .getListSkills();
 
                                             Navigator.pop(context);
                                           },
@@ -408,29 +409,29 @@ class TestGradeScoreCard extends StatelessWidget {
                   ],
                 ),
               ),
-              if(!isVerified)
-              InkWell(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    barrierLabel: '',
-                    barrierDismissible: false,
-                    builder: (_) => VerifyDialog(
-                      onTap: onDelete,
-                    ),
-                  );
-                },
-                child: const SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: Center(
-                    child: Icon(
-                      Icons.delete_rounded,
-                      color: errorColor,
+              if (!isVerified)
+                InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierLabel: '',
+                      barrierDismissible: false,
+                      builder: (_) => VerifyDialog(
+                        onTap: onDelete,
+                      ),
+                    );
+                  },
+                  child: const SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Center(
+                      child: Icon(
+                        Icons.delete_rounded,
+                        color: errorColor,
+                      ),
                     ),
                   ),
-                ),
-              )
+                )
             ],
           ),
         ),

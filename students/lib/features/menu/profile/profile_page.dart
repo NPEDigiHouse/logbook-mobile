@@ -3,9 +3,9 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:common/others/about_page.dart';
-import 'package:common/others/change_password_page.dart';
-import 'package:common/others/contact_us_page.dart';
+import 'package:common/features/others/about_page.dart';
+import 'package:common/features/others/change_password_page.dart';
+import 'package:common/features/others/contact_us_page.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:core/app/app_settings.dart';
 import 'package:core/context/navigation_extension.dart';

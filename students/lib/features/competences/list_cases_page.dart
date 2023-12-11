@@ -1,4 +1,4 @@
-import 'package:common/no_internet/check_internet_onetime.dart';
+import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';

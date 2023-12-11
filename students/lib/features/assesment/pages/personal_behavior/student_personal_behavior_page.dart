@@ -1,4 +1,4 @@
-import 'package:common/no_internet/check_internet_onetime.dart';
+import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

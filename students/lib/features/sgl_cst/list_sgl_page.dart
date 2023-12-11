@@ -1,4 +1,4 @@
-import 'package:common/no_internet/check_internet_onetime.dart';
+import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/helpers/utils.dart';
@@ -78,7 +78,7 @@ class _ListSglPageState extends State<ListSglPage> {
                           if (state.isSglDeleteSuccess ||
                               state.isSglEditSuccess) {
                             BlocProvider.of<SglCstCubit>(context)
-                              .getStudentSglDetail();
+                                .getStudentSglDetail();
                           }
                         },
                         builder: (context, state) {
@@ -171,11 +171,11 @@ class _ListSglPageState extends State<ListSglPage> {
                                                           VerifyDialog(
                                                         onTap: () {
                                                           BlocProvider.of<
-                                                                  SglCstCubit>(
-                                                              context)
-                                                            .deleteSgl(
-                                                                id: data.sglId ??
-                                                                    '');
+                                                                      SglCstCubit>(
+                                                                  context)
+                                                              .deleteSgl(
+                                                                  id: data.sglId ??
+                                                                      '');
                                                           Navigator.pop(
                                                               context);
                                                         },
@@ -357,7 +357,8 @@ class _ListSglPageState extends State<ListSglPage> {
                                 },
                                 itemCount: state.sglDetail!.sgls!.length);
                           }
-                          return const SizedBox(height: 300, child: CustomLoading());
+                          return const SizedBox(
+                              height: 300, child: CustomLoading());
                         },
                       ),
                       const SizedBox(
@@ -373,5 +374,4 @@ class _ListSglPageState extends State<ListSglPage> {
       }),
     );
   }
-
 }

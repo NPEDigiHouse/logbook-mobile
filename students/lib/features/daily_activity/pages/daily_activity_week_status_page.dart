@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_null_aware_operators
 
-import 'package:common/no_internet/check_internet_onetime.dart';
+import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/helpers/asset_path.dart';
@@ -49,11 +49,11 @@ class _DailyActivityWeekStatusPageState
     super.initState();
     if (widget.isSupervisor) {
       BlocProvider.of<DailyActivityCubit>(context)
-        .getActivitiesByWeekIdStudentId(
-            weekId: widget.week.id!, studentId: widget.studentId ?? '');
+          .getActivitiesByWeekIdStudentId(
+              weekId: widget.week.id!, studentId: widget.studentId ?? '');
     } else {
       BlocProvider.of<DailyActivityCubit>(context)
-        .getDailyActivityDays(weekId: widget.week.id!);
+          .getDailyActivityDays(weekId: widget.week.id!);
     }
   }
 
@@ -74,12 +74,12 @@ class _DailyActivityWeekStatusPageState
                     if (state.isDailyActivityUpdated) {
                       if (widget.isSupervisor) {
                         BlocProvider.of<DailyActivityCubit>(context)
-                          .getActivitiesByWeekIdStudentId(
-                              weekId: widget.week.id!,
-                              studentId: widget.studentId ?? '');
+                            .getActivitiesByWeekIdStudentId(
+                                weekId: widget.week.id!,
+                                studentId: widget.studentId ?? '');
                       } else {
                         BlocProvider.of<DailyActivityCubit>(context)
-                          .getDailyActivityDays(weekId: widget.week.id!);
+                            .getDailyActivityDays(weekId: widget.week.id!);
                       }
 
                       BlocProvider.of<DailyActivityCubit>(context)
@@ -151,7 +151,8 @@ class _DailyActivityWeekStatusPageState
                                                     ),
                                                     shape: BoxShape.circle,
                                                   ),
-                                                  padding: const EdgeInsets.all(2),
+                                                  padding:
+                                                      const EdgeInsets.all(2),
                                                   child: SvgPicture.asset(
                                                       AssetPath.getIcon(
                                                           'emoji_hadir.svg'))),
@@ -196,7 +197,8 @@ class _DailyActivityWeekStatusPageState
                                                     ),
                                                     shape: BoxShape.circle,
                                                   ),
-                                                  padding: const EdgeInsets.all(2),
+                                                  padding:
+                                                      const EdgeInsets.all(2),
                                                   child: SvgPicture.asset(
                                                       AssetPath.getIcon(
                                                           'emoji_alfa.svg'))),

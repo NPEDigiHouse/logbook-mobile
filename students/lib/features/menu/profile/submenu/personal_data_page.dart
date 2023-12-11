@@ -2,7 +2,7 @@
 
 import 'dart:io';
 import 'dart:ui';
-import 'package:common/personal_data/widgets/change_profile_photo.dart';
+import 'package:common/features/personal_data/widgets/change_profile_photo.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';

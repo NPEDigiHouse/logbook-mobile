@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:ui' as ui;
-import 'package:common/pdf_helper/pdf_helper.dart';
+import 'package:common/features/pdf_helper/pdf_helper.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';

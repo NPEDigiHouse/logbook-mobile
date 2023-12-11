@@ -1,4 +1,4 @@
-import 'package:common/auth/login_page.dart';
+import 'package:common/features/auth/login_page.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:data/models/user/user_credential.dart';
 import 'package:flutter/material.dart';

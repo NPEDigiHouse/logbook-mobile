@@ -1,4 +1,4 @@
-import 'package:common/no_internet/check_internet_onetime.dart';
+import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
@@ -42,7 +42,7 @@ class _StudentListScientificSessionPageState
     _selectedMenu = ValueNotifier('All');
     _dataFilters = ValueNotifier(null);
     BlocProvider.of<StudentCubit>(context)
-      .getStudentScientificSessionOfActiveDepartment();
+        .getStudentScientificSessionOfActiveDepartment();
     super.initState();
   }
 
@@ -162,9 +162,10 @@ class _StudentListScientificSessionPageState
                                                         StudentScientificSessionCard(
                                                       model: s[index],
                                                     ),
-                                                    separatorBuilder: (context,
-                                                            index) =>
-                                                        const SizedBox(height: 12),
+                                                    separatorBuilder:
+                                                        (context, index) =>
+                                                            const SizedBox(
+                                                                height: 12),
                                                     itemCount: s.length,
                                                   ),
                                                 ],

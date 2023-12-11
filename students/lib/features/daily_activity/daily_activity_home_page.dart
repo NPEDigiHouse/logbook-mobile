@@ -1,6 +1,5 @@
-
-import 'package:common/daily_activity/widgets/daily_activity_home_card.dart';
-import 'package:common/no_internet/check_internet_onetime.dart';
+import 'package:common/features/daily_activity/widgets/daily_activity_home_card.dart';
+import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
