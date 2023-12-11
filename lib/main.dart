@@ -1,6 +1,7 @@
-import 'package:elogbook/app.dart';
-import 'package:elogbook/core/utils/api_header.dart';
-import 'package:elogbook/injection.dart' as di;
+import 'package:data/utils/api_header.dart';
+
+import 'app.dart';
+import 'injection.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 

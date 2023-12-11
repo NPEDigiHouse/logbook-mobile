@@ -1,5 +1,5 @@
-import 'package:elogbook/core/styles/color_palette.dart';
-import 'package:elogbook/core/styles/text_style.dart';
+import 'package:core/styles/color_palette.dart';
+import 'package:core/styles/text_style.dart';
 import 'package:flutter/material.dart';
 
 ThemeData get lightTheme {

@@ -51,6 +51,22 @@ dependencies:
   top_snackbar_flutter: ^3.1.0
   connectivity_plus: ^2.2.0
 
+  # modul
+  main:
+    path: main
+  core:
+    path: core
+  common:
+    path: common
+  data:
+    path: data
+  students:
+    path: students
+  coordinator:
+    path: coordinator
+  supervisor:
+    path: supervisor
+
 dev_dependencies:
   build_runner: ^2.4.5
   flutter_launcher_icons: "^0.13.1"
@@ -58,8 +74,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   json_serializable: ^6.7.0
-  integration_test:
-    sdk: flutter
 
 flutter:
   uses-material-design: true
