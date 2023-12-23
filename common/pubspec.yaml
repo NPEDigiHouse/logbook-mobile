@@ -37,6 +37,8 @@ dependencies:
     path: ../coordinator
   students:
     path: ../students
+  pdf: ^3.10.7
+  file_saver: ^0.2.9
   
 
 dev_dependencies:

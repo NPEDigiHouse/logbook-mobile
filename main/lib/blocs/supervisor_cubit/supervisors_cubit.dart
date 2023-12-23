@@ -15,20 +15,20 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
   SupervisorsCubit({
     required this.dataSource,
     required this.profileDataSource,
-  }) : super(Initial());
+  }) : super(SupervisorInit());
 
   Future<void> getAllSupervisors() async {
     try {
-      emit(Loading());
+      emit(SupervisorLoading());
 
       final result = await dataSource.getAllSupervisors();
 
-      result.fold((l) => emit(Failed(message: l.message)),
-          (r) => emit(FetchSuccess(supervisors: r)));
+      result.fold((l) => emit(SupervisorFailed(message: l.message)),
+          (r) => emit(SupervisorFetchSuccess(supervisors: r)));
     } catch (e) {
       print(e.toString());
       emit(
-        Failed(
+        SupervisorFailed(
           message: e.toString(),
         ),
       );
@@ -42,7 +42,7 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
 
   Future<void> getAllStudentDepartment() async {
     try {
-      emit(Loading());
+      emit(SupervisorLoading());
 
       final result = await dataSource.getAllStudentsByCeu();
 
@@ -55,7 +55,7 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
     } catch (e) {
       print(e.toString());
       emit(
-        Failed(
+        SupervisorFailed(
           message: e.toString(),
         ),
       );

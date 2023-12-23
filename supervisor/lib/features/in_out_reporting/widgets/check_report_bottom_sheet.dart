@@ -7,88 +7,8 @@ import 'package:data/models/students/student_check_in_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
-import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
-import 'package:main/widgets/empty_data.dart';
-import 'package:main/widgets/inkwell_container.dart';
-import 'package:main/widgets/profile_pic_placeholder.dart';
 import 'package:main/widgets/verify_dialog.dart';
-
-class CheckInReportPage extends StatefulWidget {
-  final String title;
-  final int iconQuarterTurns;
-
-  const CheckInReportPage({
-    super.key,
-    required this.title,
-    required this.iconQuarterTurns,
-  });
-
-  @override
-  State<CheckInReportPage> createState() => _CheckInReportPageState();
-}
-
-class _CheckInReportPageState extends State<CheckInReportPage> {
-  @override
-  void initState() {
-    BlocProvider.of<StudentCubit>(context).getStudentCheckIn();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<StudentCubit, StudentState>(
-      builder: (context, state) {
-        if ( state.studentsCheckIn != null) {
-          if (state.studentsCheckIn!.isEmpty) {
-            return const EmptyData(title: 'No Data', subtitle: 'no student check in');
-          }
-          return CustomScrollView(
-            slivers: <Widget>[
-              SliverOverlapInjector(
-                handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 24,
-                  horizontal: 20,
-                ),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final hasSeparator =
-                          index != state.studentsCheckIn!.length - 1;
-                      final bottom = hasSeparator ? 12.0 : 0.0;
-
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: bottom),
-                        child: InOutReportingItem(
-                          student: state.studentsCheckIn![index],
-                          onTap: () => showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) => CheckReportBottomSheet(
-                              title: widget.title,
-                              iconQuarterTurns: widget.iconQuarterTurns,
-                              student: state.studentsCheckIn![index],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: state.studentsCheckIn!.length,
-                  ),
-                ),
-              ),
-            ],
-          );
-        }
-        return const CustomLoading();
-      },
-    );
-  }
-}
 
 class CheckReportBottomSheet extends StatefulWidget {
   final String title;
@@ -111,7 +31,7 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
   Widget build(BuildContext context) {
     return BlocListener<StudentCubit, StudentState>(
       listener: (context, state) {
-        if ( state.successVerifyCheckIn) {
+        if (state.successVerifyCheckIn) {
           BlocProvider.of<StudentCubit>(context).getStudentCheckIn();
           context.back();
         }
@@ -255,94 +175,6 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class InOutReportingItem extends StatelessWidget {
-  final StudentCheckInModel student;
-  final VoidCallback? onTap;
-
-  const InOutReportingItem({
-    super.key,
-    required this.student,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWellContainer(
-      onTap: onTap,
-      padding: const EdgeInsets.all(16),
-      color: scaffoldBackgroundColor,
-      radius: 12,
-      boxShadow: <BoxShadow>[
-        BoxShadow(
-          offset: const Offset(0, 1),
-          blurRadius: 10,
-          color: Colors.black.withOpacity(.08),
-        ),
-      ],
-      child: Row(
-        children: <Widget>[
-          ProfilePicPlaceholder(
-              height: 56,
-              name: student.fullname ?? '-',
-              width: 56,
-              isSmall: true),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  Utils.datetimeToString(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          student.checkInTime! * 1000),
-                      isShowTime: true),
-                  style: textTheme.labelSmall?.copyWith(
-                    color: secondaryTextColor,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  student.fullname ?? "",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  student.studentId ?? '-',
-                  style: textTheme.bodySmall?.copyWith(
-                    color: primaryColor,
-                  ),
-                ),
-                RichText(
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    style: textTheme.bodySmall?.copyWith(
-                      color: secondaryTextColor,
-                    ),
-                    children: <TextSpan>[
-                      const TextSpan(
-                        text: 'Department:\t',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      TextSpan(text: student.unitName),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

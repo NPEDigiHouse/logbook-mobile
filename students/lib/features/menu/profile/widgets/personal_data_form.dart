@@ -227,7 +227,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                             SupervisorsState>(
                                         builder: (context, state) {
                                       List<SupervisorModel> supervisors = [];
-                                      if (state is FetchSuccess) {
+                                      if (state is SupervisorFetchSuccess) {
                                         supervisors.clear();
                                         supervisors.addAll(state.supervisors);
                                         if (values[i] != null) {

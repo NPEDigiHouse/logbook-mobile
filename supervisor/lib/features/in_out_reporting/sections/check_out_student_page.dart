@@ -1,5 +1,4 @@
 import 'package:core/context/navigation_extension.dart';
-import 'package:core/helpers/asset_path.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
@@ -10,9 +9,9 @@ import 'package:main/blocs/student_cubit/student_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/empty_data.dart';
-import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/profile_pic_placeholder.dart';
 import 'package:main/widgets/verify_dialog.dart';
+import 'package:supervisor/features/in_out_reporting/widgets/out_report_item.dart';
 
 class CheckOutReportPage extends StatefulWidget {
   final String title;
@@ -41,7 +40,7 @@ class _CheckOutReportPageState extends State<CheckOutReportPage> {
       builder: (context, state) {
         if (state.studentsCheckOut != null) {
           if (state.studentsCheckOut!.isEmpty) {
-            return EmptyData(
+            return const EmptyData(
                 title: 'No Data', subtitle: 'no student check out');
           }
           return CustomScrollView(
@@ -64,7 +63,7 @@ class _CheckOutReportPageState extends State<CheckOutReportPage> {
 
                       return Padding(
                         padding: EdgeInsets.only(bottom: bottom),
-                        child: InOutReportingItem(
+                        child: OutReportingItem(
                           student: state.studentsCheckOut![index],
                           onTap: () => showModalBottomSheet(
                             context: context,
@@ -85,7 +84,7 @@ class _CheckOutReportPageState extends State<CheckOutReportPage> {
             ],
           );
         }
-        return CustomLoading();
+        return const CustomLoading();
       },
     );
   }
@@ -161,7 +160,7 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
               ),
               const SizedBox(height: 16),
 
-              ItemDivider(),
+              const ItemDivider(),
               const SizedBox(height: 16),
               Text(
                 'Department Name',
@@ -179,7 +178,7 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
                   color: secondaryTextColor,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
               Row(
@@ -255,94 +254,6 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class InOutReportingItem extends StatelessWidget {
-  final StudentCheckOutModel student;
-  final VoidCallback? onTap;
-
-  const InOutReportingItem({
-    super.key,
-    required this.student,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWellContainer(
-      onTap: onTap,
-      padding: const EdgeInsets.all(16),
-      color: scaffoldBackgroundColor,
-      radius: 12,
-      boxShadow: <BoxShadow>[
-        BoxShadow(
-          offset: const Offset(0, 1),
-          blurRadius: 10,
-          color: Colors.black.withOpacity(.08),
-        ),
-      ],
-      child: Row(
-        children: <Widget>[
-          CircleAvatar(
-            radius: 28,
-            foregroundImage: AssetImage(
-              AssetPath.getImage('profile_default.png'),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  Utils.datetimeToString(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          student.checkInTime! * 1000),
-                      isShowTime: true),
-                  style: textTheme.labelSmall?.copyWith(
-                    color: secondaryTextColor,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  student.fullname ?? "",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  student.studentId ?? '-',
-                  style: textTheme.bodySmall?.copyWith(
-                    color: primaryColor,
-                  ),
-                ),
-                RichText(
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    style: textTheme.bodySmall?.copyWith(
-                      color: secondaryTextColor,
-                    ),
-                    children: <TextSpan>[
-                      const TextSpan(
-                        text: 'Department:\t',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      TextSpan(text: student.unitName),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

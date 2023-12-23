@@ -84,7 +84,7 @@ class _CreateCstPageState extends State<CreateCstPage> {
                     BlocBuilder<SupervisorsCubit, SupervisorsState>(
                         builder: (context, state) {
                       List<SupervisorModel> supervisors = [];
-                      if (state is FetchSuccess) {
+                      if (state is SupervisorFetchSuccess) {
                         supervisors.clear();
                         supervisors.addAll(state.supervisors);
                         return CustomDropdown<SupervisorModel>(

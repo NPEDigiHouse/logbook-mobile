@@ -1,11 +1,9 @@
-
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
-
-import 'check_in_students_page.dart';
-import 'check_out_student_page.dart';
+import 'package:supervisor/features/in_out_reporting/sections/check_in_students_page.dart';
+import 'package:supervisor/features/in_out_reporting/sections/check_out_student_page.dart';
 import 'in_out_history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

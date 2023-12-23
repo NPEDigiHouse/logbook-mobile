@@ -82,9 +82,8 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
         }
         try {
           BlocProvider.of<ScientificSessionCubit>(context)
-            .uploadAttachment(path: file.path);
-        } catch (e) {
-        }
+              .uploadAttachment(path: file.path);
+        } catch (e) {}
       }
     } else if (status.isDenied) {
       // Pengguna menolak izin, Anda dapat memberi tahu pengguna untuk mengaktifkannya di pengaturan
@@ -99,7 +98,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
     super.initState();
     Future.microtask(() {
       BlocProvider.of<SupervisorsCubit>(context, listen: false)
-        .getAllSupervisors();
+          .getAllSupervisors();
       BlocProvider.of<ScientificSessionCubit>(context)
         ..getListSessionTypes()
         ..getScientificSessionRoles();
@@ -116,7 +115,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
         listener: (context, state) {
           if (state.postSuccess) {
             BlocProvider.of<StudentCubit>(context)
-              .getStudentScientificSessionOfActiveDepartment();
+                .getStudentScientificSessionOfActiveDepartment();
             BlocProvider.of<ScientificSessionCubit>(context).reset();
             Navigator.pop(context);
           }
@@ -166,7 +165,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                         BlocBuilder<SupervisorsCubit, SupervisorsState>(
                             builder: (context, state) {
                           List<SupervisorModel> supervisors = [];
-                          if (state is FetchSuccess) {
+                          if (state is SupervisorFetchSuccess) {
                             supervisors.clear();
                             supervisors.addAll(state.supervisors);
                           }
@@ -336,8 +335,8 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                                   child: InkWell(
                                     onTap: () {
                                       BlocProvider.of<ScientificSessionCubit>(
-                                          context)
-                                        .resetAttachment();
+                                              context)
+                                          .resetAttachment();
                                     },
                                     child: const Center(
                                         child: Icon(Icons.close_rounded)),
@@ -387,21 +386,21 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
           builder: (_) => VerifyDialog(
                 onTap: () {
                   BlocProvider.of<ScientificSessionCubit>(context,
-                      listen: false)
-                    .uploadScientificSession(
-                      model: ScientificSessionPostModel(
-                        attachment: attachment,
-                        role: role,
-                        title: titleController.text,
-                        topic: topicController.text,
-                        reference: referenceController.text,
-                        sessionType: sesionType,
-                        supervisorId: supervisorId,
-                        notes: additionalNotesController.text.isEmpty
-                            ? null
-                            : additionalNotesController.text,
-                      ),
-                    );
+                          listen: false)
+                      .uploadScientificSession(
+                    model: ScientificSessionPostModel(
+                      attachment: attachment,
+                      role: role,
+                      title: titleController.text,
+                      topic: topicController.text,
+                      reference: referenceController.text,
+                      sessionType: sesionType,
+                      supervisorId: supervisorId,
+                      notes: additionalNotesController.text.isEmpty
+                          ? null
+                          : additionalNotesController.text,
+                    ),
+                  );
                   Navigator.pop(context);
                 },
               ));

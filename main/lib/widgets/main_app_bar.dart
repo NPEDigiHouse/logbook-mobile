@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:cool_alert/cool_alert.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -36,32 +38,18 @@ class MainAppBar extends StatelessWidget {
       ),
       leadingWidth: 56,
       actions: <Widget>[
-        if (withLogout)
-          Padding(
-            padding: const EdgeInsets.only(right: 6),
-            child: IconButton(
-              onPressed: () async {
-                CoolAlert.show(
-                  context: context,
-                  type: CoolAlertType.confirm,
-                  title: 'Confirm Logout',
-                  confirmBtnText: 'Confirm',
-                  text: "Are you sure to sign out?",
-                  onConfirmBtnTap: () async {
-                    await BlocProvider.of<UserCubit>(context).reset();
-                    await BlocProvider.of<LogoutCubit>(context).logout();
-                  },
-                  confirmBtnColor: primaryColor,
-                );
-              },
-              icon: const Icon(
-                Icons.logout_rounded,
-                color: primaryColor,
-                size: 30,
-              ),
-              tooltip: 'Keluar',
+        Padding(
+          padding: const EdgeInsets.only(right: 6),
+          child: IconButton(
+            onPressed: () async {},
+            icon: const Icon(
+              CupertinoIcons.bell_fill,
+              color: primaryColor,
+              size: 30,
             ),
+            tooltip: 'Keluar',
           ),
+        ),
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),

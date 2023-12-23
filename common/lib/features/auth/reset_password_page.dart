@@ -43,7 +43,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ForgotPasswordHeader(),
+      appBar: const ForgotPasswordHeader(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: SpacingColumn(

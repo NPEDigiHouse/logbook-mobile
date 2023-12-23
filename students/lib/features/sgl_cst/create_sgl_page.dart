@@ -83,7 +83,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                     BlocBuilder<SupervisorsCubit, SupervisorsState>(
                         builder: (context, state) {
                       List<SupervisorModel> supervisors = [];
-                      if (state is FetchSuccess) {
+                      if (state is SupervisorFetchSuccess) {
                         supervisors.clear();
                         supervisors.addAll(state.supervisors);
                       }

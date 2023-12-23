@@ -57,7 +57,7 @@ class _SupervisorListStudentDepartmentPageState
                     }
                   },
                   builder: (context, state) {
-                    if (state is Loading) {
+                    if (state is SupervisorLoading) {
                       return const CustomLoading();
                     }
                     if (state is FetchStudentDepartmentSuccess) {

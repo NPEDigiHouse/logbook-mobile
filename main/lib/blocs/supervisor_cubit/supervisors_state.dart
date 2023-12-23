@@ -7,19 +7,19 @@ abstract class SupervisorsState extends Equatable {
   List<Object> get props => [];
 }
 
-class Initial extends SupervisorsState {}
+class SupervisorInit extends SupervisorsState {}
 
-class Failed extends SupervisorsState {
+class SupervisorFailed extends SupervisorsState {
   final String message;
 
-  const Failed({required this.message});
+  const SupervisorFailed({required this.message});
 }
 
-class Loading extends SupervisorsState {}
+class SupervisorLoading extends SupervisorsState {}
 
-class FetchSuccess extends SupervisorsState {
+class SupervisorFetchSuccess extends SupervisorsState {
   final List<SupervisorModel> supervisors;
-  const FetchSuccess({required this.supervisors});
+  const SupervisorFetchSuccess({required this.supervisors});
 }
 
 class FetchStudentSuccess extends SupervisorsState {

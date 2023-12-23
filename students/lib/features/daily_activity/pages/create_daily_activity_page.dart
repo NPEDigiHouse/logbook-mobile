@@ -109,7 +109,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                     BlocBuilder<SupervisorsCubit, SupervisorsState>(
                         builder: (context, state) {
                       List<SupervisorModel> supervisors = [];
-                      if (state is FetchSuccess) {
+                      if (state is SupervisorFetchSuccess) {
                         supervisors.clear();
                         supervisors.addAll(state.supervisors);
                         if (supervisors.indexWhere((element) =>
@@ -336,17 +336,16 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
         ? 'This field is required, please select again.'
         : null;
     if (_formKey.currentState!.saveAndValidate() && supervisorId != null) {
-      BlocProvider.of<DailyActivityCubit>(context)
-        .updateDailyActivity(
-          id: widget.dayId,
-          model: DailyActivityPostModel(
-            activityNameId: activityNameId,
-            activityStatus: status,
-            detail: detailController.text,
-            locationId: locationId,
-            supervisorId: supervisorId,
-          ),
-        );
+      BlocProvider.of<DailyActivityCubit>(context).updateDailyActivity(
+        id: widget.dayId,
+        model: DailyActivityPostModel(
+          activityNameId: activityNameId,
+          activityStatus: status,
+          detail: detailController.text,
+          locationId: locationId,
+          supervisorId: supervisorId,
+        ),
+      );
     }
   }
 }

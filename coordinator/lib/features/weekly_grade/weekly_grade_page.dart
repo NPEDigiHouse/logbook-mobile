@@ -103,7 +103,7 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
                     }
                   },
                   builder: (context, state) {
-                    if (state is Loading) {
+                    if (state is SupervisorLoading) {
                       return const CustomLoading();
                     }
                     if (state is FetchStudentDepartmentSuccess) {

@@ -19,15 +19,7 @@ class PdfHelper {
     StudentStatistic? data,
     String? activeUnitName,
   }) async {
-    var myTheme = ThemeData.withFont(
-      base:
-          Font.ttf(await rootBundle.load("fonts/PlusJakartaSans-Regular.ttf")),
-      bold: Font.ttf(await rootBundle.load("fonts/PlusJakartaSans-Bold.ttf")),
-    );
-
-    final pdf = Document(
-      theme: myTheme,
-    );
+    final pdf = Document();
 
     pdf.addPage(MultiPage(
       pageFormat: PdfPageFormat.a4,
@@ -52,8 +44,7 @@ class PdfHelper {
       ],
     ));
 
-    return PdfApi.saveDocument(
-        name: 'Statistic ${data?.student?.studentId}', pdf: pdf);
+    return PdfApi.saveDocument(name: '${data?.student?.studentId}', pdf: pdf);
   }
 
   static Widget buildHeader(Uint8List image) {
