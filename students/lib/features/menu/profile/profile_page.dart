@@ -65,8 +65,15 @@ class _ProfilePageState extends State<ProfilePage> {
       },
       child: CustomScrollView(
         slivers: <Widget>[
-          const MainAppBar(
-            withLogout: false,
+          SliverAppBar(
+            title: Text(
+              'My Profile',
+              style: textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: primaryColor,
+              ),
+            ),
+            centerTitle: false,
           ),
           SliverFillRemaining(
             child: SingleChildScrollView(

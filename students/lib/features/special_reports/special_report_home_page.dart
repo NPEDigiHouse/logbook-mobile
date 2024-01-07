@@ -1,20 +1,16 @@
 import 'package:common/features/no_internet/check_internet_onetime.dart';
-import 'package:core/context/navigation_extension.dart';
-import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:data/models/user/user_credential.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:main/blocs/special_report/special_report_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/headers/unit_header.dart';
-import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/spacing_column.dart';
-import 'add_special_report_page.dart';
+import 'package:students/features/special_reports/widgets/add_new_consultion_card.dart';
 import 'widgets/special_report_card.dart';
 
 class SpecialReportHomePage extends StatefulWidget {
@@ -80,7 +76,7 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                           ),
                         if (widget.credential.student?.supervisingDPKId != null)
                           // if (widget.activeDepartmentModel.countCheckIn! == 0)
-                          const AddNewConsultionCard(),
+                          const AddNewConsultationCard(),
                         BlocBuilder<SpecialReportCubit, SpecialReportState>(
                           builder: (context, state) {
                             if (state.specialReport != null) {
@@ -141,90 +137,6 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
             ),
           );
         }),
-      ),
-    );
-  }
-}
-
-class AddNewConsultionCard extends StatelessWidget {
-  const AddNewConsultionCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWellContainer(
-      radius: 12,
-      onTap: () => context.navigateTo(const AddSpecialReportPage()),
-      color: primaryColor,
-      boxShadow: [
-        BoxShadow(
-            offset: const Offset(0, 0),
-            spreadRadius: 0,
-            blurRadius: 6,
-            color: const Color(0xFFD4D4D4).withOpacity(.25)),
-        BoxShadow(
-            offset: const Offset(0, 4),
-            spreadRadius: 0,
-            blurRadius: 24,
-            color: const Color(0xFFD4D4D4).withOpacity(.25)),
-      ],
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Stack(
-          children: [
-            Positioned(
-              left: 0,
-              bottom: 0,
-              child: Opacity(
-                opacity: .3,
-                child: SvgPicture.asset(
-                  AssetPath.getVector('ellipse_1.svg'),
-                  height: 80,
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: Opacity(
-                opacity: .6,
-                child: SvgPicture.asset(
-                  AssetPath.getVector('half_ellipse.svg'),
-                  height: 80,
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Column(
-                    children: [
-                      Text(
-                        'Add new consultation issue',
-                        style: textTheme.titleMedium?.copyWith(
-                          color: scaffoldBackgroundColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Add the consultation problems found during stage',
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withOpacity(.75),
-                        ),
-                      )
-                    ],
-                  )),
-                  const Icon(
-                    Icons.add_rounded,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

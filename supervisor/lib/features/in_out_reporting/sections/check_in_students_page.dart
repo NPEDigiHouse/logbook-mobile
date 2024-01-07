@@ -34,7 +34,7 @@ class _CheckInReportPageState extends State<CheckInReportPage> {
         if (state.studentsCheckIn != null) {
           if (state.studentsCheckIn!.isEmpty) {
             return const EmptyData(
-                title: 'No Data', subtitle: 'no student check in');
+                title: 'No Data', subtitle: 'No check-in request');
           }
           return CustomScrollView(
             slivers: <Widget>[

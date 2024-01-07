@@ -107,6 +107,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                     listData.value = [
                                       ...state.listCasesModel!.listCases!
                                     ];
+                                    listData.notifyListeners();
                                     isMounted = true;
                                   });
                                 }

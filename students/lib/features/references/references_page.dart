@@ -3,7 +3,6 @@
 import 'dart:io';
 
 import 'package:core/helpers/utils.dart';
-import 'package:core/styles/color_palette.dart';
 import 'package:data/models/reference/reference_on_list_model.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -14,11 +13,10 @@ import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/headers/unit_header.dart';
-import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/inputs/search_field.dart';
 import 'package:main/widgets/spacing_column.dart';
-import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:students/features/references/widgets/reference_card.dart';
 
 class ReferencePage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
@@ -53,7 +51,7 @@ class _ReferencePageState extends State<ReferencePage> {
   void initState() {
     super.initState();
     BlocProvider.of<ReferenceCubit>(context)
-      .getListReference(unitId: widget.activeDepartmentModel.unitId!);
+        .getListReference(unitId: widget.activeDepartmentModel.unitId!);
   }
 
   @override
@@ -161,18 +159,18 @@ class _ReferencePageState extends State<ReferencePage> {
                                                             await checkAndRequestPermission();
                                                         if (hasPermission) {
                                                           BlocProvider.of<
-                                                                  ReferenceCubit>(
-                                                              context)
-                                                            .getReferenceById(
-                                                                id: state
-                                                                    .references![
-                                                                        index]
-                                                                    .id!,
-                                                                fileName: state
-                                                                        .references![
-                                                                            index]
-                                                                        .file ??
-                                                                    '');
+                                                                      ReferenceCubit>(
+                                                                  context)
+                                                              .getReferenceById(
+                                                                  id: state
+                                                                      .references![
+                                                                          index]
+                                                                      .id!,
+                                                                  fileName: state
+                                                                          .references![
+                                                                              index]
+                                                                          .file ??
+                                                                      '');
                                                         }
                                                       }
                                                     },
@@ -222,74 +220,3 @@ class _ReferencePageState extends State<ReferencePage> {
 }
 
 // ignore: must_be_immutable
-class ReferenceCard extends StatefulWidget {
-  final ReferenceOnListModel reference;
-  final VoidCallback onTap;
-  const ReferenceCard({
-    required this.reference,
-    super.key,
-    required this.onTap,
-  });
-
-  @override
-  State<ReferenceCard> createState() => _ReferenceCardState();
-}
-
-class _ReferenceCardState extends State<ReferenceCard> {
-  @override
-  Widget build(BuildContext context) {
-    return InkWellContainer(
-      radius: 12,
-      onTap: widget.onTap,
-      padding: const EdgeInsets.symmetric(
-        vertical: 12,
-        horizontal: 16,
-      ),
-      color: scaffoldBackgroundColor,
-      boxShadow: [
-        BoxShadow(
-          offset: const Offset(0, 4),
-          blurRadius: 24,
-          spreadRadius: 0,
-          color: const Color(0xFF374151).withOpacity(
-            .15,
-          ),
-        )
-      ],
-      child: SizedBox(
-        height: 45,
-        child: Row(
-          children: [
-            const SizedBox(
-              width: 4,
-            ),
-            Icon(
-              widget.reference.type == 'URL'
-                  ? Icons.link
-                  : Icons.file_present_outlined,
-              color: primaryColor,
-            ),
-            const SizedBox(
-              width: 12,
-            ),
-            const VerticalDivider(),
-            const SizedBox(
-              width: 12,
-            ),
-            Expanded(
-              child: Text(
-                widget.reference.type == 'URL'
-                    ? widget.reference.filename ??
-                        widget.reference.file ??
-                        'nonamed'
-                    : p.basename(widget.reference.file!),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}

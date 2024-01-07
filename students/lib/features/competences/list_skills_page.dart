@@ -106,6 +106,7 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                                       ...state.listSkillsModel!.listSkills!
                                     ];
                                     isMounted = true;
+                                    listData.notifyListeners();
                                   });
                                 }
                               }

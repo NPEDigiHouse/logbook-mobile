@@ -12,13 +12,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:main/blocs/unit_cubit/unit_cubit.dart';
 import 'package:main/widgets/custom_alert.dart';
-import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/glassmorphism.dart';
 import 'package:main/widgets/grid_menu_row.dart';
 import 'package:main/widgets/list_menu_column.dart';
 import 'package:main/widgets/main_app_bar.dart';
 import 'package:main/widgets/menu_switch.dart';
 import 'package:main/widgets/verify_dialog.dart';
+import 'package:students/features/menu/home/student_home_page.skeleton.dart';
 import '../../assesment/assesment_home_page.dart';
 import '../../clinical_record/pages/list_clinical_record_page.dart';
 import '../../competences/competences_home_page.dart';
@@ -31,15 +31,15 @@ import '../../self_reflection/self_reflection_home_page.dart';
 import '../../sgl_cst/sgl_cst_home_page.dart';
 import '../../special_reports/special_report_home_page.dart';
 
-class DepartmentActivityPage extends StatefulWidget {
+class StudentHomePage extends StatefulWidget {
   final UserCredential credential;
-  const DepartmentActivityPage({super.key, required this.credential});
+  const StudentHomePage({super.key, required this.credential});
 
   @override
-  State<DepartmentActivityPage> createState() => _DepartmentActivityPageState();
+  State<StudentHomePage> createState() => _StudentHomePageState();
 }
 
-class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
+class _StudentHomePageState extends State<StudentHomePage> {
   late final ValueNotifier<bool> _isList;
 
   @override
@@ -534,7 +534,7 @@ class _DepartmentActivityPageState extends State<DepartmentActivityPage> {
                     ),
                   );
                 }
-                return CustomLoading();
+                return const StudentHomePageSkeleton();
               }),
             ),
           ),

@@ -1,4 +1,3 @@
-
 import 'package:data/models/clinical_records/clinical_record_post_model.dart';
 
 class ClinicalRecordData {
@@ -31,78 +30,6 @@ class ClinicalRecordData {
     _clinicalRecordPostModel.diagnosess = diagnosis;
     _clinicalRecordPostModel.examinations = examinations;
   }
-
-  // void updateAffectedPart(
-  //     {required AffectedPart old,
-  //     required AffectedPart newAffectedPart,
-  //     required ClinicalRecordSectionType type}) {
-  //   if (ClinicalRecordSectionType == ClinicalRecordSectionType.examination) {
-  //     int index = _clinicalRecordPostModel.examinations!
-  //         .indexWhere((element) => element.affectedPartId == old.id);
-  //     _clinicalRecordPostModel.examinations![index].affectedPartId =
-  //         newAffectedPart.id;
-  //   }
-  //   if (ClinicalRecordSectionType == ClinicalRecordSectionType.diagnosis) {
-  //     int index = _clinicalRecordPostModel.diagnosiss!
-  //         .indexWhere((element) => element.affectedPartId == old.id);
-  //     _clinicalRecordPostModel.diagnosiss![index].affectedPartId =
-  //         newAffectedPart.id;
-  //   }
-  //   if (ClinicalRecordSectionType == ClinicalRecordSectionType.management) {
-  //     int index = _clinicalRecordPostModel.managements!
-  //         .indexWhere((element) => element.affectedPartId == old.id);
-  //     _clinicalRecordPostModel.managements![index].affectedPartId =
-  //         newAffectedPart.id;
-  //   }
-  // }
-
-  // void addData({
-  //   required ClinicalRecordSectionType type,
-  //   required AffectedPart affectedPart,
-  //   String? roleId,
-  //   String? id,
-  // }) {
-  //   if (ClinicalRecordSectionType == ClinicalRecordSectionType.examination) {
-  //     int index = _clinicalRecordPostModel.examinations!
-  //         .indexWhere((element) => element.affectedPartId == affectedPart.id);
-  //     if (index == -1) {
-  //       _clinicalRecordPostModel.examinations!.add(ExaminationsPostModel(
-  //           affectedPartId: affectedPart.id, examinationTypeId: [id!]));
-  //     } else {
-  //       _clinicalRecordPostModel.examinations![index].examinationTypeId!
-  //           .add(id!);
-  //     }
-  //   }
-  //   if (ClinicalRecordSectionType == ClinicalRecordSectionType.diagnosis) {
-  //     int index = _clinicalRecordPostModel.diagnosiss!
-  //         .indexWhere((element) => element.affectedPartId == affectedPart.id);
-  //     if (index == -1) {
-  //       _clinicalRecordPostModel.diagnosiss!.add(DiagnosisPostModel(
-  //           affectedPartId: affectedPart.id, diagnosisTypeId: [id!]));
-  //     } else {
-  //       _clinicalRecordPostModel.diagnosiss![index].diagnosisTypeId!.add(id!);
-  //     }
-  //   }
-  //   if (ClinicalRecordSectionType == ClinicalRecordSectionType.management) {
-  //     int index = _clinicalRecordPostModel.managements!
-  //         .indexWhere((element) => element.affectedPartId == affectedPart.id);
-  //     if (index == -1) {
-  //       _clinicalRecordPostModel.managements!.add(
-  //           ManagementPostModel(affectedPartId: affectedPart.id, management: [
-  //         ManagementTypeRole(
-  //           managementRoleId: roleId!,
-  //           managementTypeId: id,
-  //         )
-  //       ]));
-  //     } else {
-  //       _clinicalRecordPostModel.managements![index].management!
-  //           .add(ManagementTypeRole(
-  //         managementRoleId: roleId!,
-  //         managementTypeId: id,
-  //       ));
-  //     }
-  //   }
-  // }
 
   void addSupervisorId(String id) {
     _clinicalRecordPostModel.supervisorId = id;

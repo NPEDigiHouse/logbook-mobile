@@ -1,6 +1,5 @@
 import 'package:common/features/history/history_data.dart';
 import 'package:core/context/navigation_extension.dart';
-import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:flutter/material.dart';
@@ -332,35 +331,6 @@ class _InOutHistoryPageState extends State<InOutHistoryPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Stack buildTitleSection() {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          right: 16,
-          top: 0,
-          child: SvgPicture.asset(
-            AssetPath.getVector('circle_bg2.svg'),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 32, 8, 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'History',
-                style: textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: primaryColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 

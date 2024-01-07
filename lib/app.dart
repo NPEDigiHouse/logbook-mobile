@@ -3,7 +3,7 @@ import 'package:core/app/app_settings.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/utils/keys.dart';
 import 'package:main/main.exports.dart';
-import 'package:students/features/clinical_record/providers/clinical_record_data_notifier2.dart';
+import 'package:students/features/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:supervisor/features/assesment/providers/mini_cex_provider.dart';
 import 'package:supervisor/features/assesment/providers/scientific_assignment_provider.dart';
 
@@ -63,7 +63,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => di.locator<HistoryCubit>()),
         ChangeNotifierProvider(create: (_) => di.locator<MiniCexProvider>()),
         ChangeNotifierProvider(
-            create: (_) => di.locator<ClinicalRecordDataNotifier2>()),
+            create: (_) => di.locator<ClinicalRecordDataNotifier>()),
         ChangeNotifierProvider(
             create: (_) => di.locator<ScientificAssignmentProvider>()),
       ],

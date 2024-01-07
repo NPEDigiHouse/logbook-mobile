@@ -10,7 +10,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class InOutReportingPage extends StatefulWidget {
-  const InOutReportingPage({super.key});
+  final List<String> departmentName;
+
+  const InOutReportingPage({super.key, required this.departmentName});
 
   @override
   State<InOutReportingPage> createState() => _InOutReportingPageState();
@@ -19,7 +21,6 @@ class InOutReportingPage extends StatefulWidget {
 class _InOutReportingPageState extends State<InOutReportingPage>
     with SingleTickerProviderStateMixin {
   late final List<Widget> _pages;
-  late final ValueNotifier<String> _query;
   late final TabController _tabController;
 
   @override
@@ -34,16 +35,12 @@ class _InOutReportingPageState extends State<InOutReportingPage>
         iconQuarterTurns: 1,
       ),
     ];
-
-    _query = ValueNotifier('');
     _tabController = TabController(length: 2, vsync: this);
-
     super.initState();
   }
 
   @override
   void dispose() {
-    _query.dispose();
     _tabController.dispose();
 
     super.dispose();
@@ -52,105 +49,130 @@ class _InOutReportingPageState extends State<InOutReportingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
-            SliverToBoxAdapter(
-              child: SizedBox(
-                width: double.infinity,
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      right: 16,
-                      top: 0,
-                      child: SvgPicture.asset(
-                        AssetPath.getVector('circle_bg4.svg'),
-                      ),
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return <Widget>[
+              _headerSection(context),
+              SliverOverlapAbsorber(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverSafeArea(
+                  top: false,
+                  sliver: SliverAppBar(
+                    elevation: 0,
+                    forceElevated: innerBoxIsScrolled,
+                    pinned: true,
+                    automaticallyImplyLeading: false,
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    surfaceTintColor: Colors.transparent,
+                    systemOverlayStyle: const SystemUiOverlayStyle(
+                      statusBarIconBrightness: Brightness.dark,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const SizedBox(height: 24),
-                              Text(
-                                'Verification',
-                                style: textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: primaryColor,
-                                ),
-                              ),
-                              Text(
-                                'In-Out Reporting',
-                                style: textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                    bottom: PreferredSize(
+                      preferredSize: const Size.fromHeight(0),
+                      child: Container(
+                        color: onDisableColor,
+                        child: TabBar(
+                          controller: _tabController,
+                          dividerColor: Colors.transparent,
+                          labelStyle: textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
-                          const Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              context.navigateTo(const InOutHistoryPage());
-                            },
-                            icon: const Icon(
-                              Icons.history_rounded,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: SliverSafeArea(
-                top: false,
-                sliver: SliverAppBar(
-                  elevation: 0,
-                  forceElevated: innerBoxIsScrolled,
-                  pinned: true,
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  surfaceTintColor: Colors.transparent,
-                  systemOverlayStyle: const SystemUiOverlayStyle(
-                    statusBarIconBrightness: Brightness.dark,
-                  ),
-                  bottom: PreferredSize(
-                    preferredSize: const Size.fromHeight(0),
-                    child: Container(
-                      color: onDisableColor,
-                      child: TabBar(
-                        controller: _tabController,
-                        dividerColor: Colors.transparent,
-                        labelStyle: textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          unselectedLabelStyle: textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.normal,
+                          ),
+                          unselectedLabelColor: const Color(0xFF848FA9),
+                          tabs: const <Tab>[
+                            Tab(text: 'Check In'),
+                            Tab(text: 'Check Out'),
+                          ],
                         ),
-                        unselectedLabelStyle: textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.normal,
-                        ),
-                        unselectedLabelColor: const Color(0xFF848FA9),
-                        tabs: const <Tab>[
-                          Tab(text: 'Check In'),
-                          Tab(text: 'Check Out'),
-                        ],
                       ),
                     ),
                   ),
                 ),
               ),
+            ];
+          },
+          body: TabBarView(
+            controller: _tabController,
+            children: _pages,
+          ),
+        ),
+      ),
+    );
+  }
+
+  SliverToBoxAdapter _headerSection(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: SizedBox(
+        width: double.infinity,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              right: 16,
+              top: 0,
+              child: SvgPicture.asset(
+                AssetPath.getVector('circle_bg4.svg'),
+              ),
             ),
-          ];
-        },
-        body: TabBarView(
-          controller: _tabController,
-          children: _pages,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const SizedBox(height: 12),
+                        Text(
+                          'Verification',
+                          style: textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: primaryColor,
+                          ),
+                        ),
+                        Text(
+                          'In-Out Reporting',
+                          style: textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: widget.departmentName.isEmpty
+                                  ? borderColor.withOpacity(.7)
+                                  : primaryColor.withOpacity(.7)),
+                          child: Text(
+                            widget.departmentName.isEmpty
+                                ? 'No Department'
+                                : widget.departmentName.first,
+                            style: textTheme.bodySmall
+                                ?.copyWith(color: scaffoldBackgroundColor),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      context.navigateTo(const InOutHistoryPage());
+                    },
+                    icon: const Icon(
+                      Icons.history_rounded,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

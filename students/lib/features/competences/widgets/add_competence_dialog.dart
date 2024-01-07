@@ -33,7 +33,7 @@ class AddCompetenceDialog extends StatefulWidget {
 
 class _AddTopicDialogState extends State<AddCompetenceDialog> {
   int? caseId;
-  String? desc;
+  String? descSelect;
   String? supervisorId;
   final ValueNotifier<String?> supervisorVal = ValueNotifier(null);
   final ValueNotifier<String?> competenceVal = ValueNotifier(null);
@@ -303,7 +303,7 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                               .toList(),
                           onChanged: (v) {
                             if (v != null) {
-                              desc = v as List<String>;
+                              descSelect = v;
                             }
                           },
                           value: null,
@@ -354,13 +354,13 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                     BlocProvider.of<CompetenceCubit>(context).uploadNewCase(
                         model: CasePostModel(
                             caseTypeId: caseId,
-                            type: desc,
+                            type: descSelect,
                             supervisorId: supervisorId));
                   } else {
                     BlocProvider.of<CompetenceCubit>(context).uploadNewSkills(
                         model: SkillPostModel(
                             skillTypeId: caseId,
-                            type: desc,
+                            type: descSelect,
                             supervisorId: supervisorId));
                   }
                   Navigator.pop(context);

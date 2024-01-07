@@ -6,7 +6,7 @@ import 'package:main/blocs/login_cubit/login_cubit.dart';
 import 'package:main/blocs/wrapper_cubit/wrapper_cubit.dart';
 import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
-import 'package:students/features/menu/main_menu.dart';
+import 'package:students/student_main.dart';
 import 'package:supervisor/features/menu/main_menu.dart';
 
 import '../auth/login_page.dart';

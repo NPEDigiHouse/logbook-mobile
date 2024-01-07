@@ -5,7 +5,7 @@ import 'package:data/models/units/unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/unit_cubit/unit_cubit.dart';
-import 'package:main/widgets/custom_loading.dart';
+import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'widgets/custom_bottom_alert.dart';
 import 'widgets/select_unit_card.dart';
 
@@ -23,7 +23,7 @@ class _SelectDepartmentPageState extends State<SelectDepartmentPage> {
   void initState() {
     super.initState();
     BlocProvider.of<DepartmentCubit>(context, listen: false)
-      .fetchDepartments(true);
+        .fetchDepartments(true);
   }
 
   @override
@@ -31,7 +31,7 @@ class _SelectDepartmentPageState extends State<SelectDepartmentPage> {
     return WillPopScope(
       onWillPop: () async {
         BlocProvider.of<DepartmentCubit>(context, listen: false)
-          .getActiveDepartment();
+            .getActiveDepartment();
         return true;
       },
       child: Scaffold(
@@ -41,7 +41,7 @@ class _SelectDepartmentPageState extends State<SelectDepartmentPage> {
           leading: IconButton(
             onPressed: () {
               BlocProvider.of<DepartmentCubit>(context, listen: false)
-                .getActiveDepartment();
+                  .getActiveDepartment();
               context.back();
             },
             icon: const Icon(
@@ -52,7 +52,7 @@ class _SelectDepartmentPageState extends State<SelectDepartmentPage> {
             IconButton(
               onPressed: () {
                 BlocProvider.of<DepartmentCubit>(context, listen: false)
-                  .fetchDepartments(sortAZ);
+                    .fetchDepartments(sortAZ);
                 sortAZ = !sortAZ;
               },
               icon: const Icon(
@@ -110,7 +110,8 @@ class _SelectDepartmentPageState extends State<SelectDepartmentPage> {
                       .toList()
                 ];
                 return ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                   separatorBuilder: (context, index) => const SizedBox(
                     height: 16,
                   ),
@@ -125,7 +126,12 @@ class _SelectDepartmentPageState extends State<SelectDepartmentPage> {
                   itemCount: state.units.length,
                 );
               } else {
-                return const CustomLoading();
+                return ListSkeletonTemplate(
+                  listHeight: List.generate(9, (index) => 70),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  spacing: 16,
+                );
               }
             },
           ),

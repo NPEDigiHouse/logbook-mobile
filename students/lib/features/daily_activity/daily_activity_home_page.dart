@@ -5,7 +5,7 @@ import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
-import 'package:main/widgets/custom_loading.dart';
+import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'package:main/widgets/headers/unit_header.dart';
 import 'package:main/widgets/spacing_column.dart';
 
@@ -51,52 +51,70 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
           },
           child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
             builder: (context, state) {
-              if (state.studentDailyActivity != null) {
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: SpacingColumn(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    horizontalPadding: 16,
-                    spacing: 20,
-                    children: [
-                      DepartmentHeader(
-                        unitName: widget.activeDepartmentModel.unitName!,
-                      ),
-                      ...List.generate(
-                          state.studentDailyActivity!.weeks!.length, (index) {
-                        final i = state.studentDailyActivity!.dailyActivities!
-                            .indexWhere((element) =>
-                                element.weekName ==
-                                state.studentDailyActivity!.weeks![index]
-                                    .weekName);
+              return SingleChildScrollView(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DepartmentHeader(
+                      unitName: widget.activeDepartmentModel.unitName!,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Builder(builder: (context) {
+                      if ((state.studentDailyActivity != null)) {
+                        return SpacingColumn(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 20,
+                          children: [
+                            ...List.generate(
+                                state.studentDailyActivity!.weeks!.length,
+                                (index) {
+                              final i = state
+                                  .studentDailyActivity!.dailyActivities!
+                                  .indexWhere((element) =>
+                                      element.weekName ==
+                                      state.studentDailyActivity!.weeks![index]
+                                          .weekName);
 
-                        final endDate = DateTime.fromMillisecondsSinceEpoch(
-                            state.studentDailyActivity!.weeks![index].endDate! *
-                                1000);
-                        return DailyActivityHomeCard(
-                          isSupervisor: false,
-                          startDate: DateTime.fromMillisecondsSinceEpoch(state
-                                  .studentDailyActivity!
-                                  .weeks![index]
-                                  .startDate! *
-                              1000),
-                          endDate: endDate,
-                          week: state.studentDailyActivity!.weeks![index],
-                          status: state
-                                  .studentDailyActivity!.weeks![index].status ??
-                              false,
-                          // checkInCount:
-                          //     widget.activeDepartmentModel.countCheckIn!,
-                          dailyActivity: i == -1
-                              ? null
-                              : state.studentDailyActivity!.dailyActivities![i],
+                              final endDate =
+                                  DateTime.fromMillisecondsSinceEpoch(state
+                                          .studentDailyActivity!
+                                          .weeks![index]
+                                          .endDate! *
+                                      1000);
+                              return DailyActivityHomeCard(
+                                isSupervisor: false,
+                                startDate: DateTime.fromMillisecondsSinceEpoch(
+                                    state.studentDailyActivity!.weeks![index]
+                                            .startDate! *
+                                        1000),
+                                endDate: endDate,
+                                week: state.studentDailyActivity!.weeks![index],
+                                status: state.studentDailyActivity!
+                                        .weeks![index].status ??
+                                    false,
+                                // checkInCount:
+                                //     widget.activeDepartmentModel.countCheckIn!,
+                                dailyActivity: i == -1
+                                    ? null
+                                    : state.studentDailyActivity!
+                                        .dailyActivities![i],
+                              );
+                            })
+                          ],
                         );
-                      })
-                    ],
-                  ),
-                );
-              }
-              return const CustomLoading();
+                      }
+                      return const ListSkeletonTemplate(
+                        listHeight: [195, 195, 195, 195],
+                        borderRadius: 12,
+                      );
+                    }),
+                  ],
+                ),
+              );
             },
           ),
         );

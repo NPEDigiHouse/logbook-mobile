@@ -16,7 +16,7 @@ import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/verify_dialog.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:students/features/clinical_record/providers/clinical_record_data_notifier2.dart';
+import 'package:students/features/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:students/features/clinical_record/providers/clinical_record_data_temp.dart';
 
 class CreateClinicalRecordThirdPage extends StatefulWidget {
@@ -88,7 +88,7 @@ class _CreateClinicalRecordThirdPageState
     return BlocListener<ClinicalRecordCubit, ClinicalRecordState>(
       listener: (context, state) {
         if (state.clinicalRecordPostSuccess) {
-          context.read<ClinicalRecordDataNotifier2>().reset();
+          context.read<ClinicalRecordDataNotifier>().reset();
           BlocProvider.of<StudentCubit>(context)
               .getStudentClinicalRecordOfActiveDepartment();
 

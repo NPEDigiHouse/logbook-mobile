@@ -10,9 +10,9 @@ import 'package:main/blocs/profile_cubit/profile_cubit.dart';
 import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/custom_navigation_bar.dart';
-import 'history/history_page.dart';
-import 'profile/profile_page.dart';
-import 'unit/unit_activity_page.dart';
+import 'features/menu/history/history_page.dart';
+import 'features/menu/profile/profile_page.dart';
+import 'features/menu/home/student_home_page.dart';
 
 class StudentMainMenu extends StatefulWidget {
   const StudentMainMenu({
@@ -43,7 +43,7 @@ class _StudentMainMenuState extends State<StudentMainMenu> {
 
   List<Widget> _listMenu(UserCredential credential) {
     return [
-      DepartmentActivityPage(credential: credential),
+      StudentHomePage(credential: credential),
       const HistoryPage(),
       ProfilePage(credential: credential),
     ];

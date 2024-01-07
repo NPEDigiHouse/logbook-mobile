@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/headers/form_section_header.dart';
 import 'package:main/widgets/spacing_column.dart';
-import '../providers/clinical_record_data_notifier2.dart';
+import '../providers/clinical_record_data_notifier.dart';
 import '../providers/clinical_record_data_temp.dart';
 
 class DiagnosticsAdaptiveForm extends StatefulWidget {
@@ -31,7 +31,7 @@ class DiagnosticsAdaptiveForm extends StatefulWidget {
 class _DiagnosticsAdaptiveFormState extends State<DiagnosticsAdaptiveForm> {
   @override
   Widget build(BuildContext context) {
-    final data = context.watch<ClinicalRecordDataNotifier2>();
+    final data = context.watch<ClinicalRecordDataNotifier>();
     return Column(
       children: [
         FormSectionHeader(

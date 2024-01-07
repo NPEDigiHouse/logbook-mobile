@@ -13,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/inkwell_container.dart';
+import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'package:students/features/daily_activity/daily_activity_home_page.dart';
 import 'package:students/features/daily_activity/pages/create_daily_activity_page.dart';
@@ -310,10 +311,13 @@ class _DailyActivityWeekStatusPageState
                         ),
                       );
                     }
-                    // if (state.activityPerDays?!= null) {
 
-                    // }
-                    return const CustomLoading();
+                    return const ListSkeletonTemplate(
+                      listHeight: [130, 210, 210, 210],
+                      spacing: 20,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    );
                   },
                 ),
               ),

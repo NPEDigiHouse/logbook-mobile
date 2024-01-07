@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:main/main.exports.dart';
 import 'package:data/data.exports.dart';
 import 'package:get_it/get_it.dart';
-import 'package:students/features/clinical_record/providers/clinical_record_data_notifier2.dart';
+import 'package:students/features/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:supervisor/features/assesment/providers/mini_cex_provider.dart';
 import 'package:supervisor/features/assesment/providers/scientific_assignment_provider.dart';
 
@@ -265,7 +265,7 @@ void _injectStateManagement() {
     () => MiniCexProvider(),
   );
   locator.registerFactory(
-    () => ClinicalRecordDataNotifier2(),
+    () => ClinicalRecordDataNotifier(),
   );
   locator.registerFactory(
     () => ScientificAssignmentProvider(),

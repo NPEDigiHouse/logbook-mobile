@@ -8,14 +8,15 @@ import 'package:main/blocs/special_report/special_report_cubit.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'package:main/widgets/verify_dialog.dart';
 
-class AddSpecialReportPage extends StatefulWidget {
-  const AddSpecialReportPage({super.key});
+class CreateSpecialReportPage extends StatefulWidget {
+  const CreateSpecialReportPage({super.key});
 
   @override
-  State<AddSpecialReportPage> createState() => _AddSpecialReportPageState();
+  State<CreateSpecialReportPage> createState() =>
+      _CreateSpecialReportPageState();
 }
 
-class _AddSpecialReportPageState extends State<AddSpecialReportPage> {
+class _CreateSpecialReportPageState extends State<CreateSpecialReportPage> {
   final TextEditingController fieldController = TextEditingController();
   final ValueNotifier<bool> isSaveAsDraft = ValueNotifier(false);
   final _formKey = GlobalKey<FormBuilderState>();

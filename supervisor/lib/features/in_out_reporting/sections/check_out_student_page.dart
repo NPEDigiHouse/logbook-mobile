@@ -41,7 +41,7 @@ class _CheckOutReportPageState extends State<CheckOutReportPage> {
         if (state.studentsCheckOut != null) {
           if (state.studentsCheckOut!.isEmpty) {
             return const EmptyData(
-                title: 'No Data', subtitle: 'no student check out');
+                title: 'No Data', subtitle: 'No check-out request');
           }
           return CustomScrollView(
             slivers: <Widget>[

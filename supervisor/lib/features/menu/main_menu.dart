@@ -45,7 +45,8 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
         ),
         // TaskPage(),
         if (credential.badges!.indexWhere((e) => e.name == 'HEAD_DIV') != -1)
-          const InOutReportingPage(),
+          InOutReportingPage(
+              departmentName: credential.supervisor?.units ?? []),
         const ListResidentPage(),
         SupervisorHistoryPage(
           isKabag:

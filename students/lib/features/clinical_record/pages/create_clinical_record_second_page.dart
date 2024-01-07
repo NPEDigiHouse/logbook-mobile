@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/widgets/dividers/section_divider.dart';
 
-import '../providers/clinical_record_data_notifier2.dart';
+import '../providers/clinical_record_data_notifier.dart';
 import '../providers/clinical_record_data_temp.dart';
 import '../widgets/diagnostics_adaptive_form.dart';
 import '../widgets/examination_adaptive_form.dart';
@@ -41,7 +41,7 @@ class _CreateClinicalRecordSecondPageState
         ..getDiagnosisTypes(unitId: widget.unitId)
         ..getManagementTypes(unitId: widget.unitId)
         ..getManagementRoles();
-      context.read<ClinicalRecordDataNotifier2>().reset();
+      context.read<ClinicalRecordDataNotifier>().reset();
     });
     super.initState();
   }
@@ -122,8 +122,7 @@ class _CreateClinicalRecordSecondPageState
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: FilledButton(
                       onPressed: () {
-                        final data =
-                            context.read<ClinicalRecordDataNotifier2>();
+                        final data = context.read<ClinicalRecordDataNotifier>();
                         widget.clinicalRecordData.tempAddSecondData(
                           data.getManagementsPost(),
                           data.getDiagnosticsPost(),

@@ -1,15 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:cool_alert/cool_alert.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:main/blocs/logout_cubit/logout_cubit.dart';
-import 'package:main/blocs/profile_cubit/profile_cubit.dart';
 
 class MainAppBar extends StatelessWidget {
   final bool withLogout;
