@@ -78,8 +78,6 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
         }
       }
     } else if (status.isDenied) {
-      // Pengguna menolak izin, Anda dapat memberi tahu pengguna untuk mengaktifkannya di pengaturan
-      print('Storage permission is denied');
     } else if (status.isPermanentlyDenied) {
       // Pengguna secara permanen menolak izin, arahkan pengguna ke pengaturan aplikasi
       openAppSettings();
@@ -237,6 +235,8 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
                                           .graduationDate! *
                                       1000))
                               : '',
+                      'Academic Adviser':
+                          state.userCredential!.student!.academicSupervisorName,
                     },
                     section: 1,
                   ),
@@ -249,29 +249,6 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
                       'Address': state.userCredential!.student!.address,
                     },
                     section: 2,
-                  ),
-                  PersonalDataForm(
-                    title: 'Academic Adviser and DPK',
-                    dataMap: {
-                      'Academic Adviser':
-                          state.userCredential!.student!.academicSupervisorName,
-                      'Supervising DPK':
-                          state.userCredential!.student!.supervisingDPKName,
-                      'Examiner DPK':
-                          state.userCredential!.student!.examinerDPKName,
-                    },
-                    section: 3,
-                  ),
-                  PersonalDataForm(
-                    title: 'Station',
-                    dataMap: {
-                      'Period and length of station (Weeks)': state
-                          .userCredential!.student!.periodLengthStation
-                          .toString(),
-                      'RS Station': state.userCredential!.student!.rsStation,
-                      'PKM Station': state.userCredential!.student!.pkmStation,
-                    },
-                    section: 4,
                   ),
                 ],
               ),

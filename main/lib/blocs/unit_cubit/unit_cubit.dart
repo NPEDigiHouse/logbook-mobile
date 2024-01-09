@@ -1,5 +1,6 @@
 import 'package:data/datasources/remote_datasources/unit_datasource.dart';
 import 'package:data/models/units/active_unit_model.dart';
+import 'package:data/models/units/student_unit_model.dart';
 import 'package:data/models/units/unit_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +30,33 @@ class DepartmentCubit extends Cubit<DepartmentState> {
           }
         }
         emit(FetchSuccess(units: r));
+      });
+    } catch (e) {
+      emit(
+        Failed(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<void> fetchStudentDepartments(bool? isSortAZ) async {
+    try {
+      emit(Loading());
+
+      final result = await datasource.fetchStudentDepartment();
+
+      result.fold((l) => emit(Failed(message: l.message)), (r) {
+        if (isSortAZ != null) {
+          if (isSortAZ) {
+            r.units!.sort(
+                (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+          } else {
+            r.units!.sort(
+                (a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
+          }
+        }
+        emit(StudentUnitFetchSuccess(units: r));
       });
     } catch (e) {
       emit(

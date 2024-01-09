@@ -153,22 +153,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          'Department Activity',
-                          style: textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 28,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Logbook data according to the active unit',
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: secondaryTextColor,
-                            letterSpacing: 0,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
                         Container(
                           width: AppSize.getAppWidth(context) - 46,
                           decoration: BoxDecoration(
@@ -192,6 +176,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                   ),
                                   child: SvgPicture.asset(
                                     AssetPath.getVector('ellipse_1.svg'),
+                                    color: primaryTextColor.withOpacity(.1),
                                   ),
                                 ),
                               ),
@@ -200,6 +185,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                 top: 0,
                                 child: SvgPicture.asset(
                                   AssetPath.getVector('half_ellipse.svg'),
+                                  color: primaryTextColor.withOpacity(.1),
                                 ),
                               ),
                               Padding(

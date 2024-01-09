@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:data/datasources/remote_datasources/auth_datasource.dart';
 import 'package:data/models/units/active_unit_model.dart';
+import 'package:data/models/units/student_unit_model.dart';
 import 'package:data/models/units/unit_model.dart';
 import 'package:data/services/api_service.dart';
 import 'package:data/services/token_manager.dart';
@@ -12,6 +13,7 @@ import 'package:dio/dio.dart';
 
 abstract class DepartmentDatasource {
   Future<Either<Failure, List<DepartmentModel>>> fetchAllDepartment();
+  Future<Either<Failure, StudentUnitResult>> fetchStudentDepartment();
   Future<Either<Failure, void>> changeDepartmentActive(
       {required String unitId});
   Future<Either<Failure, ActiveDepartmentModel>> getActiveDepartment();
@@ -104,6 +106,22 @@ class DepartmentDatasourceImpl implements DepartmentDatasource {
       );
     } catch (e) {
       throw failure(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, StudentUnitResult>> fetchStudentDepartment() async {
+    try {
+      final response = await dio.get(
+        '${ApiService.baseUrl}/students/units-v2',
+        options: apiHeader.adminOptions(),
+      );
+
+      final units = StudentUnitResult.fromJson(response.data);
+      return Right(units);
+    } catch (e) {
+      print(e.toString());
+      return Left(failure(e));
     }
   }
 }

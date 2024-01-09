@@ -16,6 +16,11 @@ class FetchSuccess extends DepartmentState {
   const FetchSuccess({required this.units});
 }
 
+class StudentUnitFetchSuccess extends DepartmentState {
+  final StudentUnitResult units;
+  const StudentUnitFetchSuccess({required this.units});
+}
+
 class ChangeActiveSuccess extends DepartmentState {}
 
 class ChangeActiveFailed extends DepartmentState {}

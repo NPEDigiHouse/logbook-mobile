@@ -1,10 +1,11 @@
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
+import 'package:core/styles/text_style.dart';
 import 'package:data/models/units/active_unit_model.dart';
-import 'package:data/models/units/unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/unit_cubit/unit_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'widgets/custom_bottom_alert.dart';
 import 'widgets/select_unit_card.dart';
@@ -23,7 +24,7 @@ class _SelectDepartmentPageState extends State<SelectDepartmentPage> {
   void initState() {
     super.initState();
     BlocProvider.of<DepartmentCubit>(context, listen: false)
-        .fetchDepartments(true);
+        .fetchStudentDepartments(true);
   }
 
   @override
@@ -52,7 +53,7 @@ class _SelectDepartmentPageState extends State<SelectDepartmentPage> {
             IconButton(
               onPressed: () {
                 BlocProvider.of<DepartmentCubit>(context, listen: false)
-                    .fetchDepartments(sortAZ);
+                    .fetchStudentDepartments(sortAZ);
                 sortAZ = !sortAZ;
               },
               icon: const Icon(
@@ -66,64 +67,48 @@ class _SelectDepartmentPageState extends State<SelectDepartmentPage> {
           child: BlocConsumer<DepartmentCubit, DepartmentState>(
             listener: (context, state) {
               if (state is ChangeActiveSuccess) {
-                showModalBottomSheet(
-                  context: context,
-                  backgroundColor: Colors.transparent,
-                  builder: (BuildContext context) {
-                    return const CustomBottomAlert(
-                      message: 'Successfully replaced unit!',
-                    );
-                  },
-                ).whenComplete(() {
-                  BlocProvider.of<DepartmentCubit>(context, listen: false)
-                      .getActiveDepartment();
-                  Navigator.pop(context); // Jika ini adalah tujuan yang benar
-                });
+                CustomAlert.success(
+                    context: context,
+                    message: 'Successfully replaced depeartment!');
+                BlocProvider.of<DepartmentCubit>(context, listen: false)
+                    .getActiveDepartment()
+                    .whenComplete(() => Navigator.pop(context));
               } else if (state is ChangeActiveFailed) {
-                showModalBottomSheet(
-                  context: context,
-                  backgroundColor: Colors.transparent,
-                  builder: (BuildContext context) {
-                    return const CustomBottomAlert(
-                      message: 'Failed to change active unit',
-                      isFailed: true,
-                    );
-                  },
-                ).whenComplete(() {
-                  BlocProvider.of<DepartmentCubit>(context, listen: false)
-                      .getActiveDepartment();
-                  Navigator.pop(context); // Jika ini adalah tujuan yang benar
-                });
+                CustomAlert.error(
+                    context: context, message: 'Failed to change active unit');
+                BlocProvider.of<DepartmentCubit>(context, listen: false)
+                    .getActiveDepartment()
+                    .whenComplete(() => Navigator.pop(context));
               }
             },
             builder: (context, state) {
-              if (state is FetchSuccess) {
-                final List<DepartmentModel> data = [
-                  if (widget.activeDepartmentModel.unitId != null)
-                    DepartmentModel(
-                      id: widget.activeDepartmentModel.unitId!,
-                      name: widget.activeDepartmentModel.unitName!,
-                    ),
-                  ...state.units
-                      .where((element) =>
-                          element.id != widget.activeDepartmentModel.unitId)
-                      .toList()
-                ];
+              if (state is StudentUnitFetchSuccess) {
+                final notAvailable = state.units.units!
+                    .where((element) => element.isDone!)
+                    .toList();
+                final available = state.units.units!
+                    .where((element) => !element.isDone! && !element.isActive!)
+                    .toList();
+                final active =
+                    state.units.units!.where((element) => element.isActive!);
+                final merge = [...active, ...available, ...notAvailable];
                 return ListView.separated(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                      const EdgeInsets.only(left: 20, right: 20, bottom: 24),
                   separatorBuilder: (context, index) => const SizedBox(
                     height: 16,
                   ),
                   itemBuilder: (context, index) {
                     return SelectDepartmentCard(
-                      unitName: data[index].name,
-                      unitId: data[index].id,
+                      unitName: merge[index].name,
+                      unitId: merge[index].id,
+                      isAllow: state.units.isAllowSelect!,
                       activeDepartmentId:
                           widget.activeDepartmentModel.unitId ?? '',
+                      isDone: merge[index].isDone!,
                     );
                   },
-                  itemCount: state.units.length,
+                  itemCount: merge.length,
                 );
               } else {
                 return ListSkeletonTemplate(

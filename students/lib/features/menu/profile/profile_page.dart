@@ -14,6 +14,7 @@ import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/user/user_credential.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,9 +26,9 @@ import 'package:main/blocs/unit_cubit/unit_cubit.dart';
 import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/image_preview.dart';
-import 'package:main/widgets/main_app_bar.dart';
 import 'package:main/widgets/profile_item_menu_card.dart';
 import 'package:main/widgets/profile_pic_placeholder.dart';
+import 'package:students/features/menu/profile/submenu/department_data_page.dart';
 import 'package:students/features/menu/profile/submenu/personal_data_page.dart';
 import 'package:students/features/menu/profile/submenu/unit_statistics_page.dart';
 
@@ -67,10 +68,10 @@ class _ProfilePageState extends State<ProfilePage> {
         slivers: <Widget>[
           SliverAppBar(
             title: Text(
-              'My Profile',
+              'Profile',
               style: textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: primaryColor,
+                color: primaryTextColor,
               ),
             ),
             centerTitle: false,
@@ -174,42 +175,154 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 12),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: secondaryColor,
-                              borderRadius: BorderRadius.circular(50),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Active Department',
+                        style: textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        BlocBuilder<DepartmentCubit, DepartmentState>(
+                            builder: (context, state) {
+                          return Text(
+                            state is GetActiveDepartmentSuccess
+                                ? state.activeDepartment.unitName ??
+                                    'No Active Department'
+                                : '...',
+                            style: textTheme.bodyLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
-                            child:
-                                BlocBuilder<DepartmentCubit, DepartmentState>(
-                              builder: (context, state) {
-                                return Text(
-                                  state is GetActiveDepartmentSuccess
-                                      ? state.activeDepartment.unitName ??
-                                          'No Active Department'
-                                      : '...',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                );
-                              },
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          );
+                        }),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: InkWell(
+                              onTap: () =>
+                                  context.navigateTo(DepartmentDataPage(
+                                userId: widget.credential.id!,
+                              )),
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: secondaryColor,
+                                ),
+                                child: Column(
+                                  children: [
+                                    const Icon(
+                                      CupertinoIcons.doc_text_fill,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      'Data',
+                                      style: textTheme.bodyMedium?.copyWith(
+                                          color: scaffoldBackgroundColor),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )),
+                            const SizedBox(
+                              width: 12,
                             ),
-                          ),
+                            Expanded(
+                              child:
+                                  BlocBuilder<DepartmentCubit, DepartmentState>(
+                                builder: (context, state1) {
+                                  if (state1 is GetActiveDepartmentSuccess) {
+                                    return BlocBuilder<UserCubit, UserState>(
+                                      builder: (context, state) {
+                                        return InkWell(
+                                          onTap: () => context.navigateTo(
+                                              DepartmentStatisticsPage(
+                                            credential: widget.credential,
+                                            profilePic: state.profilePic,
+                                            activeDepartmentModel:
+                                                state1.activeDepartment,
+                                            stateProfilePic: state.rspp,
+                                          )),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              color: secondaryColor,
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                const Icon(
+                                                  CupertinoIcons.chart_bar_fill,
+                                                  color: Colors.white,
+                                                ),
+                                                Text(
+                                                  'Statistic',
+                                                  style: textTheme.bodyMedium
+                                                      ?.copyWith(
+                                                          color:
+                                                              scaffoldBackgroundColor),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    return const SizedBox.shrink();
+                                  }
+                                },
+                              ),
+                            )
+                          ],
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 14),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'General Data',
+                        style: textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   ProfileItemMenuCard(
                     iconPath: 'person_filled.svg',
                     title: 'Personal Data',
@@ -218,49 +331,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     )),
                   ),
                   const SizedBox(height: 8),
-                  BlocBuilder<DepartmentCubit, DepartmentState>(
-                    builder: (context, state1) {
-                      if (state1 is GetActiveDepartmentSuccess) {
-                        return BlocBuilder<UserCubit, UserState>(
-                          builder: (context, state) {
-                            return ProfileItemMenuCard(
-                              iconPath: 'stats_chart_filled.svg',
-                              title: 'Department Statisics',
-                              onTap: () =>
-                                  context.navigateTo(DepartmentStatisticsPage(
-                                credential: widget.credential,
-                                profilePic: state.profilePic,
-                                activeDepartmentModel: state1.activeDepartment,
-                                stateProfilePic: state.rspp,
-                              )),
-                            );
-                          },
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 8),
                   ProfileItemMenuCard(
                     iconPath: 'lock_filled.svg',
                     title: 'Change Password',
                     onTap: () => context.navigateTo(const ChangePasswordPage()),
                   ),
-                  // const SizedBox(height: 8),
-                  // BlocBuilder<ProfileCubit, ProfileState>(
-                  //   builder: (context, state) {
-                  //     return ProfileItemMenuCard(
-                  //       iconPath: 'file_export_filled.svg',
-                  //       title: 'Export Data',
-                  //       onTap: () => context.navigateTo(ExportDataPage(
-                  //         memoryImage: state.requestState == RequestState.data
-                  //             ? state.profilePic
-                  //             : null,
-                  //       )),
-                  //     );
-                  //   },
-                  // ),
                   const SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.symmetric(

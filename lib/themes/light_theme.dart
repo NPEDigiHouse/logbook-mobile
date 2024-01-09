@@ -35,18 +35,18 @@ ThemeData get lightTheme {
 
 final appBarTheme = AppBarTheme(
   titleTextStyle: textTheme.titleMedium?.copyWith(
-    color: primaryColor,
+    color: primaryTextColor,
     fontWeight: FontWeight.bold,
   ),
   backgroundColor: Colors.white,
   elevation: 2,
   shadowColor: Colors.black38,
   iconTheme: const IconThemeData(
-    color: primaryColor,
+    color: primaryTextColor,
   ),
   centerTitle: true,
   actionsIconTheme: const IconThemeData(
-    color: primaryColor,
+    color: primaryTextColor,
   ),
 );
 

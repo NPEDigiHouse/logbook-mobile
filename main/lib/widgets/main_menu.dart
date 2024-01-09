@@ -37,8 +37,12 @@ class MainMenu extends StatelessWidget {
         ),
         leading: Padding(
           padding: const EdgeInsets.only(left: 20),
-          child: SvgPicture.asset(
-            AssetPath.getVector('logo.svg'),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                AssetPath.getIcon('logo.svg'),
+              ),
+            ],
           ),
         ),
         leadingWidth: 56,

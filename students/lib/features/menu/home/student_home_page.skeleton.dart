@@ -14,22 +14,6 @@ class StudentHomePageSkeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Department Activity',
-            style: textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 28,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            'Logbook data according to the active unit',
-            style: textTheme.bodyMedium?.copyWith(
-              color: secondaryTextColor,
-              letterSpacing: 0,
-            ),
-          ),
-          const SizedBox(height: 20),
           CustomShimmer(
             child: Container(
               decoration: BoxDecoration(

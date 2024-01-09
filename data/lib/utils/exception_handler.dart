@@ -9,5 +9,5 @@ Failure failure(Object e) {
       return ClientFailure(e.message ?? '');
     }
   }
-  return const ClientFailure('error not recognized');
+  return ClientFailure(e.toString());
 }

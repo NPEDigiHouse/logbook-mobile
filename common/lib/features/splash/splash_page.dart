@@ -49,7 +49,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryColor,
+      backgroundColor: scaffoldBackgroundColor,
       body: Container(
         width: AppSize.getAppWidth(context),
         height: AppSize.getAppHeight(context),
@@ -57,10 +57,25 @@ class _SplashPageState extends State<SplashPage> {
         child: Stack(
           children: [
             Center(
-              child: SvgPicture.asset(
-                AssetPath.getVector('splash_icon.svg'),
-                width: 150,
-                height: 150,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    AssetPath.getIcon('logo.svg'),
+                    width: 150,
+                    height: 150,
+                    color: scaffoldBackgroundColor,
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Text(
+                    "E-Logbook",
+                    style: textTheme.headlineSmall?.copyWith(
+                        color: scaffoldBackgroundColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             ),
             Positioned(
@@ -73,7 +88,7 @@ class _SplashPageState extends State<SplashPage> {
                     Text(
                       "Version ${AppSettings.appVersion}",
                       style: textTheme.bodyMedium
-                          ?.copyWith(color: backgroundColor),
+                          ?.copyWith(color: scaffoldBackgroundColor),
                     ),
                   ],
                 ),

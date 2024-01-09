@@ -19,18 +19,27 @@ class MainAppBar extends StatelessWidget {
       shadowColor: Colors.transparent,
       backgroundColor: scaffoldBackgroundColor,
       surfaceTintColor: scaffoldBackgroundColor,
-      title: const Text('E-Logbook'),
+      title: Row(
+        children: [
+          if (!withLogout) ...[
+            SvgPicture.asset(
+              AssetPath.getIcon('logo.svg'),
+              color: primaryTextColor,
+              width: 24,
+              height: 24,
+            ),
+            const SizedBox(
+              width: 12,
+            ),
+          ],
+          const Text('E-Logbook'),
+        ],
+      ),
       centerTitle: true,
       titleTextStyle: textTheme.titleMedium?.copyWith(
-        color: primaryColor,
+        color: primaryTextColor,
         fontWeight: FontWeight.w700,
-        fontSize: 18,
-      ),
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 20),
-        child: SvgPicture.asset(
-          AssetPath.getVector('logo.svg'),
-        ),
+        fontSize: 20,
       ),
       leadingWidth: 56,
       actions: <Widget>[
@@ -39,9 +48,9 @@ class MainAppBar extends StatelessWidget {
           child: IconButton(
             onPressed: () async {},
             icon: const Icon(
-              CupertinoIcons.bell_fill,
-              color: primaryColor,
-              size: 30,
+              CupertinoIcons.bell,
+              color: primaryTextColor,
+              size: 24,
             ),
             tooltip: 'Keluar',
           ),

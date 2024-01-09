@@ -4,18 +4,24 @@ import 'package:core/styles/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/unit_cubit/unit_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
+import 'package:students/features/select_units/widgets/custom_bottom_alert.dart';
 
 class SelectDepartmentCard extends StatelessWidget {
   const SelectDepartmentCard({
     super.key,
     required this.unitName,
     required this.unitId,
+    required this.isAllow,
+    required this.isDone,
     required this.activeDepartmentId,
   });
 
   final String unitName;
   final String unitId;
+  final bool isAllow;
   final String activeDepartmentId;
+  final bool isDone;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +50,7 @@ class SelectDepartmentCard extends StatelessWidget {
               margin: const EdgeInsets.symmetric(vertical: 2),
               width: 5,
               decoration: BoxDecoration(
-                color: primaryColor,
+                color: isDone ? onFormDisableColor : primaryColor,
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
@@ -61,6 +67,12 @@ class SelectDepartmentCard extends StatelessWidget {
                       "Currently selected",
                       style:
                           textTheme.labelSmall?.copyWith(color: primaryColor),
+                    )
+                  else if (isDone)
+                    Text(
+                      "Done",
+                      style: textTheme.labelSmall
+                          ?.copyWith(color: onFormDisableColor),
                     ),
                   if (activeDepartmentId == unitId)
                     const SizedBox(
@@ -72,6 +84,8 @@ class SelectDepartmentCard extends StatelessWidget {
                     style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                       height: 1.2,
+                      color: isDone ? onFormDisableColor : primaryTextColor,
+                      decoration: isDone ? TextDecoration.lineThrough : null,
                     ),
                   ),
                 ],
@@ -80,15 +94,34 @@ class SelectDepartmentCard extends StatelessWidget {
             const SizedBox(
               width: 12,
             ),
-            Radio.adaptive(
-              value: unitId,
-              groupValue: activeDepartmentId,
-              onChanged: (v) {
-                final unitCubit =
-                    BlocProvider.of<DepartmentCubit>(context, listen: false);
-                unitCubit.changeDepartmentActive(unitId: unitId);
-              },
-            ),
+            if (!isDone)
+              Radio.adaptive(
+                value: unitId,
+                groupValue: activeDepartmentId,
+                onChanged: (v) {
+                  if (!isAllow) {
+                    CustomAlert.error(
+                        message:
+                            'Cannot change department, please completed current department before!',
+                        context: context);
+                    // showModalBottomSheet(
+                    //   context: context,
+                    //   backgroundColor: Colors.white,
+                    //   builder: (BuildContext context) {
+                    //     return const CustomBottomAlert(
+                    //       message: 'Failed to change active unit',
+                    //       isFailed: true,
+
+                    //     );
+                    //   },
+                    // );
+                  } else {
+                    final unitCubit = BlocProvider.of<DepartmentCubit>(context,
+                        listen: false);
+                    unitCubit.changeDepartmentActive(unitId: unitId);
+                  }
+                },
+              ),
           ],
         ),
       ),

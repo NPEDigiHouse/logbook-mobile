@@ -358,7 +358,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 'History',
                 style: textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: primaryColor,
+                  color: primaryTextColor,
                 ),
               ),
             ],

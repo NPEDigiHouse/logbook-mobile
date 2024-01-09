@@ -7,9 +7,11 @@ class CustomNavigationBar extends StatelessWidget {
   final ValueNotifier<int> selectedIndex;
   final List<String> listIconPath;
   final List<String> listTitle;
+  final double? height;
 
   const CustomNavigationBar({
     super.key,
+    this.height = 80,
     required this.value,
     required this.listIconPath,
     required this.listTitle,
@@ -20,7 +22,7 @@ class CustomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: const Color(0xFFEFF0F9),
-      height: 80,
+      height: height,
       width: AppSize.getAppWidth(context),
       child: Builder(
         builder: (context) {

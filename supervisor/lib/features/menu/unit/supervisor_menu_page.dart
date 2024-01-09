@@ -54,7 +54,9 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: <Widget>[
-        const MainAppBar(),
+        const MainAppBar(
+          withLogout: false,
+        ),
         SliverFillRemaining(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(
@@ -87,6 +89,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
                           ),
                           child: SvgPicture.asset(
                             AssetPath.getVector('ellipse_1.svg'),
+                            color: secondaryColor,
                           ),
                         ),
                       ),
@@ -95,6 +98,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
                         top: 0,
                         child: SvgPicture.asset(
                           AssetPath.getVector('half_ellipse.svg'),
+                          color: secondaryColor,
                         ),
                       ),
                       Padding(

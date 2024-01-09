@@ -29,13 +29,6 @@ class ProfileItemMenuCard extends StatelessWidget {
         width: 1,
         color: onFormDisableColor.withOpacity(.5),
       ),
-      // boxShadow: <BoxShadow>[
-      //   BoxShadow(
-      //     offset: const Offset(0, 1),
-      //     blurRadius: 8,
-      //     color: Colors.black.withOpacity(.1),
-      //   ),
-      // ],
       child: Row(
         children: <Widget>[
           Container(

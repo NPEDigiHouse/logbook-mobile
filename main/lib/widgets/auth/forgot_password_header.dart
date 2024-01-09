@@ -29,7 +29,12 @@ class ForgotPasswordHeader extends StatelessWidget
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(AssetPath.getVector('logo.svg')),
+          SvgPicture.asset(
+            AssetPath.getIcon('logo.svg'),
+            color: primaryTextColor,
+            width: 24,
+            height: 24,
+          ),
           const SizedBox(
             width: 8,
           ),
@@ -37,7 +42,7 @@ class ForgotPasswordHeader extends StatelessWidget
             "E-Logbook",
             style: TextStyle(
               fontWeight: FontWeight.w900,
-              fontSize: textTheme.titleSmall?.fontSize,
+              fontSize: textTheme.titleMedium?.fontSize,
             ),
           ),
         ],

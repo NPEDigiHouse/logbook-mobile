@@ -25,7 +25,7 @@ class AboutPage extends StatelessWidget {
             Row(
               children: [
                 SvgPicture.asset(
-                  AssetPath.getVector('logo.svg'),
+                  AssetPath.getIcon('logo.svg'),
                   width: 60,
                   height: 60,
                 ),

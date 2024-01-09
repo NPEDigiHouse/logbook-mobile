@@ -39,11 +39,11 @@ dependencies:
     path: ../students
   pdf: ^3.10.7
   file_saver: ^0.2.9
-  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  build_runner: ^2.4.5
 
 flutter:

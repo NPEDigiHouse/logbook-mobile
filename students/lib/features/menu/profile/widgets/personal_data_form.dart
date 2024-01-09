@@ -46,7 +46,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
     for (var i = 0; i < widget.dataMap.length; i++) {
       editingControllers.add(TextEditingController());
     }
-    if (widget.section == 3) {
+    if (widget.section == 3 || widget.section == 1) {
       BlocProvider.of<SupervisorsCubit>(context).getAllSupervisors();
     }
     if (widget.section == 4) {
@@ -125,6 +125,10 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                                           .text)
                                                   .millisecondsSinceEpoch) ~/
                                               1000,
+                                      academicSupervisor:
+                                          editingControllers[4].text.isEmpty
+                                              ? null
+                                              : editingControllers[4].text,
                                     );
                                     if (editingControllers[0].text.isNotEmpty) {
                                       BlocProvider.of<UserCubit>(context)
@@ -147,18 +151,14 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                     break;
                                   case 3:
                                     data = StudentProfile(
-                                      academicSupervisor:
+                                      supervisingDpk:
                                           editingControllers[0].text.isEmpty
                                               ? null
                                               : editingControllers[0].text,
-                                      supervisingDpk:
+                                      examinerDpk:
                                           editingControllers[1].text.isEmpty
                                               ? null
                                               : editingControllers[1].text,
-                                      examinerDpk:
-                                          editingControllers[2].text.isEmpty
-                                              ? null
-                                              : editingControllers[2].text,
                                     );
                                     break;
                                   case 4:
@@ -222,7 +222,8 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                     );
                                   }
 
-                                  if (widget.section == 3) {
+                                  if (widget.section == 1 && i == 4 ||
+                                      widget.section == 3) {
                                     return BlocBuilder<SupervisorsCubit,
                                             SupervisorsState>(
                                         builder: (context, state) {

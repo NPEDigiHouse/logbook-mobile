@@ -1,6 +1,7 @@
 import 'package:common/features/auth/login_page.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:data/models/user/user_credential.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
@@ -83,19 +84,20 @@ class _StudentMainMenuState extends State<StudentMainMenu> {
                       index: value,
                       children: _listMenu(s.userCredential!),
                     ),
-                    bottomNavigationBar: CustomNavigationBar(
-                      listIconPath: const [
-                        "icon_unit.svg",
-                        "icon_history.svg",
-                        "icon_user.svg"
+                    bottomNavigationBar: BottomNavigationBar(
+                      items: const [
+                        BottomNavigationBarItem(
+                            icon: Icon(CupertinoIcons.home), label: 'Home'),
+                        BottomNavigationBarItem(
+                            icon: Icon(CupertinoIcons.news), label: 'History'),
+                        BottomNavigationBarItem(
+                            icon: Icon(CupertinoIcons.profile_circled),
+                            label: 'Profile')
                       ],
-                      listTitle: const [
-                        "Department\nActivity",
-                        "History",
-                        "Profile"
-                      ],
-                      selectedIndex: _selectedIndex,
-                      value: value,
+                      onTap: (value) {
+                        _selectedIndex.value = value;
+                      },
+                      currentIndex: value,
                     ),
                   );
                 } else if (s.initState == RequestState.loading) {

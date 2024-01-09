@@ -34,13 +34,18 @@ class AuthHeader extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(AssetPath.getVector('logo.svg')),
+                SvgPicture.asset(
+                  AssetPath.getIcon('logo.svg'),
+                  width: 24,
+                  height: 24,
+                  color: Colors.black,
+                ),
                 const SizedBox(
                   width: 8,
                 ),
                 Text(
                   "E-Logbook",
-                  style: textTheme.titleSmall?.copyWith(
+                  style: textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
                 ),
