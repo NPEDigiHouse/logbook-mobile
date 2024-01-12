@@ -256,7 +256,7 @@ class _DepartmentStatisticsPageState extends State<DepartmentStatisticsPage> {
                     ),
                   );
                 }
-                return CustomLoading();
+                return const CustomLoading();
               },
             ),
           ],

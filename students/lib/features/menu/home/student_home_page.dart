@@ -6,6 +6,7 @@ import 'package:core/styles/text_style.dart';
 import 'package:data/datasources/local_datasources/static_datasource.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:data/models/user/user_credential.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -30,6 +31,8 @@ import '../../select_units/select_unit_page.dart';
 import '../../self_reflection/self_reflection_home_page.dart';
 import '../../sgl_cst/sgl_cst_home_page.dart';
 import '../../special_reports/special_report_home_page.dart';
+
+enum DepartmentStatus { process, complete, warning }
 
 class StudentHomePage extends StatefulWidget {
   final UserCredential credential;
@@ -123,9 +126,12 @@ class _StudentHomePageState extends State<StudentHomePage> {
       ]),
       child: CustomScrollView(
         slivers: <Widget>[
-          const MainAppBar(
-            withLogout: false,
-          ),
+          MainAppBar(
+              withLogout: false,
+              onTap: () {
+                BlocProvider.of<DepartmentCubit>(context, listen: false)
+                    .getActiveDepartment();
+              }),
           SliverFillRemaining(
             child: BlocListener<DepartmentCubit, DepartmentState>(
               listener: (context, state) {
@@ -213,42 +219,73 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                       ),
                                     ),
                                     const SizedBox(height: 16),
-                                    InkWell(
-                                      onTap: () {
-                                        context.navigateTo(SelectDepartmentPage(
-                                          activeDepartmentModel:
-                                              unitCubit.activeDepartment,
-                                        ));
-                                      },
-                                      child: Glassmorphism(
-                                        blur: 5,
-                                        opacity: .15,
-                                        radius: 99,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 6,
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              const Icon(
-                                                Icons.change_circle_outlined,
-                                                size: 20,
-                                                color: backgroundColor,
+                                    Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            context.navigateTo(
+                                                SelectDepartmentPage(
+                                              activeDepartmentModel:
+                                                  unitCubit.activeDepartment,
+                                            ));
+                                          },
+                                          child: Glassmorphism(
+                                            blur: 5,
+                                            opacity: .15,
+                                            radius: 99,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 6,
                                               ),
-                                              const SizedBox(width: 5),
-                                              Text(
-                                                'Change Department',
-                                                style: textTheme.labelLarge
-                                                    ?.copyWith(
-                                                  color: backgroundColor,
-                                                ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  const Icon(
+                                                    Icons
+                                                        .change_circle_outlined,
+                                                    size: 20,
+                                                    color: backgroundColor,
+                                                  ),
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    'Change Department',
+                                                    style: textTheme.labelLarge
+                                                        ?.copyWith(
+                                                      color: backgroundColor,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                        const SizedBox(
+                                          width: 8,
+                                        ),
+                                        InkWell(
+                                          onTap: () {},
+                                          child: const Glassmorphism(
+                                            blur: 5,
+                                            opacity: .15,
+                                            radius: 99,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(6),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Icon(
+                                                    CupertinoIcons.hourglass,
+                                                    size: 20,
+                                                    color: backgroundColor,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),

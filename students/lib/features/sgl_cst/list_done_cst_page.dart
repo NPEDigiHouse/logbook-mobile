@@ -1,32 +1,28 @@
 import 'package:common/features/no_internet/check_internet_onetime.dart';
-import 'package:core/context/navigation_extension.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/spacing_column.dart';
-import 'package:students/features/sgl_cst/list_done_cst_page.dart';
 import 'package:students/features/sgl_cst/list_sgl_page.skeleton.dart';
 import 'package:students/features/sgl_cst/widgets/cst_submission_card.dart';
-import 'create_cst_page.dart';
-import 'widgets/sgl_cst_app_bar.dart';
 
-class ListCstPage extends StatefulWidget {
+class ListDoneCstPage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
 
-  const ListCstPage({super.key, required this.activeDepartmentModel});
+  const ListDoneCstPage({super.key, required this.activeDepartmentModel});
 
   @override
-  State<ListCstPage> createState() => _ListCstPageState();
+  State<ListDoneCstPage> createState() => _ListDoneCstPageState();
 }
 
-class _ListCstPageState extends State<ListCstPage> {
+class _ListDoneCstPageState extends State<ListDoneCstPage> {
   @override
   void initState() {
     super.initState();
     BlocProvider.of<SglCstCubit>(context)
-        .getStudentCstDetail(status: "INPROCESS");
+        .getStudentCstDetail(status: "VERIFIED");
   }
 
   @override
@@ -37,24 +33,13 @@ class _ListCstPageState extends State<ListCstPage> {
           onRefresh: () async {
             await Future.wait([
               BlocProvider.of<SglCstCubit>(context)
-                  .getStudentCstDetail(status: "INPROCESS")
+                  .getStudentCstDetail(status: "VERIFIED")
             ]);
           },
           child: CustomScrollView(
             slivers: [
-              SglCstAppBar(
-                title: 'Clinical Skill Training (CST)',
-                onBtnPressed: () {
-                  context.navigateTo(CreateCstPage(
-                    model: widget.activeDepartmentModel,
-                    date: DateTime.now(),
-                  ));
-                },
-                onHistoryClick: () {
-                  context.navigateTo(ListDoneCstPage(
-                    activeDepartmentModel: widget.activeDepartmentModel,
-                  ));
-                },
+              const SliverAppBar(
+                title: Text('List Verified CST'),
               ),
               SliverFillRemaining(
                 child: SingleChildScrollView(
@@ -66,18 +51,18 @@ class _ListCstPageState extends State<ListCstPage> {
                           if (state.isCstDeleteSuccess ||
                               state.isCstEditSuccess) {
                             BlocProvider.of<SglCstCubit>(context)
-                                .getStudentSglDetail(status: "INPROCESS");
+                                .getStudentSglDetail(status: "VERIFIED");
                           }
                         },
                         builder: (context, state) {
-                          if (state.cstDetail != null) {
-                            if (state.cstDetail!.csts!.isEmpty) {
+                          if (state.cstDoneDetail != null) {
+                            if (state.cstDoneDetail!.csts!.isEmpty) {
                               return const Column(
                                 children: [
                                   EmptyData(
                                       title: 'No CST Found',
                                       subtitle:
-                                          'There is no cst data added yet'),
+                                          'There is no cst data verified yet'),
                                 ],
                               );
                             }
@@ -85,7 +70,8 @@ class _ListCstPageState extends State<ListCstPage> {
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  final data = state.cstDetail!.csts![index];
+                                  final data =
+                                      state.cstDoneDetail!.csts![index];
                                   return CstSubmissionCard(
                                       data: data,
                                       unitId:
@@ -97,7 +83,7 @@ class _ListCstPageState extends State<ListCstPage> {
                                     height: 16,
                                   );
                                 },
-                                itemCount: state.cstDetail!.csts!.length);
+                                itemCount: state.cstDoneDetail!.csts!.length);
                           }
 
                           return const ListSglCstPageSkeleton();

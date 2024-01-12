@@ -15,6 +15,8 @@ class SglCstState {
   final bool isVerifyAllSglCstSuccess;
   final SglResponse? sglDetail;
   final CstResponse? cstDetail;
+  final SglResponse? sglDoneDetail;
+  final CstResponse? cstDoneDetail;
   final RequestState requestState;
   final bool isNewTopicAddSuccess;
   final HistoryCstModel? historyCstData;
@@ -28,6 +30,8 @@ class SglCstState {
       this.isCstDeleteSuccess = false,
       this.isCstEditSuccess = false,
       this.historyCstData,
+      this.sglDoneDetail,
+      this.cstDoneDetail,
       this.historySglData,
       this.isNewTopicAddSuccess = false,
       this.sglStudents,
@@ -58,6 +62,8 @@ class SglCstState {
     HistorySglModel? historySglData,
     SglResponse? sglDetail,
     CstResponse? cstDetail,
+    SglResponse? sglDoneDetail,
+    CstResponse? cstDoneDetail,
     List<TopicModel>? topics,
   }) {
     return SglCstState(
@@ -67,6 +73,8 @@ class SglCstState {
       isNewTopicAddSuccess: isNewTopicAddSuccess,
       sglDetail: sglDetail ?? this.sglDetail,
       cstDetail: cstDetail ?? this.cstDetail,
+      sglDoneDetail: sglDoneDetail ?? this.sglDoneDetail,
+      cstDoneDetail: cstDoneDetail ?? this.cstDoneDetail,
       isSglDeleteSuccess: isSglDeleteSuccess,
       isSglEditSuccess: isSglEditSuccess,
       isCstDeleteSuccess: isCstDeleteSuccess,

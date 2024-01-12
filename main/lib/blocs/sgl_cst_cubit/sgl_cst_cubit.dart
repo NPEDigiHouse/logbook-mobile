@@ -172,16 +172,21 @@ class SglCstCubit extends Cubit<SglCstState> {
     );
   }
 
-  Future<void> getStudentSglDetail() async {
+  Future<void> getStudentSglDetail({required String status}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result = await studentDataSource.getStudentSgl();
+      final result = await studentDataSource.getStudentSgl(status: status);
       try {
-        emit(
-            state.copyWith(sglDetail: result, requestState: RequestState.data));
+        if (status == "VERIFIED") {
+          emit(state.copyWith(
+              sglDoneDetail: result, requestState: RequestState.data));
+        } else {
+          emit(state.copyWith(
+              sglDetail: result, requestState: RequestState.data));
+        }
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }
@@ -207,16 +212,21 @@ class SglCstCubit extends Cubit<SglCstState> {
     );
   }
 
-  Future<void> getStudentCstDetail() async {
+  Future<void> getStudentCstDetail({required String status}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result = await studentDataSource.getStudentCst();
+      final result = await studentDataSource.getStudentCst(status: status);
       try {
-        emit(
-            state.copyWith(cstDetail: result, requestState: RequestState.data));
+        if (status == "VERIFIED") {
+          emit(state.copyWith(
+              cstDoneDetail: result, requestState: RequestState.data));
+        } else {
+          emit(state.copyWith(
+              cstDetail: result, requestState: RequestState.data));
+        }
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

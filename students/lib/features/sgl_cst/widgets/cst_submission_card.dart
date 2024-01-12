@@ -18,11 +18,11 @@ class CstSubmissionCard extends StatelessWidget {
   const CstSubmissionCard({
     super.key,
     required this.data,
-    required this.widget,
+    required this.unitId,
   });
 
   final Cst data;
-  final ListCstPage widget;
+  final String unitId;
 
   @override
   Widget build(BuildContext context) {
@@ -43,22 +43,42 @@ class CstSubmissionCard extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'CST #${data.cstId?.substring(0, 5).toUpperCase()}',
-                style: textTheme.titleMedium?.copyWith(
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'CST - ${Utils.datetimeToString(data.createdAt!, format: 'EEE, dd MMM yyyy')}',
+                    style: textTheme.titleMedium?.copyWith(
+                      color: secondaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    Utils.epochToStringTime(
+                        startTime: data.startTime!, endTime: data.endTime),
+                    style:
+                        textTheme.bodyMedium?.copyWith(color: primaryTextColor),
+                  ),
+                ],
               ),
               if (data.verificationStatus == 'VERIFIED') ...[
                 const SizedBox(
                   width: 4,
                 ),
-                const Icon(
-                  Icons.verified,
-                  color: successColor,
-                  size: 16,
+                const Column(
+                  children: [
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Icon(
+                      Icons.verified,
+                      color: primaryColor,
+                      size: 16,
+                    ),
+                  ],
                 )
               ],
               const Spacer(),
@@ -139,22 +159,6 @@ class CstSubmissionCard extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            children: [
-              Text(
-                "(${Utils.epochToStringTime(startTime: data.startTime!, endTime: data.endTime)})",
-                style: textTheme.bodyMedium?.copyWith(color: primaryTextColor),
-              ),
-              const SizedBox(
-                width: 6,
-              ),
-              Text(
-                Utils.datetimeToString(data.createdAt!,
-                    format: 'EEE, dd MMM yyyy'),
-                style: textTheme.bodyMedium?.copyWith(color: primaryTextColor),
-              ),
-            ],
-          ),
           const SizedBox(
             height: 12,
           ),
@@ -170,7 +174,7 @@ class CstSubmissionCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: data.topic![i].verificationStatus == 'VERIFIED'
-                        ? successColor
+                        ? primaryColor
                         : secondaryTextColor,
                   ),
                   child: Center(
@@ -223,7 +227,7 @@ class CstSubmissionCard extends StatelessWidget {
                     type: TopicDialogType.cst,
                     date: data.createdAt!,
                     id: data.cstId!,
-                    departmentId: widget.activeDepartmentModel.unitId ?? '',
+                    departmentId: unitId ?? '',
                     supervisorId: '',
                   ),
                 );

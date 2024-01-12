@@ -97,19 +97,19 @@ class CoordinatorHomePage extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Expanded(
-                      child: MenuItem(
-                        isVerification: false,
-                        name: 'Daily Activity',
-                        iconPath: 'icon_training.svg',
-                        onTap: () => context
-                            .navigateTo(const CoordinatorDailyActivityPage()),
-                        status: 'Add Week',
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 12,
-                    ),
+                    // Expanded(
+                    //   child: MenuItem(
+                    //     isVerification: false,
+                    //     name: 'Daily Activity',
+                    //     iconPath: 'icon_training.svg',
+                    //     onTap: () => context
+                    //         .navigateTo(const CoordinatorDailyActivityPage()),
+                    //     status: 'Add Week',
+                    //   ),
+                    // ),
+                    // const SizedBox(
+                    //   width: 12,
+                    // ),
                     Expanded(
                       child: MenuItem(
                         isVerification: false,
@@ -120,6 +120,7 @@ class CoordinatorHomePage extends StatelessWidget {
                         status: 'Input Score',
                       ),
                     ),
+                    const Expanded(child: SizedBox()),
                   ],
                 ),
               ],

@@ -1,13 +1,18 @@
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SglCstAppBar extends StatelessWidget {
   final String title;
   final VoidCallback onBtnPressed;
+  final VoidCallback onHistoryClick;
   const SglCstAppBar(
-      {super.key, required this.title, required this.onBtnPressed});
+      {super.key,
+      required this.title,
+      required this.onBtnPressed,
+      required this.onHistoryClick});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +29,15 @@ class SglCstAppBar extends StatelessWidget {
         ),
         onPressed: () => context.back(),
       ),
+      actions: [
+        IconButton(
+          icon: const Icon(
+            CupertinoIcons.doc_checkmark,
+            color: scaffoldBackgroundColor,
+          ),
+          onPressed: onHistoryClick,
+        ),
+      ],
       backgroundColor: primaryColor,
       titleTextStyle: textTheme.titleMedium?.copyWith(
         color: scaffoldBackgroundColor,

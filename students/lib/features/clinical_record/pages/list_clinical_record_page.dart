@@ -115,14 +115,6 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                     state.clinicalRecordResponse
                                             ?.listClinicalRecords !=
                                         null) {
-                                  if (state.clinicalRecordResponse!
-                                      .listClinicalRecords!.isEmpty) {
-                                    return const EmptyData(
-                                      title: 'Clinical Record Empty',
-                                      subtitle:
-                                          'Please upload clinical record before',
-                                    );
-                                  }
                                   return SingleChildScrollView(
                                     child: SpacingColumn(
                                       crossAxisAlignment:

@@ -13,13 +13,14 @@ class DepartmentHeader extends StatelessWidget {
       children: [
         Text(
           'Department',
-          style: textTheme.titleLarge?.copyWith(color: primaryColor),
+          style: textTheme.bodyLarge?.copyWith(color: primaryTextColor),
         ),
         Text(
           unitName,
-          style: textTheme.titleSmall?.copyWith(
-            color: secondaryTextColor,
+          style: textTheme.titleMedium?.copyWith(
+            color: primaryColor,
             height: 1,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ],

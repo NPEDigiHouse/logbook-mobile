@@ -54,7 +54,7 @@ class _WrapperState extends State<Wrapper> {
             ));
             break;
         }
-        ;
+
         if (loginState is LoginSuccess) {
           BlocProvider.of<WrapperCubit>(context).isSignIn();
         }

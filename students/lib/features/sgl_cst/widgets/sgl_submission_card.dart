@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/verify_dialog.dart';
-import 'package:students/features/sgl_cst/list_sgl_page.dart';
 import 'package:students/features/sgl_cst/widgets/add_topic_dialog.dart';
 import 'package:students/features/sgl_cst/widgets/edit_sglcst_dialog.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -18,11 +17,11 @@ class SglSubmissionCard extends StatelessWidget {
   const SglSubmissionCard({
     super.key,
     required this.data,
-    required this.widget,
+    required this.unitId,
   });
 
   final Sgl data;
-  final ListSglPage widget;
+  final String unitId;
 
   @override
   Widget build(BuildContext context) {
@@ -43,22 +42,42 @@ class SglSubmissionCard extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'SGL #${data.sglId?.substring(0, 5).toUpperCase()}',
-                style: textTheme.titleMedium?.copyWith(
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'SGL - ${Utils.datetimeToString(data.createdAt!, format: 'EEE, dd MMM yyyy')}',
+                    style: textTheme.titleMedium?.copyWith(
+                      color: secondaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    Utils.epochToStringTime(
+                        startTime: data.startTime!, endTime: data.endTime),
+                    style:
+                        textTheme.bodyMedium?.copyWith(color: primaryTextColor),
+                  ),
+                ],
               ),
               if (data.verificationStatus == 'VERIFIED') ...[
                 const SizedBox(
                   width: 4,
                 ),
-                const Icon(
-                  Icons.verified,
-                  color: successColor,
-                  size: 16,
+                const Column(
+                  children: [
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Icon(
+                      Icons.verified,
+                      color: primaryColor,
+                      size: 16,
+                    ),
+                  ],
                 )
               ],
               const Spacer(),
@@ -139,22 +158,6 @@ class SglSubmissionCard extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            children: [
-              Text(
-                "(${Utils.epochToStringTime(startTime: data.startTime!, endTime: data.endTime)})",
-                style: textTheme.bodyMedium?.copyWith(color: primaryTextColor),
-              ),
-              const SizedBox(
-                width: 6,
-              ),
-              Text(
-                Utils.datetimeToString(data.createdAt!,
-                    format: 'EEE, dd MMM yyyy'),
-                style: textTheme.bodyMedium?.copyWith(color: primaryTextColor),
-              ),
-            ],
-          ),
           const SizedBox(
             height: 12,
           ),
@@ -170,7 +173,7 @@ class SglSubmissionCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: data.topic![i].verificationStatus == 'VERIFIED'
-                        ? successColor
+                        ? primaryColor
                         : secondaryTextColor,
                   ),
                   child: Center(
@@ -223,7 +226,7 @@ class SglSubmissionCard extends StatelessWidget {
                     type: TopicDialogType.sgl,
                     date: data.createdAt!,
                     id: data.sglId!,
-                    departmentId: widget.activeDepartmentModel.unitId ?? '',
+                    departmentId: unitId ?? '',
                     supervisorId: '',
                   ),
                 );

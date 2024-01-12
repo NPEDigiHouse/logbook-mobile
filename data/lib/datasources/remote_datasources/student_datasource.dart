@@ -30,8 +30,8 @@ abstract class StudentDataSource {
   Future<List<MiniCexListModel>> getStudentMiniCex();
   Future<List<StudentScientificAssignment>> getStudentScientificAssignment();
   Future<List<StudentScientificAssignment>> getStudentPersonalBehavior();
-  Future<SglResponse> getStudentSgl();
-  Future<CstResponse> getStudentCst();
+  Future<SglResponse> getStudentSgl({required String status});
+  Future<CstResponse> getStudentCst({required String status});
   Future<SpecialReportResponse> getStudentSpecialReports();
   Future<FinalScoreResponse> getStudentFinalScore();
   Future<WeeklyAssesmentResponse> getStudentWeeklyAssesment();
@@ -222,28 +222,26 @@ class StudentDataSourceImpl implements StudentDataSource {
   }
 
   @override
-  Future<CstResponse> getStudentCst() async {
+  Future<CstResponse> getStudentCst({required String status}) async {
     try {
       final response = await dio.get(
         '${ApiService.baseUrl}/students/csts',
         options: await apiHeader.userOptions(),
+        data: {"status": status},
       );
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = CstResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
       throw failure(e);
     }
   }
 
   @override
-  Future<SglResponse> getStudentSgl() async {
+  Future<SglResponse> getStudentSgl({required String status}) async {
     try {
-      final response = await dio.get(
-        '${ApiService.baseUrl}/students/sgls',
-        options: await apiHeader.userOptions(),
-      );
+      final response = await dio.get('${ApiService.baseUrl}/students/sgls',
+          options: await apiHeader.userOptions(), data: {"status": status});
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = SglResponse.fromJson(dataResponse.data);
       return result;

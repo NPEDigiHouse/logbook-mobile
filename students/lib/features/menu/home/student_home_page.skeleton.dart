@@ -1,5 +1,4 @@
 import 'package:core/helpers/app_size.dart';
-import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:main/widgets/custom_shimmer.dart';

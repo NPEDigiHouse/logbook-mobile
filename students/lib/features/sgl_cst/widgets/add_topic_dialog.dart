@@ -64,9 +64,9 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
       listener: (context, state) {
         if (state.isNewTopicAddSuccess) {
           if (widget.type == TopicDialogType.cst) {
-            BlocProvider.of<SglCstCubit>(context).getStudentCstDetail();
+            BlocProvider.of<SglCstCubit>(context).getStudentCstDetail(status: "INPROCESS");
           } else {
-            BlocProvider.of<SglCstCubit>(context).getStudentSglDetail();
+            BlocProvider.of<SglCstCubit>(context).getStudentSglDetail(status: "INPROCESS");
           }
           context.back();
         }

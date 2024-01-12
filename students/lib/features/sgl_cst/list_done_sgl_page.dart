@@ -1,32 +1,28 @@
 import 'package:common/features/no_internet/check_internet_onetime.dart';
-import 'package:core/context/navigation_extension.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/spacing_column.dart';
-import 'package:students/features/sgl_cst/list_done_sgl_page.dart';
 import 'package:students/features/sgl_cst/list_sgl_page.skeleton.dart';
 import 'package:students/features/sgl_cst/widgets/sgl_submission_card.dart';
-import 'create_sgl_page.dart';
-import 'widgets/sgl_cst_app_bar.dart';
 
-class ListSglPage extends StatefulWidget {
+class ListDoneSglPage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
 
-  const ListSglPage({super.key, required this.activeDepartmentModel});
+  const ListDoneSglPage({super.key, required this.activeDepartmentModel});
 
   @override
-  State<ListSglPage> createState() => _ListSglPageState();
+  State<ListDoneSglPage> createState() => _ListDoneSglPageState();
 }
 
-class _ListSglPageState extends State<ListSglPage> {
+class _ListDoneSglPageState extends State<ListDoneSglPage> {
   @override
   void initState() {
     super.initState();
     BlocProvider.of<SglCstCubit>(context)
-        .getStudentSglDetail(status: "INPROCESS");
+        .getStudentSglDetail(status: "VERIFIED");
   }
 
   @override
@@ -37,25 +33,14 @@ class _ListSglPageState extends State<ListSglPage> {
           onRefresh: () async {
             await Future.wait([
               BlocProvider.of<SglCstCubit>(context)
-                  .getStudentSglDetail(status: "INPROCESS")
+                  .getStudentSglDetail(status: "VERIFIED")
             ]);
           },
           child: CustomScrollView(
             slivers: [
-              SglCstAppBar(
-                  title: 'Small Group Learning (SGL)',
-                  onBtnPressed: () {
-                    context.navigateTo(
-                      CreateSglPage(
-                        model: widget.activeDepartmentModel,
-                        date: DateTime.now(),
-                      ),
-                    );
-                  },
-                  onHistoryClick: () {
-                    context.navigateTo(ListDoneSglPage(
-                        activeDepartmentModel: widget.activeDepartmentModel));
-                  }),
+              const SliverAppBar(
+                title: Text('List Verified SGL'),
+              ),
               SliverFillRemaining(
                 child: SingleChildScrollView(
                   child: SpacingColumn(
@@ -66,22 +51,23 @@ class _ListSglPageState extends State<ListSglPage> {
                           if (state.isSglDeleteSuccess ||
                               state.isSglEditSuccess) {
                             BlocProvider.of<SglCstCubit>(context)
-                                .getStudentSglDetail(status: "INPROCESS");
+                                .getStudentSglDetail(status: "VERIFIED");
                           }
                         },
                         builder: (context, state) {
-                          if (state.sglDetail != null) {
-                            if ((state.sglDetail?.sgls ?? []).isEmpty) {
+                          if (state.sglDoneDetail != null) {
+                            if ((state.sglDoneDetail?.sgls ?? []).isEmpty) {
                               return const EmptyData(
                                   title: 'No SGL Found',
-                                  subtitle: 'There is no sgl data added yet');
+                                  subtitle:
+                                      'There is no sgl data verified yet');
                             }
                             return ListView.separated(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 final data =
-                                    (state.sglDetail?.sgls ?? [])[index];
+                                    (state.sglDoneDetail?.sgls ?? [])[index];
                                 return SglSubmissionCard(
                                     data: data,
                                     unitId:
@@ -93,7 +79,8 @@ class _ListSglPageState extends State<ListSglPage> {
                                   height: 16,
                                 );
                               },
-                              itemCount: (state.sglDetail?.sgls ?? []).length,
+                              itemCount:
+                                  (state.sglDoneDetail?.sgls ?? []).length,
                             );
                           }
                           return const ListSglCstPageSkeleton();

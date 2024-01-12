@@ -73,11 +73,13 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
     return BlocListener<SglCstCubit, SglCstState>(
       listener: (context, state) {
         if (widget.type == TopicDialogType.cst && state.isCstEditSuccess) {
-          BlocProvider.of<SglCstCubit>(context).getStudentCstDetail();
+          BlocProvider.of<SglCstCubit>(context)
+              .getStudentCstDetail(status: "INPROCESS");
           context.back();
         } else if (state.isSglEditSuccess &&
             widget.type == TopicDialogType.sgl) {
-          BlocProvider.of<SglCstCubit>(context).getStudentSglDetail();
+          BlocProvider.of<SglCstCubit>(context)
+              .getStudentSglDetail(status: "INPROCESS");
           context.back();
         }
       },

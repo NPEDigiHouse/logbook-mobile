@@ -58,7 +58,7 @@ class _CreateCstPageState extends State<CreateCstPage> {
       body: BlocListener<SglCstCubit, SglCstState>(
         listener: (context, state) {
           if (state.isCstPostSuccess) {
-            BlocProvider.of<SglCstCubit>(context).getStudentCstDetail();
+            BlocProvider.of<SglCstCubit>(context).getStudentCstDetail(status: "INPROCESS");
             Navigator.pop(context);
           }
         },

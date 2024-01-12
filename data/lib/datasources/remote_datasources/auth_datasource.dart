@@ -1,5 +1,7 @@
 // ignore_for_file: void_checks, unnecessary_null_comparison
 
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:data/datasources/local_datasources/auth_preferences_handler.dart';
 import 'package:data/models/user/user_credential.dart';
@@ -174,17 +176,26 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   Future<Either<Failure, UserCredential>> getUserCredential() async {
     try {
-      final response = await dio.get(
-        '${ApiService.baseUrl}/users',
-        options: await apiHeader.userOptions(),
-      );
+      const Duration timeoutDuration = Duration(seconds: 7);
+
+      final response = await dio
+          .get(
+            '${ApiService.baseUrl}/users',
+            options: await apiHeader.userOptions(),
+          )
+          .timeout(timeoutDuration);
+
       final dataResponse =
           DataResponse<Map<String, dynamic>>.fromJson(response.data);
       UserCredential userCredential =
           UserCredential.fromJson(dataResponse.data);
       return Right(userCredential);
     } catch (e) {
-      return Left(failure(e));
+      if (e is TimeoutException) {
+        return Left(failure("Operation timed out"));
+      } else {
+        return Left(failure(e));
+      }
     }
   }
 }

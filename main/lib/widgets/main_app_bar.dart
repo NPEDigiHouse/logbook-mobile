@@ -9,7 +9,8 @@ import 'package:flutter_svg/svg.dart';
 
 class MainAppBar extends StatelessWidget {
   final bool withLogout;
-  const MainAppBar({super.key, this.withLogout = true});
+  final VoidCallback? onTap;
+  const MainAppBar({super.key, this.withLogout = true, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +21,26 @@ class MainAppBar extends StatelessWidget {
       backgroundColor: scaffoldBackgroundColor,
       surfaceTintColor: scaffoldBackgroundColor,
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (!withLogout) ...[
-            SvgPicture.asset(
-              AssetPath.getIcon('logo.svg'),
-              color: primaryTextColor,
-              width: 24,
-              height: 24,
+          InkWell(
+            onTap: onTap,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(
+                  AssetPath.getIcon('logo.svg'),
+                  color: primaryTextColor,
+                  width: 24,
+                  height: 24,
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                const Text('E-Logbook'),
+              ],
             ),
-            const SizedBox(
-              width: 12,
-            ),
-          ],
-          const Text('E-Logbook'),
+          ),
         ],
       ),
       centerTitle: true,
@@ -52,7 +60,7 @@ class MainAppBar extends StatelessWidget {
               color: primaryTextColor,
               size: 24,
             ),
-            tooltip: 'Keluar',
+            tooltip: 'Notification',
           ),
         ),
       ],
