@@ -51,44 +51,65 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       backgroundColor: scaffoldBackgroundColor,
       body: Container(
+        color: primaryColor,
         width: AppSize.getAppWidth(context),
         height: AppSize.getAppHeight(context),
-        color: primaryColor,
         child: Stack(
           children: [
             Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    AssetPath.getIcon('logo.svg'),
-                    width: 150,
-                    height: 150,
-                    color: scaffoldBackgroundColor,
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    "E-Logbook",
-                    style: textTheme.headlineSmall?.copyWith(
-                        color: scaffoldBackgroundColor,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(.1),
+                ),
+                padding: const EdgeInsets.all(20),
+                width: 240,
+                height: 240,
+              ),
+            ),
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(.2),
+                ),
+                padding: const EdgeInsets.all(20),
+                width: 200,
+                height: 200,
+              ),
+            ),
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(.3),
+                ),
+                padding: const EdgeInsets.all(30),
+                width: 160,
+                height: 160,
+                child: SvgPicture.asset(
+                  AssetPath.getIcon('logo.svg'),
+                  width: 100,
+                  height: 100,
+                  color: scaffoldBackgroundColor,
+                ),
               ),
             ),
             Positioned(
               bottom: 24,
               child: SizedBox(
                 width: AppSize.getAppWidth(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
                   children: [
-                    Text(
-                      "Version ${AppSettings.appVersion}",
-                      style: textTheme.bodyMedium
-                          ?.copyWith(color: scaffoldBackgroundColor),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Version ${AppSettings.appVersion} (2024)",
+                          style: textTheme.bodyMedium
+                              ?.copyWith(color: scaffoldBackgroundColor),
+                        ),
+                      ],
                     ),
                   ],
                 ),

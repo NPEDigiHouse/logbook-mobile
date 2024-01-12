@@ -16,7 +16,6 @@ dependencies:
   top_snackbar_flutter: ^3.1.0
   dotted_border: ^2.0.0+3
   shimmer: ^2.0.0
-  flutter_spinkit: ^5.2.0
   cool_alert: ^2.0.1
   flutter_typeahead: ^4.7.0
   flutter_form_builder: ^9.1.0
