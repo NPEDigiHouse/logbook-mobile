@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:open_file/open_file.dart' as o;
 import 'package:data/models/clinical_records/affected_part_model.dart';
 import 'package:data/models/clinical_records/clinical_record_list_model.dart';
 import 'package:data/models/clinical_records/clinical_record_post_model.dart';
@@ -24,6 +25,10 @@ import 'package:path_provider/path_provider.dart';
 
 abstract class ClinicalRecordsDatasource {
   Future<Either<Failure, void>> uploadClinicalRecord({
+    required ClinicalRecordPostModel clinicalRecordPostModel,
+  });
+  Future<Either<Failure, void>> updateClinicalRecord({
+    required String id,
     required ClinicalRecordPostModel clinicalRecordPostModel,
   });
   Future<Either<Failure, String>> uploadClinicalRecordAttachment(
@@ -92,6 +97,41 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   }
 
   @override
+  Future<Either<Failure, void>> updateClinicalRecord(
+      {required ClinicalRecordPostModel clinicalRecordPostModel,
+      required String id}) async {
+    try {
+      print('${ApiService.baseUrl}/clinical-records/$id/v2');
+      final data = {
+        'patientName': clinicalRecordPostModel.patientName,
+        'patientAge': clinicalRecordPostModel.patientAge,
+        'gender': clinicalRecordPostModel.gender,
+        'recordId': clinicalRecordPostModel.recordId,
+        if (clinicalRecordPostModel.notes != null)
+          'notes': clinicalRecordPostModel.notes,
+        if (clinicalRecordPostModel.studentFeedback != null)
+          'studentFeedback': clinicalRecordPostModel.studentFeedback,
+        'supervisorId': clinicalRecordPostModel.supervisorId,
+        if (clinicalRecordPostModel.attachment != null)
+          'attachment': clinicalRecordPostModel.attachment,
+        'examinations': clinicalRecordPostModel.examinations,
+        'diagnosiss': clinicalRecordPostModel.diagnosess,
+        'managements': clinicalRecordPostModel.managements,
+      };
+      print(data);
+      await dio.put(
+        '${ApiService.baseUrl}/clinical-records/$id/v2',
+        options: await apiHeader.userOptions(),
+        data: data,
+      );
+      return const Right(true);
+    } catch (e) {
+      print(e.toString());
+      return Left(failure(e));
+    }
+  }
+
+  @override
   Future<Either<Failure, String>> uploadClinicalRecordAttachment(
       {required String filePath}) async {
     try {
@@ -137,6 +177,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         '${ApiService.baseUrl}/clinical-records/$clinicalRecordId',
         options: await apiHeader.userOptions(),
       );
+      print(response.data);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = DetailClinicalRecordModel.fromJson(dataResponse.data);
       return result;
@@ -293,7 +334,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
     try {
       Directory directory = Directory("");
       if (Platform.isAndroid) {
-        directory = Directory("/storage/emulated/0/Download");
+        directory = (await getDownloadsDirectory())!;
       } else {
         directory = await getApplicationDocumentsDirectory();
       }
@@ -318,6 +359,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
           mimeType: MimeType.pdf,
         );
       }
+      await o.OpenFile.open(savePath ?? '');
       return savePath ?? '';
     } catch (e) {
       throw failure(e);

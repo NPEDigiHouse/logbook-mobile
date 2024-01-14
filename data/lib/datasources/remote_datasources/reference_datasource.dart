@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:open_file/open_file.dart' as o;
 
 import 'package:data/models/reference/reference_on_list_model.dart';
 import 'package:data/services/api_service.dart';
@@ -55,7 +56,7 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
     try {
       Directory _directory = Directory("");
       if (Platform.isAndroid) {
-        _directory = Directory("/storage/emulated/0/Download");
+        _directory = (await getDownloadsDirectory())!;
       } else {
         _directory = await getApplicationDocumentsDirectory();
       }
@@ -79,6 +80,7 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
           ),
           mimeType: MimeType.pdf,
         );
+        await o.OpenFile.open(savePath ?? '');
       }
 
       return savePath ?? '';

@@ -66,6 +66,7 @@ class StudentDataSourceImpl implements StudentDataSource {
         '${ApiService.baseUrl}/students/clinical-records',
         options: await apiHeader.userOptions(),
       );
+      print(response.data);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentClinicalRecordResponse.fromJson(dataResponse.data);
       return result;

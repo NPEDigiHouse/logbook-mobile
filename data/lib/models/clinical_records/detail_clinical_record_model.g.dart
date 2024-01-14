@@ -13,8 +13,14 @@ DetailClinicalRecordModel _$DetailClinicalRecordModelFromJson(
       diagnosess: (json['diagnosess'] as List<dynamic>?)
           ?.map((e) => DiagnosisModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      supervisorId: json['supervisorId'] as String?,
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+      id: json['id'] as String?,
       rating: (json['rating'] as num?)?.toDouble(),
       notes: json['notes'] as String?,
+      patientAge: json['patientAge'] as int?,
       examinations: (json['examinations'] as List<dynamic>?)
           ?.map((e) => ExaminationsModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -41,17 +47,21 @@ Map<String, dynamic> _$DetailClinicalRecordModelToJson(
       'examinations': instance.examinations,
       'managements': instance.managements,
       'patientName': instance.patientName,
+      'id': instance.id,
       'patientSex': instance.patientSex,
       'studentFeedback': instance.studentFeedback,
       'studentName': instance.studentName,
       'supervisorFeedback': instance.supervisorFeedback,
       'supervisorName': instance.supervisorName,
+      'supervisorId': instance.supervisorId,
       'filename': instance.filename,
       'verificationStatus': instance.verificationStatus,
       'recordId': instance.recordId,
       'unit': instance.unit,
+      'patientAge': instance.patientAge,
       'rating': instance.rating,
       'notes': instance.notes,
+      'updatedAt': instance.updatedAt?.toIso8601String(),
     };
 
 ExaminationsModel _$ExaminationsModelFromJson(Map<String, dynamic> json) =>

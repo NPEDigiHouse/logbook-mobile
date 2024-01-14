@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:open_file/open_file.dart' as o;
 
 import 'package:dartz/dartz.dart';
 import 'package:data/models/scientific_session/list_scientific_session_model.dart';
@@ -121,7 +122,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
     try {
       Directory directory = Directory("");
       if (Platform.isAndroid) {
-        directory = Directory("/storage/emulated/0/Download");
+        directory = (await getDownloadsDirectory())!;
       } else {
         directory = await getApplicationDocumentsDirectory();
       }
@@ -145,6 +146,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
           ),
           mimeType: MimeType.pdf,
         );
+        await o.OpenFile.open(savePath ?? '');
       }
 
       return savePath ?? '';

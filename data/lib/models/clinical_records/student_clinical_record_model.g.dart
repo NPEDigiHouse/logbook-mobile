@@ -30,6 +30,9 @@ StudentClinicalRecordModel _$StudentClinicalRecordModelFromJson(
     StudentClinicalRecordModel(
       clinicalRecordId: json['clinicalRecordId'] as String?,
       patientName: json['patientName'] as String?,
+      createdAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
       supervisorName: json['supervisorName'] as String?,
       verificationStatus: json['verificationStatus'] as String?,
     );
@@ -40,5 +43,6 @@ Map<String, dynamic> _$StudentClinicalRecordModelToJson(
       'clinicalRecordId': instance.clinicalRecordId,
       'patientName': instance.patientName,
       'supervisorName': instance.supervisorName,
+      'updatedAt': instance.createdAt?.toIso8601String(),
       'verificationStatus': instance.verificationStatus,
     };

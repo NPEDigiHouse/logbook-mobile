@@ -19,6 +19,7 @@ dependencies:
   path_provider: ^2.0.5
   path: ^1.8.3
   file_saver: ^0.2.8
+  open_file: ^3.3.2
 
 dev_dependencies:
   flutter_test:

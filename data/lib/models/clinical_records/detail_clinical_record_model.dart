@@ -9,23 +9,31 @@ class DetailClinicalRecordModel {
   final List<ExaminationsModel>? examinations;
   final List<ManagementModel>? managements;
   final String? patientName;
+  String? id;
   final String? patientSex;
   final String? studentFeedback;
   final String? studentName;
   final String? supervisorFeedback;
   final String? supervisorName;
+  final String? supervisorId;
   final String? filename;
   final String? verificationStatus;
   final String? recordId;
   final String? unit;
+  final int? patientAge;
   final double? rating;
   final String? notes;
+  final DateTime? updatedAt;
 
   DetailClinicalRecordModel({
     this.attachments,
     this.diagnosess,
+    this.supervisorId,
+    this.updatedAt,
+    this.id,
     this.rating,
     this.notes,
+    this.patientAge,
     this.examinations,
     this.managements,
     this.patientName,

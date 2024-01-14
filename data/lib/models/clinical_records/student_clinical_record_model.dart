@@ -24,11 +24,14 @@ class StudentClinicalRecordModel {
   final String? clinicalRecordId;
   final String? patientName;
   final String? supervisorName;
+  @JsonKey(name: 'updatedAt')
+  final DateTime? createdAt;
   final String? verificationStatus;
 
   StudentClinicalRecordModel({
     this.clinicalRecordId,
     this.patientName,
+    this.createdAt,
     this.supervisorName,
     this.verificationStatus,
   });
