@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'dart:ui';
+import 'package:common/features/file/file_management.dart';
 import 'package:common/features/personal_data/widgets/change_profile_photo.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/asset_path.dart';
@@ -30,43 +31,6 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController userIdController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-
-  Future<void> uploadFile(BuildContext context) async {
-    PermissionStatus? status;
-
-    if (Platform.isAndroid) {
-      final plugin = DeviceInfoPlugin();
-      final android = await plugin.androidInfo;
-
-      status = android.version.sdkInt < 33
-          ? await Permission.storage.request()
-          : PermissionStatus.granted;
-    } else {
-      status = await Permission.storage.request();
-    }
-
-    if (status.isGranted) {
-      // Izin diberikan, lanjutkan dengan tindakan yang diperlukan
-      FilePickerResult? result =
-          await FilePicker.platform.pickFiles(type: FileType.image);
-
-      if (result != null) {
-        File file = File(result.files.single.path!);
-        try {
-          BlocProvider.of<UserCubit>(context).uploadProfilePic(path: file.path);
-        } catch (e) {
-          print('Error uploading file: $e');
-        }
-      }
-    } else if (status.isDenied) {
-      await Permission.storage.request();
-      // Pengguna menolak izin, Anda dapat memberi tahu pengguna untuk mengaktifkannya di pengaturan
-      print('Storage permission is denied');
-    } else if (status.isPermanentlyDenied) {
-      // Pengguna secara permanen menolak izin, arahkan pengguna ke pengaturan aplikasi
-      openAppSettings();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +78,13 @@ class _LecturerPersonalDataPageState extends State<LecturerPersonalDataPage> {
                               isDismissible: true,
                               builder: (ctx) => ChangeProfilePhotoSheet(
                                   onTap: () {
-                                    uploadFile(context);
+                                    FileManagement.uploadImage(
+                                      context,
+                                      (path) {
+                                        BlocProvider.of<UserCubit>(context)
+                                            .uploadProfilePic(path: path);
+                                      },
+                                    );
                                     Navigator.of(context).pop();
                                   },
                                   isProfilePhotoExist:

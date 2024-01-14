@@ -1,12 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:io';
 import 'dart:ui';
+import 'package:common/features/file/file_management.dart';
 import 'package:common/features/personal_data/widgets/change_profile_photo.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +15,6 @@ import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/profile_cubit/profile_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/custom_shimmer.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:students/features/menu/profile/widgets/personal_data_form.dart';
 
 class PersonalDataPage extends StatefulWidget {
@@ -28,62 +26,6 @@ class PersonalDataPage extends StatefulWidget {
 }
 
 class _PersonalDataPageState extends State<PersonalDataPage> {
-  Future<void> uploadFile(BuildContext context) async {
-    PermissionStatus? status;
-
-    if (Platform.isAndroid) {
-      final plugin = DeviceInfoPlugin();
-      final android = await plugin.androidInfo;
-
-      status = android.version.sdkInt < 33
-          ? await Permission.storage.request()
-          : PermissionStatus.granted;
-    } else {
-      status = await Permission.storage.request();
-    }
-    if (status.isGranted) {
-      // Izin diberikan, lanjutkan dengan tindakan yang diperlukan
-      FilePickerResult? result =
-          await FilePicker.platform.pickFiles(type: FileType.image);
-
-      if (result != null) {
-        CroppedFile? croppedFile = await ImageCropper().cropImage(
-          sourcePath: result.files.single.path!,
-          aspectRatioPresets: [
-            CropAspectRatioPreset.square,
-            CropAspectRatioPreset.ratio3x2,
-            CropAspectRatioPreset.original,
-            CropAspectRatioPreset.ratio4x3,
-            CropAspectRatioPreset.ratio16x9
-          ],
-          uiSettings: [
-            AndroidUiSettings(
-                toolbarTitle: 'Crop Profile Image',
-                toolbarColor: primaryColor,
-                toolbarWidgetColor: Colors.white,
-                statusBarColor: secondaryColor,
-                activeControlsWidgetColor: primaryColor,
-                initAspectRatio: CropAspectRatioPreset.original,
-                lockAspectRatio: false),
-            IOSUiSettings(
-              title: 'Crop Profile Image',
-            ),
-          ],
-        );
-        try {
-          BlocProvider.of<UserCubit>(context)
-              .uploadProfilePic(path: croppedFile!.path);
-        } catch (e) {
-          print('Error uploading file: $e');
-        }
-      }
-    } else if (status.isDenied) {
-    } else if (status.isPermanentlyDenied) {
-      // Pengguna secara permanen menolak izin, arahkan pengguna ke pengaturan aplikasi
-      openAppSettings();
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -131,7 +73,13 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
                               isDismissible: true,
                               builder: (ctx) => ChangeProfilePhotoSheet(
                                   onTap: () {
-                                    uploadFile(context);
+                                    FileManagement.uploadImage(
+                                      context,
+                                      (path) {
+                                        BlocProvider.of<UserCubit>(context)
+                                            .uploadProfilePic(path: path);
+                                      },
+                                    );
                                     Navigator.of(context).pop();
                                   },
                                   isProfilePhotoExist:

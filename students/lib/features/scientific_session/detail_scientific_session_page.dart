@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:common/features/file/file_management.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
@@ -33,27 +34,11 @@ class DetailScientificSessionPage extends StatefulWidget {
 
 class _DetailScientificSessionPageState
     extends State<DetailScientificSessionPage> {
-  Future<bool> checkAndRequestPermission() async {
-    PermissionStatus? status;
-
-    if (Platform.isAndroid) {
-      final plugin = DeviceInfoPlugin();
-      final android = await plugin.androidInfo;
-
-      status = android.version.sdkInt < 33
-          ? await Permission.storage.request()
-          : PermissionStatus.granted;
-    } else {
-      status = await Permission.storage.request();
-    }
-    return status.isGranted;
-  }
-
   @override
   void initState() {
     super.initState();
     BlocProvider.of<ScientificSessionSupervisorCubit>(context)
-      .getScientificSessionDetail(id: widget.id);
+        .getScientificSessionDetail(id: widget.id);
   }
 
   @override
@@ -78,9 +63,9 @@ class _DetailScientificSessionPageState
                     builder: (_) => VerifyDialog(
                       onTap: () {
                         BlocProvider.of<ScientificSessionCubit>(context)
-                          .deleteScientificSessionById(id: widget.id);
+                            .deleteScientificSessionById(id: widget.id);
                         BlocProvider.of<StudentCubit>(context)
-                          .getStudentScientificSessionOfActiveDepartment();
+                            .getStudentScientificSessionOfActiveDepartment();
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
@@ -341,19 +326,19 @@ class _DetailScientificSessionPageState
                                 height: 24,
                                 child: OutlinedButton(
                                   style: OutlinedButton.styleFrom(
-                                    padding:
-                                        const EdgeInsets.symmetric(horizontal: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
                                   ),
                                   onPressed: () async {
-                                    final hasPermission =
-                                        await checkAndRequestPermission();
+                                    final hasPermission = await FileManagement
+                                        .checkAndRequestPermission();
                                     if (hasPermission) {
                                       BlocProvider.of<ScientificSessionCubit>(
-                                          context)
-                                        .downloadAttachment(
-                                            id: widget.id,
-                                            filename:
-                                                '${p.basename(state.detail!.attachment!)}.pdf');
+                                              context)
+                                          .downloadAttachment(
+                                              id: widget.id,
+                                              filename:
+                                                  '${p.basename(state.detail!.attachment!)}.pdf');
                                     }
                                   },
                                   child: Text(
@@ -561,13 +546,13 @@ class _DetailScientificSessionPageState
                             itemCount: 5,
                             ignoreGestures: true,
                             unratedColor: const Color(0xFFCED8EE),
-                            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             itemBuilder: (context, _) => const Icon(
                               Icons.star,
                               color: primaryColor,
                             ),
-                            onRatingUpdate: (rating) {
-                            },
+                            onRatingUpdate: (rating) {},
                           ),
                           Text(
                             '"Good"',

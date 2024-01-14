@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:common/features/file/file_management.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:data/models/reference/reference_on_list_model.dart';
 import 'package:data/models/units/active_unit_model.dart';
@@ -30,22 +31,6 @@ class ReferencePage extends StatefulWidget {
 class _ReferencePageState extends State<ReferencePage> {
   ValueNotifier<List<ReferenceOnListModel>> listData = ValueNotifier([]);
   bool isMounted = false;
-
-  Future<bool> checkAndRequestPermission() async {
-    PermissionStatus? status;
-
-    if (Platform.isAndroid) {
-      final plugin = DeviceInfoPlugin();
-      final android = await plugin.androidInfo;
-
-      status = android.version.sdkInt < 33
-          ? await Permission.storage.request()
-          : PermissionStatus.granted;
-    } else {
-      status = await Permission.storage.request();
-    }
-    return status.isGranted;
-  }
 
   @override
   void initState() {
@@ -156,7 +141,8 @@ class _ReferencePageState extends State<ReferencePage> {
                                                                 '');
                                                       } else {
                                                         final hasPermission =
-                                                            await checkAndRequestPermission();
+                                                            await FileManagement
+                                                                .checkAndRequestPermission();
                                                         if (hasPermission) {
                                                           BlocProvider.of<
                                                                       ReferenceCubit>(

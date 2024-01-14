@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:common/features/file/file_management.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
@@ -34,22 +35,6 @@ class SupervisorDetailClinicalRecordPage extends StatefulWidget {
 
 class _SupervisorDetailClinicalRecordPageState
     extends State<SupervisorDetailClinicalRecordPage> {
-  Future<bool> checkAndRequestPermission() async {
-    PermissionStatus? status;
-
-    if (Platform.isAndroid) {
-      final plugin = DeviceInfoPlugin();
-      final android = await plugin.androidInfo;
-
-      status = android.version.sdkInt < 33
-          ? await Permission.storage.request()
-          : PermissionStatus.granted;
-    } else {
-      status = await Permission.storage.request();
-    }
-    return status.isGranted;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -538,8 +523,8 @@ class _SupervisorDetailClinicalRecordPageState
                                           horizontal: 8),
                                     ),
                                     onPressed: () async {
-                                      final hasPermission =
-                                          await checkAndRequestPermission();
+                                      final hasPermission = await FileManagement
+                                          .checkAndRequestPermission();
                                       if (hasPermission) {
                                         BlocProvider.of<ClinicalRecordCubit>(
                                                 context)

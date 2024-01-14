@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:common/features/file/file_management.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/models/scientific_session/scientific_roles.dart';
@@ -53,45 +54,6 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
   ValueNotifier<String?> supervisorValue = ValueNotifier(null);
   final List<ScientificRoles> _roles = [];
   final List<SessionTypesModel> _sessionTypes = [];
-
-  Future<void> uploadFile(BuildContext context) async {
-    PermissionStatus? status;
-
-    if (Platform.isAndroid) {
-      final plugin = DeviceInfoPlugin();
-      final android = await plugin.androidInfo;
-
-      status = android.version.sdkInt < 33
-          ? await Permission.storage.request()
-          : PermissionStatus.granted;
-    } else {
-      status = await Permission.storage.request();
-    }
-    if (status.isGranted) {
-      // Izin diberikan, lanjutkan dengan tindakan yang diperlukan
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-          allowedExtensions: ['pdf', 'jpg', 'png'], type: FileType.custom);
-
-      if (result != null) {
-        File file = File(result.files.single.path!);
-        int maxSizeInBytes = 5 * 1024 * 1024; // 5MB dalam byte
-
-        if (result.files.first.size > maxSizeInBytes) {
-          CustomAlert.error(message: 'Max file size is 5mb', context: context);
-          return;
-        }
-        try {
-          BlocProvider.of<ScientificSessionCubit>(context)
-              .uploadAttachment(path: file.path);
-        } catch (e) {}
-      }
-    } else if (status.isDenied) {
-      // Pengguna menolak izin, Anda dapat memberi tahu pengguna untuk mengaktifkannya di pengaturan
-    } else if (status.isPermanentlyDenied) {
-      // Pengguna secara permanen menolak izin, arahkan pengguna ke pengaturan aplikasi
-      openAppSettings();
-    }
-  }
 
   @override
   void initState() {
@@ -287,7 +249,13 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                               horizontal: 12, vertical: 24),
                           radius: 12,
                           color: const Color(0xFF29C5F6).withOpacity(.2),
-                          onTap: () => uploadFile(context),
+                          onTap: () => FileManagement.uploadFile(
+                            context,
+                            (path) {
+                              BlocProvider.of<ScientificSessionCubit>(context)
+                                  .uploadAttachment(path: path);
+                            },
+                          ),
                           child: Row(
                             children: [
                               if (state.attachState == RequestState.init) ...[
@@ -302,7 +270,14 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                                     ),
                                     padding: const EdgeInsets.all(0.0),
                                     iconSize: 14,
-                                    onPressed: () => uploadFile(context),
+                                    onPressed: () => FileManagement.uploadFile(
+                                      context,
+                                      (path) {
+                                        BlocProvider.of<ScientificSessionCubit>(
+                                                context)
+                                            .uploadAttachment(path: path);
+                                      },
+                                    ),
                                     icon: const Icon(
                                       Icons.add_rounded,
                                       color: backgroundColor,

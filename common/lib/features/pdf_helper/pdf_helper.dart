@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:common/features/file/file_management.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:data/models/students/student_statistic.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -824,22 +825,6 @@ class PdfHelper {
   }
 }
 
-Future<bool> checkAndRequestPermission() async {
-  PermissionStatus? status;
-
-  if (Platform.isAndroid) {
-    final plugin = DeviceInfoPlugin();
-    final android = await plugin.androidInfo;
-
-    status = android.version.sdkInt < 33
-        ? await Permission.storage.request()
-        : PermissionStatus.granted;
-  } else {
-    status = await Permission.storage.request();
-  }
-  return status.isGranted;
-}
-
 class PdfApi {
   static Future<File?> saveDocument({
     required String name,
@@ -851,7 +836,7 @@ class PdfApi {
       final directory = Directory("/storage/emulated/0/Download");
       final file = File('${directory.path}/$name.pdf');
 
-      if (await checkAndRequestPermission()) {
+      if (await FileManagement.checkAndRequestPermission()) {
         await file.writeAsBytes(bytes);
         return file;
       } else {
@@ -861,7 +846,7 @@ class PdfApi {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/$name.pdf');
 
-      if (await checkAndRequestPermission()) {
+      if (await FileManagement.checkAndRequestPermission()) {
         await file.writeAsBytes(bytes);
 
         try {

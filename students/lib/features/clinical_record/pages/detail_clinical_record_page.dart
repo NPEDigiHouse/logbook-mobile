@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:common/features/file/file_management.dart';
 import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/utils.dart';
@@ -35,22 +36,6 @@ class DetailClinicalRecordPage extends StatefulWidget {
 
 class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
   final TextEditingController fController = TextEditingController();
-
-  Future<bool> checkAndRequestPermission() async {
-    PermissionStatus? status;
-
-    if (Platform.isAndroid) {
-      final plugin = DeviceInfoPlugin();
-      final android = await plugin.androidInfo;
-
-      status = android.version.sdkInt < 33
-          ? await Permission.storage.request()
-          : PermissionStatus.granted;
-    } else {
-      status = await Permission.storage.request();
-    }
-    return status.isGranted;
-  }
 
   @override
   void initState() {
@@ -611,7 +596,8 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                                       ),
                                       onPressed: () async {
                                         final hasPermission =
-                                            await checkAndRequestPermission();
+                                            await FileManagement
+                                                .checkAndRequestPermission();
                                         if (hasPermission) {
                                           BlocProvider.of<ClinicalRecordCubit>(
                                                   context)

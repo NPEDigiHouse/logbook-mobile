@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:common/features/file/file_management.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -34,48 +35,6 @@ class _CreateClinicalRecordThirdPageState
     extends State<CreateClinicalRecordThirdPage> {
   ValueNotifier<String> fileName = ValueNotifier('');
   final TextEditingController notesController = TextEditingController();
-  Future<void> uploadFile(BuildContext context) async {
-    PermissionStatus? status;
-
-    if (Platform.isAndroid) {
-      final plugin = DeviceInfoPlugin();
-      final android = await plugin.androidInfo;
-
-      status = android.version.sdkInt < 33
-          ? await Permission.storage.request()
-          : PermissionStatus.granted;
-    } else {
-      status = await Permission.storage.request();
-    }
-    if (status.isGranted) {
-      // Izin diberikan, lanjutkan dengan tindakan yang diperlukan
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        allowedExtensions: ['pdf', 'jpg', 'png'],
-        type: FileType.custom,
-      );
-
-      if (result != null) {
-        int maxSizeInBytes = 5 * 1024 * 1024; // 5MB dalam byte
-        if (result.files.first.size > maxSizeInBytes) {
-          CustomAlert.error(context: context, message: 'Max file size is 5mb');
-          return;
-        }
-        File file = File(result.files.single.path!);
-
-        fileName.value = basename(file.path);
-
-        try {
-          BlocProvider.of<ClinicalRecordCubit>(context)
-              .uploadClinicalRecordAttachment(path: file.path);
-        } catch (e) {}
-      }
-    } else if (status.isDenied) {
-      // Pengguna menolak izin, Anda dapat memberi tahu pengguna untuk mengaktifkannya di pengaturan
-    } else if (status.isPermanentlyDenied) {
-      // Pengguna secara permanen menolak izin, arahkan pengguna ke pengaturan aplikasi
-      openAppSettings();
-    }
-  }
 
   @override
   void dispose() {
@@ -129,7 +88,16 @@ class _CreateClinicalRecordThirdPageState
                       radius: 12,
                       color: const Color(0xFF29C5F6).withOpacity(.2),
                       margin: const EdgeInsets.symmetric(horizontal: 16),
-                      onTap: () => uploadFile(context),
+                      onTap: () => FileManagement.uploadFile(
+                        context,
+                        (path) {
+                          fileName.value = basename(path);
+                          try {
+                            BlocProvider.of<ClinicalRecordCubit>(context)
+                                .uploadClinicalRecordAttachment(path: path);
+                          } catch (e) {}
+                        },
+                      ),
                       child: Row(
                         children: [
                           if (state.attachState == RequestState.init) ...[
@@ -143,7 +111,18 @@ class _CreateClinicalRecordThirdPageState
                                 ),
                                 padding: const EdgeInsets.all(0.0),
                                 iconSize: 14,
-                                onPressed: () => uploadFile(context),
+                                onPressed: () => FileManagement.uploadFile(
+                                  context,
+                                  (path) {
+                                    fileName.value = basename(path);
+                                    try {
+                                      BlocProvider.of<ClinicalRecordCubit>(
+                                              context)
+                                          .uploadClinicalRecordAttachment(
+                                              path: path);
+                                    } catch (e) {}
+                                  },
+                                ),
                                 icon: const Icon(
                                   Icons.add_rounded,
                                   color: backgroundColor,
