@@ -47,8 +47,8 @@ class _DailyActivityWeekStatusPageState
     if (widget.isSupervisor) {
       BlocProvider.of<DailyActivityCubit>(context)
           .getActivitiesByWeekIdStudentId(
-              weekId: widget.da.dailyActivityId!,
-              studentId: widget.studentId ?? '');
+        weekId: widget.da.dailyActivityId!,
+      );
     } else {
       BlocProvider.of<DailyActivityCubit>(context)
           .getDailyActivityDays(weekId: widget.da.dailyActivityId!);
@@ -73,8 +73,8 @@ class _DailyActivityWeekStatusPageState
                       if (widget.isSupervisor) {
                         BlocProvider.of<DailyActivityCubit>(context)
                             .getActivitiesByWeekIdStudentId(
-                                weekId: widget.da.dailyActivityId!,
-                                studentId: widget.studentId ?? '');
+                          weekId: widget.da.dailyActivityId!,
+                        );
                       } else {
                         BlocProvider.of<DailyActivityCubit>(context)
                             .getDailyActivityDays(

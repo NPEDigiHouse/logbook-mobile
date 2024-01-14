@@ -62,10 +62,10 @@ class DailyActivityHomeCard extends StatelessWidget {
             ],
           ),
         ),
-        // if (DateTime.now().isBefore(startDate))
-        //   Positioned.fill(
-        //     child: _lockedWeekLayer(),
-        //   ),
+        if (DateTime.now().isBefore(startDate) && !isSupervisor)
+          Positioned.fill(
+            child: _lockedWeekLayer(),
+          ),
       ],
     );
   }
@@ -275,9 +275,9 @@ class DailyActivityHomeCard extends StatelessWidget {
   }
 
   void onWeekTab(BuildContext context) {
-    // if (DateTime.now().isBefore(startDate)) {
-    //   return;
-    // }
+    if (DateTime.now().isBefore(startDate) && !isSupervisor) {
+      return;
+    }
     context.navigateTo(
       DailyActivityWeekStatusPage(
         da: da,

@@ -1,4 +1,5 @@
 import 'package:core/helpers/asset_path.dart';
+import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _SupervisorDailyActivityDetailPageState
         listener: (context, state) {
           if (state.stateVerifyDailyActivity == RequestState.data) {
             BlocProvider.of<DailyActivityCubit>(context)
-              .getActivityDetailBySupervisor(id: widget.id);
+                .getActivityDetailBySupervisor(id: widget.id);
           }
         },
         child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
@@ -120,6 +121,8 @@ class _SupervisorDailyActivityDetailPageState
                               ],
                             ],
                           ),
+                          Text(Utils.epochToStringDate(
+                              startTime: (data?.date ?? 0) ~/ 1000)),
                           if (data?.activityStatus == 'ATTEND')
                             Row(
                               children: [
@@ -153,6 +156,14 @@ class _SupervisorDailyActivityDetailPageState
                               style: textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            Text('Detail', style: textTheme.bodyMedium),
+                            Text(
+                              data?.detail ?? '-',
+                              style: textTheme.bodyMedium,
                             ),
                           ] else
                             Text(

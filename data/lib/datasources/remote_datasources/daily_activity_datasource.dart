@@ -19,7 +19,7 @@ abstract class DailyActivityDataSource {
   Future<StudentDailyActivityPerDays> getStudentDailyPerDaysActivities(
       {required String weekId});
   Future<StudentDailyActivityPerDays> getActivitiesByStudentIdAndWeekId(
-      {required String weekId, required String studentId});
+      {required String weekId});
   Future<void> addWeekByCoordinator({required PostWeek postWeek});
   Future<List<ListWeekItem>> getWeekByCoordinator({required String unitId});
   Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor(
@@ -112,7 +112,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       {required String studentId}) async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/daily-activities/students/$studentId',
+        '${ApiService.baseUrl}/daily-activities/students/$studentId/v2',
         options: await apiHeader.userOptions(),
       );
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
@@ -128,10 +128,11 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       {required String id}) async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/daily-activities/$id',
+        '${ApiService.baseUrl}/daily-activities/$id/v2',
         options: await apiHeader.userOptions(),
       );
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
+
       final result = DailyActivityStudent.fromJson(dataResponse.data);
       return result;
     } catch (e) {
@@ -143,12 +144,15 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
   Future<void> verifiyDailyActivityById(
       {required String id, required bool verifiedStatus}) async {
     try {
+      print('${ApiService.baseUrl}/daily-activities/$id/v2');
+
       await dio.put(
-        '${ApiService.baseUrl}/daily-activities/$id',
+        '${ApiService.baseUrl}/daily-activities/$id/v2',
         options: await apiHeader.userOptions(),
         data: {"verified": verifiedStatus},
       );
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }
@@ -191,12 +195,10 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         '${ApiService.baseUrl}/students/daily-activities/weeks/$weekId/v2',
         options: await apiHeader.userOptions(),
       );
-      print(response.data);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentDailyActivityPerDays.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
       throw failure(e);
     }
   }
@@ -215,6 +217,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
           .toList();
       return listData;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }
@@ -270,10 +273,10 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
 
   @override
   Future<StudentDailyActivityPerDays> getActivitiesByStudentIdAndWeekId(
-      {required String weekId, required String studentId}) async {
+      {required String weekId}) async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/daily-activities/students/$studentId/weeks/$weekId',
+        '${ApiService.baseUrl}/students/weeks/$weekId/v2',
         options: await apiHeader.userOptions(),
       );
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);

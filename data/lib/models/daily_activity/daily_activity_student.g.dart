@@ -9,21 +9,21 @@ part of 'daily_activity_student.dart';
 DailyActivityStudent _$DailyActivityStudentFromJson(
         Map<String, dynamic> json) =>
     DailyActivityStudent(
-      activityName: json['activityName'] as String?,
-      activityStatus: json['activityStatus'] as String?,
-      id: json['id'] as String?,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      detail: json['detail'] as String?,
-      location: json['location'] as String?,
-      studentId: json['studentId'] as String?,
-      studentName: json['studentName'] as String?,
-      unitName: json['unitName'] as String?,
-      verificationStatus: json['verificationStatus'] as String?,
-      weekNum: json['weekNum'] as int?,
-      day: json['day'] as String?,
-    );
+        activityName: json['activityName'] as String?,
+        activityStatus: json['activityStatus'] as String?,
+        id: json['id'] as String?,
+        createdAt: json['createdAt'] == null
+            ? null
+            : DateTime.parse(json['createdAt'] as String),
+        detail: json['detail'] as String?,
+        location: json['location'] as String?,
+        studentId: json['studentId'] as String?,
+        studentName: json['studentName'] as String?,
+        unitName: json['unitName'] as String?,
+        verificationStatus: json['verificationStatus'] as String?,
+        weekNum: json['weekNum'] as int?,
+        day: json['day'] as String?,
+        date: json['date'] as int?);
 
 Map<String, dynamic> _$DailyActivityStudentToJson(
         DailyActivityStudent instance) =>

@@ -81,9 +81,13 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
                                 ),
                               ...state.weeklyAssesment!.assesments!
                                   .map((element) {
+                                final bool isPassed = DateTime.now().isAfter(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        element.startDate! * 1000));
                                 return WeeklyGradeCard(
                                   startTime: element.startDate,
                                   endTime: element.endDate,
+                                  isPassed: isPassed,
                                   totalGrade: getTotalGrades(
                                       (element.score ?? 0).toDouble())!,
                                   week: element.weekNum ?? 0,
@@ -178,6 +182,7 @@ class TopStatCard extends StatelessWidget {
                   height: 12,
                 ),
                 Builder(builder: (context) {
+                  print(totalGrade!.value);
                   return SemicircularIndicator(
                     contain: true,
                     radius: 100,

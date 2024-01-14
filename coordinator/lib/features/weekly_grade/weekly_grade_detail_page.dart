@@ -1,4 +1,5 @@
 import 'package:core/helpers/app_size.dart';
+import 'package:core/helpers/utils.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/supervisors/student_unit_model.dart';
 import 'package:main/blocs/assesment_cubit/assesment_cubit.dart';
@@ -85,9 +86,15 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                                 itemBuilder: (_, i) {
                                   final grades =
                                       state.weeklyAssesment!.assesments![i];
+
+                                  final bool isPassed = DateTime.now().isAfter(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          grades.startDate! * 1000));
+
                                   return WeeklyGradeCard(
                                     startTime: grades.startDate,
                                     endTime: grades.endDate,
+                                    isPassed: isPassed,
                                     totalGrade: getTotalGrades(
                                         ((grades.score ?? 0) * 100)
                                             .toDouble())!,
@@ -95,19 +102,24 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                                     notAttendNum: grades.notAttendNum ?? 0,
                                     week: grades.weekNum ?? 0,
                                     score: grades.score!.toDouble(),
-                                    onTap: () => showDialog(
-                                      context: context,
-                                      barrierLabel: '',
-                                      barrierDismissible: false,
-                                      builder: (_) => WeeklyGradeScoreDialog(
-                                        week: grades.weekNum ?? 0,
-                                        score: grades.score!.toDouble(),
-                                        id: grades.id!,
-                                        activeDepartmentId:
-                                            widget.student.activeDepartmentId!,
-                                        studentId: widget.student.studentId!,
-                                      ),
-                                    ),
+                                    onTap: isPassed
+                                        ? () => showDialog(
+                                              context: context,
+                                              barrierLabel: '',
+                                              barrierDismissible: false,
+                                              builder: (_) =>
+                                                  WeeklyGradeScoreDialog(
+                                                week: grades.weekNum ?? 0,
+                                                score: grades.score!.toDouble(),
+                                                id: grades.id!,
+                                                activeDepartmentId: widget
+                                                    .student
+                                                    .activeDepartmentId!,
+                                                studentId:
+                                                    widget.student.studentId!,
+                                              ),
+                                            )
+                                        : null,
                                     status: grades.verificationStatus ?? '',
                                   );
                                 },

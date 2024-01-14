@@ -271,8 +271,11 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
   Future<WeeklyAssesmentResponse> getWeeklyAssesment(
       {required String unitId, required String studentId}) async {
     try {
+      print(
+          '${ApiService.baseUrl}/weekly-assesments/students/$studentId/units/$unitId/v2');
+
       final response = await dio.get(
-        '${ApiService.baseUrl}/weekly-assesments/students/$studentId/units/$unitId',
+        '${ApiService.baseUrl}/weekly-assesments/students/$studentId/units/$unitId/v2',
         options: await apiHeader.userOptions(),
       );
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);

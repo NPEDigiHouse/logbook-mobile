@@ -13,6 +13,7 @@ class WeeklyGradeCard extends StatelessWidget {
   final int? endTime;
   final int? notAttendNum;
   final String status;
+  final bool? isPassed;
   final double? score;
   final VoidCallback? onTap;
   final TotalGradeHelper totalGrade;
@@ -20,6 +21,7 @@ class WeeklyGradeCard extends StatelessWidget {
   const WeeklyGradeCard({
     super.key,
     this.attendNum,
+    this.isPassed,
     this.startTime,
     this.endTime,
     this.notAttendNum,
@@ -65,8 +67,10 @@ class WeeklyGradeCard extends StatelessWidget {
                       Text(
                         'Week $week',
                         style: textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontWeight: FontWeight.bold,
+                            color: !(isPassed ?? true)
+                                ? secondaryTextColor
+                                : primaryTextColor),
                       ),
                       if (status == 'VERIFIED') ...[
                         const SizedBox(
@@ -80,8 +84,15 @@ class WeeklyGradeCard extends StatelessWidget {
                       ]
                     ],
                   ),
-                  Text(Utils.epochToStringDate(
-                      startTime: (startTime ?? 0), endTime: (endTime ?? 0))),
+                  if (!(isPassed ?? true))
+                    Text(
+                      'Not Start Yet',
+                      style: textTheme.bodyMedium
+                          ?.copyWith(color: secondaryTextColor),
+                    )
+                  else
+                    Text(Utils.epochToStringDate(
+                        startTime: (startTime ?? 0), endTime: (endTime ?? 0))),
                   const SizedBox(
                     height: 8,
                   ),
@@ -92,7 +103,9 @@ class WeeklyGradeCard extends StatelessWidget {
                             horizontal: 6, vertical: 3),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: successColor,
+                          color: !(isPassed ?? true)
+                              ? secondaryTextColor
+                              : successColor,
                         ),
                         child: Column(
                           children: [
@@ -120,7 +133,9 @@ class WeeklyGradeCard extends StatelessWidget {
                             horizontal: 6, vertical: 3),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: errorColor,
+                          color: !(isPassed ?? true)
+                              ? secondaryTextColor
+                              : errorColor,
                         ),
                         child: Column(
                           children: [
@@ -145,7 +160,9 @@ class WeeklyGradeCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (score != null)
+            if (!(isPassed ?? true))
+              const SizedBox.shrink()
+            else if (score != 0)
               GestureDetector(
                 onTap: onTap,
                 child: CircularPercentIndicator(

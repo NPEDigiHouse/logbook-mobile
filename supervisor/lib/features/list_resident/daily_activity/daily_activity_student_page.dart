@@ -44,7 +44,7 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
       }
     });
     BlocProvider.of<DailyActivityCubit>(context)
-      .getDailyActivitiesBySupervisor(studentId: widget.student.studentId!);
+        .getDailyActivitiesBySupervisor(studentId: widget.student.studentId!);
   }
 
   @override
@@ -77,40 +77,50 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
                             horizontalPadding: 16,
                             spacing: 20,
                             children: [
-                              ...List.generate(
-                                  state.studentDailyActivity!.dailyActivities!.length,
-                                  (index) {
-                                final i = state
-                                    .studentDailyActivity!.dailyActivities!
-                                    .indexWhere((element) =>
-                                        element.weekName ==
-                                        state.studentDailyActivity!
-                                            .dailyActivities![index].weekName);
-                                return DailyActivityHomeCard(
-                                  studentId: widget.student.id,
-                                  isSupervisor: true,
-                                  startDate:
-                                      DateTime.fromMillisecondsSinceEpoch(state
+                              if (state.studentDailyActivity?.dailyActivities !=
+                                  null)
+                                ...List.generate(
+                                    state.studentDailyActivity!.dailyActivities!
+                                        .length, (index) {
+                                  final i = state
+                                      .studentDailyActivity!.dailyActivities!
+                                      .indexWhere((element) =>
+                                          element.weekName ==
+                                          state
                                               .studentDailyActivity!
                                               .dailyActivities![index]
-                                              .startDate! *
-                                          1000),
-                                  status: state.studentDailyActivity!
-                                          .dailyActivities![index].status ??
-                                      false,
-                                  // checkInCount: 2,
-                                  da:
-                                      state.studentDailyActivity!.dailyActivities![index],
-                                  dailyActivity: i == -1
-                                      ? null
-                                      : state.studentDailyActivity!
-                                          .dailyActivities![i],
-                                  endDate: DateTime.fromMillisecondsSinceEpoch(
-                                      state.studentDailyActivity!.dailyActivities![index]
-                                              .endDate! *
-                                          1000),
-                                );
-                              }),
+                                              .weekName);
+                                  return DailyActivityHomeCard(
+                                    studentId: widget.student.id,
+                                    isSupervisor: true,
+                                    startDate:
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            (state
+                                                        .studentDailyActivity!
+                                                        .dailyActivities![index]
+                                                        .startDate ??
+                                                    0) *
+                                                1000),
+                                    status: state.studentDailyActivity!
+                                            .dailyActivities![index].status ??
+                                        false,
+                                    // checkInCount: 2,
+                                    da: state.studentDailyActivity!
+                                        .dailyActivities![index],
+                                    dailyActivity: i == -1
+                                        ? null
+                                        : state.studentDailyActivity!
+                                            .dailyActivities![i],
+                                    endDate:
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            (state
+                                                        .studentDailyActivity!
+                                                        .dailyActivities![index]
+                                                        .endDate ??
+                                                    0) *
+                                                1000),
+                                  );
+                                }),
                               const SizedBox(
                                 height: 12,
                               ),

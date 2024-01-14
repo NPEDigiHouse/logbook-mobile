@@ -284,7 +284,7 @@ class StudentDataSourceImpl implements StudentDataSource {
   Future<WeeklyAssesmentResponse> getStudentWeeklyAssesment() async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/students/weekly-assesments/',
+        '${ApiService.baseUrl}/students/weekly-assesments/v2',
         options: await apiHeader.userOptions(),
       );
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
