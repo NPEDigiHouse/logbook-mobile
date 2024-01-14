@@ -2,6 +2,7 @@ import 'package:core/styles/color_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/realtime_internet_check/realtime_internet_check_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 
 class CheckInternetRealtime extends StatefulWidget {
   final Widget child;
@@ -24,15 +25,8 @@ class _CheckInternetRealtimeState extends State<CheckInternetRealtime> {
     return BlocListener<RealtimeInternetCheckCubit, RealtimeInternetCheckState>(
       listener: (context, state) {
         if (state is RealtimeInternetCheckLost) {
-          const snackBar = SnackBar(
-            backgroundColor: errorColor,
-            content: Text(
-              'Internet connection lost',
-              style: TextStyle(color: scaffoldBackgroundColor),
-            ),
-            duration: Duration(days: 1),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          CustomAlert.error(
+              message: 'Internet connection lost', context: context);
         } else if (state is RealtimeInternetCheckGain) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
         }

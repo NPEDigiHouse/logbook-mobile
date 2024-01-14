@@ -180,6 +180,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void onStateChange(LoginState state) {
     if (state is LoginSuccess) {
+      CustomAlert.success(message: 'Success Login', context: context);
       Future.microtask(() {
         BlocProvider.of<WrapperCubit>(context).isSignIn();
       });
