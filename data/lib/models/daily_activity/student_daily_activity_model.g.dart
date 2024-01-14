@@ -10,20 +10,22 @@ StudentDailyActivityResponse _$StudentDailyActivityResponseFromJson(
         Map<String, dynamic> json) =>
     StudentDailyActivityResponse(
       unitName: json['unitName'] as String?,
-      weeks: (json['weeks'] as List<dynamic>?)
-          ?.map((e) => Week.fromJson(e as Map<String, dynamic>))
-          .toList(),
       dailyActivities: (json['dailyActivities'] as List<dynamic>?)
           ?.map((e) => DailyActivity.fromJson(e as Map<String, dynamic>))
           .toList(),
+      inprocessDailyActivity: json['inprocessDailyActivity'] as int?,
+      unverifiedDailyActivity: json['unverifiedDailyActivity'] as int?,
+      verifiedDailyActivity: json['verifiedDailyActivity'] as int?,
     );
 
 Map<String, dynamic> _$StudentDailyActivityResponseToJson(
         StudentDailyActivityResponse instance) =>
     <String, dynamic>{
       'unitName': instance.unitName,
-      'weeks': instance.weeks,
       'dailyActivities': instance.dailyActivities,
+      'inprocessDailyActivity': instance.inprocessDailyActivity,
+      'verifiedDailyActivity': instance.verifiedDailyActivity,
+      'unverifiedDailyActivity': instance.unverifiedDailyActivity,
     };
 
 DailyActivity _$DailyActivityFromJson(Map<String, dynamic> json) =>
@@ -32,9 +34,14 @@ DailyActivity _$DailyActivityFromJson(Map<String, dynamic> json) =>
       attendNum: json['attendNum'] as int?,
       notAttendNum: json['notAttendNum'] as int?,
       sickNum: json['sickNum'] as int?,
+      startDate: json['startDate'] as int?,
+      endDate: json['endDate'] as int?,
+      status: json['status'] as bool?,
       activitiesStatus: (json['activitiesStatus'] as List<dynamic>?)
           ?.map((e) => ActivitiesStatus.fromJson(e as Map<String, dynamic>))
           .toList(),
+      dailyActivityId: json['dailyActivityId'] as String?,
+      verificationStatus: json['verificationStatus'] as String?,
     );
 
 Map<String, dynamic> _$DailyActivityToJson(DailyActivity instance) =>
@@ -43,6 +50,11 @@ Map<String, dynamic> _$DailyActivityToJson(DailyActivity instance) =>
       'attendNum': instance.attendNum,
       'notAttendNum': instance.notAttendNum,
       'sickNum': instance.sickNum,
+      'endDate': instance.endDate,
+      'startDate': instance.startDate,
+      'status': instance.status,
+      'verificationStatus': instance.verificationStatus,
+      'dailyActivityId': instance.dailyActivityId,
       'activitiesStatus': instance.activitiesStatus,
     };
 
@@ -50,6 +62,7 @@ ActivitiesStatus _$ActivitiesStatusFromJson(Map<String, dynamic> json) =>
     ActivitiesStatus(
       id: json['id'] as String?,
       day: json['day'] as String?,
+      date: json['date'] as int?,
       location: json['location'] as String?,
       detail: json['detail'] as String?,
       activityStatus: json['activityStatus'] as String?,
@@ -65,29 +78,10 @@ Map<String, dynamic> _$ActivitiesStatusToJson(ActivitiesStatus instance) =>
       'day': instance.day,
       'location': instance.location,
       'detail': instance.detail,
+      'date': instance.date,
       'activityStatus': instance.activityStatus,
       'activityName': instance.activityName,
       'verificationStatus': instance.verificationStatus,
       'supervisorId': instance.supervisorId,
       'supervisorName': instance.supervisorName,
-    };
-
-Week _$WeekFromJson(Map<String, dynamic> json) => Week(
-      endDate: json['endDate'] as int?,
-      startDate: json['startDate'] as int?,
-      unitId: json['unitId'] as String?,
-      unitName: json['unitName'] as String?,
-      weekName: json['weekName'] as int?,
-      id: json['id'] as String?,
-      status: json['status'] as bool?,
-    );
-
-Map<String, dynamic> _$WeekToJson(Week instance) => <String, dynamic>{
-      'endDate': instance.endDate,
-      'startDate': instance.startDate,
-      'unitId': instance.unitId,
-      'unitName': instance.unitName,
-      'weekName': instance.weekName,
-      'id': instance.id,
-      'status': instance.status,
     };

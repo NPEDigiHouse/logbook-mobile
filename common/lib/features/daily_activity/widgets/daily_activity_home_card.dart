@@ -12,10 +12,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/spacing_row.dart';
 import 'package:students/features/daily_activity/pages/daily_activity_week_status_page.dart';
-import 'package:supervisor/features/list_resident/daily_activity/daily_activity_student_page.dart';
 
 class DailyActivityHomeCard extends StatelessWidget {
-  final Week week;
+  final DailyActivity da;
   final DateTime startDate;
   final DateTime endDate;
   final DailyActivity? dailyActivity;
@@ -29,7 +28,7 @@ class DailyActivityHomeCard extends StatelessWidget {
       required this.isSupervisor,
       required this.endDate,
       required this.startDate,
-      required this.week,
+      required this.da,
       this.dailyActivity});
 
   @override
@@ -63,10 +62,10 @@ class DailyActivityHomeCard extends StatelessWidget {
             ],
           ),
         ),
-        if (DateTime.now().isBefore(startDate))
-          Positioned.fill(
-            child: _lockedWeekLayer(),
-          ),
+        // if (DateTime.now().isBefore(startDate))
+        //   Positioned.fill(
+        //     child: _lockedWeekLayer(),
+        //   ),
       ],
     );
   }
@@ -77,14 +76,14 @@ class DailyActivityHomeCard extends StatelessWidget {
         height: 16,
       ),
       Text(
-        'Week ${week.weekName}',
+        'Week ${da.weekName}',
         style: textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.bold,
         ),
       ),
       Text(
         Utils.epochToStringDate(
-            startTime: week.startDate!, endTime: week.endDate),
+            startTime: da.startDate ?? 0, endTime: da.endDate),
         style: textTheme.bodyMedium?.copyWith(
           color: secondaryTextColor,
         ),
@@ -98,7 +97,7 @@ class DailyActivityHomeCard extends StatelessWidget {
   Builder _verifiedWeekStatus() {
     return Builder(builder: (context) {
       VerifiedStatus status = VerifiedStatus.pending;
-      if (Utils.getIntervalOfData(week.startDate, week.endDate) + 1 ==
+      if (Utils.getIntervalOfData(da.startDate, da.endDate) + 1 ==
           (dailyActivity == null
               ? 0
               : dailyActivity!.activitiesStatus!.length)) {
@@ -163,45 +162,9 @@ class DailyActivityHomeCard extends StatelessWidget {
         'NOT_ATTEND': 'emoji_alfa.svg',
         'HOLIDAY': 'icon_holiday.svg',
       };
-      final List<DailyActivityTempModel> listDays = [];
-      final List<ActivitiesStatus> temp =
-          dailyActivity != null ? dailyActivity!.activitiesStatus! : [];
-
-      String firstDayName = Utils.epochToStringDate(
-        startTime: week.startDate!,
-        format: 'EEEE',
-      );
-      int interval = Utils.getIntervalOfData(week.startDate, week.endDate);
-
-      final daysOfWeek = [
-        'MONDAY',
-        'TUESDAY',
-        'WEDNESDAY',
-        'THURSDAY',
-        'FRIDAY',
-        'SATURDAY',
-        'SUNDAY',
-      ];
-      int startIndex = daysOfWeek.indexOf(firstDayName.toUpperCase());
-      DateTime start = startDate;
-      for (var i = 0; i < interval + 1; i++) {
-        ActivitiesStatus? tempD;
-        if (temp.indexWhere(
-                (element) => element.day == daysOfWeek[startIndex % 7]) !=
-            -1) {
-          tempD = temp.firstWhere(
-              (element) => element.day == daysOfWeek[startIndex % 7]);
-        }
-        listDays.add(
-          DailyActivityTempModel(
-            day: daysOfWeek[startIndex % 7],
-            dailyActivity: tempD,
-            dateTime: start,
-          ),
-        );
-        start = start.add(const Duration(days: 1));
-        startIndex += 1;
-      }
+      final List<ActivitiesStatus> listDays =
+          dailyActivity?.activitiesStatus ?? [];
+      listDays.sort((a, b) => a.date!.compareTo(b.date!));
 
       return SpacingRow(
         onlyPading: true,
@@ -210,19 +173,18 @@ class DailyActivityHomeCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: listDays.map(
           (e) {
-            bool isLateAttend = e.dailyActivity == null &&
-                endDate.isBefore(
-                  DateTime(
-                    DateTime.now().year,
-                    DateTime.now().month,
-                    DateTime.now().day,
-                  ),
-                );
-            bool isUnsubmit = e.dailyActivity == null;
+            bool isLateAttend = endDate.isBefore(
+              DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+              ),
+            );
+            bool isUnsubmit = e.activityName == null;
             return Column(
               children: [
                 Text(
-                  e.day.substring(0, 3),
+                  (e.day ?? 'ERR').substring(0, 3),
                   style: textTheme.bodySmall,
                 ),
                 const SizedBox(
@@ -278,9 +240,9 @@ class DailyActivityHomeCard extends StatelessWidget {
     );
   }
 
-  Widget _attendanceIcon(Map<String, String> emoji, DailyActivityTempModel e) {
+  Widget _attendanceIcon(Map<String, String> emoji, ActivitiesStatus e) {
     return SvgPicture.asset(
-      AssetPath.getIcon(emoji[e.dailyActivity!.activityStatus!]!),
+      AssetPath.getIcon(emoji[e.activityStatus!]!),
       width: 30,
       height: 30,
       fit: BoxFit.cover,
@@ -313,14 +275,14 @@ class DailyActivityHomeCard extends StatelessWidget {
   }
 
   void onWeekTab(BuildContext context) {
-    if (DateTime.now().isBefore(startDate)) {
-      return;
-    }
+    // if (DateTime.now().isBefore(startDate)) {
+    //   return;
+    // }
     context.navigateTo(
       DailyActivityWeekStatusPage(
-        week: week,
+        da: da,
         isSupervisor: isSupervisor,
-        weekName: week.weekName!,
+        weekName: da.weekName!,
         studentId: studentId,
         startDate: startDate,
         status: status ||

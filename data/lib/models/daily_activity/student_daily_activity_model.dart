@@ -6,15 +6,18 @@ part 'student_daily_activity_model.g.dart';
 class StudentDailyActivityResponse {
   @JsonKey(name: "unitName")
   final String? unitName;
-  @JsonKey(name: "weeks")
-  final List<Week>? weeks;
   @JsonKey(name: "dailyActivities")
   final List<DailyActivity>? dailyActivities;
+  final int? inprocessDailyActivity;
+  final int? verifiedDailyActivity;
+  final int? unverifiedDailyActivity;
 
   StudentDailyActivityResponse({
     this.unitName,
-    this.weeks,
     this.dailyActivities,
+    this.inprocessDailyActivity,
+    this.unverifiedDailyActivity,
+    this.verifiedDailyActivity,
   });
 
   factory StudentDailyActivityResponse.fromJson(Map<String, dynamic> json) =>
@@ -33,17 +36,28 @@ class DailyActivity {
   final int? notAttendNum;
   @JsonKey(name: "sickNum")
   final int? sickNum;
-
+  @JsonKey(name: "endDate")
+  final int? endDate;
+  @JsonKey(name: "startDate")
+  final int? startDate;
+  @JsonKey(name: "status")
+  final bool? status;
+  final String? verificationStatus;
+  final String? dailyActivityId;
   @JsonKey(name: "activitiesStatus")
   final List<ActivitiesStatus>? activitiesStatus;
 
-  DailyActivity({
-    this.weekName,
-    this.attendNum,
-    this.notAttendNum,
-    this.sickNum,
-    this.activitiesStatus,
-  });
+  DailyActivity(
+      {this.weekName,
+      this.attendNum,
+      this.notAttendNum,
+      this.sickNum,
+      this.startDate,
+      this.endDate,
+      this.status,
+      this.activitiesStatus,
+      this.dailyActivityId,
+      this.verificationStatus});
 
   factory DailyActivity.fromJson(Map<String, dynamic> json) =>
       _$DailyActivityFromJson(json);
@@ -61,6 +75,8 @@ class ActivitiesStatus {
   final String? location;
   @JsonKey(name: "detail")
   final String? detail;
+  @JsonKey(name: "date")
+  final int? date;
   @JsonKey(name: "activityStatus")
   final String? activityStatus;
   @JsonKey(name: "activityName")
@@ -73,6 +89,7 @@ class ActivitiesStatus {
   ActivitiesStatus({
     this.id,
     this.day,
+    this.date,
     this.location,
     this.detail,
     this.activityStatus,
@@ -88,34 +105,34 @@ class ActivitiesStatus {
   Map<String, dynamic> toJson() => _$ActivitiesStatusToJson(this);
 }
 
-@JsonSerializable()
-class Week {
-  @JsonKey(name: "endDate")
-  final int? endDate;
-  @JsonKey(name: "startDate")
-  final int? startDate;
-  @JsonKey(name: "unitId")
-  final String? unitId;
-  @JsonKey(name: "unitName")
-  final String? unitName;
-  @JsonKey(name: "weekName")
-  final int? weekName;
-  @JsonKey(name: "id")
-  final String? id;
-  @JsonKey(name: "status")
-  final bool? status;
+// @JsonSerializable()
+// class Week {
+//   @JsonKey(name: "endDate")
+//   final int? endDate;
+//   @JsonKey(name: "date")
+//   final int? startDate;
+//   @JsonKey(name: "unitId")
+//   final String? unitId;
+//   @JsonKey(name: "unitName")
+//   final String? unitName;
+//   @JsonKey(name: "weekName")
+//   final int? weekName;
+//   @JsonKey(name: "id")
+//   final String? id;
+//   @JsonKey(name: "status")
+//   final bool? status;
 
-  Week({
-    this.endDate,
-    this.startDate,
-    this.unitId,
-    this.unitName,
-    this.weekName,
-    this.id,
-    this.status,
-  });
+//   Week({
+//     this.endDate,
+//     this.startDate,
+//     this.unitId,
+//     this.unitName,
+//     this.weekName,
+//     this.id,
+//     this.status,
+//   });
 
-  factory Week.fromJson(Map<String, dynamic> json) => _$WeekFromJson(json);
+//   factory Week.fromJson(Map<String, dynamic> json) => _$WeekFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WeekToJson(this);
-}
+//   Map<String, dynamic> toJson() => _$WeekToJson(this);
+// }

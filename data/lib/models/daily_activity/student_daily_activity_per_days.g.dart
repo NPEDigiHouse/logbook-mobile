@@ -9,10 +9,9 @@ part of 'student_daily_activity_per_days.dart';
 StudentDailyActivityPerDays _$StudentDailyActivityPerDaysFromJson(
         Map<String, dynamic> json) =>
     StudentDailyActivityPerDays(
-      days: (json['days'] as List<dynamic>?)
-          ?.map((e) => Day.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      date: json['date'] as int?,
       alpha: json['alpha'] as int?,
+      verificationStatus: json['verificationStatus'] as String?,
       attend: json['attend'] as int?,
       weekName: json['weekName'] as int?,
       activities: (json['activities'] as List<dynamic>?)
@@ -23,9 +22,10 @@ StudentDailyActivityPerDays _$StudentDailyActivityPerDaysFromJson(
 Map<String, dynamic> _$StudentDailyActivityPerDaysToJson(
         StudentDailyActivityPerDays instance) =>
     <String, dynamic>{
-      'days': instance.days,
       'alpha': instance.alpha,
       'attend': instance.attend,
+      'verificationStatus': instance.verificationStatus,
+      'date': instance.date,
       'weekName': instance.weekName,
       'activities': instance.activities,
     };

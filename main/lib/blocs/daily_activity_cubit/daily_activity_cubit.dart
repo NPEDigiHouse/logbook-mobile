@@ -205,11 +205,11 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       ));
 
       final result = await dataSource.getStudentDailyActivities();
-      result.weeks?.sort(
-        (a, b) {
-          return a.weekName!.compareTo(b.weekName!);
-        },
-      );
+      // result.weeks?.sort(
+      //   (a, b) {
+      //     return a.weekName!.compareTo(b.weekName!);
+      //   },
+      // );
       try {
         emit(state.copyWith(
           studentDailyActivity: result,
@@ -236,7 +236,7 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
 
       final result =
           await dataSource.getDailyActivityBySupervisor(studentId: studentId);
-      result.weeks?.sort(
+      result.dailyActivities?.sort(
         (a, b) {
           return a.weekName!.compareTo(b.weekName!);
         },

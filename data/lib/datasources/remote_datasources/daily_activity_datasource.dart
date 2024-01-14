@@ -56,13 +56,15 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
   Future<StudentDailyActivityResponse> getStudentDailyActivities() async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/students/daily-activities/',
+        '${ApiService.baseUrl}/students/daily-activities/v2',
         options: await apiHeader.userOptions(),
       );
+      print(response.data);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentDailyActivityResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }
@@ -87,17 +89,18 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
   Future<void> updateDailyActiviy(
       {required String dayId, required DailyActivityPostModel model}) async {
     try {
+      final data = {
+        'activityStatus': model.activityStatus,
+        if (model.detail!.isNotEmpty) 'detail': model.detail,
+        'supervisorId': model.supervisorId,
+        if (model.locationId != null) 'locationId': model.locationId,
+        if (model.activityNameId != null)
+          'activityNameId': model.activityNameId,
+      };
       await dio.put(
-        '${ApiService.baseUrl}/daily-activities/days/$dayId',
+        '${ApiService.baseUrl}/daily-activities/activities/$dayId',
         options: await apiHeader.userOptions(),
-        data: {
-          'activityStatus': model.activityStatus,
-          if (model.detail!.isNotEmpty) 'detail': model.detail,
-          'supervisorId': model.supervisorId,
-          if (model.locationId != null) 'locationId': model.locationId,
-          if (model.activityNameId != null)
-            'activityNameId': model.activityNameId,
-        },
+        data: data,
       );
     } catch (e) {
       throw failure(e);
@@ -185,13 +188,15 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       {required String weekId}) async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/students/daily-activities/weeks/$weekId',
+        '${ApiService.baseUrl}/students/daily-activities/weeks/$weekId/v2',
         options: await apiHeader.userOptions(),
       );
+      print(response.data);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentDailyActivityPerDays.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }
@@ -200,7 +205,8 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
   Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor(
       {String? unitId}) async {
     try {
-      final response = await dio.get('${ApiService.baseUrl}/daily-activities/',
+      final response = await dio.get(
+          '${ApiService.baseUrl}/daily-activities/v2',
           options: await apiHeader.userOptions(),
           queryParameters: {if (unitId != null) "unit": unitId});
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);

@@ -78,35 +78,35 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
                             spacing: 20,
                             children: [
                               ...List.generate(
-                                  state.studentDailyActivity!.weeks!.length,
+                                  state.studentDailyActivity!.dailyActivities!.length,
                                   (index) {
                                 final i = state
                                     .studentDailyActivity!.dailyActivities!
                                     .indexWhere((element) =>
                                         element.weekName ==
                                         state.studentDailyActivity!
-                                            .weeks![index].weekName);
+                                            .dailyActivities![index].weekName);
                                 return DailyActivityHomeCard(
                                   studentId: widget.student.id,
                                   isSupervisor: true,
                                   startDate:
                                       DateTime.fromMillisecondsSinceEpoch(state
                                               .studentDailyActivity!
-                                              .weeks![index]
+                                              .dailyActivities![index]
                                               .startDate! *
                                           1000),
                                   status: state.studentDailyActivity!
-                                          .weeks![index].status ??
+                                          .dailyActivities![index].status ??
                                       false,
                                   // checkInCount: 2,
-                                  week:
-                                      state.studentDailyActivity!.weeks![index],
+                                  da:
+                                      state.studentDailyActivity!.dailyActivities![index],
                                   dailyActivity: i == -1
                                       ? null
                                       : state.studentDailyActivity!
                                           .dailyActivities![i],
                                   endDate: DateTime.fromMillisecondsSinceEpoch(
-                                      state.studentDailyActivity!.weeks![index]
+                                      state.studentDailyActivity!.dailyActivities![index]
                                               .endDate! *
                                           1000),
                                 );

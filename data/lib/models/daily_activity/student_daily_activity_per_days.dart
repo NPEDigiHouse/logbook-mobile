@@ -5,20 +5,21 @@ part 'student_daily_activity_per_days.g.dart';
 
 @JsonSerializable()
 class StudentDailyActivityPerDays {
-  @JsonKey(name: "days")
-  final List<Day>? days;
   @JsonKey(name: "alpha")
   final int? alpha;
   @JsonKey(name: "attend")
   final int? attend;
+  final String? verificationStatus;
+  final int? date;
   @JsonKey(name: "weekName")
   final int? weekName;
   @JsonKey(name: "activities")
   final List<ActivitiesStatus>? activities;
 
   StudentDailyActivityPerDays({
-    this.days,
+    this.date,
     this.alpha,
+    this.verificationStatus,
     this.attend,
     this.weekName,
     this.activities,

@@ -79,8 +79,8 @@ class Utils {
   }
 
   static int getIntervalOfData(int? startDate, int? endDate) {
-    DateTime start = DateTime.fromMillisecondsSinceEpoch(startDate! * 1000);
-    DateTime end = DateTime.fromMillisecondsSinceEpoch(endDate! * 1000);
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(startDate ?? 1 * 1000);
+    DateTime end = DateTime.fromMillisecondsSinceEpoch(endDate ?? 1 * 1000);
     Duration interval = end.difference(start);
     return interval.inDays;
   }

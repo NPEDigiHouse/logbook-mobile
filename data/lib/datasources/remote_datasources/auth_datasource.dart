@@ -107,6 +107,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       CredentialSaver.credential = credential;
       return const Right(true);
     } catch (e) {
+      print(e.toString());
       return Left(failure(e));
     }
   }
@@ -118,6 +119,8 @@ class AuthDataSourceImpl implements AuthDataSource {
 
       return Right(credential != null);
     } catch (e) {
+      print(e.toString());
+
       return Left(failure(e));
     }
   }
@@ -191,6 +194,7 @@ class AuthDataSourceImpl implements AuthDataSource {
           UserCredential.fromJson(dataResponse.data);
       return Right(userCredential);
     } catch (e) {
+      print(e.toString());
       if (e is TimeoutException) {
         return Left(failure("Operation timed out"));
       } else {

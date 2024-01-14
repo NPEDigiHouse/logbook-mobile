@@ -42,11 +42,15 @@ class _CustomLoadingState extends State<CustomLoading>
         padding: const EdgeInsets.all(20),
         child: RotationTransition(
           turns: _controller,
-          child: SvgPicture.asset(
-            AssetPath.getIcon('logo.svg'),
-            color: scaffoldBackgroundColor,
+          child: SizedBox(
             width: 30,
             height: 30,
+            child: SvgPicture.asset(
+              AssetPath.getIcon('logo.svg'),
+              color: scaffoldBackgroundColor,
+              width: 30,
+              height: 30,
+            ),
           ),
         ),
       ),

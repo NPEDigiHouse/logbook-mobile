@@ -11,20 +11,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
-import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'package:main/widgets/spacing_column.dart';
-import 'package:students/features/daily_activity/daily_activity_home_page.dart';
 import 'package:students/features/daily_activity/pages/create_daily_activity_page.dart';
 
 class DailyActivityWeekStatusPage extends StatefulWidget {
-  final Week week;
+  final DailyActivity da;
   final int weekName;
   final DateTime startDate;
   final bool isSupervisor;
   final String? studentId;
-  // final int checkInCount;
   final bool status;
 
   const DailyActivityWeekStatusPage({
@@ -32,10 +29,9 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
     required this.status,
     required this.isSupervisor,
     required this.startDate,
-    required this.week,
+    required this.da,
     this.studentId,
     required this.weekName,
-    // required this.checkInCount
   });
 
   @override
@@ -51,10 +47,11 @@ class _DailyActivityWeekStatusPageState
     if (widget.isSupervisor) {
       BlocProvider.of<DailyActivityCubit>(context)
           .getActivitiesByWeekIdStudentId(
-              weekId: widget.week.id!, studentId: widget.studentId ?? '');
+              weekId: widget.da.dailyActivityId!,
+              studentId: widget.studentId ?? '');
     } else {
       BlocProvider.of<DailyActivityCubit>(context)
-          .getDailyActivityDays(weekId: widget.week.id!);
+          .getDailyActivityDays(weekId: widget.da.dailyActivityId!);
     }
   }
 
@@ -76,11 +73,12 @@ class _DailyActivityWeekStatusPageState
                       if (widget.isSupervisor) {
                         BlocProvider.of<DailyActivityCubit>(context)
                             .getActivitiesByWeekIdStudentId(
-                                weekId: widget.week.id!,
+                                weekId: widget.da.dailyActivityId!,
                                 studentId: widget.studentId ?? '');
                       } else {
                         BlocProvider.of<DailyActivityCubit>(context)
-                            .getDailyActivityDays(weekId: widget.week.id!);
+                            .getDailyActivityDays(
+                                weekId: widget.da.dailyActivityId!);
                       }
 
                       BlocProvider.of<DailyActivityCubit>(context)
@@ -224,86 +222,35 @@ class _DailyActivityWeekStatusPageState
                                 ],
                               ),
                             ),
-                            ...List.generate(
-                                state.activityPerDays!.days!.length, (index) {
-                              final List<DailyActivityTempModel> listDays = [];
-
-                              final data = state.activityPerDays!.days!;
-                              data.sort(
-                                (a, b) {
-                                  final daysOfWeek = [
-                                    'MONDAY',
-                                    'TUESDAY',
-                                    'WEDNESDAY',
-                                    'THURSDAY',
-                                    'FRIDAY',
-                                    'SATURDAY',
-                                    'SUNDAY',
-                                  ];
-                                  return daysOfWeek
-                                      .indexOf(a.day!)
-                                      .compareTo(daysOfWeek.indexOf(b.day!));
-                                },
-                              );
-                              DateTime start = widget.startDate;
-
-                              for (var d in data) {
-                                ActivitiesStatus? tempD;
-                                if (state.activityPerDays!.activities!
-                                        .indexWhere((element) =>
-                                            element.day == d.day) !=
-                                    -1) {
-                                  tempD = state.activityPerDays!.activities!
-                                      .firstWhere(
-                                          (element) => element.day == d.day);
-                                }
-                                listDays.add(
-                                  DailyActivityTempModel(
-                                    day: d.day!,
-                                    id: d.id,
-                                    dailyActivity: tempD,
-                                    dateTime: start,
-                                  ),
+                            if (state.activityPerDays!.activities != null)
+                              ...List.generate(
+                                  state.activityPerDays!.activities!.length,
+                                  (index) {
+                                final data = state.activityPerDays!.activities!;
+                                data.sort(
+                                  (a, b) => a.date!.compareTo(b.date!),
                                 );
-                                start = start.add(const Duration(days: 1));
-                              }
-                              return DailyActivityStatusCard(
-                                isSupervisor: widget.isSupervisor,
-                                activeStatus: widget.status,
-                                id: listDays[index].id!,
-                                date: listDays[index].dateTime,
-                                supervisorName:
-                                    listDays[index].dailyActivity == null
-                                        ? null
-                                        : listDays[index]
-                                            .dailyActivity
-                                            ?.supervisorName,
-                                verificationStatus:
-                                    listDays[index].dailyActivity == null
-                                        ? 'PENDING'
-                                        : listDays[index]
-                                                .dailyActivity!
-                                                .verificationStatus ??
-                                            'PENDING',
-                                day: listDays[index].day,
-                                dailyActivityId: widget.week.id,
-                                status: listDays[index].dailyActivity == null
-                                    ? null
-                                    : listDays[index]
-                                        .dailyActivity!
-                                        .activityStatus,
-                                // checkInCount: widget.checkInCount,
-                                detail: listDays[index].dailyActivity == null
-                                    ? null
-                                    : listDays[index].dailyActivity?.detail,
-                                activity: listDays[index].dailyActivity == null
-                                    ? null
-                                    : listDays[index]
-                                        .dailyActivity!
-                                        .activityName,
-                                activitiesStatus: listDays[index].dailyActivity,
-                              );
-                            }).toList(),
+
+                                return DailyActivityStatusCard(
+                                  isSupervisor: widget.isSupervisor,
+                                  activeStatus: widget.status,
+                                  id: data[index].id!,
+                                  date: DateTime.fromMillisecondsSinceEpoch(
+                                      (data[index].date ?? 0) * 1000),
+                                  supervisorName: data[index].supervisorName,
+                                  verificationStatus:
+                                      data[index].verificationStatus == null
+                                          ? 'PENDING'
+                                          : data[index].verificationStatus ??
+                                              'PENDING',
+                                  day: data[index].day ?? 'ERR',
+                                  dailyActivityId: widget.da.dailyActivityId,
+                                  status: data[index].activityStatus,
+                                  detail: data[index].detail,
+                                  activity: data[index].activityName,
+                                  activitiesStatus: data[index],
+                                );
+                              }).toList(),
                             const SizedBox(
                               height: 16,
                             ),
@@ -377,6 +324,7 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.status);
     Map<String, String> emoji = {
       'ATTEND': 'emoji_hadir.svg',
       'SICK': 'sakit_emoji.svg',
@@ -411,19 +359,14 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.status == null &&
-              widget.date!.isBefore(DateTime(
-                DateTime.now().year,
-                DateTime.now().month,
-                DateTime.now().day,
-              )))
+          if (widget.status == "NOT_ATTEND" && !widget.activeStatus)
             SvgPicture.asset(
               AssetPath.getIcon(emoji['NOT_ATTEND']!),
               width: 50,
               height: 50,
               fit: BoxFit.cover,
             )
-          else if (widget.status == null)
+          else if (widget.status == "NOT_ATTEND")
             Container(
               width: 38,
               height: 38,
@@ -449,10 +392,12 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
           ),
           Text(
             widget.activity ??
-                (widget.status == null
-                    ? 'Unsubmitted'
-                    : widget.status![0].toUpperCase() +
-                        widget.status!.substring(1).toLowerCase()),
+                ((widget.status == "NOT_ATTEND" && !widget.activeStatus)
+                    ? "Not Attend"
+                    : widget.status == "NOT_ATTEND"
+                        ? "Unsubmitted"
+                        : widget.status![0].toUpperCase() +
+                            widget.status!.substring(1).toLowerCase()),
             style: textTheme.bodyMedium
                 ?.copyWith(height: 1.1, color: onFormDisableColor),
           ),

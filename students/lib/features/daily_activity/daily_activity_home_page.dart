@@ -64,44 +64,45 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                       height: 20,
                     ),
                     Builder(builder: (context) {
-                      if ((state.studentDailyActivity != null)) {
+                      if ((state.studentDailyActivity?.dailyActivities !=
+                          null)) {
                         return SpacingColumn(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           spacing: 20,
                           children: [
                             ...List.generate(
-                                state.studentDailyActivity!.weeks!.length,
-                                (index) {
-                              final i = state
-                                  .studentDailyActivity!.dailyActivities!
-                                  .indexWhere((element) =>
-                                      element.weekName ==
-                                      state.studentDailyActivity!.weeks![index]
-                                          .weekName);
-
-                              final endDate =
-                                  DateTime.fromMillisecondsSinceEpoch(state
+                                state.studentDailyActivity!.dailyActivities!
+                                    .length, (index) {
+                              final endDate = state.studentDailyActivity!
+                                          .dailyActivities![index].endDate !=
+                                      null
+                                  ? DateTime.fromMillisecondsSinceEpoch(state
                                           .studentDailyActivity!
-                                          .weeks![index]
+                                          .dailyActivities![index]
                                           .endDate! *
-                                      1000);
+                                      1000)
+                                  : DateTime.now();
                               return DailyActivityHomeCard(
                                 isSupervisor: false,
-                                startDate: DateTime.fromMillisecondsSinceEpoch(
-                                    state.studentDailyActivity!.weeks![index]
+                                startDate: state
+                                            .studentDailyActivity!
+                                            .dailyActivities![index]
+                                            .startDate !=
+                                        null
+                                    ? DateTime.fromMillisecondsSinceEpoch(state
+                                            .studentDailyActivity!
+                                            .dailyActivities![index]
                                             .startDate! *
-                                        1000),
+                                        1000)
+                                    : DateTime.now(),
                                 endDate: endDate,
-                                week: state.studentDailyActivity!.weeks![index],
+                                da: state.studentDailyActivity!
+                                    .dailyActivities![index],
                                 status: state.studentDailyActivity!
-                                        .weeks![index].status ??
+                                        .dailyActivities![index].status ??
                                     false,
-                                // checkInCount:
-                                //     widget.activeDepartmentModel.countCheckIn!,
-                                dailyActivity: i == -1
-                                    ? null
-                                    : state.studentDailyActivity!
-                                        .dailyActivities![i],
+                                dailyActivity: state.studentDailyActivity!
+                                    .dailyActivities![index],
                               );
                             })
                           ],

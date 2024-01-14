@@ -19,6 +19,7 @@ import 'package:main/widgets/spacing_column.dart';
 class CreateDailyActivityPage extends StatefulWidget {
   final String id;
   final String dayId;
+
   final ActivitiesStatus? activityStatus;
   const CreateDailyActivityPage(
       {super.key, required this.dayId, required this.id, this.activityStatus});
@@ -36,6 +37,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
   String? status;
   int? activityNameId;
   String? supervisorName;
+
   final _formKey = GlobalKey<FormBuilderState>();
 
   final ValueNotifier<String?> supervisorVal = ValueNotifier(null);
@@ -51,6 +53,8 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
     });
     status = widget.activityStatus?.activityStatus;
     detailController.text = widget.activityStatus?.detail ?? '';
+    status = status == "NOT_ATTEND" ? null : status;
+
     if (status == 'ATTEND') {
       locationName = widget.activityStatus?.location ?? '';
       activityName = widget.activityStatus?.activityName ?? '';
@@ -335,6 +339,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
     supervisorVal.value = supervisorId == null
         ? 'This field is required, please select again.'
         : null;
+    print(supervisorId);
     if (_formKey.currentState!.saveAndValidate() && supervisorId != null) {
       BlocProvider.of<DailyActivityCubit>(context).updateDailyActivity(
         id: widget.dayId,
