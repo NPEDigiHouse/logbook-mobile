@@ -1,4 +1,5 @@
 import 'package:core/context/navigation_extension.dart';
+import 'package:data/models/clinical_records/detail_clinical_record_model.dart';
 import 'package:data/models/clinical_records/diagnosis_types_model.dart';
 import 'package:data/models/clinical_records/examination_types_model.dart';
 import 'package:data/models/clinical_records/management_role_model.dart';
@@ -18,8 +19,12 @@ import 'create_clinical_record_third_page.dart';
 class CreateClinicalRecordSecondPage extends StatefulWidget {
   final String unitId;
   final ClinicalRecordData clinicalRecordData;
+  final DetailClinicalRecordModel? detail;
   const CreateClinicalRecordSecondPage(
-      {super.key, required this.unitId, required this.clinicalRecordData});
+      {super.key,
+      required this.unitId,
+      required this.clinicalRecordData,
+      this.detail});
 
   @override
   State<CreateClinicalRecordSecondPage> createState() =>
@@ -50,7 +55,9 @@ class _CreateClinicalRecordSecondPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Clinical Record"),
+        title: Text(widget.detail != null
+            ? 'Edit Clinical Record'
+            : "Add Clinical Record"),
       ).variant(),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -131,6 +138,7 @@ class _CreateClinicalRecordSecondPageState
                         context.navigateTo(
                           CreateClinicalRecordThirdPage(
                             clinicalRecordData: widget.clinicalRecordData,
+                            detail: widget.detail,
                           ),
                         );
                       },

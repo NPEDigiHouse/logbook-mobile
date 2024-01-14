@@ -1,4 +1,5 @@
 import 'package:core/context/navigation_extension.dart';
+import 'package:data/models/clinical_records/detail_clinical_record_model.dart';
 import 'package:data/models/supervisors/supervisor_model.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,9 @@ import '../providers/clinical_record_data_temp.dart';
 
 class CreateClinicalRecordFirstPage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
+  final DetailClinicalRecordModel? detail;
   const CreateClinicalRecordFirstPage(
-      {super.key, required this.activeDepartmentModel});
+      {super.key, required this.activeDepartmentModel, this.detail});
 
   @override
   State<CreateClinicalRecordFirstPage> createState() =>
@@ -42,6 +44,13 @@ class _CreateClinicalRecordFirstPageState
       BlocProvider.of<SupervisorsCubit>(context, listen: false)
           .getAllSupervisors();
     });
+    if (widget.detail != null) {
+      patientNameController.text = widget.detail?.patientName ?? '';
+      patientAgeController.text = (widget.detail?.patientAge ?? "").toString();
+      recordIdController.text = widget.detail?.recordId ?? '';
+      supervisorId = widget.detail?.supervisorId;
+      gender = (widget.detail?.patientSex ?? 'MALE').toUpperCase();
+    }
   }
 
   @override
@@ -57,7 +66,9 @@ class _CreateClinicalRecordFirstPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Clinical Record"),
+        title: Text(widget.detail != null
+            ? 'Edit Clinical Record'
+            : "Add Clinical Record"),
       ).variant(),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -106,6 +117,9 @@ class _CreateClinicalRecordFirstPageState
                                   supervisorId = '';
                                 }
                               },
+                              init: widget.detail != null
+                                  ? widget.detail!.supervisorName!
+                                  : null,
                               hint: 'Supervisor',
                               onCallback: (pattern) {
                                 final temp = supervisors
@@ -238,6 +252,7 @@ class _CreateClinicalRecordFirstPageState
           CreateClinicalRecordSecondPage(
             unitId: widget.activeDepartmentModel.unitId!,
             clinicalRecordData: clinicalRecord,
+            detail: widget.detail,
           ),
         );
       }

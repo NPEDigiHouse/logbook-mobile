@@ -162,6 +162,7 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                                         (context, index) =>
                                                             ClinicalRecordCard(
                                                       model: s[index],
+                                                      department: widget.activeDepartmentModel,
                                                     ),
                                                     separatorBuilder:
                                                         (context, index) =>

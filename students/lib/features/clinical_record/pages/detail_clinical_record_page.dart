@@ -1,14 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:io';
-
 import 'package:common/features/file/file_management.dart';
 import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:data/models/units/active_unit_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,11 +21,13 @@ import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/dividers/section_divider.dart';
 import 'package:main/widgets/headers/form_section_header.dart';
 import 'package:main/widgets/verify_dialog.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:students/features/clinical_record/pages/create_clinical_record_first_page.dart';
 
 class DetailClinicalRecordPage extends StatefulWidget {
   final String id;
-  const DetailClinicalRecordPage({super.key, required this.id});
+  final ActiveDepartmentModel department;
+  const DetailClinicalRecordPage(
+      {super.key, required this.id, required this.department});
 
   @override
   State<DetailClinicalRecordPage> createState() =>
@@ -46,7 +46,7 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cr = context.read<ClinicalRecordSupervisorCubit>().state;
+    final cr = context.watch<ClinicalRecordSupervisorCubit>().state;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Entry Detail"),
@@ -58,6 +58,14 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                 Icons.more_vert_rounded,
               ),
               onSelected: (value) {
+                if (value == 'Edit') {
+                  cr.detailClinicalRecordModel!.id = widget.id;
+                  context.navigateTo(
+                    CreateClinicalRecordFirstPage(
+                        activeDepartmentModel: widget.department,
+                        detail: cr.detailClinicalRecordModel),
+                  );
+                }
                 if (value == 'Delete') {
                   showDialog(
                     context: context,
@@ -79,6 +87,10 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
               itemBuilder: (BuildContext context) {
                 return <PopupMenuEntry<String>>[
                   const PopupMenuItem<String>(
+                    value: 'Edit',
+                    child: Text('Edit'),
+                  ),
+                  const PopupMenuItem<String>(
                     value: 'Delete',
                     child: Text('Delete'),
                   ),
@@ -89,6 +101,10 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
       ).variant(),
       body: BlocListener<ClinicalRecordCubit, ClinicalRecordState>(
         listener: (context, state) {
+          if (state.clinicalRecordPostSuccess) {
+            BlocProvider.of<ClinicalRecordSupervisorCubit>(context)
+                .getDetailClinicalRecord(id: widget.id);
+          }
           if (state.isPostFeedbackSuccess) {
             BlocProvider.of<ClinicalRecordSupervisorCubit>(context)
                 .getDetailClinicalRecord(id: widget.id);
@@ -144,15 +160,16 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                                     fontStyle: FontStyle.italic,
                                   ),
                                 ),
-                                // SizedBox(
-                                //   height: 4,
-                                // ),
-                                // Text(
-                                //   ReusableFunctionHelper.datetimeToString(state.detailClinicalRecordModel!.,),
-                                //   style: textTheme.bodyMedium?.copyWith(
-                                //     color: secondaryTextColor,
-                                //   ),
-                                // )
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Text(
+                                  Utils.datetimeToString(state
+                                      .detailClinicalRecordModel!.updatedAt!),
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: secondaryTextColor,
+                                  ),
+                                )
                               ],
                             ),
                           ],
@@ -228,7 +245,7 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                               height: 16,
                             ),
                             Text(
-                              'Patient Names',
+                              'Patient Name',
                               style: textTheme.bodyMedium?.copyWith(
                                 color: secondaryTextColor,
                               ),
@@ -265,7 +282,7 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                               ),
                             ),
                             Text(
-                              '18th',
+                              '${state.detailClinicalRecordModel?.patientAge}th',
                               style: textTheme.titleMedium?.copyWith(
                                 color: primaryTextColor,
                               ),

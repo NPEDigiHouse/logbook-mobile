@@ -833,7 +833,7 @@ class PdfApi {
     final bytes = await pdf.save();
 
     if (Platform.isAndroid) {
-      final directory = Directory("/storage/emulated/0/Download");
+      final directory = (await getDownloadsDirectory())!;
       final file = File('${directory.path}/$name.pdf');
 
       if (await FileManagement.checkAndRequestPermission()) {

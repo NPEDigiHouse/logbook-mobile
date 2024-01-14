@@ -5,26 +5,26 @@ import 'dart:io';
 import 'package:common/features/file/file_management.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
+import 'package:data/models/clinical_records/detail_clinical_record_model.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
-import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/headers/form_section_header.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/verify_dialog.dart';
 import 'package:path/path.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:students/features/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:students/features/clinical_record/providers/clinical_record_data_temp.dart';
 
 class CreateClinicalRecordThirdPage extends StatefulWidget {
   final ClinicalRecordData clinicalRecordData;
+  final DetailClinicalRecordModel? detail;
 
   const CreateClinicalRecordThirdPage(
-      {super.key, required this.clinicalRecordData});
+      {super.key, required this.clinicalRecordData, this.detail});
 
   @override
   State<CreateClinicalRecordThirdPage> createState() =>
@@ -35,6 +35,15 @@ class _CreateClinicalRecordThirdPageState
     extends State<CreateClinicalRecordThirdPage> {
   ValueNotifier<String> fileName = ValueNotifier('');
   final TextEditingController notesController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.detail != null) {
+      notesController.text = widget.detail!.notes ?? '';
+    }
+  }
 
   @override
   void dispose() {
@@ -58,7 +67,9 @@ class _CreateClinicalRecordThirdPageState
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Add Clinical Record"),
+          title: Text(widget.detail != null
+              ? 'Edit Clinical Record'
+              : "Add Clinical Record"),
         ).variant(),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -206,12 +217,22 @@ class _CreateClinicalRecordThirdPageState
                                             .addNotes(notesController.text);
                                       }
 
-                                      BlocProvider.of<ClinicalRecordCubit>(
-                                              context)
-                                          .uploadClinicalRecord(
-                                        model: widget.clinicalRecordData
-                                            .clinicalRecordPostModel,
-                                      );
+                                      if (widget.detail != null) {
+                                        BlocProvider.of<ClinicalRecordCubit>(
+                                                context)
+                                            .updateClinicalRecord(
+                                          id: widget.detail!.id!,
+                                          model: widget.clinicalRecordData
+                                              .clinicalRecordPostModel,
+                                        );
+                                      } else {
+                                        BlocProvider.of<ClinicalRecordCubit>(
+                                                context)
+                                            .uploadClinicalRecord(
+                                          model: widget.clinicalRecordData
+                                              .clinicalRecordPostModel,
+                                        );
+                                      }
                                       Navigator.pop(context);
                                     },
                                   ));

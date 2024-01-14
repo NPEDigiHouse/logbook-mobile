@@ -182,6 +182,32 @@ class ClinicalRecordCubit extends Cubit<ClinicalRecordState> {
     }
   }
 
+   Future<void> updateClinicalRecord(
+      {required ClinicalRecordPostModel model, required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await clinicalRecordsDatasource.updateClinicalRecord(
+        id: id,
+          clinicalRecordPostModel: model);
+
+      result.fold(
+          (l) => emit(
+                state.copyWith(requestState: RequestState.error),
+              ), (r) {
+        return emit(state.copyWith(clinicalRecordPostSuccess: true));
+      });
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> addFeedback(
       {required String id, required String feedback}) async {
     try {
