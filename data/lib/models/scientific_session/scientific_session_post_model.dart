@@ -10,6 +10,7 @@ class ScientificSessionPostModel {
   final String? topic;
   final String? title;
   final int? role;
+  String? id;
   final String? notes;
   final String? attachment;
 
@@ -17,6 +18,7 @@ class ScientificSessionPostModel {
     this.attachment,
     this.reference,
     this.role,
+    this.id,
     this.notes,
     this.topic,
     this.title,

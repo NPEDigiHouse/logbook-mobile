@@ -54,13 +54,13 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
   Future<String> downloadDataReference(
       {required int id, required String filename}) async {
     try {
-      Directory _directory = Directory("");
+      Directory directory = Directory("");
       if (Platform.isAndroid) {
-        _directory = (await getDownloadsDirectory())!;
+        directory = (await getDownloadsDirectory())!;
       } else {
-        _directory = await getApplicationDocumentsDirectory();
+        directory = await getApplicationDocumentsDirectory();
       }
-      String? savePath = '${_directory.path}/$filename.pdf';
+      String? savePath = '${directory.path}/$filename.pdf';
       if (Platform.isAndroid) {
         await dio.download(
           '${ApiService.baseUrl}/references/$id',
@@ -80,11 +80,12 @@ class ReferenceDataSourceImpl implements ReferenceDataSource {
           ),
           mimeType: MimeType.pdf,
         );
-        await o.OpenFile.open(savePath ?? '');
       }
+      await o.OpenFile.open(savePath ?? '');
 
       return savePath ?? '';
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }

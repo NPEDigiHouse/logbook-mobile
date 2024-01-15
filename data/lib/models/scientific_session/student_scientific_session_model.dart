@@ -25,12 +25,14 @@ class StudentScientificSessionResponse {
 class StudentScientificSessionModel {
   final String? scientificSessionId;
   final DateTime? updatedAt;
+  final String? topicName;
   final String? supervisorName;
   final String? verificationStatus;
 
   StudentScientificSessionModel({
     this.scientificSessionId,
     this.updatedAt,
+    this.topicName,
     this.supervisorName,
     this.verificationStatus,
   });

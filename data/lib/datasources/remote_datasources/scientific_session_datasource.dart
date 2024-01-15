@@ -24,6 +24,9 @@ abstract class ScientificSessionDataSource {
   Future<Either<Failure, void>> uploadScientificSession({
     required ScientificSessionPostModel scientificSessionPostModel,
   });
+  Future<Either<Failure, void>> updateScientificSession({
+    required ScientificSessionPostModel scientificSessionPostModel,
+  });
   Future<Either<Failure, ScientificSessionDetailModel>>
       getScientificSessionDetail({required String scientificSessionId});
   Future<Either<Failure, String>> uploadScientificSessionAttachment(
@@ -247,6 +250,32 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
       return true;
     } catch (e) {
       throw failure(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateScientificSession(
+      {required ScientificSessionPostModel scientificSessionPostModel}) async {
+    try {
+      await dio.put('${ApiService.baseUrl}/scientific-sessions/${scientificSessionPostModel.id}/v2',
+          options: await apiHeader.userOptions(),
+          data: {
+            'supervisorId': scientificSessionPostModel.supervisorId,
+            'sessionType': scientificSessionPostModel.sessionType,
+            if (scientificSessionPostModel.reference != null &&
+                scientificSessionPostModel.reference!.isNotEmpty)
+              'reference': scientificSessionPostModel.reference,
+            'topic': scientificSessionPostModel.topic,
+            'title': scientificSessionPostModel.title,
+            'role': scientificSessionPostModel.role,
+            if (scientificSessionPostModel.notes != null)
+              'notes': scientificSessionPostModel.notes,
+            if (scientificSessionPostModel.attachment != null)
+              'attachment': scientificSessionPostModel.attachment,
+          });
+      return Right(true);
+    } catch (e) {
+      return Left(failure(e));
     }
   }
 }

@@ -88,9 +88,13 @@ class _StudentListScientificSessionPageState
                         sliver: SliverFillRemaining(
                           child: BlocListener<ScientificSessionCubit,
                               ScientifcSessionState>(
-                            listener: (context, state) {
+                            listener: (context, state) async {
                               if (state.postSuccess) {
                                 isMounted = false;
+                                await Future.wait([
+                                  BlocProvider.of<StudentCubit>(context)
+                                      .getStudentScientificSessionOfActiveDepartment(),
+                                ]);
                               }
                             },
                             child: BlocConsumer<StudentCubit, StudentState>(
@@ -160,6 +164,8 @@ class _StudentListScientificSessionPageState
                                                     itemBuilder: (context,
                                                             index) =>
                                                         StudentScientificSessionCard(
+                                                      department: widget
+                                                          .activeDepartmentModel,
                                                       model: s[index],
                                                     ),
                                                     separatorBuilder:

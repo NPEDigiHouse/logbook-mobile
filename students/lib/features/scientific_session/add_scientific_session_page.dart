@@ -1,26 +1,23 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 
-import 'dart:io';
-
 import 'package:common/features/file/file_management.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/models/scientific_session/scientific_roles.dart';
+import 'package:data/models/scientific_session/scientific_session_detail_model.dart';
 import 'package:data/models/scientific_session/scientific_session_post_model.dart';
 import 'package:data/models/scientific_session/session_types_model.dart';
 import 'package:data/models/supervisors/supervisor_model.dart';
 import 'package:data/models/units/active_unit_model.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/scientific_session_cubit/scientific_session_cubit.dart';
+import 'package:main/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
 import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
-import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/dividers/section_divider.dart';
 import 'package:main/widgets/headers/form_section_header.dart';
 import 'package:main/widgets/inkwell_container.dart';
@@ -29,13 +26,16 @@ import 'package:main/widgets/inputs/custom_dropdown.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'package:main/widgets/verify_dialog.dart';
 import 'package:path/path.dart' as path;
-import 'package:permission_handler/permission_handler.dart';
 
 class AddScientificSessionPage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
+  final ScientificSessionDetailModel? detail;
 
-  const AddScientificSessionPage(
-      {super.key, required this.activeDepartmentModel});
+  const AddScientificSessionPage({
+    super.key,
+    required this.activeDepartmentModel,
+    this.detail,
+  });
 
   @override
   State<AddScientificSessionPage> createState() =>
@@ -65,6 +65,16 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
         ..getListSessionTypes()
         ..getScientificSessionRoles();
     });
+
+    if (widget.detail != null) {
+      supervisorId = widget.detail?.supervisorId;
+      role = widget.detail?.roleId ?? -1;
+      sesionType = widget.detail?.sessionTypeId ?? -1;
+      titleController.text = widget.detail?.title ?? '';
+      topicController.text = widget.detail?.topic ?? '';
+      referenceController.text = widget.detail?.reference ?? '';
+      additionalNotesController.text = widget.detail?.note ?? '';
+    }
   }
 
   @override
@@ -143,6 +153,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                                 }
                               },
                               hint: 'Supervisor',
+                              init: widget.detail?.studentName,
                               onCallback: (pattern) {
                                 final temp = supervisors
                                     .where((competence) =>
@@ -202,7 +213,10 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                           onChanged: (v) {
                             if (v != null) sesionType = v.id!;
                           },
-                          value: null,
+                          value: sesionType != -1
+                              ? _sessionTypes.firstWhere(
+                                  (element) => element.id == sesionType)
+                              : null,
                         ),
                         BuildTextField(
                           onChanged: (v) {},
@@ -242,7 +256,10 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                           onChanged: (v) {
                             if (v != null) role = v.id!;
                           },
-                          value: null,
+                          value: role != -1
+                              ? _roles
+                                  .firstWhere((element) => element.id == role)
+                              : null,
                         ),
                         InkWellContainer(
                           padding: const EdgeInsets.symmetric(
@@ -360,22 +377,45 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
           barrierDismissible: false,
           builder: (_) => VerifyDialog(
                 onTap: () {
-                  BlocProvider.of<ScientificSessionCubit>(context,
-                          listen: false)
-                      .uploadScientificSession(
-                    model: ScientificSessionPostModel(
-                      attachment: attachment,
-                      role: role,
-                      title: titleController.text,
-                      topic: topicController.text,
-                      reference: referenceController.text,
-                      sessionType: sesionType,
-                      supervisorId: supervisorId,
-                      notes: additionalNotesController.text.isEmpty
-                          ? null
-                          : additionalNotesController.text,
-                    ),
-                  );
+                  if (widget.detail != null) {
+                    BlocProvider.of<ScientificSessionCubit>(context,
+                            listen: false)
+                        .updateScientificSession(
+                      model: ScientificSessionPostModel(
+                        attachment: attachment,
+                        role: role,
+                        id: widget.detail!.id,
+                        title: titleController.text,
+                        topic: topicController.text,
+                        reference: referenceController.text,
+                        sessionType: sesionType,
+                        supervisorId: supervisorId,
+                        notes: additionalNotesController.text.isEmpty
+                            ? null
+                            : additionalNotesController.text,
+                      ),
+                    );
+                    BlocProvider.of<ScientificSessionSupervisorCubit>(context)
+                        .getScientificSessionDetail(id: widget.detail!.id!);
+                  } else {
+                    BlocProvider.of<ScientificSessionCubit>(context,
+                            listen: false)
+                        .uploadScientificSession(
+                      model: ScientificSessionPostModel(
+                        attachment: attachment,
+                        role: role,
+                        title: titleController.text,
+                        topic: topicController.text,
+                        reference: referenceController.text,
+                        sessionType: sesionType,
+                        supervisorId: supervisorId,
+                        notes: additionalNotesController.text.isEmpty
+                            ? null
+                            : additionalNotesController.text,
+                      ),
+                    );
+                  }
+
                   Navigator.pop(context);
                 },
               ));

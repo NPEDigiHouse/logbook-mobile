@@ -4,6 +4,7 @@ import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/scientific_session/student_scientific_session_model.dart';
+import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../detail_scientific_session_page.dart';
@@ -12,9 +13,11 @@ class StudentScientificSessionCard extends StatelessWidget {
   const StudentScientificSessionCard({
     super.key,
     required this.model,
+    required this.department,
   });
 
   final StudentScientificSessionModel model;
+  final ActiveDepartmentModel department;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +27,7 @@ class StudentScientificSessionCard extends StatelessWidget {
         onTap: () => context.navigateTo(
           DetailScientificSessionPage(
             id: model.scientificSessionId!,
+            activeDepartmentModel: department,
           ),
         ),
         child: Padding(
@@ -61,9 +65,7 @@ class StudentScientificSessionCard extends StatelessWidget {
                           'Scientific Session',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: textTheme.titleSmall?.copyWith(),
                         ),
                         const SizedBox(width: 4),
                         if (model.verificationStatus == 'VERIFIED')
@@ -74,7 +76,38 @@ class StudentScientificSessionCard extends StatelessWidget {
                           ),
                       ],
                     ),
+                    Text(
+                      Utils.datetimeToString(
+                        model.updatedAt!,
+                      ),
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: secondaryColor,
+                        fontWeight: FontWeight.bold,
+                        height: 1,
+                      ),
+                    ),
                     const SizedBox(height: 12),
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: textTheme.bodySmall?.copyWith(
+                          color: secondaryTextColor,
+                        ),
+                        children: <TextSpan>[
+                          const TextSpan(
+                            text: 'Topic:\t',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          TextSpan(
+                            text: model.topicName,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
                     RichText(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -90,27 +123,6 @@ class StudentScientificSessionCard extends StatelessWidget {
                             ),
                           ),
                           TextSpan(text: model.supervisorName!),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: textTheme.bodySmall?.copyWith(
-                          color: secondaryTextColor,
-                        ),
-                        children: <TextSpan>[
-                          const TextSpan(
-                            text: 'Date:\t',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          TextSpan(
-                            text: Utils.datetimeToString(model.updatedAt!),
-                          ),
                         ],
                       ),
                     ),

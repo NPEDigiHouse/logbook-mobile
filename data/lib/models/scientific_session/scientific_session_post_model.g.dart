@@ -12,6 +12,7 @@ ScientificSessionPostModel _$ScientificSessionPostModelFromJson(
       attachment: json['attachment'] as String?,
       reference: json['reference'] as String?,
       role: json['role'] as int?,
+      id: json['id'] as String?,
       notes: json['notes'] as String?,
       topic: json['topic'] as String?,
       title: json['title'] as String?,
@@ -28,6 +29,7 @@ Map<String, dynamic> _$ScientificSessionPostModelToJson(
       'topic': instance.topic,
       'title': instance.title,
       'role': instance.role,
+      'id': instance.id,
       'notes': instance.notes,
       'attachment': instance.attachment,
     };

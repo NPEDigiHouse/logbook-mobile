@@ -7,13 +7,18 @@ class ScientificSessionDetailModel {
   final int? rating;
   final String? reference;
   final String? role;
+  final int? roleId;
   final String? studentName;
   final String? supervisorName;
+  final String? supervisorId;
   final String? title;
+  String? id;
   final String? topic;
+  final int? sessionTypeId;
   final DateTime? updatedAt;
   final String? attachment;
   final String? sessionType;
+  final String? note;
   final String? unit;
   final String? verificationStatus;
   final String? studentFeedback;
@@ -23,8 +28,13 @@ class ScientificSessionDetailModel {
       {this.rating,
       this.reference,
       this.role,
+      this.roleId,
+      this.note,
+      this.sessionTypeId,
+      this.id,
       this.studentName,
       this.supervisorName,
+      this.supervisorId,
       this.title,
       this.topic,
       this.updatedAt,

@@ -97,6 +97,7 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                 ];
               },
             ),
+        
         ],
       ).variant(),
       body: BlocListener<ClinicalRecordCubit, ClinicalRecordState>(

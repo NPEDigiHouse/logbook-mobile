@@ -32,6 +32,7 @@ StudentScientificSessionModel _$StudentScientificSessionModelFromJson(
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
+      topicName: json['topicName'] as String?,
       supervisorName: json['supervisorName'] as String?,
       verificationStatus: json['verificationStatus'] as String?,
     );
@@ -41,6 +42,7 @@ Map<String, dynamic> _$StudentScientificSessionModelToJson(
     <String, dynamic>{
       'scientificSessionId': instance.scientificSessionId,
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      'topicName': instance.topicName,
       'supervisorName': instance.supervisorName,
       'verificationStatus': instance.verificationStatus,
     };

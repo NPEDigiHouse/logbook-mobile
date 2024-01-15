@@ -153,4 +153,33 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
       );
     }
   }
+
+  Future<void> updateScientificSession(
+      {required ScientificSessionPostModel model}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result =
+          await ds.updateScientificSession(scientificSessionPostModel: model);
+
+      result.fold(
+          (l) => emit(
+                state.copyWith(requestState: RequestState.error),
+              ), (r) {
+        return emit(
+          state.copyWith(
+            postSuccess: true,
+          ),
+        );
+      });
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
 }
