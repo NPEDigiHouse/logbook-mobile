@@ -1,8 +1,10 @@
 import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:core/helpers/app_size.dart';
+import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/competences/list_skills_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
@@ -14,6 +16,7 @@ import 'package:main/widgets/headers/unit_header.dart';
 import 'package:main/widgets/inputs/search_field.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'package:main/widgets/verify_dialog.dart';
+import 'package:students/features/competences/widgets/update_competence_dialog.dart';
 
 import 'widgets/add_competence_dialog.dart';
 
@@ -82,7 +85,7 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
             onRefresh: () async {
               isMounted = false;
               await Future.wait([
-                BlocProvider.of<CompetenceCubit>(context).getListCases(),
+                BlocProvider.of<CompetenceCubit>(context).getListSkills(),
               ]);
             },
             child: ValueListenableBuilder(
@@ -96,6 +99,9 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                           child: BlocConsumer<CompetenceCubit, CompetenceState>(
                             listener: (context, state) {
                               if (state.isSkillSuccessAdded) {
+                                isMounted = false;
+                              }
+                              if (state.isDeleteSkillSuccess) {
                                 isMounted = false;
                               }
                               if (state.listSkillsModel != null &&
@@ -155,6 +161,8 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) =>
                                             TestGradeScoreCard(
+                                          skillId: s[index].skillTypeId ?? -1,
+                                          unitId: widget.unitId,
                                           onDelete: () {
                                             isMounted = false;
                                             BlocProvider.of<CompetenceCubit>(
@@ -167,6 +175,10 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
 
                                             Navigator.pop(context);
                                           },
+                                          id: s[index].skillId ?? '',
+                                          createdAt: DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                                  s[index].createdAt ?? 0),
                                           caseName: s[index].skillName!,
                                           caseType: s[index].skillType!,
                                           isVerified:
@@ -313,15 +325,23 @@ class TestGradeScoreCard extends StatelessWidget {
     required this.caseName,
     required this.caseType,
     required this.isVerified,
+    required this.createdAt,
     required this.supervisorName,
     required this.onDelete,
+    required this.id,
+    required this.skillId,
+    required this.unitId,
   });
 
   final String caseName;
   final String caseType;
+  final DateTime createdAt;
   final String supervisorName;
   final bool isVerified;
   final VoidCallback onDelete;
+  final String id;
+  final int skillId;
+  final String unitId;
 
   @override
   Widget build(BuildContext context) {
@@ -389,50 +409,104 @@ class TestGradeScoreCard extends StatelessWidget {
                       caseName,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold, height: 1.1),
-                    ),
-                    const SizedBox(
-                      height: 2,
+                      style: textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          height: 1.1,
+                          color: primaryColor),
                     ),
                     Text(
                       caseType,
                       style: textTheme.bodySmall?.copyWith(
-                        color: secondaryTextColor,
+                        color: primaryTextColor,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    if (isVerified) ...[
-                      const SizedBox(
-                        height: 4,
+                    Text(
+                      Utils.datetimeToString(createdAt),
+                      style: textTheme.bodySmall?.copyWith(
+                        color: primaryTextColor,
+                        height: 1,
                       ),
-                      const ChipVerified(),
-                    ]
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    ChipVerified(
+                      isVerified: isVerified,
+                    ),
                   ],
                 ),
               ),
               if (!isVerified)
-                InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      barrierLabel: '',
-                      barrierDismissible: false,
-                      builder: (_) => VerifyDialog(
-                        onTap: onDelete,
-                      ),
-                    );
-                  },
-                  child: const SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: Center(
-                      child: Icon(
-                        Icons.delete_rounded,
-                        color: errorColor,
-                      ),
-                    ),
+                PopupMenuButton<String>(
+                  icon: const Icon(
+                    Icons.more_vert_rounded,
                   ),
-                )
+                  onSelected: (value) {
+                    if (value == 'Edit') {
+                      showDialog(
+                        context: context,
+                        barrierLabel: '',
+                        barrierDismissible: false,
+                        builder: (_) => EditCompetenceDialog(
+                          type: CompetenceType.skillType,
+                          unitId: unitId,
+                          caseId: skillId,
+                          caseName: caseName,
+                          id: id,
+                          caseType: caseType,
+                          supervisorName: supervisorName,
+                        ),
+                      ).then((value) {});
+                    }
+                    if (value == 'Delete') {
+                      showDialog(
+                        context: context,
+                        barrierLabel: '',
+                        barrierDismissible: false,
+                        builder: (_) => VerifyDialog(
+                          onTap: onDelete,
+                        ),
+                      );
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return <PopupMenuEntry<String>>[
+                      const PopupMenuItem<String>(
+                        value: 'Edit',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.edit,
+                              size: 16,
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Text('Edit'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'Delete',
+                        child: Row(
+                          children: [
+                            Icon(
+                              CupertinoIcons.delete,
+                              size: 16,
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Text('Delete'),
+                          ],
+                        ),
+                      ),
+                    ];
+                  },
+                ),
+            
+            
             ],
           ),
         ),

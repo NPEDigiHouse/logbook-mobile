@@ -26,10 +26,18 @@ class CaseModel {
   final String? caseId;
   final String? caseName;
   final String? caseType;
+  final int? caseTypeId;
+  final int? createdAt;
   final String? verificationStatus;
 
   CaseModel(
-      {this.supervisorName, this.caseId, this.caseName, this.caseType, this.verificationStatus});
+      {this.supervisorName,
+      this.caseId,
+      this.caseName,
+      this.caseTypeId,
+      this.caseType,
+      this.verificationStatus,
+      this.createdAt});
 
   factory CaseModel.fromJson(Map<String, dynamic> json) =>
       _$CaseModelFromJson(json);

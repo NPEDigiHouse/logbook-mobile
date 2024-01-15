@@ -25,6 +25,10 @@ abstract class CompetenceDataSource {
   Future<List<StudentSkillModel>> getStudentSkills({required String unitId});
   Future<void> addSkill({required SkillPostModel skillPostModel});
   Future<void> addCase({required CasePostModel casePostModel});
+  Future<void> updateSkill(
+      {required SkillPostModel skillPostModel, required String id});
+  Future<void> updateCase(
+      {required CasePostModel casePostModel, required String id});
   Future<ListCasesModel> getListCase();
   Future<ListSkillsModel> getListSkill();
   Future<bool> deleteCase(String id);
@@ -189,6 +193,8 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
         '${ApiService.baseUrl}/competencies/skills',
         options: await apiHeader.userOptions(),
       );
+      print(response.data);
+
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentCompetenceModel> listData = dataResponse.data
           .map((e) => StudentCompetenceModel.fromJson(e))
@@ -278,6 +284,44 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
       );
       return true;
     } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<void> updateCase(
+      {required CasePostModel casePostModel, required String id}) async {
+    try {
+      await dio.put(
+        '${ApiService.baseUrl}/competencies/cases/$id/v2',
+        options: await apiHeader.userOptions(),
+        data: {
+          if (casePostModel.type != null) "type": casePostModel.type,
+          if (casePostModel.caseTypeId != null)
+            "caseTypeId": casePostModel.caseTypeId,
+        },
+      );
+    } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<void> updateSkill(
+      {required SkillPostModel skillPostModel, required String id}) async {
+    try {
+      print(skillPostModel.skillTypeId);
+      await dio.put(
+        '${ApiService.baseUrl}/competencies/skills/$id/v2',
+        options: await apiHeader.userOptions(),
+        data: {
+          if (skillPostModel.type != null) "type": skillPostModel.type,
+          if (skillPostModel.skillTypeId != null)
+            "skillTypeId": skillPostModel.skillTypeId,
+        },
+      );
+    } catch (e) {
+      print((e as DioException).response);
       throw failure(e);
     }
   }

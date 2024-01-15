@@ -25,12 +25,16 @@ class SkillModel {
   final String? skillId;
   final String? skillName;
   final String? skillType;
+  final int? skillTypeId;
+  final int? createdAt;
   final String? supervisorName;
   final String? verificationStatus;
 
   SkillModel(
       {this.supervisorName,
       this.skillId,
+      this.skillTypeId,
+      this.createdAt,
       this.skillName,
       this.skillType,
       this.verificationStatus});

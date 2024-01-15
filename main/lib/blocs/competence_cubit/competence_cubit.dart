@@ -177,6 +177,56 @@ class CompetenceCubit extends Cubit<CompetenceState> {
     }
   }
 
+  Future<void> updateSkill(
+      {required SkillPostModel model, required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await competenceDataSource.updateSkill(skillPostModel: model, id: id);
+
+      try {
+        emit(state.copyWith(
+          isSkillSuccessAdded: true,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> updateCase(
+      {required CasePostModel model, required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await competenceDataSource.updateCase(casePostModel: model, id: id);
+
+      try {
+        emit(state.copyWith(
+          isSkillSuccessAdded: true,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getCaseStudents() async {
     try {
       emit(state.copyWith(

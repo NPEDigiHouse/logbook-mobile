@@ -25,6 +25,8 @@ Map<String, dynamic> _$ListSkillsModelToJson(ListSkillsModel instance) =>
 SkillModel _$SkillModelFromJson(Map<String, dynamic> json) => SkillModel(
       supervisorName: json['supervisorName'] as String?,
       skillId: json['skillId'] as String?,
+      skillTypeId: json['skillTypeId'] as int?,
+      createdAt: json['createdAt'] as int?,
       skillName: json['skillName'] as String?,
       skillType: json['skillType'] as String?,
       verificationStatus: json['verificationStatus'] as String?,
@@ -35,6 +37,8 @@ Map<String, dynamic> _$SkillModelToJson(SkillModel instance) =>
       'skillId': instance.skillId,
       'skillName': instance.skillName,
       'skillType': instance.skillType,
+      'skillTypeId': instance.skillTypeId,
+      'createdAt': instance.createdAt,
       'supervisorName': instance.supervisorName,
       'verificationStatus': instance.verificationStatus,
     };
