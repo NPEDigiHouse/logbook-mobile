@@ -9,7 +9,9 @@ import 'package:main/widgets/spacing_column.dart';
 import 'package:main/widgets/verify_dialog.dart';
 
 class CreateSpecialReportPage extends StatefulWidget {
-  const CreateSpecialReportPage({super.key});
+  final String? id;
+  final String? content;
+  const CreateSpecialReportPage({super.key, this.content, this.id});
 
   @override
   State<CreateSpecialReportPage> createState() =>
@@ -22,10 +24,18 @@ class _CreateSpecialReportPageState extends State<CreateSpecialReportPage> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.content != null) {
+      fieldController.text = widget.content!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<SpecialReportCubit, SpecialReportState>(
       listener: (context, state) {
-        if (state.isSuccessPostSpecialReport) {
+        if (state.isSuccessPostSpecialReport || state.isUpdateSpecialReport) {
           BlocProvider.of<SpecialReportCubit>(context)
               .getStudentSpecialReport();
           Navigator.pop(context);
@@ -99,8 +109,15 @@ class _CreateSpecialReportPageState extends State<CreateSpecialReportPage> {
           barrierDismissible: false,
           builder: (_) => VerifyDialog(
                 onTap: () {
-                  BlocProvider.of<SpecialReportCubit>(context)
-                      .postSpecialReport(content: fieldController.text);
+                  if (widget.content != null) {
+                    BlocProvider.of<SpecialReportCubit>(context)
+                        .updateSpecialReport(
+                            content: fieldController.text, id: widget.id!);
+                  } else {
+                    BlocProvider.of<SpecialReportCubit>(context)
+                        .postSpecialReport(content: fieldController.text);
+                  }
+
                   Navigator.pop(context);
                 },
               ));

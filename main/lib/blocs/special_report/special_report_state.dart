@@ -6,6 +6,8 @@ class SpecialReportState {
   final List<SpecialReportOnList>? specialReportStudents;
   final bool isVerifySpecialReportSuccess;
   final bool isSuccessPostSpecialReport;
+  final bool isDeleteSpecialReport;
+  final bool isUpdateSpecialReport;
 
   SpecialReportState({
     this.specialReport,
@@ -13,6 +15,8 @@ class SpecialReportState {
     this.isVerifySpecialReportSuccess = false,
     this.specialReportStudents,
     this.isSuccessPostSpecialReport = false,
+    this.isDeleteSpecialReport = false,
+    this.isUpdateSpecialReport = false,
   });
 
   SpecialReportState copyWith({
@@ -22,12 +26,16 @@ class SpecialReportState {
     bool isVerifySpecialReportSuccess = false,
     List<SpecialReportOnList>? specialReportStudents,
     bool isSuccessPostSpecialReport = false,
+    bool isUpdateSpecialReport = false,
+    bool isDeleteSpecialReport = false,
   }) {
     return SpecialReportState(
       specialReport: specialReport ?? this.specialReport,
       specialReportDetail: specialReportDetail ?? this.specialReportDetail,
       isSuccessPostSpecialReport: isSuccessPostSpecialReport,
       isVerifySpecialReportSuccess: isVerifySpecialReportSuccess,
+      isDeleteSpecialReport: isDeleteSpecialReport,
+      isUpdateSpecialReport: isUpdateSpecialReport,
       specialReportStudents:
           specialReportStudents ?? this.specialReportStudents,
     );

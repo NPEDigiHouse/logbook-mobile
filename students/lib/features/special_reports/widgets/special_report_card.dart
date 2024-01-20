@@ -1,8 +1,13 @@
+import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/special_reports/special_report_response.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/special_report/special_report_cubit.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
+import 'package:main/widgets/verify_dialog.dart';
+import 'package:students/features/special_reports/create_special_report_page.dart';
 
 class SpecialReportCard extends StatelessWidget {
   final int index;
@@ -56,9 +61,28 @@ class SpecialReportCard extends StatelessWidget {
                     Icons.more_vert_rounded,
                   ),
                   onSelected: (value) {
-                    if (value == 'Edit') {}
+                    if (value == 'Edit') {
+                      context.navigateTo(CreateSpecialReportPage(
+                        content: data.content,
+                        id: data.problemConsultationId,
+                      ));
+                    }
 
-                    if (value == 'Delete') {}
+                    if (value == 'Delete') {
+                      showDialog(
+                        context: context,
+                        barrierLabel: '',
+                        barrierDismissible: false,
+                        builder: (_) => VerifyDialog(
+                          onTap: () {
+                            BlocProvider.of<SpecialReportCubit>(context)
+                                .deleteSpecialReport(
+                                    id: data.problemConsultationId!);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      );
+                    }
                   },
                   itemBuilder: (BuildContext context) {
                     return <PopupMenuEntry<String>>[

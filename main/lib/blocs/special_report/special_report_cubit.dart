@@ -102,6 +102,50 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
     }
   }
 
+  Future<void> updateSpecialReport(
+      {required String content, required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await specialReportDataSource.updateSpecialReport(
+          id: id, content: content);
+      try {
+        emit(state.copyWith(isUpdateSpecialReport: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> deleteSpecialReport({required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await specialReportDataSource.deleteSpecialReport(id: id);
+      try {
+        emit(state.copyWith(isDeleteSpecialReport: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getSpecialReportStudents() async {
     try {
       emit(state.copyWith(

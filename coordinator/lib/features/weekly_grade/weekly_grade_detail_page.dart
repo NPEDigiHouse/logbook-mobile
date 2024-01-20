@@ -88,10 +88,10 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
 
                                   final bool isPassed = DateTime.now().isAfter(
                                       DateTime.fromMillisecondsSinceEpoch(
-                                          (grades.startDate??0) * 1000));
+                                          (grades.startDate ?? 0)));
 
                                   return WeeklyGradeCard(
-                                    startTime: grades.startDate,
+                                    startTime: grades.startDate ,
                                     endTime: grades.endDate,
                                     isPassed: isPassed,
                                     totalGrade: getTotalGrades(

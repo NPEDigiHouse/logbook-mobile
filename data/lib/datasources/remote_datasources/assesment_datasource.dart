@@ -275,6 +275,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
         '${ApiService.baseUrl}/weekly-assesments/students/$studentId/units/$unitId/v2',
         options: await apiHeader.userOptions(),
       );
+      print(response);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = WeeklyAssesmentResponse.fromJson(dataResponse.data);
 

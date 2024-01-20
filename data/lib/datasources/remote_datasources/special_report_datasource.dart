@@ -10,6 +10,9 @@ import 'package:dio/dio.dart';
 
 abstract class SpecialReportDataSource {
   Future<SpecialReportDetail> getSpecialReportDetail({required String id});
+  Future<bool> deleteSpecialReport({required String id});
+  Future<bool> updateSpecialReport(
+      {required String id, required String content});
   Future<void> postSpecialReport({required String content});
   Future<List<SpecialReportOnList>> getSpecialReportBySupervisor();
   Future<SpecialReportResponse> getSpecialReportByStudentId(
@@ -107,6 +110,36 @@ class SpecialReportDataSourceImpl implements SpecialReportDataSource {
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = SpecialReportResponse.fromJson(dataResponse.data);
       return result;
+    } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<bool> deleteSpecialReport({required String id}) async {
+    try {
+      await dio.delete(
+        '${ApiService.baseUrl}/problem-consultations/$id',
+        options: await apiHeader.userOptions(),
+      );
+      return true;
+    } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<bool> updateSpecialReport(
+      {required String id, required String content}) async {
+    try {
+      await dio.put(
+        '${ApiService.baseUrl}/problem-consultations/$id/update',
+        data: {
+          'content': content,
+        },
+        options: await apiHeader.userOptions(),
+      );
+      return true;
     } catch (e) {
       throw failure(e);
     }

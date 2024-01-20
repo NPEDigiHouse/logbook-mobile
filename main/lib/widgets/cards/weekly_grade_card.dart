@@ -92,7 +92,8 @@ class WeeklyGradeCard extends StatelessWidget {
                     )
                   else
                     Text(Utils.epochToStringDate(
-                        startTime: (startTime ?? 0), endTime: (endTime ?? 0))),
+                        startTime: (startTime == null ? 0 : startTime! ~/ 1000),
+                        endTime: (endTime == null ? 0 : endTime! ~/ 1000))),
                   const SizedBox(
                     height: 8,
                   ),
