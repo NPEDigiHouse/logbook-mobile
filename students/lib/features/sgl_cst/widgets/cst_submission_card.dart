@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/verify_dialog.dart';
-import 'package:students/features/sgl_cst/list_cst_page.dart';
 import 'package:students/features/sgl_cst/widgets/add_topic_dialog.dart';
 import 'package:students/features/sgl_cst/widgets/edit_sglcst_dialog.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -131,6 +130,7 @@ class CstSubmissionCard extends StatelessWidget {
                     ];
                   },
                 ),
+           
             ],
           ),
           const SizedBox(

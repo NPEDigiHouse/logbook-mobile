@@ -96,7 +96,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         sliver: SliverFillRemaining(
                           child: BlocConsumer<CompetenceCubit, CompetenceState>(
-                            listener: (context, state) {
+                            listener: (context, state) async {
                               if (state.isCaseSuccessAdded) {
                                 isMounted = false;
                               }

@@ -213,7 +213,7 @@ class CompetenceCubit extends Cubit<CompetenceState> {
 
       try {
         emit(state.copyWith(
-          isSkillSuccessAdded: true,
+          isCaseSuccessAdded: true,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));

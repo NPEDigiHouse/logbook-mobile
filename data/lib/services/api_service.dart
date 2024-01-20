@@ -1,7 +1,7 @@
-// class ApiService {
-//   static String baseUrl = "https://e-logbook.npedigihouse.tech/api";
-// }
-
 class ApiService {
-  static String baseUrl = "http://103.133.36.68:5000/api";
+  static String baseUrl = "http://192.168.1.13:5000/api";
 }
+
+// class ApiService {
+//   static String baseUrl = "https://elogbook.fk.umi.ac.id/api";
+// }

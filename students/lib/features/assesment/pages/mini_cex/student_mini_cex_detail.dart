@@ -1,3 +1,4 @@
+import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
@@ -12,13 +13,14 @@ import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'package:semicircle_indicator/semicircle_indicator.dart';
 import 'package:main/widgets/clip_donut_painter.dart';
+import 'package:students/features/assesment/pages/widgets/title_assesment_card.dart';
 
 class StudentMiniCexDetail extends StatefulWidget {
-  final String id;
   const StudentMiniCexDetail({
-    super.key,
     required this.id,
+    super.key,
   });
+  final String id;
 
   @override
   State<StudentMiniCexDetail> createState() => _StudentMiniCexDetailState();
@@ -32,74 +34,102 @@ class _StudentMiniCexDetailState extends State<StudentMiniCexDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AssesmentCubit, AssesmentState>(
-      builder: (context, state) {
-        if (state.requestState == RequestState.loading) {
-          return const SizedBox(
-            height: 300,
-            child: CustomLoading(),
-          );
-        }
-        if (state.miniCexStudentDetail != null ||
-            state.requestState == RequestState.data) {
-          return Builder(builder: (context) {
-            if (state.miniCexStudentDetail!.scores!.isNotEmpty) {
-              return SpacingColumn(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 12,
-                children: [
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  TopStatCard(
-                    title: 'Total Grades',
-                    totalGrade:
-                        getTotalGrades(state.miniCexStudentDetail!.grade!),
-                  ),
-                  ...List.generate(
-                    state.miniCexStudentDetail!.scores!.length,
-                    (index) => TestGradeScoreCard(
-                        caseName:
-                            state.miniCexStudentDetail!.scores![index].name ??
-                                '',
-                        score:
-                            state.miniCexStudentDetail!.scores![index].score ??
-                                0),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                ],
-              );
-            } else {
-              return const Center(
-                child: EmptyData(
-                  title: 'Waiting for assessment',
-                  subtitle:
-                      'the supervisor has not given a value for the mini cex',
-                ),
-              );
-            }
-          });
-        } else {
-          return SizedBox(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 12,
-                ),
-                OutlinedButton(
-                  onPressed: () => BlocProvider.of<AssesmentCubit>(context)
-                    ..getMiniCexStudentDetail(
-                      id: widget.id,
-                    ),
-                  child: const Text('Load Mini Cex Score'),
-                ),
-              ],
-            ),
-          );
-        }
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Mini Cex"),
+      ).variant(),
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<AssesmentCubit>(context)
+                  .getMiniCexStudentDetail(id: widget.id),
+            ]);
+          },
+          child: CustomScrollView(
+            slivers: [
+              SliverFillRemaining(
+                child: BlocConsumer<AssesmentCubit, AssesmentState>(
+                    listener: (context, state) =>
+                        print(state.miniCexStudentDetail),
+                    builder: (context, state) {
+                      if (state.requestState == RequestState.loading) {
+                        return const CustomLoading();
+                      }
+                      if (state.miniCexStudentDetail != null) {
+                        return SpacingColumn(
+                          horizontalPadding: 16,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 12,
+                          children: [
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            TitleAssesmentCard(
+                              title: state.miniCexStudentDetail?.dataCase ?? '',
+                              subtitle:
+                                  state.miniCexStudentDetail?.location ?? '',
+                            ),
+                            if (state.miniCexStudentDetail?.scores != null &&
+                                state.miniCexStudentDetail!.scores!
+                                    .isNotEmpty) ...[
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              TopStatCard(
+                                title: 'Total Grades',
+                                totalGrade: getTotalGrades(
+                                    state.miniCexStudentDetail!.grade ?? 0),
+                              ),
+                              ...List.generate(
+                                state.miniCexStudentDetail!.scores!.length,
+                                (index) => TestGradeScoreCard(
+                                    caseName: state.miniCexStudentDetail!
+                                            .scores![index].name ??
+                                        '',
+                                    score: state.miniCexStudentDetail!
+                                            .scores![index].score ??
+                                        0),
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                            ] else ...[
+                              const Center(
+                                child: EmptyData(
+                                  title: 'Waiting for assessment',
+                                  subtitle:
+                                      'the supervisor has not given a value for the mini cex',
+                                ),
+                              )
+                            ]
+                          ],
+                        );
+                      } else {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              OutlinedButton(
+                                onPressed: () {
+                                  BlocProvider.of<AssesmentCubit>(context)
+                                      .getMiniCexStudentDetail(id: widget.id);
+                                },
+                                child: const Text('Load Mini Cex Assessment'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    }),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -32,4 +32,53 @@ class SelfReflectionCubit extends Cubit<SelfReflectionState> {
       );
     }
   }
+
+  Future<void> updateSelfReflection(
+      {required String id, required String content}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result =
+          await ds.updateSelfReflection(id: id, data: content);
+      try {
+        emit(state.copyWith(
+          isUpdate: result,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> deleteSelfReflection({required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await ds.deleteSelfReflection(id: id);
+      try {
+        emit(state.copyWith(
+          isDelete: result,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
 }

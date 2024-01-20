@@ -21,6 +21,8 @@ abstract class SelfReflectionDataSource {
   Future<String> getDetail({required String id});
   Future<StudentSelfReflectionModel> getStudentSelfReflection(
       {required String studentId});
+  Future<bool> deleteSelfReflection({required String id});
+  Future<bool> updateSelfReflection({required String id, required String data});
 }
 
 class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
@@ -108,6 +110,37 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
       return result;
     } catch (e) {
       throw failure(e);
+    }
+  }
+
+  @override
+  Future<bool> deleteSelfReflection({required String id}) async {
+    try {
+      await dio.delete(
+        '${ApiService.baseUrl}/self-reflections/$id',
+        options: await apiHeader.userOptions(),
+      );
+      return true;
+    } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<bool> updateSelfReflection(
+      {required String id, required String data}) async {
+    try {
+      await dio.put(
+        '${ApiService.baseUrl}/self-reflections/$id/update',
+        options: await apiHeader.userOptions(),
+        data: {
+          'content': data,
+        },
+      );
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
     }
   }
 }

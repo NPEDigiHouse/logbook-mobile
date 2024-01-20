@@ -132,9 +132,7 @@ class _WrapperScientificAssignmentState
       listener: (context, state) {
         if (state.scientificAssignmentDetail != null) {
           context.replace(
-            ScientificAssignmentDetail(
-              ss: state.scientificAssignmentDetail!,
-            ),
+            ScientificAssignmentDetail(id: widget.id),
           );
         }
       },

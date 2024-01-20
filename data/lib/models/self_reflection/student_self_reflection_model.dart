@@ -24,11 +24,12 @@ class StudentSelfReflectionModel {
 @JsonSerializable()
 class SelfReflectionData {
   final String? content;
+  final int? updatedAt;
   final String? selfReflectionId;
   final String? verificationStatus;
 
   SelfReflectionData(
-      {this.content, this.verificationStatus, this.selfReflectionId});
+      {this.content, this.verificationStatus, this.selfReflectionId, this.updatedAt});
 
   factory SelfReflectionData.fromJson(json) =>
       _$SelfReflectionDataFromJson(json);

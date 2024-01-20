@@ -50,6 +50,7 @@ dependencies:
   connectivity_plus: ^2.2.0
   flutter_image_compress: ^2.1.0
   open_file: ^3.3.2
+  expandable_text: ^2.3.0
 
   # modul
   main:

@@ -148,7 +148,6 @@ class AssesmentCubit extends Cubit<AssesmentState> {
         emit(state.copyWith(requestState: RequestState.error));
       }
     } catch (e) {
-      print(e.toString());
       emit(
         state.copyWith(
           requestState: RequestState.error,

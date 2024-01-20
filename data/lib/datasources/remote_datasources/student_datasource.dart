@@ -41,6 +41,7 @@ abstract class StudentDataSource {
   Future<List<StudentCheckOutModel>> getStudentCheckOut();
   Future<void> verifyCheckOut({required String studentId});
   Future<StudentById> getStudentById({required String studentId});
+
   Future<StudentStatistic> getStudentStatistic();
   Future<void> updateStudentData(
       {required StudentPostModel studentDataPostModel});

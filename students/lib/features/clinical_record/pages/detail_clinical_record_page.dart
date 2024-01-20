@@ -756,7 +756,11 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
                                     height: 4,
                                   ),
                                   Text(
-                                    'Entry details have been verified by supervisor',
+                                    state.detailClinicalRecordModel!
+                                                .verificationStatus ==
+                                            'VERIFIED'
+                                        ? 'Entry details have been verified by supervisor'
+                                        : 'Waiting for verification from the supervisor',
                                     style: textTheme.bodyMedium?.copyWith(
                                       color: secondaryTextColor,
                                       height: 1.1,

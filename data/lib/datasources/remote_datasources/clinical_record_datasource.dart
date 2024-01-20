@@ -101,7 +101,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       {required ClinicalRecordPostModel clinicalRecordPostModel,
       required String id}) async {
     try {
-      print('${ApiService.baseUrl}/clinical-records/$id/v2');
       final data = {
         'patientName': clinicalRecordPostModel.patientName,
         'patientAge': clinicalRecordPostModel.patientAge,
@@ -118,7 +117,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         'diagnosiss': clinicalRecordPostModel.diagnosess,
         'managements': clinicalRecordPostModel.managements,
       };
-      print(data);
       await dio.put(
         '${ApiService.baseUrl}/clinical-records/$id/v2',
         options: await apiHeader.userOptions(),
@@ -126,7 +124,7 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       );
       return const Right(true);
     } catch (e) {
-      print(e.toString());
+      
       return Left(failure(e));
     }
   }

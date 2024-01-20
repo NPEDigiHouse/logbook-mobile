@@ -19,12 +19,11 @@ import 'package:main/widgets/clip_donut_painter.dart';
 import '../widgets/title_assesment_card.dart';
 
 class ScientificAssignmentDetail extends StatefulWidget {
-  final ListScientificAssignment ss;
   const ScientificAssignmentDetail({
     super.key,
-    required this.ss,
+    required this.id,
   });
-
+  final String id;
   @override
   State<ScientificAssignmentDetail> createState() =>
       _ScientificAssignmentDetailState();
@@ -48,7 +47,7 @@ class _ScientificAssignmentDetailState
           onRefresh: () async {
             await Future.wait([
               BlocProvider.of<AssesmentCubit>(context)
-                  .getStudentScientificAssignment(),
+                  .getScientiicAssignmentDetail(id: widget.id),
             ]);
           },
           child: CustomScrollView(
@@ -79,7 +78,9 @@ class _ScientificAssignmentDetailState
                             ),
                             Builder(builder: (context) {
                               if (state.scientificAssignmentDetail!.scores!
-                                  .isNotEmpty) {
+                                      .isNotEmpty &&
+                                  state.scientificAssignmentDetail?.grade !=
+                                      null) {
                                 return SpacingColumn(spacing: 12, children: [
                                   TopStatCard(
                                     title: 'Scientific Assignment Statistic',
@@ -158,14 +159,19 @@ class _ScientificAssignmentDetailState
                         ),
                       );
                     } else {
-                      return SizedBox(
+                      return Center(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const SizedBox(
                               height: 12,
                             ),
                             OutlinedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                BlocProvider.of<AssesmentCubit>(context)
+                                    .getScientiicAssignmentDetail(
+                                        id: widget.id);
+                              },
                               child: const Text('Load Scientific Assesment'),
                             ),
                           ],

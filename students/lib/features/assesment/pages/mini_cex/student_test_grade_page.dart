@@ -5,12 +5,12 @@ import 'package:core/styles/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/assesment_cubit/assesment_cubit.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'add_mini_cex_page.dart';
 import 'student_mini_cex_detail.dart';
-import '../widgets/title_assesment_card.dart';
 
 class StudentTestGrade extends StatefulWidget {
   final String unitName;
@@ -91,22 +91,8 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
                           );
                         }
                         final miniCex = state.studentMiniCexs!.first;
-                        return SingleChildScrollView(
-                          child: SpacingColumn(
-                            onlyPading: true,
-                            horizontalPadding: 16,
-                            spacing: 12,
-                            children: [
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              TitleAssesmentCard(
-                                title: miniCex.miniCexListModelCase ?? '',
-                                subtitle: miniCex.location ?? '',
-                              ),
-                              StudentMiniCexDetail(id: miniCex.id!),
-                            ],
-                          ),
+                        return WrapperMiniCex(
+                          id: miniCex.id!,
                         );
                       } else {
                         return const CustomLoading();
@@ -119,6 +105,38 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
           );
         });
       }),
+    );
+  }
+}
+
+class WrapperMiniCex extends StatefulWidget {
+  final String id;
+  const WrapperMiniCex({super.key, required this.id});
+
+  @override
+  State<WrapperMiniCex> createState() => _WrapperMiniCexState();
+}
+
+class _WrapperMiniCexState extends State<WrapperMiniCex> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<AssesmentCubit>(context)
+        .getMiniCexStudentDetail(id: widget.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AssesmentCubit, AssesmentState>(
+      listener: (context, state) {
+        if (state.miniCexStudentDetail != null &&
+            state.requestState == RequestState.data) {
+          context.replace(StudentMiniCexDetail(
+            id: widget.id,
+          ));
+        }
+      },
+      child: const CustomLoading(),
     );
   }
 }

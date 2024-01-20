@@ -14,7 +14,10 @@ import 'package:main/widgets/verify_dialog.dart';
 
 class CreateSelfReflectionPage extends StatefulWidget {
   final UserCredential credential;
-  const CreateSelfReflectionPage({super.key, required this.credential});
+  final String? content;
+  final String? id;
+  const CreateSelfReflectionPage(
+      {super.key, required this.credential, this.content, this.id});
 
   @override
   State<CreateSelfReflectionPage> createState() =>
@@ -27,10 +30,18 @@ class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.content != null) {
+      fieldController.text = widget.content ?? '';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<SelfReflectionCubit, SelfReflectionState>(
       listener: (context, state) {
-        if (state.isSelfReflectionPostSuccess) {
+        if (state.isSelfReflectionPostSuccess || state.isUpdate) {
           BlocProvider.of<StudentCubit>(context).getStudentSelfReflections();
           Navigator.pop(context);
         }
@@ -104,10 +115,17 @@ class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
         barrierDismissible: false,
         builder: (_) => VerifyDialog(
           onTap: () {
-            BlocProvider.of<SelfReflectionCubit>(context)
-              .uploadSelfReflection(
-                  model:
-                      SelfReflectionPostModel(content: fieldController.text));
+            if (widget.content != null) {
+              BlocProvider.of<SelfReflectionCubit>(context)
+                  .updateSelfReflection(
+                      id: widget.id!, content: fieldController.text);
+            } else {
+              BlocProvider.of<SelfReflectionCubit>(context)
+                  .uploadSelfReflection(
+                      model: SelfReflectionPostModel(
+                          content: fieldController.text));
+            }
+
             Navigator.pop(context);
           },
         ),

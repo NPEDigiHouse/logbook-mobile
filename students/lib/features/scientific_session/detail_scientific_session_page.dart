@@ -468,7 +468,8 @@ class _DetailScientificSessionPageState
                       ),
                       child: Column(
                         children: [
-                          Padding(
+                          Container(
+                            width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 16.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -480,11 +481,23 @@ class _DetailScientificSessionPageState
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Text(
+                                  state.detail!.verificationStatus == 'VERIFIED'
+                                      ? 'Entry details have been verified by supervisor'
+                                      : 'Waiting for verification from the supervisor',
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: secondaryTextColor,
+                                    height: 1.1,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ],
                             ),
                           ),
                           Container(
-                            width: double.infinity,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(56),
                               color:
@@ -498,52 +511,48 @@ class _DetailScientificSessionPageState
                             ),
                             child: state.detail!.verificationStatus ==
                                     'VERIFIED'
-                                ? Center(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(
-                                          Icons.verified,
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.verified,
+                                        color: Colors.white,
+                                      ),
+                                      const SizedBox(
+                                        width: 4,
+                                      ),
+                                      Text(
+                                        'Verified',
+                                        style: textTheme.bodyMedium?.copyWith(
                                           color: Colors.white,
                                         ),
-                                        const SizedBox(
-                                          width: 4,
-                                        ),
-                                        Text(
-                                          'Verified',
-                                          style: textTheme.bodyMedium?.copyWith(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   )
-                                : Center(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(4.0),
-                                          decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.white),
-                                          child: const Icon(
-                                            Icons.close_rounded,
-                                            color: errorColor,
-                                            size: 12,
-                                          ),
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(4.0),
+                                        decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white),
+                                        child: const Icon(
+                                          Icons.close_rounded,
+                                          color: errorColor,
+                                          size: 12,
                                         ),
-                                        const SizedBox(
-                                          width: 4,
+                                      ),
+                                      const SizedBox(
+                                        width: 4,
+                                      ),
+                                      Text(
+                                        'Unverified',
+                                        style: textTheme.bodyMedium?.copyWith(
+                                          color: Colors.white,
                                         ),
-                                        Text(
-                                          'Unverified',
-                                          style: textTheme.bodyMedium?.copyWith(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                           ),
                           if (state.detail!.verificationStatus ==

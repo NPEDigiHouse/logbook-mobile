@@ -1,5 +1,4 @@
 import 'package:core/helpers/app_size.dart';
-import 'package:core/helpers/utils.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/supervisors/student_unit_model.dart';
 import 'package:main/blocs/assesment_cubit/assesment_cubit.dart';
@@ -89,7 +88,7 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
 
                                   final bool isPassed = DateTime.now().isAfter(
                                       DateTime.fromMillisecondsSinceEpoch(
-                                          grades.startDate! * 1000));
+                                          (grades.startDate??0) * 1000));
 
                                   return WeeklyGradeCard(
                                     startTime: grades.startDate,
