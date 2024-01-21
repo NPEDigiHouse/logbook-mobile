@@ -252,26 +252,37 @@ class SglCstCubit extends Cubit<SglCstState> {
     );
   }
 
-  Future<void> getListSglStudents({String? unitId}) async {
-    final result = await dataSource.getSglBySupervisor(unitId: unitId);
+  Future<void> getListSglStudents(
+      {String? unitId, int? page, String? query, bool onScroll = false}) async {
+    final result = await dataSource.getSglBySupervisor(
+        unitId: unitId, query: query, page: page);
+
+    if (!onScroll) emit(state.copyWith(sglState: RequestState.loading));
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
+      (l) => emit(state.copyWith(sglState: RequestState.error)),
       (r) {
-        r.sort((a, b) =>
-            (b.latest ?? DateTime.now()).compareTo(a.latest ?? DateTime.now()));
-        emit(state.copyWith(sglStudents: r));
+        if (page == 1 && !onScroll) {
+          emit(state.copyWith(sglStudents: r, sglState: RequestState.data));
+        } else {
+          emit(state.copyWith(sglStudents: state.sglStudents! + r));
+        }
       },
     );
   }
 
-  Future<void> getListCstStudents({String? unitId}) async {
-    final result = await dataSource.getCstBySupervisor(unitId: unitId);
+  Future<void> getListCstStudents(
+      {String? unitId, int? page, String? query, bool onScroll = false}) async {
+    final result = await dataSource.getCstBySupervisor(
+        unitId: unitId, query: query, page: page);
+    if (!onScroll) emit(state.copyWith(cstState: RequestState.loading));
     result.fold(
       (l) => emit(state.copyWith(requestState: RequestState.error)),
       (r) {
-        r.sort((a, b) =>
-            (b.latest ?? DateTime.now()).compareTo(a.latest ?? DateTime.now()));
-        emit(state.copyWith(cstStudents: r));
+        if (page == 1 && !onScroll) {
+          emit(state.copyWith(cstStudents: r, cstState: RequestState.data));
+        } else {
+          emit(state.copyWith(cstStudents: state.cstStudents! + r));
+        }
       },
     );
   }

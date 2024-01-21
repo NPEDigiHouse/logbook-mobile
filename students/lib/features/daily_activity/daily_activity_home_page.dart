@@ -7,7 +7,6 @@ import 'package:data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'package:main/widgets/headers/unit_header.dart';

@@ -1,6 +1,6 @@
-
 import 'package:core/context/navigation_extension.dart';
 import 'package:data/models/sglcst/sgl_cst_on_list_model.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/inputs/search_field.dart';
@@ -23,22 +23,38 @@ class SupervisorListCstPage extends StatefulWidget {
 
 class _SupervisorListCstPageState extends State<SupervisorListCstPage> {
   String? filterUnitId;
+  late int page;
+  String? query;
+  final ScrollController _scrollController = ScrollController();
 
-  ValueNotifier<List<SglCstOnList>> listSglCstStudents = ValueNotifier([]);
-  bool isMounted = false;
   @override
   void initState() {
     super.initState();
-    filterUnitId = null;
-    isMounted = false;
-    Future.microtask(
-        () => BlocProvider.of<SglCstCubit>(context).getListCstStudents());
+    _scrollController.addListener(_onScroll);
+    page = 1;
+    Future.microtask(() =>
+        BlocProvider.of<SglCstCubit>(context).getListCstStudents(page: 1));
+  }
+
+  void _onScroll() {
+    final state = context.read<SglCstCubit>().state.cstState;
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        state != RequestState.loading) {
+      _loadMoreData();
+    }
+  }
+
+  void _loadMoreData() {
+    BlocProvider.of<SglCstCubit>(context).getListCstStudents(
+        unitId: filterUnitId, query: query, page: page + 1, onScroll: true);
+    page++;
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     super.dispose();
-    listSglCstStudents.dispose();
   }
 
   @override
@@ -56,9 +72,9 @@ class _SupervisorListCstPageState extends State<SupervisorListCstPage> {
                   initUnit: filterUnitId,
                   onTap: (f) {
                     filterUnitId = f;
-                    isMounted = false;
-                    BlocProvider.of<SglCstCubit>(context)
-                        .getListCstStudents(unitId: f);
+                    page = 1;
+                    BlocProvider.of<SglCstCubit>(context).getListCstStudents(
+                        unitId: f, query: query, page: page);
                     Navigator.pop(context);
                   },
                 ),
@@ -72,84 +88,79 @@ class _SupervisorListCstPageState extends State<SupervisorListCstPage> {
       ).variant(),
       body: RefreshIndicator(
         onRefresh: () async {
-          isMounted = false;
+          page = 1;
           await Future.wait([
-            BlocProvider.of<SglCstCubit>(context)
-                .getListCstStudents(unitId: filterUnitId),
+            BlocProvider.of<SglCstCubit>(context).getListCstStudents(
+                unitId: filterUnitId, page: page, query: query),
           ]);
         },
         child: SafeArea(
-          child: ValueListenableBuilder(
-              valueListenable: listSglCstStudents,
-              builder: (context, s, _) {
-                return BlocBuilder<SglCstCubit, SglCstState>(
-                  builder: (context, state) {
-                    if (state.cstStudents == null) {
-                      return const CustomLoading();
-                    }
-                    if (!isMounted) {
-                      Future.microtask(() {
-                        listSglCstStudents.value = [...state.cstStudents!];
-                      });
-                      isMounted = true;
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: CustomScrollView(
-                        slivers: [
-                          const SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: 16,
-                            ),
-                          ),
-                          SliverToBoxAdapter(
-                            child: SearchField(
-                              onChanged: (value) {
-                                final data = state.cstStudents!
-                                    .where((element) => element.studentName!
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase()))
-                                    .toList();
-                                if (value.isEmpty) {
-                                  listSglCstStudents.value.clear();
-                                  listSglCstStudents.value = [
-                                    ...state.cstStudents!
-                                  ];
-                                } else {
-                                  listSglCstStudents.value = [...data];
-                                }
-                              },
-                              onSubmited: (value) {},
-                              text: '',
-                              hint: 'Search for student',
-                            ),
-                          ),
-                          const SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: 12,
-                            ),
-                          ),
-                          SliverList.separated(
-                            itemCount: s.length,
-                            itemBuilder: (context, index) {
-                              return CstOnListCard(
-                                sglCst: s[index],
-                                isCeu: widget.isCeu,
-                                userId: widget.userId,
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return const SizedBox(
-                                height: 12,
-                              );
-                            },
-                          )
-                        ],
+          child: BlocSelector<SglCstCubit, SglCstState,
+              (List<SglCstOnList>?, RequestState)>(
+            selector: (state) => (state.cstStudents, state.cstState),
+            builder: (context, state) {
+              final data = state.$1;
+
+              if (data == null || state.$2 == RequestState.loading) {
+                return const CustomLoading();
+              }
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 16,
                       ),
-                    );
-                  },
-                );
-              }),
+                    ),
+                    SliverToBoxAdapter(
+                      child: SearchField(
+                        onClear: () {
+                          query = null;
+                          context.read<SglCstCubit>().getListCstStudents(
+                              unitId: filterUnitId, page: page, query: query);
+                        },
+                        onChanged: (value) {
+                          query = value;
+                          context.read<SglCstCubit>().getListCstStudents(
+                              unitId: filterUnitId, page: page, query: query);
+                        },
+                        text: '',
+                        hint: 'Search for student',
+                      ),
+                    ),
+                    const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 12,
+                      ),
+                    ),
+                    SliverList.separated(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        return CstOnListCard(
+                          sglCst: data[index],
+                          isCeu: widget.isCeu,
+                          userId: widget.userId,
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                          height: 12,
+                        );
+                      },
+                    ),
+                    const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

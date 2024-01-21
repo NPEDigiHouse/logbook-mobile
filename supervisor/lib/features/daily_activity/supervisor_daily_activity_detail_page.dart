@@ -121,8 +121,9 @@ class _SupervisorDailyActivityDetailPageState
                               ],
                             ],
                           ),
-                          Text(Utils.epochToStringDate(
-                              startTime: (data?.date ?? 0) ~/ 1000)),
+                          if (data?.date != null && data?.date != 0)
+                            Text(Utils.epochToStringDate(
+                                startTime: (data?.date ?? 0) ~/ 1000)),
                           if (data?.activityStatus == 'ATTEND')
                             Row(
                               children: [

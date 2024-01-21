@@ -55,9 +55,9 @@ abstract class SglCstDataSource {
   Future<Either<Failure, List<TopicModel>>> getTopicsByDepartmentId(
       {required String unitId});
   Future<Either<Failure, List<SglCstOnList>>> getSglBySupervisor(
-      {String? unitId});
+      {String? unitId, int? page, String? query});
   Future<Either<Failure, List<SglCstOnList>>> getCstBySupervisor(
-      {String? unitId});
+      {String? unitId, int? page, String? query});
 
   Future<Either<Failure, SglResponse>> getSglByStudentId(
       {required String studentId});
@@ -153,12 +153,15 @@ class SglCstDataSourceImpl implements SglCstDataSource {
 
   @override
   Future<Either<Failure, List<SglCstOnList>>> getCstBySupervisor(
-      {String? unitId}) async {
+      {String? unitId, int? page, String? query}) async {
     try {
-      final response = await dio.get('${ApiService.baseUrl}/csts',
+      final response = await dio.get('${ApiService.baseUrl}/csts/v2',
           options: await apiHeader.userOptions(),
-          queryParameters: {if (unitId != null) "unit": unitId});
-
+          queryParameters: {
+            if (unitId != null) "unit": unitId,
+            if (page != null) "page": page,
+            if (query != null) "query": query,
+          });
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<SglCstOnList> listData =
           dataResponse.data.map((e) => SglCstOnList.fromJson(e)).toList();
@@ -186,11 +189,15 @@ class SglCstDataSourceImpl implements SglCstDataSource {
 
   @override
   Future<Either<Failure, List<SglCstOnList>>> getSglBySupervisor(
-      {String? unitId}) async {
+      {String? unitId, int? page, String? query}) async {
     try {
-      final response = await dio.get('${ApiService.baseUrl}/sgls',
+      final response = await dio.get('${ApiService.baseUrl}/sgls/v2',
           options: await apiHeader.userOptions(),
-          queryParameters: {if (unitId != null) "unit": unitId});
+          queryParameters: {
+            if (unitId != null) "unit": unitId,
+            if (page != null) "page": page,
+            if (query != null) "query": query,
+          });
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<SglCstOnList> listData =
           dataResponse.data.map((e) => SglCstOnList.fromJson(e)).toList();

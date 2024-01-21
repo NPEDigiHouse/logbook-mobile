@@ -9,11 +9,13 @@ class SearchField extends StatefulWidget {
   final String hint;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmited;
+  final VoidCallback? onClear;
 
   const SearchField({
     super.key,
     required this.text,
     this.hint = 'Search',
+    this.onClear,
     this.onSubmited,
     required this.onChanged,
   });
@@ -80,6 +82,9 @@ class _SearchFieldState extends State<SearchField> {
             ),
             onPressed: () {
               _controller.clear();
+              if (widget.onClear != null) {
+                widget.onClear!.call();
+              }
               // widget.onChanged('');
             },
           ),

@@ -6,11 +6,9 @@ import 'package:common/features/personal_data/widgets/change_profile_photo.dart'
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/profile_cubit/profile_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';

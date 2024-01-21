@@ -81,98 +81,106 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.only(bottom: 24),
               child: Column(
                 children: <Widget>[
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: primaryColor,
-                    ),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: <Widget>[
-                        Positioned(
-                          left: 0,
-                          bottom: 0,
-                          child: SvgPicture.asset(
-                            AssetPath.getVector('half_ellipse3.svg'),
+                  ConstrainedBox(
+                    constraints:
+                        const BoxConstraints(minHeight: 200, maxHeight: 220),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: primaryColor,
+                      ),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: <Widget>[
+                          Positioned(
+                            left: 0,
+                            bottom: 0,
+                            child: SvgPicture.asset(
+                              AssetPath.getVector('half_ellipse3.svg'),
+                            ),
                           ),
-                        ),
-                        Positioned(
-                          right: 0,
-                          bottom: 0,
-                          child: SvgPicture.asset(
-                            AssetPath.getVector('circle_bg3.svg'),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: SvgPicture.asset(
+                              AssetPath.getVector('circle_bg3.svg'),
+                            ),
                           ),
-                        ),
-                        Positioned(
-                          right: 0,
-                          left: 0,
-                          top: 16,
-                          child: Column(
-                            children: <Widget>[
-                              BlocBuilder<UserCubit, UserState>(
-                                builder: (context, state) {
-                                  if (state.profilePic != null &&
-                                      state.rspp == RequestState.data) {
-                                    return Column(
-                                      children: [
-                                        InkWell(
-                                          onTap: () => context.navigateTo(
-                                              ImagePreview(
-                                                  byte: state.profilePic!,
-                                                  tag: 'profile_image')),
-                                          child: Hero(
-                                            tag: 'profile_image',
-                                            child: Container(
-                                              width: 100,
-                                              height: 100,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    width: 2,
-                                                    color:
-                                                        scaffoldBackgroundColor,
-                                                    strokeAlign: BorderSide
-                                                        .strokeAlignOutside),
-                                                color: Colors.white,
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  image: MemoryImage(
-                                                    state.profilePic!,
+                          Positioned(
+                            right: 0,
+                            left: 0,
+                            top: 16,
+                            child: Column(
+                              children: <Widget>[
+                                BlocBuilder<UserCubit, UserState>(
+                                  builder: (context, state) {
+                                    if (state.profilePic != null &&
+                                        state.rspp == RequestState.data) {
+                                      return Column(
+                                        children: [
+                                          InkWell(
+                                            onTap: () => context.navigateTo(
+                                                ImagePreview(
+                                                    byte: state.profilePic!,
+                                                    tag: 'profile_image')),
+                                            child: Hero(
+                                              tag: 'profile_image',
+                                              child: Container(
+                                                width: 100,
+                                                height: 100,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      width: 2,
+                                                      color:
+                                                          scaffoldBackgroundColor,
+                                                      strokeAlign: BorderSide
+                                                          .strokeAlignOutside),
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                    image: MemoryImage(
+                                                      state.profilePic!,
+                                                    ),
+                                                    fit: BoxFit.cover,
                                                   ),
-                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    );
-                                  } else {
-                                    return ProfilePicPlaceholder(
-                                        height: 100,
-                                        name: widget.credential.fullname ?? 'U',
-                                        width: 100);
-                                  }
-                                },
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                widget.credential.fullname ?? '-',
-                                style: textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                        ],
+                                      );
+                                    } else {
+                                      return ProfilePicPlaceholder(
+                                          height: 100,
+                                          name:
+                                              widget.credential.fullname ?? 'U',
+                                          width: 100);
+                                    }
+                                  },
                                 ),
-                              ),
-                              Text(
-                                'NIM. ${widget.credential.student?.studentId}',
-                                style: textTheme.bodyLarge?.copyWith(
-                                  color: onDisableColor,
+                                const SizedBox(height: 12),
+                                Text(
+                                  widget.credential.fullname ?? '-',
+                                  style: textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    height: 1.2,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  'NIM. ${widget.credential.student?.studentId}',
+                                  style: textTheme.bodyLarge?.copyWith(
+                                    color: onDisableColor,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
