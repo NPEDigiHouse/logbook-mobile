@@ -13,11 +13,15 @@ class StudentDailyActivityPerDays {
   final int? date;
   @JsonKey(name: "weekName")
   final int? weekName;
+  final List<String>? dayExist;
+  final List<String>? dayNotExist;
   @JsonKey(name: "activities")
   final List<ActivitiesStatus>? activities;
 
   StudentDailyActivityPerDays({
     this.date,
+    this.dayExist,
+    this.dayNotExist,
     this.alpha,
     this.verificationStatus,
     this.attend,

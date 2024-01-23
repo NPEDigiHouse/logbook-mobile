@@ -18,11 +18,15 @@ import 'package:main/widgets/spacing_column.dart';
 
 class CreateDailyActivityPage extends StatefulWidget {
   final String id;
-  final String dayId;
-
+  final String? dayId;
+  final List<String>? dayExist;
   final ActivitiesStatus? activityStatus;
   const CreateDailyActivityPage(
-      {super.key, required this.dayId, required this.id, this.activityStatus});
+      {super.key,
+      this.dayId,
+      required this.id,
+      this.activityStatus,
+      this.dayExist});
 
   @override
   State<CreateDailyActivityPage> createState() =>
@@ -41,6 +45,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   final ValueNotifier<String?> supervisorVal = ValueNotifier(null);
+  final ValueNotifier<String?> day = ValueNotifier(null);
   final TextEditingController detailController = TextEditingController();
   @override
   void initState() {
@@ -60,6 +65,11 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
       activityName = widget.activityStatus?.activityName ?? '';
     }
     supervisorName = widget.activityStatus?.supervisorName;
+    if (widget.dayExist != null) {
+      if (widget.dayExist!.isNotEmpty) {
+        day.value = widget.dayExist?.first;
+      }
+    }
   }
 
   @override
@@ -103,13 +113,35 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                     padding: 16,
                   ),
                   SpacingColumn(spacing: 16, horizontalPadding: 16, children: [
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text('Date'),
-                        enabled: false,
-                      ),
-                      initialValue: Utils.datetimeToString(DateTime.now()),
-                    ),
+                    if (widget.dayExist == null)
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          label: Text('Date'),
+                          enabled: false,
+                        ),
+                        initialValue: Utils.datetimeToString(DateTime.now()),
+                      )
+                    else
+                      ValueListenableBuilder(
+                          valueListenable: day,
+                          builder: (context, val, _) {
+                            return DropdownButtonFormField(
+                              isExpanded: true,
+                              hint: const Text('Day Name'),
+                              items: widget.dayExist!
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (v) {
+                                day.value = v;
+                              },
+                              value: val,
+                            );
+                          }),
                     BlocBuilder<SupervisorsCubit, SupervisorsState>(
                         builder: (context, state) {
                       List<SupervisorModel> supervisors = [];
@@ -339,18 +371,31 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
     supervisorVal.value = supervisorId == null
         ? 'This field is required, please select again.'
         : null;
-    print(supervisorId);
     if (_formKey.currentState!.saveAndValidate() && supervisorId != null) {
-      BlocProvider.of<DailyActivityCubit>(context).updateDailyActivity(
-        id: widget.dayId,
-        model: DailyActivityPostModel(
-          activityNameId: activityNameId,
-          activityStatus: status,
-          detail: detailController.text,
-          locationId: locationId,
-          supervisorId: supervisorId,
-        ),
-      );
+      if (widget.dayId != null) {
+        BlocProvider.of<DailyActivityCubit>(context).updateDailyActivity(
+          id: widget.dayId!,
+          model: DailyActivityPostModel(
+            activityNameId: activityNameId,
+            activityStatus: status,
+            detail: detailController.text,
+            locationId: locationId,
+            supervisorId: supervisorId,
+          ),
+        );
+      } else {
+        BlocProvider.of<DailyActivityCubit>(context).updateDailyActivity2(
+          day: day.value!,
+          dailyActivityV2Id: widget.id,
+          model: DailyActivityPostModel(
+            activityNameId: activityNameId,
+            activityStatus: status,
+            detail: detailController.text,
+            locationId: locationId,
+            supervisorId: supervisorId,
+          ),
+        );
+      }
     }
   }
 }

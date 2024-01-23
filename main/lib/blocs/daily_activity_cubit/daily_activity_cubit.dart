@@ -38,6 +38,31 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
+  Future<void> addWeekByStudent(
+      {int? startDate, int? endDate, int? weekNum}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.createWeek(
+          startDate: startDate, endDate: endDate, weekNum: weekNum);
+      try {
+        emit(state.copyWith(isAddWeekSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(
+            requestState: RequestState.error,
+            errorMessage: "Week already created"));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+            requestState: RequestState.error,
+            errorMessage: "Week already created"),
+      );
+    }
+  }
+
   Future<void> editWeekByCoordinator(
       {required PostWeek postWeek, required String id}) async {
     try {
@@ -150,15 +175,14 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
-  Future<void> getActivitiesByWeekIdStudentId(
-      {required String weekId}) async {
+  Future<void> getActivitiesByWeekIdStudentId({required String weekId}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result = await dataSource.getStudentDailyPerDaysActivities(
-          weekId: weekId);
+      final result =
+          await dataSource.getStudentDailyPerDaysActivities(weekId: weekId);
 
       try {
         emit(state.copyWith(activityPerDays: result));
@@ -313,6 +337,31 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       ));
 
       await dataSource.updateDailyActiviy(dayId: id, model: model);
+      try {
+        emit(state.copyWith(isDailyActivityUpdated: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> updateDailyActivity2(
+      {required String day,
+      required DailyActivityPostModel model,
+      required String dailyActivityV2Id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.updateDailyActiviy2(
+          day: day, model: model, dailyActivityV2Id: dailyActivityV2Id);
       try {
         emit(state.copyWith(isDailyActivityUpdated: true));
       } catch (e) {

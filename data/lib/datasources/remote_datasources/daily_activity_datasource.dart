@@ -31,6 +31,10 @@ abstract class DailyActivityDataSource {
   Future<DailyActivityStudent> getActivityOfDailyActivity({required String id});
   Future<void> updateDailyActiviy(
       {required String dayId, required DailyActivityPostModel model});
+  Future<void> updateDailyActiviy2(
+      {required DailyActivityPostModel model,
+      required String day,
+      required String dailyActivityV2Id});
   Future<void> verifiyDailyActivityById(
       {required String id, required bool verifiedStatus});
   Future<Either<Failure, bool>> updateStatus(
@@ -38,6 +42,8 @@ abstract class DailyActivityDataSource {
   Future<Either<Failure, bool>> updateWeek(
       {required PostWeek postWeek, required String id});
   Future<Either<Failure, bool>> deleteWeek({required String id});
+  Future<Either<Failure, bool>> createWeek(
+      {int? startDate, int? endDate, int? weekNum});
 }
 
 class DailyActivityDataSourceImpl implements DailyActivityDataSource {
@@ -59,12 +65,12 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         '${ApiService.baseUrl}/students/daily-activities/v2',
         options: await apiHeader.userOptions(),
       );
-      print(response.data);
+      print(response);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentDailyActivityResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print(e.toString());
+      print("Err");
       throw failure(e);
     }
   }
@@ -195,6 +201,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         '${ApiService.baseUrl}/students/daily-activities/weeks/$weekId/v2',
         options: await apiHeader.userOptions(),
       );
+
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentDailyActivityPerDays.fromJson(dataResponse.data);
       return result;
@@ -284,6 +291,53 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       return result;
     } catch (e) {
       throw failure(e);
+    }
+  }
+
+  @override
+  Future<void> updateDailyActiviy2(
+      {required DailyActivityPostModel model,
+      required String day,
+      required String dailyActivityV2Id}) async {
+    try {
+      final data = {
+        'activityStatus': model.activityStatus,
+        if (model.detail!.isNotEmpty) 'detail': model.detail,
+        'supervisorId': model.supervisorId,
+        if (model.locationId != null) 'locationId': model.locationId,
+        if (model.activityNameId != null)
+          'activityNameId': model.activityNameId,
+        'day': day,
+        'dailyActivityV2Id': dailyActivityV2Id,
+      };
+      await dio.post(
+        '${ApiService.baseUrl}/students/daily-activities/v2/activities',
+        options: await apiHeader.userOptions(),
+        data: data,
+      );
+    } catch (e) {
+      print(e.toString());
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> createWeek(
+      {int? startDate, int? endDate, int? weekNum}) async {
+    try {
+      await dio.post(
+        '${ApiService.baseUrl}/students/daily-activities/weeks/v2',
+        options: await apiHeader.userOptions(),
+        data: {
+          if (weekNum != null) 'weekNum': weekNum,
+          if (startDate != null) 'startDate': startDate,
+          if (endDate != null) 'endDate': endDate,
+        },
+      );
+      return const Right(true);
+    } catch (e) {
+      print(e.toString());
+      return Left(failure(e));
     }
   }
 }

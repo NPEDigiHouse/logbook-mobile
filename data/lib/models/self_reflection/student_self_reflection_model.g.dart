@@ -31,11 +31,13 @@ SelfReflectionData _$SelfReflectionDataFromJson(Map<String, dynamic> json) =>
       content: json['content'] as String?,
       verificationStatus: json['verificationStatus'] as String?,
       selfReflectionId: json['selfReflectionId'] as String?,
+      updatedAt: json['updatedAt'] as int?,
     );
 
 Map<String, dynamic> _$SelfReflectionDataToJson(SelfReflectionData instance) =>
     <String, dynamic>{
       'content': instance.content,
+      'updatedAt': instance.updatedAt,
       'selfReflectionId': instance.selfReflectionId,
       'verificationStatus': instance.verificationStatus,
     };

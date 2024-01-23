@@ -10,6 +10,12 @@ StudentDailyActivityPerDays _$StudentDailyActivityPerDaysFromJson(
         Map<String, dynamic> json) =>
     StudentDailyActivityPerDays(
       date: json['date'] as int?,
+      dayExist: (json['dayExist'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      dayNotExist: (json['dayNotExist'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       alpha: json['alpha'] as int?,
       verificationStatus: json['verificationStatus'] as String?,
       attend: json['attend'] as int?,
@@ -27,6 +33,8 @@ Map<String, dynamic> _$StudentDailyActivityPerDaysToJson(
       'verificationStatus': instance.verificationStatus,
       'date': instance.date,
       'weekName': instance.weekName,
+      'dayExist': instance.dayExist,
+      'dayNotExist': instance.dayNotExist,
       'activities': instance.activities,
     };
 

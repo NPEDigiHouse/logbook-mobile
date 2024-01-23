@@ -62,10 +62,10 @@ class DailyActivityHomeCard extends StatelessWidget {
             ],
           ),
         ),
-        if (DateTime.now().isBefore(startDate) && !isSupervisor)
-          Positioned.fill(
-            child: _lockedWeekLayer(),
-          ),
+        // if (DateTime.now().isBefore(startDate) && !isSupervisor)
+        //   Positioned.fill(
+        //     child: _lockedWeekLayer(),
+        //   ),
       ],
     );
   }
@@ -164,7 +164,6 @@ class DailyActivityHomeCard extends StatelessWidget {
       };
       final List<ActivitiesStatus> listDays =
           dailyActivity?.activitiesStatus ?? [];
-      listDays.sort((a, b) => a.date!.compareTo(b.date!));
 
       return SpacingRow(
         onlyPading: true,
@@ -174,13 +173,14 @@ class DailyActivityHomeCard extends StatelessWidget {
         children: listDays.map(
           (e) {
             bool isLateAttend = endDate.isBefore(
-              DateTime(
-                DateTime.now().year,
-                DateTime.now().month,
-                DateTime.now().day,
-              ),
-            );
-            bool isUnsubmit = e.activityName == null;
+                  DateTime(
+                    DateTime.now().year,
+                    DateTime.now().month,
+                    DateTime.now().day,
+                  ),
+                ) &&
+                e.activityStatus == 'NOT_ATTEND';
+            bool isUnsubmit = e.activityStatus == 'NOT_ATTEND';
             return Column(
               children: [
                 Text(
@@ -275,9 +275,9 @@ class DailyActivityHomeCard extends StatelessWidget {
   }
 
   void onWeekTab(BuildContext context) {
-    if (DateTime.now().isBefore(startDate) && !isSupervisor) {
-      return;
-    }
+    // if (DateTime.now().isBefore(startDate) && !isSupervisor) {
+    //   return;
+    // }
     context.navigateTo(
       DailyActivityWeekStatusPage(
         da: da,

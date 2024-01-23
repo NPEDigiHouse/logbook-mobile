@@ -11,6 +11,7 @@ import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'package:main/widgets/headers/unit_header.dart';
 import 'package:main/widgets/spacing_column.dart';
+import 'package:students/features/daily_activity/widgets/add_week_dialog.dart';
 
 class DailyActivityTempModel {
   final String day;
@@ -18,8 +19,12 @@ class DailyActivityTempModel {
   final DateTime dateTime;
   final ActivitiesStatus? dailyActivity;
 
-  DailyActivityTempModel(
-      {required this.day, this.dailyActivity, this.id, required this.dateTime});
+  DailyActivityTempModel({
+    required this.day,
+    this.dailyActivity,
+    this.id,
+    required this.dateTime,
+  });
 }
 
 class DailyActivityPage extends StatefulWidget {
@@ -40,212 +45,242 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daily Activity'),
-      ),
-      body: CheckInternetOnetime(child: (context) {
-        return RefreshIndicator(
-          onRefresh: () async {
-            await Future.wait([
-              BlocProvider.of<DailyActivityCubit>(context)
-                  .getStudentDailyActivities(),
-            ]);
-          },
-          child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
-            builder: (context, state) {
-              return SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DepartmentHeader(
-                      unitName: widget.activeDepartmentModel.unitName!,
+    return BlocBuilder<DailyActivityCubit, DailyActivityState>(
+        builder: (context, state) {
+      final bool isNotCheckOut =
+          widget.activeDepartmentModel.checkOutTime != null;
+      final DateTime endDate = DateTime.fromMillisecondsSinceEpoch(
+          state.studentDailyActivity?.dailyActivities?.last.endDate ?? 0);
+      final bool isLastDateBiggerThenNow = DateTime.now().isAfter(endDate);
+      return Scaffold(
+        floatingActionButton: (isNotCheckOut && isLastDateBiggerThenNow)
+            ? FloatingActionButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierLabel: '',
+                    barrierDismissible: false,
+                    builder: (_) => AddWeekDialog(
+                      endDate: endDate,
+                      departmentId: widget.activeDepartmentModel.unitId ?? '',
+                      weekNum: state.studentDailyActivity!.dailyActivities!.last
+                              .weekName ??
+                          0,
                     ),
-                    const SizedBox(
-                      height: 20,
+                  );
+                },
+                child: const Icon(Icons.add_rounded),
+              )
+            : null,
+        appBar: AppBar(
+          title: const Text('Daily Activity'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                BlocProvider.of<DailyActivityCubit>(context)
+                    .getStudentDailyActivities();
+              },
+              icon: const Icon(Icons.refresh_rounded),
+            )
+          ],
+        ),
+        body: CheckInternetOnetime(child: (context) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              await Future.wait([
+                BlocProvider.of<DailyActivityCubit>(context)
+                    .getStudentDailyActivities(),
+              ]);
+            },
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DepartmentHeader(
+                    unitName: widget.activeDepartmentModel.unitName!,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: AppSize.getAppWidth(context),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 20),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(.12),
+                          offset: const Offset(0, 2),
+                          blurRadius: 20,
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(12),
+                      color: scaffoldBackgroundColor,
                     ),
-                    Container(
-                      width: AppSize.getAppWidth(context),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 20),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(.12),
-                            offset: const Offset(0, 2),
-                            blurRadius: 20,
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                        color: scaffoldBackgroundColor,
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Overview',
-                                style: textTheme.titleLarge,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF6F7F8),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  height: 84,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          width: 24,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                            color: variant2Color.withOpacity(
-                                              .2,
-                                            ),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          padding: const EdgeInsets.all(2),
-                                          child: const Icon(
-                                            Icons.hourglass_top_rounded,
-                                            color: variant2Color,
-                                            size: 12,
-                                          )),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        '${state.studentDailyActivity?.inprocessDailyActivity}',
-                                        style: textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          height: 1,
-                                        ),
-                                      ),
-                                      const Text('Pending'),
-                                    ],
-                                  ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Overview',
+                              style: textTheme.titleLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF6F7F8),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF6F7F8),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  height: 84,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
+                                height: 84,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
                                         width: 24,
                                         height: 24,
                                         decoration: BoxDecoration(
-                                          color: secondaryColor.withOpacity(
+                                          color: variant2Color.withOpacity(
                                             .2,
                                           ),
                                           shape: BoxShape.circle,
                                         ),
                                         padding: const EdgeInsets.all(2),
                                         child: const Icon(
-                                          Icons.verified_rounded,
-                                          color: secondaryColor,
+                                          Icons.hourglass_top_rounded,
+                                          color: variant2Color,
                                           size: 12,
-                                        ),
+                                        )),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      '${state.studentDailyActivity?.inprocessDailyActivity}',
+                                      style: textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        height: 1,
                                       ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        '${state.studentDailyActivity?.verifiedDailyActivity}',
-                                        style: textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          height: 1,
-                                        ),
-                                      ),
-                                      const Text('Verified'),
-                                    ],
-                                  ),
+                                    ),
+                                    const Text('Pending'),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF6F7F8),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                height: 84,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                        color: secondaryColor.withOpacity(
+                                          .2,
+                                        ),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      padding: const EdgeInsets.all(2),
+                                      child: const Icon(
+                                        Icons.verified_rounded,
+                                        color: secondaryColor,
+                                        size: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      '${state.studentDailyActivity?.verifiedDailyActivity}',
+                                      style: textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        height: 1,
+                                      ),
+                                    ),
+                                    const Text('Verified'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Builder(builder: (context) {
-                      if ((state.studentDailyActivity?.dailyActivities !=
-                          null)) {
-                        return SpacingColumn(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 20,
-                          children: [
-                            ...List.generate(
-                                state.studentDailyActivity!.dailyActivities!
-                                    .length, (index) {
-                              final endDate = state.studentDailyActivity!
-                                          .dailyActivities![index].endDate !=
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Builder(builder: (context) {
+                    if ((state.studentDailyActivity?.dailyActivities != null)) {
+                      return SpacingColumn(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 20,
+                        children: [
+                          ...List.generate(
+                              state.studentDailyActivity!.dailyActivities!
+                                  .length, (index) {
+                            final endDate = state.studentDailyActivity!
+                                        .dailyActivities![index].endDate !=
+                                    null
+                                ? DateTime.fromMillisecondsSinceEpoch(state
+                                        .studentDailyActivity!
+                                        .dailyActivities![index]
+                                        .endDate!
+                                        .toInt() *
+                                    1000)
+                                : DateTime.now();
+                            return DailyActivityHomeCard(
+                              isSupervisor: false,
+                              startDate: state.studentDailyActivity!
+                                          .dailyActivities![index].startDate !=
                                       null
                                   ? DateTime.fromMillisecondsSinceEpoch(state
                                           .studentDailyActivity!
                                           .dailyActivities![index]
-                                          .endDate! *
+                                          .startDate!
+                                          .toInt() *
                                       1000)
-                                  : DateTime.now();
-                              return DailyActivityHomeCard(
-                                isSupervisor: false,
-                                startDate: state
-                                            .studentDailyActivity!
-                                            .dailyActivities![index]
-                                            .startDate !=
-                                        null
-                                    ? DateTime.fromMillisecondsSinceEpoch(state
-                                            .studentDailyActivity!
-                                            .dailyActivities![index]
-                                            .startDate! *
-                                        1000)
-                                    : DateTime.now(),
-                                endDate: endDate,
-                                da: state.studentDailyActivity!
-                                    .dailyActivities![index],
-                                status: state.studentDailyActivity!
-                                        .dailyActivities![index].status ??
-                                    false,
-                                dailyActivity: state.studentDailyActivity!
-                                    .dailyActivities![index],
-                              );
-                            })
-                          ],
-                        );
-                      }
-                      return const ListSkeletonTemplate(
-                        listHeight: [195, 195, 195, 195],
-                        borderRadius: 12,
+                                  : DateTime.now(),
+                              endDate: endDate,
+                              da: state.studentDailyActivity!
+                                  .dailyActivities![index],
+                              status: state.studentDailyActivity!
+                                      .dailyActivities![index].status ??
+                                  false,
+                              dailyActivity: state.studentDailyActivity!
+                                  .dailyActivities![index],
+                            );
+                          })
+                        ],
                       );
-                    }),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      }),
-    );
+                    }
+                    return const ListSkeletonTemplate(
+                      listHeight: [195, 195, 195, 195],
+                      borderRadius: 12,
+                    );
+                  }),
+                ],
+              ),
+            ),
+          );
+        }),
+      );
+    });
   }
 }
