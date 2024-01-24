@@ -30,14 +30,12 @@ class _SupervisorStudentsDailyActivityPageState
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => FilterNotifier(),
-      child: const _SupervisorListDailyActivityView(),
+      child: _SupervisorListDailyActivityView(),
     );
   }
 }
 
 class _SupervisorListDailyActivityView extends StatefulWidget {
-  const _SupervisorListDailyActivityView({super.key});
-
   @override
   State<_SupervisorListDailyActivityView> createState() =>
       __SupervisorListDailyActivityViewState();
@@ -266,6 +264,7 @@ class __SupervisorListDailyActivityViewState
                           ),
                         ),
                       ),
+                      
                       SliverList.separated(
                         itemCount: data.length,
                         itemBuilder: (context, index) {

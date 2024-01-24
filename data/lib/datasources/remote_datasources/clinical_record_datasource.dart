@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:data/utils/filter_type.dart';
 import 'package:open_file/open_file.dart' as o;
 import 'package:data/models/clinical_records/affected_part_model.dart';
 import 'package:data/models/clinical_records/clinical_record_list_model.dart';
@@ -45,7 +46,11 @@ abstract class ClinicalRecordsDatasource {
   Future<Either<Failure, List<ManagementRoleModel>>> getManagementRoles();
   Future<Either<Failure, List<AffectedPart>>> getAffectedParts(
       {required String unitId});
-  Future<List<ClinicalRecordListModel>> getClinicalRecordsBySupervisor();
+  Future<List<ClinicalRecordListModel>> getClinicalRecordsBySupervisor(
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType});
   Future<void> verifiyClinicalRecord(
       {required String clinicalRecordId,
       required VerifyClinicalRecordModel model});
@@ -124,7 +129,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
       );
       return const Right(true);
     } catch (e) {
-      
       return Left(failure(e));
     }
   }
@@ -274,18 +278,30 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
   }
 
   @override
-  Future<List<ClinicalRecordListModel>> getClinicalRecordsBySupervisor() async {
+  Future<List<ClinicalRecordListModel>> getClinicalRecordsBySupervisor(
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType}) async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/clinical-records',
-        options: await apiHeader.userOptions(),
-      );
+          '${ApiService.baseUrl}/clinical-records/v2',
+          options: await apiHeader.userOptions(),
+          queryParameters: {
+            if (unitId != null) "unit": unitId,
+            if (page != null) "page": page,
+            if (query != null) "query": query,
+            if (filterType != FilterType.all)
+              'type': filterType.name.toUpperCase(),
+          });
+      print(response);
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<ClinicalRecordListModel> listData = dataResponse.data
           .map((e) => ClinicalRecordListModel.fromJson(e))
           .toList();
       return listData;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }

@@ -59,6 +59,9 @@ class TokenInterceptor extends Interceptor {
       "${ApiService.baseUrl}/users/login",
       "${ApiService.baseUrl}/units",
     ];
+    options.connectTimeout =
+        const Duration(seconds: 5000); // Timeout untuk koneksi
+    options.receiveTimeout = const Duration(seconds: 5000);
     bool firstCondition = !excludedUrls.contains(options.uri.toString());
     bool secondCondition =
         !("${ApiService.baseUrl}/students" == options.uri.toString() &&

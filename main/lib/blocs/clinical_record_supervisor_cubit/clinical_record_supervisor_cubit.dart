@@ -2,6 +2,7 @@ import 'package:data/datasources/remote_datasources/clinical_record_datasource.d
 import 'package:data/models/clinical_records/clinical_record_list_model.dart';
 import 'package:data/models/clinical_records/detail_clinical_record_model.dart';
 import 'package:data/models/clinical_records/verify_clinical_record_model.dart';
+import 'package:data/utils/filter_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
@@ -13,22 +14,36 @@ class ClinicalRecordSupervisorCubit
   ClinicalRecordSupervisorCubit({required this.datasource})
       : super(ClinicalRecordSupervisorState());
 
-  Future<void> getClinicalRecords() async {
+  Future<void> getClinicalRecords(
+      {String? unitId,
+      int? page,
+      String? query,
+      bool onScroll = false,
+      FilterType? type}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result = await datasource.getClinicalRecordsBySupervisor();
-      result.sort((a, b) =>
-          (b.time ?? DateTime.now()).compareTo(a.time ?? DateTime.now()));
+      final result = await datasource.getClinicalRecordsBySupervisor(
+        filterType: type ?? FilterType.unverified,
+        page: page,
+        query: query,
+        unitId: unitId,
+      );
+      if (!onScroll) emit(state.copyWith(fetchState: RequestState.loading));
 
       try {
-        emit(state.copyWith(
-          clinicalRecords: result,
-        ));
+        if (page == 1 && !onScroll) {
+          emit(state.copyWith(
+              clinicalRecords: result, fetchState: RequestState.data));
+        } else {
+          emit(state.copyWith(
+              clinicalRecords: result + state.clinicalRecords!,
+              fetchState: RequestState.data));
+        }
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(fetchState: RequestState.error));
       }
     } catch (e) {
       emit(

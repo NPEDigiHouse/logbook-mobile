@@ -97,10 +97,14 @@ class AuthDataSourceImpl implements AuthDataSource {
         throw const ClientFailure(
             "User with role admin cannot login in mobile app");
       }
-      final response = await dio.post(
-        '${ApiService.baseUrl}/users/login',
-        options: apiHeader.loginOptions(username, password),
-      );
+      const Duration timeoutDuration = Duration(seconds: 7);
+
+      final response = await dio
+          .post(
+            '${ApiService.baseUrl}/users/login',
+            options: apiHeader.loginOptions(username, password),
+          )
+          .timeout(timeoutDuration);
       final dataResponse = DataResponse.fromJson(response.data);
       UserToken credential = UserToken.fromJson(dataResponse.data);
       await preferenceHandler.setUserData(credential);

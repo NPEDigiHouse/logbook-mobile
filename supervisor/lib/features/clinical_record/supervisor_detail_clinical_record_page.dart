@@ -1,13 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:io';
 
 import 'package:common/features/file/file_management.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
@@ -20,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class SupervisorDetailClinicalRecordPage extends StatefulWidget {
   final String id;

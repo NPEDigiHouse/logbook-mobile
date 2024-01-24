@@ -100,8 +100,8 @@ class __SupervisorListCstViewState extends State<_SupervisorListCstView> {
                   context: context,
                   isDismissible: true,
                   builder: (ctx) => SelectDepartmentSheet(
-                    initUnit: DepartmentModel(id: '', name: ''),
-                    filterType: FilterType.unverified,
+                    initUnit: ntf.unit,
+                    filterType: ntf.filterType,
                     onTap: (f, u) {
                       // filterUnitId = f;
                       context.read<FilterNotifier>().setFilterType = f;
