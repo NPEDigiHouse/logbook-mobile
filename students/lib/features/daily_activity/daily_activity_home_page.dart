@@ -63,9 +63,10 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                     builder: (_) => AddWeekDialog(
                       endDate: endDate,
                       departmentId: widget.activeDepartmentModel.unitId ?? '',
-                      weekNum: state.studentDailyActivity!.dailyActivities!.last
-                              .weekName ??
-                          0,
+                      weekNum: (state.studentDailyActivity!.dailyActivities!
+                                  .last.weekName ??
+                              0) +
+                          1,
                     ),
                   );
                 },
@@ -74,15 +75,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
             : null,
         appBar: AppBar(
           title: const Text('Daily Activity'),
-          actions: [
-            IconButton(
-              onPressed: () {
-                BlocProvider.of<DailyActivityCubit>(context)
-                    .getStudentDailyActivities();
-              },
-              icon: const Icon(Icons.refresh_rounded),
-            )
-          ],
+          
         ),
         body: CheckInternetOnetime(child: (context) {
           return RefreshIndicator(

@@ -13,6 +13,7 @@ import 'package:data/utils/api_header.dart';
 import 'package:data/utils/data_response.dart';
 import 'package:data/utils/exception_handler.dart';
 import 'package:data/utils/failure.dart';
+import 'package:data/utils/filter_type.dart';
 import 'package:dio/dio.dart';
 
 abstract class SglCstDataSource {
@@ -55,7 +56,10 @@ abstract class SglCstDataSource {
   Future<Either<Failure, List<TopicModel>>> getTopicsByDepartmentId(
       {required String unitId});
   Future<Either<Failure, List<SglCstOnList>>> getSglBySupervisor(
-      {String? unitId, int? page, String? query});
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType});
   Future<Either<Failure, List<SglCstOnList>>> getCstBySupervisor(
       {String? unitId, int? page, String? query});
 
@@ -189,7 +193,10 @@ class SglCstDataSourceImpl implements SglCstDataSource {
 
   @override
   Future<Either<Failure, List<SglCstOnList>>> getSglBySupervisor(
-      {String? unitId, int? page, String? query}) async {
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType}) async {
     try {
       final response = await dio.get('${ApiService.baseUrl}/sgls/v2',
           options: await apiHeader.userOptions(),
@@ -197,7 +204,10 @@ class SglCstDataSourceImpl implements SglCstDataSource {
             if (unitId != null) "unit": unitId,
             if (page != null) "page": page,
             if (query != null) "query": query,
+            if (filterType != FilterType.all)
+              'type': filterType.name.toUpperCase(),
           });
+
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<SglCstOnList> listData =
           dataResponse.data.map((e) => SglCstOnList.fromJson(e)).toList();

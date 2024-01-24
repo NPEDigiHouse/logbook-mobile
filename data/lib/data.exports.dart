@@ -15,3 +15,4 @@ export 'package:data/datasources/remote_datasources/student_datasource.dart';
 export 'package:data/datasources/remote_datasources/supervisors_datasource.dart';
 export 'package:data/datasources/remote_datasources/unit_datasource.dart';
 export 'package:data/datasources/remote_datasources/user_datasource.dart';
+export 'package:data/utils/filter_type.dart';

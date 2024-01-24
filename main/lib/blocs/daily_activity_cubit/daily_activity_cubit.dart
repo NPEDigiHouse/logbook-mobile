@@ -6,6 +6,7 @@ import 'package:data/models/daily_activity/post_week_model.dart';
 import 'package:data/models/daily_activity/student_activity_perweek_model.dart';
 import 'package:data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:data/models/daily_activity/student_daily_activity_per_days.dart';
+import 'package:data/utils/filter_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
@@ -198,25 +199,42 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
-  Future<void> getDailyActivityStudentBySupervisor({String? unitId}) async {
+  Future<void> getDailyActivityStudentBySupervisor({
+    String? unitId,
+    int? page,
+    String? query,
+    bool onScroll = false,
+    FilterType? type,
+  }) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result =
-          await dataSource.getDailyActivitiesBySupervisor(unitId: unitId);
+      final result = await dataSource.getDailyActivitiesBySupervisor(
+          unitId: unitId,
+          query: query,
+          page: page,
+          filterType: type ?? FilterType.unverified);
+
+      if (!onScroll) emit(state.copyWith(fetchState: RequestState.loading));
 
       try {
-        emit(state.copyWith(
-            dailyActivityStudents: result, requestState: RequestState.data));
+        if (page == 1 && !onScroll) {
+          emit(state.copyWith(
+              dailyActivityStudents: result, fetchState: RequestState.data));
+        } else {
+          emit(state.copyWith(
+              dailyActivityStudents: state.dailyActivityStudents! + result,
+              fetchState: RequestState.data));
+        }
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(fetchState: RequestState.error));
       }
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          fetchState: RequestState.error,
         ),
       );
     }

@@ -12,6 +12,7 @@ import 'package:data/utils/api_header.dart';
 import 'package:data/utils/data_response.dart';
 import 'package:data/utils/exception_handler.dart';
 import 'package:data/utils/failure.dart';
+import 'package:data/utils/filter_type.dart';
 import 'package:dio/dio.dart';
 
 abstract class DailyActivityDataSource {
@@ -23,7 +24,10 @@ abstract class DailyActivityDataSource {
   Future<void> addWeekByCoordinator({required PostWeek postWeek});
   Future<List<ListWeekItem>> getWeekByCoordinator({required String unitId});
   Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor(
-      {String? unitId});
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType});
   Future<StudentDailyActivityResponse> getDailyActivityBySupervisor(
       {required String studentId});
   Future<StudentActivityPerweekResponse> getStudentActivityPerweek(
@@ -65,12 +69,10 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         '${ApiService.baseUrl}/students/daily-activities/v2',
         options: await apiHeader.userOptions(),
       );
-      print(response);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentDailyActivityResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
-      print("Err");
       throw failure(e);
     }
   }
@@ -211,20 +213,29 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
   }
 
   @override
-  Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor(
-      {String? unitId}) async {
+  Future<List<DailyActivityStudent>> getDailyActivitiesBySupervisor({
+    String? unitId,
+    int? page,
+    String? query,
+    required FilterType filterType,
+  }) async {
     try {
       final response = await dio.get(
           '${ApiService.baseUrl}/daily-activities/v2',
           options: await apiHeader.userOptions(),
-          queryParameters: {if (unitId != null) "unit": unitId});
+          queryParameters: {
+            if (unitId != null) "unit": unitId,
+            if (page != null) "page": page,
+            if (query != null) "query": query,
+            if (filterType != FilterType.all)
+              'type': filterType.name.toUpperCase(),
+          });
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<DailyActivityStudent> listData = dataResponse.data
           .map((e) => DailyActivityStudent.fromJson(e))
           .toList();
       return listData;
     } catch (e) {
-      print(e.toString());
       throw failure(e);
     }
   }
@@ -316,7 +327,6 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         data: data,
       );
     } catch (e) {
-      print(e.toString());
       throw failure(e);
     }
   }
@@ -336,7 +346,6 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       );
       return const Right(true);
     } catch (e) {
-      print(e.toString());
       return Left(failure(e));
     }
   }

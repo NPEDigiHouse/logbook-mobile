@@ -11,12 +11,15 @@ class SglCstOnList {
   String? studentName;
   @JsonKey(name: "unitName")
   String? activeDepartmentName;
+  @JsonKey(name: "verificationStatus")
+  String? verificationStatus;
 
   SglCstOnList({
     this.latest,
     this.studentId,
     this.studentName,
     this.activeDepartmentName,
+    this.verificationStatus,
   });
 
   factory SglCstOnList.fromJson(Map<String, dynamic> json) =>

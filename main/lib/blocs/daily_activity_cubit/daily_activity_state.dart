@@ -16,6 +16,7 @@ class DailyActivityState {
   final bool isEditWeekSuccess;
   final bool isRemoveWeekSuccess;
   final bool isEditStatusWeek;
+  final RequestState fetchState;
   final String? errorMessage;
 
   DailyActivityState({
@@ -23,6 +24,7 @@ class DailyActivityState {
     this.requestState,
     this.weekItems,
     this.errorMessage,
+    this.fetchState = RequestState.init,
     this.dailyActivityStudents,
     this.isAddWeekSuccess = false,
     this.studentActivityPerweek,
@@ -50,6 +52,7 @@ class DailyActivityState {
     bool isAddWeekSuccess = false,
     bool isEditWeekSuccess = false,
     bool isRemoveWeekSuccess = false,
+    RequestState? fetchState,
     bool isEditStatusWeek = false,
     String? errorMessage,
     List<DailyActivityStudent>? dailyActivityStudents,
@@ -58,6 +61,7 @@ class DailyActivityState {
     return DailyActivityState(
         errorMessage: errorMessage ?? this.errorMessage,
         isEditWeekSuccess: isEditWeekSuccess,
+        fetchState: fetchState ?? RequestState.init,
         isRemoveWeekSuccess: isRemoveWeekSuccess,
         isEditStatusWeek: isEditStatusWeek,
         activityPerDays: activityPerDays ?? this.activityPerDays,

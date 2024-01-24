@@ -2,13 +2,10 @@ import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
-import 'package:data/models/daily_activity/post_week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
-import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/inputs/input_date_field.dart';
 import 'package:main/widgets/verify_dialog.dart';
 

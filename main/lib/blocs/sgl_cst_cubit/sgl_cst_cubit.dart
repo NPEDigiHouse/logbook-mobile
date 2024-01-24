@@ -1,5 +1,6 @@
 import 'package:data/datasources/remote_datasources/sglcst_datasource.dart';
 import 'package:data/datasources/remote_datasources/student_datasource.dart';
+import 'package:data/utils/filter_type.dart';
 import 'package:data/models/history/history_cst_model.dart';
 import 'package:data/models/history/history_sgl_model.dart';
 import 'package:data/models/sglcst/cst_model.dart';
@@ -252,10 +253,18 @@ class SglCstCubit extends Cubit<SglCstState> {
     );
   }
 
-  Future<void> getListSglStudents(
-      {String? unitId, int? page, String? query, bool onScroll = false}) async {
+  Future<void> getListSglStudents({
+    String? unitId,
+    int? page,
+    String? query,
+    bool onScroll = false,
+    FilterType? type,
+  }) async {
     final result = await dataSource.getSglBySupervisor(
-        unitId: unitId, query: query, page: page);
+        unitId: unitId,
+        query: query,
+        page: page,
+        filterType: type ?? FilterType.unverified);
 
     if (!onScroll) emit(state.copyWith(sglState: RequestState.loading));
     result.fold(
@@ -271,7 +280,11 @@ class SglCstCubit extends Cubit<SglCstState> {
   }
 
   Future<void> getListCstStudents(
-      {String? unitId, int? page, String? query, bool onScroll = false}) async {
+      {String? unitId,
+      int? page,
+      String? query,
+      bool onScroll = false,
+      FilterType? type}) async {
     final result = await dataSource.getCstBySupervisor(
         unitId: unitId, query: query, page: page);
     if (!onScroll) emit(state.copyWith(cstState: RequestState.loading));
