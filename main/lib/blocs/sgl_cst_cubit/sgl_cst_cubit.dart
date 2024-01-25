@@ -260,6 +260,7 @@ class SglCstCubit extends Cubit<SglCstState> {
     bool onScroll = false,
     FilterType? type,
   }) async {
+    print(type);
     final result = await dataSource.getSglBySupervisor(
         unitId: unitId,
         query: query,
@@ -285,8 +286,13 @@ class SglCstCubit extends Cubit<SglCstState> {
       String? query,
       bool onScroll = false,
       FilterType? type}) async {
+    print(type);
+
     final result = await dataSource.getCstBySupervisor(
-        unitId: unitId, query: query, page: page);
+        unitId: unitId,
+        query: query,
+        page: page,
+        filterType: type ?? FilterType.unverified);
     if (!onScroll) emit(state.copyWith(cstState: RequestState.loading));
     result.fold(
       (l) => emit(state.copyWith(requestState: RequestState.error)),

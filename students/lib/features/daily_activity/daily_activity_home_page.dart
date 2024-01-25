@@ -49,8 +49,13 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
         builder: (context, state) {
       final bool isNotCheckOut =
           widget.activeDepartmentModel.checkOutTime != null;
-      final DateTime endDate = DateTime.fromMillisecondsSinceEpoch(
-          state.studentDailyActivity?.dailyActivities?.last.endDate ?? 0);
+      final bool init = state.studentDailyActivity != null &&
+          state.studentDailyActivity?.dailyActivities != null &&
+          state.studentDailyActivity!.dailyActivities!.isNotEmpty;
+      final DateTime endDate = init
+          ? DateTime.fromMillisecondsSinceEpoch(
+              state.studentDailyActivity?.dailyActivities?.last.endDate ?? 0)
+          : DateTime.now();
       final bool isLastDateBiggerThenNow = DateTime.now().isAfter(endDate);
       return Scaffold(
         floatingActionButton: (isNotCheckOut && isLastDateBiggerThenNow)
@@ -63,10 +68,12 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                     builder: (_) => AddWeekDialog(
                       endDate: endDate,
                       departmentId: widget.activeDepartmentModel.unitId ?? '',
-                      weekNum: (state.studentDailyActivity!.dailyActivities!
-                                  .last.weekName ??
-                              0) +
-                          1,
+                      weekNum: init
+                          ? (state.studentDailyActivity!.dailyActivities!.last
+                                      .weekName ??
+                                  0) +
+                              1
+                          : 1,
                     ),
                   );
                 },
@@ -75,7 +82,6 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
             : null,
         appBar: AppBar(
           title: const Text('Daily Activity'),
-          
         ),
         body: CheckInternetOnetime(child: (context) {
           return RefreshIndicator(

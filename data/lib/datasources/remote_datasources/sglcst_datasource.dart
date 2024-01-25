@@ -61,7 +61,10 @@ abstract class SglCstDataSource {
       String? query,
       required FilterType filterType});
   Future<Either<Failure, List<SglCstOnList>>> getCstBySupervisor(
-      {String? unitId, int? page, String? query});
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType});
 
   Future<Either<Failure, SglResponse>> getSglByStudentId(
       {required String studentId});
@@ -157,7 +160,10 @@ class SglCstDataSourceImpl implements SglCstDataSource {
 
   @override
   Future<Either<Failure, List<SglCstOnList>>> getCstBySupervisor(
-      {String? unitId, int? page, String? query}) async {
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType}) async {
     try {
       final response = await dio.get('${ApiService.baseUrl}/csts/v2',
           options: await apiHeader.userOptions(),
@@ -165,6 +171,8 @@ class SglCstDataSourceImpl implements SglCstDataSource {
             if (unitId != null) "unit": unitId,
             if (page != null) "page": page,
             if (query != null) "query": query,
+            if (filterType != FilterType.all)
+              'type': filterType.name.toUpperCase(),
           });
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<SglCstOnList> listData =
@@ -207,7 +215,6 @@ class SglCstDataSourceImpl implements SglCstDataSource {
             if (filterType != FilterType.all)
               'type': filterType.name.toUpperCase(),
           });
-
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<SglCstOnList> listData =
           dataResponse.data.map((e) => SglCstOnList.fromJson(e)).toList();

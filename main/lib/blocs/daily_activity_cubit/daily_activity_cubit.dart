@@ -207,10 +207,6 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     FilterType? type,
   }) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
-
       final result = await dataSource.getDailyActivitiesBySupervisor(
           unitId: unitId,
           query: query,
@@ -219,17 +215,13 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
 
       if (!onScroll) emit(state.copyWith(fetchState: RequestState.loading));
 
-      try {
-        if (page == 1 && !onScroll) {
-          emit(state.copyWith(
-              dailyActivityStudents: result, fetchState: RequestState.data));
-        } else {
-          emit(state.copyWith(
-              dailyActivityStudents: state.dailyActivityStudents! + result,
-              fetchState: RequestState.data));
-        }
-      } catch (e) {
-        emit(state.copyWith(fetchState: RequestState.error));
+      if (page == 1 && !onScroll) {
+        emit(state.copyWith(
+            dailyActivityStudents: result, fetchState: RequestState.data));
+      } else {
+        emit(state.copyWith(
+            dailyActivityStudents: state.dailyActivityStudents! + result,
+            fetchState: RequestState.data));
       }
     } catch (e) {
       emit(

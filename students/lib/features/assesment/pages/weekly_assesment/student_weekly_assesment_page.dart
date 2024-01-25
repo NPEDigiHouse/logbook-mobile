@@ -81,9 +81,13 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
                                 ),
                               ...state.weeklyAssesment!.assesments!
                                   .map((element) {
+                                if (element.startDate == null ||
+                                    !(element.startDate! > 0)) {
+                                  return const SizedBox.shrink();
+                                }
                                 final bool isPassed = DateTime.now().isAfter(
                                     DateTime.fromMillisecondsSinceEpoch(
-                                        element.startDate! * 1000));
+                                        (element.startDate ?? 0) * 1000));
                                 return WeeklyGradeCard(
                                   startTime: element.startDate,
                                   endTime: element.endDate,
@@ -91,6 +95,7 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
                                   totalGrade: getTotalGrades(
                                       (element.score ?? 0).toDouble())!,
                                   week: element.weekNum ?? 0,
+                                  isStudent: true,
                                   // date: 'Senin, 27 Mar 2023',
                                   // place: 'RS Unhas',
                                   attendNum: element.attendNum ?? 0,

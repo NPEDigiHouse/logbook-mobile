@@ -53,7 +53,7 @@ class __SupervisorListDailyActivityViewState
     _scrollController.addListener(_onScroll);
     page = 1;
     Future.microtask(() => BlocProvider.of<DailyActivityCubit>(context)
-        .getDailyActivityStudentBySupervisor());
+        .getDailyActivityStudentBySupervisor(page: page, onScroll: false));
   }
 
   void _onScroll() {
@@ -137,13 +137,23 @@ class __SupervisorListDailyActivityViewState
                 ),
               ]);
             },
-            child: BlocSelector<DailyActivityCubit, DailyActivityState,
-                (List<DailyActivityStudent>?, RequestState)>(
-              selector: (state) =>
-                  (state.dailyActivityStudents, state.fetchState),
+            child: BlocConsumer<DailyActivityCubit, DailyActivityState>(
+              listener: (context, state) {
+                if (state.stateVerifyDailyActivity == RequestState.data) {
+                  Future.microtask(
+                    () => BlocProvider.of<DailyActivityCubit>(context)
+                        .getDailyActivityStudentBySupervisor(
+                            page: 1,
+                            onScroll: false,
+                            type: ntf.filterType,
+                            unitId: ntf.unit?.id),
+                  );
+                }
+              },
               builder: (context, state) {
-                final data = state.$1;
-                if (data == null || state.$2 == RequestState.loading) {
+                final data = state.dailyActivityStudents;
+
+                if (data == null || state.fetchState == RequestState.loading) {
                   return const CustomLoading();
                 }
                 return Padding(
@@ -264,7 +274,6 @@ class __SupervisorListDailyActivityViewState
                           ),
                         ),
                       ),
-                      
                       SliverList.separated(
                         itemCount: data.length,
                         itemBuilder: (context, index) {

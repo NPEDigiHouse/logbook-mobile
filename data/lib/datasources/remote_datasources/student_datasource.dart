@@ -289,6 +289,7 @@ class StudentDataSourceImpl implements StudentDataSource {
         '${ApiService.baseUrl}/students/weekly-assesments/v2',
         options: await apiHeader.userOptions(),
       );
+      print(response);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = WeeklyAssesmentResponse.fromJson(dataResponse.data);
       return result;
@@ -350,6 +351,7 @@ class StudentDataSourceImpl implements StudentDataSource {
         '${ApiService.baseUrl}/students/$studentId',
         options: await apiHeader.userOptions(),
       );
+
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentById.fromJson(dataResponse.data);
       return result;

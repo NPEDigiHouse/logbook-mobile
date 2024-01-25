@@ -495,7 +495,7 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                       hint: 'Search Student',
                       onChanged: (value) {
                         final data = state.histories!
-                            .where((element) => element.studentName!
+                            .where((element) => (element.studentName ?? '')
                                 .toLowerCase()
                                 .contains(value.toLowerCase()))
                             .toList();

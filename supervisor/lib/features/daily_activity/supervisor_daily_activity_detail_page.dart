@@ -43,7 +43,7 @@ class _SupervisorDailyActivityDetailPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Daily Activity'),
+        title: const Text('Detail Daily Activity'),
       ),
       body: BlocListener<DailyActivityCubit, DailyActivityState>(
         listener: (context, state) {
@@ -55,7 +55,8 @@ class _SupervisorDailyActivityDetailPageState
         child: BlocBuilder<DailyActivityCubit, DailyActivityState>(
           builder: (context, state) {
             if (state.activityPerweekBySupervisor != null &&
-                state.requestState == RequestState.data) {
+                (state.requestState == RequestState.data ||
+                    state.stateVerifyDailyActivity == RequestState.init)) {
               final data = state.activityPerweekBySupervisor;
               return SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),

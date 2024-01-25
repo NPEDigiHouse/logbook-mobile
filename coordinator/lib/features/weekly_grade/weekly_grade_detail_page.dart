@@ -85,13 +85,18 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
                                 itemBuilder: (_, i) {
                                   final grades =
                                       state.weeklyAssesment!.assesments![i];
+                                  if (grades.startDate == null) {
+                                    return const SizedBox.shrink();
+                                  }
 
                                   final bool isPassed = DateTime.now().isAfter(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          (grades.startDate ?? 0)));
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                      (grades.startDate ?? 0),
+                                    ),
+                                  );
 
                                   return WeeklyGradeCard(
-                                    startTime: grades.startDate ,
+                                    startTime: grades.startDate,
                                     endTime: grades.endDate,
                                     isPassed: isPassed,
                                     totalGrade: getTotalGrades(

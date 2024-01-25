@@ -213,12 +213,15 @@ class __SupervisorListSglViewState extends State<_SupervisorListSglView> {
                                         context
                                             .read<FilterNotifier>()
                                             .setFilterType = FilterType.all;
-                                        BlocProvider.of<SglCstCubit>(context)
-                                            .getListSglStudents(
-                                                unitId: ntf.unit?.id,
-                                                page: page,
-                                                query: query,
-                                                type: ntf.filterType);
+                                        Future.microtask(() =>
+                                            BlocProvider.of<SglCstCubit>(
+                                                    context)
+                                                .getListSglStudents(
+                                              unitId: ntf.unit?.id,
+                                              page: page,
+                                              query: query,
+                                              type: FilterType.all,
+                                            ));
                                       },
                                     ),
                                   const SizedBox(
@@ -248,12 +251,15 @@ class __SupervisorListSglViewState extends State<_SupervisorListSglView> {
                                         context
                                             .read<FilterNotifier>()
                                             .setDepartmentModel = null;
-                                        BlocProvider.of<SglCstCubit>(context)
-                                            .getListSglStudents(
-                                                unitId: ntf.unit?.id,
-                                                page: page,
-                                                query: query,
-                                                type: ntf.filterType);
+                                        Future.microtask(
+                                          () => BlocProvider.of<SglCstCubit>(
+                                                  context)
+                                              .getListSglStudents(
+                                                  unitId: ntf.unit?.id,
+                                                  page: 1,
+                                                  query: query,
+                                                  type: ntf.filterType),
+                                        );
                                       },
                                     ),
                                 ],

@@ -17,6 +17,7 @@ class WeeklyGradeCard extends StatelessWidget {
   final double? score;
   final VoidCallback? onTap;
   final TotalGradeHelper totalGrade;
+  final bool isStudent;
 
   const WeeklyGradeCard({
     super.key,
@@ -24,6 +25,7 @@ class WeeklyGradeCard extends StatelessWidget {
     this.isPassed,
     this.startTime,
     this.endTime,
+    this.isStudent = false,
     this.notAttendNum,
     required this.totalGrade,
     required this.week,
@@ -161,7 +163,7 @@ class WeeklyGradeCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (!(isPassed ?? true))
+            if (!(isPassed ?? true) || isStudent)
               const SizedBox.shrink()
             else if (score != 0)
               GestureDetector(

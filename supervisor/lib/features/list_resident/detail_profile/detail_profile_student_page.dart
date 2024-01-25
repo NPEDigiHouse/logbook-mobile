@@ -60,8 +60,8 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
     super.initState();
     loadImageFromAssets(AssetPath.getImage('logo_umi.png'));
     BlocProvider.of<StudentCubit>(context)
-        .getStudentDetailById(studentId: widget.student.studentId!);
-    // ..getStatisticByStudentId(studentId: widget.student.studentId!);
+      ..getStudentDetailById(studentId: widget.student.studentId!)
+      ..getStatisticByStudentId(studentId: widget.student.studentId!);
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels < 160) {

@@ -204,11 +204,14 @@ class __SupervisorListCstViewState extends State<_SupervisorListCstView> {
                                       context
                                           .read<FilterNotifier>()
                                           .setFilterType = FilterType.all;
-                                      BlocProvider.of<SglCstCubit>(context)
-                                          .getListCstStudents(
-                                              unitId: ntf.unit?.id,
-                                              page: page,
-                                              query: query);
+                                      Future.microtask(() =>
+                                          BlocProvider.of<SglCstCubit>(context)
+                                              .getListCstStudents(
+                                            unitId: ntf.unit?.id,
+                                            page: 1,
+                                            query: query,
+                                            type: FilterType.all,
+                                          ));
                                     },
                                   ),
                                 const SizedBox(
@@ -237,11 +240,12 @@ class __SupervisorListCstViewState extends State<_SupervisorListCstView> {
                                       context
                                           .read<FilterNotifier>()
                                           .setDepartmentModel = null;
-                                      BlocProvider.of<SglCstCubit>(context)
-                                          .getListCstStudents(
-                                              unitId: ntf.unit?.id,
-                                              page: page,
-                                              query: query);
+                                      Future.microtask(() =>
+                                          BlocProvider.of<SglCstCubit>(context)
+                                              .getListCstStudents(
+                                                  unitId: ntf.unit?.id,
+                                                  page: page,
+                                                  query: query));
                                     },
                                   ),
                               ],

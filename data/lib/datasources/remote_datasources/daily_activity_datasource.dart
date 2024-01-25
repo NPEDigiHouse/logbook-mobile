@@ -236,6 +236,8 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
           .toList();
       return listData;
     } catch (e) {
+      print("ERROR");
+      print(e.toString());
       throw failure(e);
     }
   }

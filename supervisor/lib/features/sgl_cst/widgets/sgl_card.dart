@@ -72,16 +72,26 @@ class SglOnListCard extends StatelessWidget {
                         height: 1.2,
                       ),
                     ),
-                    Text(
-                      Utils.datetimeToString(sglCst.latest!,
-                          format: 'EEE, dd MMM'),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: primaryTextColor,
-                        height: 1.2,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          Utils.datetimeToString(sglCst.latest!,
+                              format: 'EEE, dd MMM'),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: primaryTextColor,
+                            height: 1.2,
+                          ),
+                        ),
+                        if (sglCst.verificationStatus == 'VERIFIED')
+                          const Icon(
+                            Icons.verified_rounded,
+                            color: primaryColor,
+                            size: 16,
+                          )
+                      ],
                     ),
                     const SizedBox(height: 4),
                     Text(
