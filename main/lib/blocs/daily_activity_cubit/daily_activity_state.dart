@@ -18,6 +18,9 @@ class DailyActivityState {
   final bool isEditStatusWeek;
   final RequestState fetchState;
   final String? errorMessage;
+  final RequestState isSync;
+  final RequestState isDelete;
+  final RequestState isStatus;
 
   DailyActivityState({
     this.studentDailyActivity,
@@ -36,6 +39,9 @@ class DailyActivityState {
     this.isEditWeekSuccess = false,
     this.isRemoveWeekSuccess = false,
     this.isEditStatusWeek = false,
+    this.isSync = RequestState.init,
+    this.isDelete = RequestState.init,
+    this.isStatus = RequestState.init,
     this.stateVerifyDailyActivity = RequestState.init,
   });
 
@@ -52,6 +58,9 @@ class DailyActivityState {
     bool isAddWeekSuccess = false,
     bool isEditWeekSuccess = false,
     bool isRemoveWeekSuccess = false,
+    RequestState isSync = RequestState.init,
+    RequestState isDelete = RequestState.init,
+    RequestState isStatus = RequestState.init,
     RequestState? fetchState,
     bool isEditStatusWeek = false,
     String? errorMessage,
@@ -59,26 +68,30 @@ class DailyActivityState {
     RequestState stateVerifyDailyActivity = RequestState.init,
   }) {
     return DailyActivityState(
-        errorMessage: errorMessage ?? this.errorMessage,
-        isEditWeekSuccess: isEditWeekSuccess,
-        fetchState: fetchState ?? RequestState.init,
-        isRemoveWeekSuccess: isRemoveWeekSuccess,
-        isEditStatusWeek: isEditStatusWeek,
-        activityPerDays: activityPerDays ?? this.activityPerDays,
-        studentDailyActivity: studentDailyActivity ?? this.studentDailyActivity,
-        activityPerweekBySupervisor:
-            activityPerweekBySupervisor ?? this.activityPerweekBySupervisor,
-        dailyActivityBySupervisor:
-            dailyActivityBySupervisor ?? this.dailyActivityBySupervisor,
-        requestState: requestState ?? RequestState.init,
-        isAddWeekSuccess: isAddWeekSuccess,
-        isDailyActivityUpdated: isDailyActivityUpdated,
-        weekItems: weekItems ?? this.weekItems,
-        studentActivityPerweek:
-            studentActivityPerweek ?? this.studentActivityPerweek,
-        isDailyActivityVerifiedById: isDailyActivityVerifiedById,
-        stateVerifyDailyActivity: stateVerifyDailyActivity,
-        dailyActivityStudents:
-            dailyActivityStudents ?? this.dailyActivityStudents);
+      errorMessage: errorMessage ?? this.errorMessage,
+      isEditWeekSuccess: isEditWeekSuccess,
+      fetchState: fetchState ?? RequestState.init,
+      isRemoveWeekSuccess: isRemoveWeekSuccess,
+      isEditStatusWeek: isEditStatusWeek,
+      activityPerDays: activityPerDays ?? this.activityPerDays,
+      studentDailyActivity: studentDailyActivity ?? this.studentDailyActivity,
+      activityPerweekBySupervisor:
+          activityPerweekBySupervisor ?? this.activityPerweekBySupervisor,
+      dailyActivityBySupervisor:
+          dailyActivityBySupervisor ?? this.dailyActivityBySupervisor,
+      requestState: requestState ?? RequestState.init,
+      isAddWeekSuccess: isAddWeekSuccess,
+      isDailyActivityUpdated: isDailyActivityUpdated,
+      weekItems: weekItems ?? this.weekItems,
+      studentActivityPerweek:
+          studentActivityPerweek ?? this.studentActivityPerweek,
+      isDailyActivityVerifiedById: isDailyActivityVerifiedById,
+      stateVerifyDailyActivity: stateVerifyDailyActivity,
+      dailyActivityStudents:
+          dailyActivityStudents ?? this.dailyActivityStudents,
+      isSync: isSync,
+      isDelete: isDelete,
+      isStatus: isStatus,
+    );
   }
 }

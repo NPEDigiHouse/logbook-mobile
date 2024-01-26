@@ -57,53 +57,55 @@ class _StudentMiniCexDetailState extends State<StudentMiniCexDetail> {
                         return const CustomLoading();
                       }
                       if (state.miniCexStudentDetail != null) {
-                        return SpacingColumn(
-                          horizontalPadding: 16,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 12,
-                          children: [
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            TitleAssesmentCard(
-                              title: state.miniCexStudentDetail?.dataCase ?? '',
-                              subtitle:
-                                  state.miniCexStudentDetail?.location ?? '',
-                            ),
-                            if (state.miniCexStudentDetail?.scores != null &&
-                                state.miniCexStudentDetail!.scores!
-                                    .isNotEmpty) ...[
+                        return SingleChildScrollView(
+                          child: SpacingColumn(
+                            horizontalPadding: 16,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 12,
+                            children: [
                               const SizedBox(
                                 height: 16,
                               ),
-                              TopStatCard(
-                                title: 'Total Grades',
-                                totalGrade: getTotalGrades(
-                                    state.miniCexStudentDetail!.grade ?? 0),
+                              TitleAssesmentCard(
+                                title: state.miniCexStudentDetail?.dataCase ?? '',
+                                subtitle:
+                                    state.miniCexStudentDetail?.location ?? '',
                               ),
-                              ...List.generate(
-                                state.miniCexStudentDetail!.scores!.length,
-                                (index) => TestGradeScoreCard(
-                                    caseName: state.miniCexStudentDetail!
-                                            .scores![index].name ??
-                                        '',
-                                    score: state.miniCexStudentDetail!
-                                            .scores![index].score ??
-                                        0),
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                            ] else ...[
-                              const Center(
-                                child: EmptyData(
-                                  title: 'Waiting for assessment',
-                                  subtitle:
-                                      'the supervisor has not given a value for the mini cex',
+                              if (state.miniCexStudentDetail?.scores != null &&
+                                  state.miniCexStudentDetail!.scores!
+                                      .isNotEmpty) ...[
+                                const SizedBox(
+                                  height: 16,
                                 ),
-                              )
-                            ]
-                          ],
+                                TopStatCard(
+                                  title: 'Total Grades',
+                                  totalGrade: getTotalGrades(
+                                      state.miniCexStudentDetail!.grade ?? 0),
+                                ),
+                                ...List.generate(
+                                  state.miniCexStudentDetail!.scores!.length,
+                                  (index) => TestGradeScoreCard(
+                                      caseName: state.miniCexStudentDetail!
+                                              .scores![index].name ??
+                                          '',
+                                      score: state.miniCexStudentDetail!
+                                              .scores![index].score ??
+                                          0),
+                                ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                              ] else ...[
+                                const Center(
+                                  child: EmptyData(
+                                    title: 'Waiting for assessment',
+                                    subtitle:
+                                        'the supervisor has not given a value for the mini cex',
+                                  ),
+                                )
+                              ]
+                            ],
+                          ),
                         );
                       } else {
                         return Center(

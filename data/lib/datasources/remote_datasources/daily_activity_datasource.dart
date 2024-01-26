@@ -48,6 +48,12 @@ abstract class DailyActivityDataSource {
   Future<Either<Failure, bool>> deleteWeek({required String id});
   Future<Either<Failure, bool>> createWeek(
       {int? startDate, int? endDate, int? weekNum});
+  Future<Either<Failure, bool>> syncDailyActivity(String studentId);
+  Future<Either<Failure, bool>> updateDailyActivityStatus(
+      {required bool status, required String id});
+  Future<Either<Failure, bool>> deleteDailyActivity({required String id});
+  Future<Either<Failure, bool>> updateAllDailyActivityStatus(
+      {required bool status});
 }
 
 class DailyActivityDataSourceImpl implements DailyActivityDataSource {
@@ -69,10 +75,12 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         '${ApiService.baseUrl}/students/daily-activities/v2',
         options: await apiHeader.userOptions(),
       );
+      print(response);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentDailyActivityResponse.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }
@@ -123,6 +131,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         '${ApiService.baseUrl}/daily-activities/students/$studentId/v2',
         options: await apiHeader.userOptions(),
       );
+      print(response);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentDailyActivityResponse.fromJson(dataResponse.data);
       return result;
@@ -144,6 +153,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       final result = DailyActivityStudent.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }
@@ -349,6 +359,62 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       return const Right(true);
     } catch (e) {
       return Left(failure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> syncDailyActivity(String studentId) async {
+    try {
+      await dio.put(
+        '${ApiService.baseUrl}/daily-activities/students/$studentId/sync',
+        options: await apiHeader.userOptions(),
+      );
+      return const Right(true);
+    } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteDailyActivity(
+      {required String id}) async {
+    try {
+      await dio.delete('${ApiService.baseUrl}/daily-activities/$id/v2',
+          options: await apiHeader.userOptions());
+      return const Right(true);
+    } catch (e) {
+      print(e.toString());
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateAllDailyActivityStatus(
+      {required bool status}) async {
+    try {
+      await dio.put(
+        '${ApiService.baseUrl}/daily-activities/status',
+        options: await apiHeader.userOptions(),
+        data: {
+          "status": status,
+        },
+      );
+      return const Right(true);
+    } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateDailyActivityStatus(
+      {required bool status, required String id}) async {
+    try {
+      await dio.put('${ApiService.baseUrl}/daily-activities/$id/status',
+          options: await apiHeader.userOptions(), data: {"status": status});
+      return const Right(true);
+    } catch (e) {
+      print(e.toString());
+      throw failure(e);
     }
   }
 }

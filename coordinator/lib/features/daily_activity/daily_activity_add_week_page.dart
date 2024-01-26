@@ -290,6 +290,7 @@ class _DailyActivtyWeekCardState extends State<DailyActivtyWeekCard> {
                   ];
                 },
               ),
+            
             ],
           ),
           const SizedBox(

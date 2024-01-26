@@ -1,3 +1,5 @@
+import 'package:coordinator/features/daily_activity/daily_activity_page.dart';
+import 'package:coordinator/features/daily_activity/daily_activity_student_page.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/helpers/asset_path.dart';
@@ -7,7 +9,6 @@ import 'package:main/widgets/main_app_bar.dart';
 import 'package:main/widgets/main_menu.dart';
 import 'package:main/widgets/spacing_column.dart';
 
-import '../daily_activity/daily_activity_page.dart';
 import 'package:flutter/material.dart';
 import '../weekly_grade/weekly_grade_page.dart';
 
@@ -97,19 +98,19 @@ class CoordinatorHomePage extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    // Expanded(
-                    //   child: MenuItem(
-                    //     isVerification: false,
-                    //     name: 'Daily Activity',
-                    //     iconPath: 'icon_training.svg',
-                    //     onTap: () => context
-                    //         .navigateTo(const CoordinatorDailyActivityPage()),
-                    //     status: 'Add Week',
-                    //   ),
-                    // ),
-                    // const SizedBox(
-                    //   width: 12,
-                    // ),
+                    Expanded(
+                      child: MenuItem(
+                        isVerification: false,
+                        name: 'Daily Activity',
+                        iconPath: 'icon_training.svg',
+                        onTap: () => context
+                            .navigateTo(const DailyActivityStudentPage()),
+                        status: 'Add Week',
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 12,
+                    ),
                     Expanded(
                       child: MenuItem(
                         isVerification: false,
@@ -120,7 +121,6 @@ class CoordinatorHomePage extends StatelessWidget {
                         status: 'Input Score',
                       ),
                     ),
-                    const Expanded(child: SizedBox()),
                   ],
                 ),
               ],

@@ -257,6 +257,9 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                                       1000)
                                   : DateTime.now(),
                               endDate: endDate,
+                              activeStatus: state.studentDailyActivity!
+                                      .dailyActivities![index].status ??
+                                  false,
                               da: state.studentDailyActivity!
                                   .dailyActivities![index],
                               status: state.studentDailyActivity!

@@ -1,7 +1,7 @@
 name: elogbook
 description: A new Flutter project.
 publish_to: "none"
-version: 1.11.4
+version: 2.1.0
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

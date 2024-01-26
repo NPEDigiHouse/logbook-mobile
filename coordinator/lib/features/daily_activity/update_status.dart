@@ -6,21 +6,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 
 class UpdateStatusDialog extends StatefulWidget {
-  final bool? isExpired;
-  final bool? isExpiredDate;
   final bool? status;
-  final String departmentId;
-  final String? id;
+  final bool? active;
+  final String id;
+  final String studentId;
   final int weekNum;
 
   const UpdateStatusDialog({
     super.key,
     this.status,
-    this.isExpired,
-    this.isExpiredDate,
-    required this.weekNum,
-    required this.departmentId,
+    this.active,
     required this.id,
+    required this.studentId,
+    required this.weekNum,
   });
 
   @override
@@ -42,7 +40,7 @@ class _UpdateStatusDialogState extends State<UpdateStatusDialog> {
       listener: (context, state) {
         if (state.isEditStatusWeek) {
           BlocProvider.of<DailyActivityCubit>(context)
-              .getListWeek(unitId: widget.departmentId);
+              .getDailyActivitiesBySupervisor(studentId: widget.studentId!);
           Navigator.pop(context);
         }
       },
@@ -100,11 +98,9 @@ class _UpdateStatusDialogState extends State<UpdateStatusDialog> {
                               'Week Status',
                             ),
                             Text(
-                              widget.isExpired! && !status
-                                  ? 'Expired'
-                                  : 'Active',
+                              !widget.active! && !status ? 'Expired' : 'Active',
                               style: textTheme.titleSmall?.copyWith(
-                                color: widget.isExpired! && !status
+                                color: !widget.active! && !status
                                     ? secondaryTextColor
                                     : successColor,
                               ),
@@ -112,7 +108,7 @@ class _UpdateStatusDialogState extends State<UpdateStatusDialog> {
                           ],
                         ),
                       ),
-                      if (widget.isExpiredDate!)
+                      if (!widget.active!)
                         PopupMenuItem<String>(
                           value: 'Status',
                           child: Switch.adaptive(
@@ -138,7 +134,8 @@ class _UpdateStatusDialogState extends State<UpdateStatusDialog> {
                 child: FilledButton(
                   onPressed: () {
                     BlocProvider.of<DailyActivityCubit>(context)
-                        .changeWeekStatus(status: status, id: widget.id ?? '');
+                        .updateDailyActivityStatus(
+                            status: status, id: widget.id);
                   },
                   child: const Text('Submit'),
                 ).fullWidth(),

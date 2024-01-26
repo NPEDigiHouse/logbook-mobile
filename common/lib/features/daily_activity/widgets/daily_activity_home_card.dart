@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:common/models/verified_status.dart';
+import 'package:coordinator/features/daily_activity/update_status.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/helpers/utils.dart';
@@ -8,9 +9,12 @@ import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/spacing_row.dart';
+import 'package:main/widgets/verify_dialog.dart';
 import 'package:students/features/daily_activity/pages/daily_activity_week_status_page.dart';
 
 class DailyActivityHomeCard extends StatelessWidget {
@@ -20,11 +24,15 @@ class DailyActivityHomeCard extends StatelessWidget {
   final DailyActivity? dailyActivity;
   final bool status;
   final bool isSupervisor;
+  final bool isCoordinator;
   final String? studentId;
+  final bool activeStatus;
   const DailyActivityHomeCard(
       {super.key,
       this.studentId,
       required this.status,
+      this.isCoordinator = false,
+      this.activeStatus = false,
       required this.isSupervisor,
       required this.endDate,
       required this.startDate,
@@ -38,7 +46,7 @@ class DailyActivityHomeCard extends StatelessWidget {
         InkWellContainer(
           padding: const EdgeInsets.all(16),
           radius: 12,
-          onTap: () => onWeekTab(context),
+          onTap: isCoordinator ? null : () => onWeekTab(context),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
@@ -56,16 +64,18 @@ class DailyActivityHomeCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _verifiedWeekStatus(),
+              isCoordinator ? _dailyActivityStatus() : _verifiedWeekStatus(),
               ..._header(),
               _listDailyAttendance(),
             ],
           ),
         ),
-        // if (DateTime.now().isBefore(startDate) && !isSupervisor)
-        //   Positioned.fill(
-        //     child: _lockedWeekLayer(),
-        //   ),
+        if (DateTime.now().isBefore(startDate) &&
+            !isSupervisor &&
+            !isCoordinator)
+          Positioned.fill(
+            child: _lockedWeekLayer(),
+          ),
       ],
     );
   }
@@ -92,6 +102,101 @@ class DailyActivityHomeCard extends StatelessWidget {
         height: 16,
       ),
     ];
+  }
+
+  Builder _dailyActivityStatus() {
+    return Builder(builder: (context) {
+      bool active = !endDate.isBefore(DateTime.now());
+      bool status = activeStatus || active;
+
+      return Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 4,
+            ),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: status ? successColor : onFormDisableColor),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  status ? Icons.check : Icons.close,
+                  color: Colors.white,
+                  size: 16,
+                ),
+                const SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  active
+                      ? 'Active'
+                      : status
+                          ? 'Set Active'
+                          : 'Not Active',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Spacer(),
+          PopupMenuButton<String>(
+            icon: const Icon(
+              Icons.more_vert_rounded,
+            ),
+            onSelected: (value) {
+              if (!active && value == 'Change Status') {
+                showDialog(
+                  context: context,
+                  barrierLabel: '',
+                  barrierDismissible: false,
+                  builder: (_) => UpdateStatusDialog(
+                    status: status,
+                    studentId: studentId ?? '',
+                    id: da.dailyActivityId ?? '',
+                    active: active,
+                    weekNum: da.weekName ?? 1,
+                  ),
+                );
+              }
+
+              if (value == 'Delete') {
+                showDialog(
+                  context: context,
+                  barrierLabel: '',
+                  barrierDismissible: false,
+                  builder: (_) => VerifyDialog(
+                    onTap: () {
+                      context
+                          .read<DailyActivityCubit>()
+                          .deleteDailyActivity(id: da.dailyActivityId!);
+                      Navigator.pop(context);
+                    },
+                  ),
+                );
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return <PopupMenuEntry<String>>[
+                if (!active)
+                  const PopupMenuItem<String>(
+                    value: 'Change Status',
+                    child: Text('Change Status'),
+                  ),
+                const PopupMenuItem<String>(
+                  value: 'Delete',
+                  child: Text('Delete'),
+                ),
+              ];
+            },
+          ),
+        ],
+      );
+    });
   }
 
   Builder _verifiedWeekStatus() {
@@ -180,6 +285,7 @@ class DailyActivityHomeCard extends StatelessWidget {
                   ),
                 ) &&
                 e.activityStatus == 'NOT_ATTEND';
+
             bool isUnsubmit = e.activityStatus == 'NOT_ATTEND';
             return Column(
               children: [
@@ -275,6 +381,8 @@ class DailyActivityHomeCard extends StatelessWidget {
   }
 
   void onWeekTab(BuildContext context) {
+    bool active = !endDate.isBefore(DateTime.now());
+    bool status = activeStatus || active;
     // if (DateTime.now().isBefore(startDate) && !isSupervisor) {
     //   return;
     // }
@@ -285,6 +393,7 @@ class DailyActivityHomeCard extends StatelessWidget {
         weekName: da.weekName!,
         studentId: studentId,
         startDate: startDate,
+        endDate: endDate,
         status: status ||
             (!endDate.isBefore(
               DateTime(

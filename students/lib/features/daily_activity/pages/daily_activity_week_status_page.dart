@@ -20,6 +20,7 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
   final DailyActivity da;
   final int weekName;
   final DateTime startDate;
+  final DateTime endDate;
   final bool isSupervisor;
   final String? studentId;
   final bool status;
@@ -29,6 +30,7 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
     required this.status,
     required this.isSupervisor,
     required this.startDate,
+    required this.endDate,
     required this.da,
     this.studentId,
     required this.weekName,
@@ -250,6 +252,7 @@ class _DailyActivityWeekStatusPageState
                                       isSupervisor: widget.isSupervisor,
                                       activeStatus: widget.status,
                                       id: data[index].id!,
+                                      endDate: widget.endDate,
                                       date: DateTime.fromMillisecondsSinceEpoch(
                                           (data[index].date ?? 0) * 1000),
                                       supervisorName:
@@ -307,12 +310,14 @@ class DailyActivityStatusCard extends StatefulWidget {
   final String? status;
   final String? supervisorName;
   // final int checkInCount;
+  final DateTime endDate;
   final String? detail;
   final ActivitiesStatus? activitiesStatus;
   final bool activeStatus;
   const DailyActivityStatusCard({
     super.key,
     this.supervisorName,
+    required this.endDate,
     required this.isSupervisor,
     required this.date,
     required this.dailyActivityId,
@@ -344,7 +349,16 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.status);
+    bool isLateAttend = widget.endDate.isBefore(
+          DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+          ),
+        ) &&
+        widget.status == 'NOT_ATTEND';
+
+    bool isUnsubmit = widget.status == 'NOT_ATTEND';
     Map<String, String> emoji = {
       'ATTEND': 'emoji_hadir.svg',
       'SICK': 'sakit_emoji.svg',
@@ -379,14 +393,14 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.status == "NOT_ATTEND" && !widget.activeStatus)
+          if (isLateAttend)
             SvgPicture.asset(
               AssetPath.getIcon(emoji['NOT_ATTEND']!),
               width: 50,
               height: 50,
               fit: BoxFit.cover,
             )
-          else if (widget.status == "NOT_ATTEND")
+          else if (isUnsubmit)
             Container(
               width: 38,
               height: 38,

@@ -24,21 +24,10 @@ class WeeklyGradePage extends StatefulWidget {
 class _WeeklyGradePageState extends State<WeeklyGradePage> {
   ValueNotifier<List<StudentDepartmentModel>> listStudent = ValueNotifier([]);
   bool isMounted = false;
-  // late final List<String> _menuList;
-  // late final ValueNotifier<String> _query, _selectedMenu;
 
   @override
   void initState() {
     BlocProvider.of<SupervisorsCubit>(context).getAllStudentDepartment();
-    // _menuList = [
-    //   'All',
-    //   'Inputed',
-    //   'Uninputed',
-    // ];
-
-    // _query = ValueNotifier('');
-    // _selectedMenu = ValueNotifier(_menuList[0]);
-
     super.initState();
   }
 

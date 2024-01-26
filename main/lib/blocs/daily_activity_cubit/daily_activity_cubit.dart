@@ -176,6 +176,92 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
+  Future<void> syncDailyActivity({required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        isSync: RequestState.loading,
+      ));
+
+      await dataSource.syncDailyActivity(studentId);
+
+      try {
+        emit(state.copyWith(isSync: RequestState.data));
+      } catch (e) {
+        emit(state.copyWith(isSync: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isSync: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> deleteDailyActivity({required String id}) async {
+    try {
+      emit(state.copyWith(
+        isDelete: RequestState.loading,
+      ));
+
+      await dataSource.deleteDailyActivity(id: id);
+
+      try {
+        emit(state.copyWith(isDelete: RequestState.data));
+      } catch (e) {
+        emit(state.copyWith(isDelete: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isDelete: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> updateDailyActivityStatus(
+      {required bool status, required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.updateDailyActivityStatus(id: id, status: status);
+
+      try {
+        emit(state.copyWith(
+            requestState: RequestState.data, isEditStatusWeek: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> updateAllDailyActivityStatus({required bool status}) async {
+    try {
+      emit(state.copyWith(
+        isStatus: RequestState.loading,
+      ));
+
+      await dataSource.updateAllDailyActivityStatus(status: status);
+
+      emit(state.copyWith(isStatus: RequestState.data));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isStatus: RequestState.error,
+        ),
+      );
+    }
+  }
+
   Future<void> getActivitiesByWeekIdStudentId({required String weekId}) async {
     try {
       emit(state.copyWith(
@@ -270,11 +356,7 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
 
       final result =
           await dataSource.getDailyActivityBySupervisor(studentId: studentId);
-      result.dailyActivities?.sort(
-        (a, b) {
-          return a.weekName!.compareTo(b.weekName!);
-        },
-      );
+
       try {
         emit(state.copyWith(
           studentDailyActivity: result,
