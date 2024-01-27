@@ -2,7 +2,6 @@ import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/clinical_records/clinical_record_list_model.dart';
-import 'package:data/models/units/unit_model.dart';
 import 'package:data/utils/filter_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';

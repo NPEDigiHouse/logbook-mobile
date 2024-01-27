@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:data/utils/filter_type.dart';
 import 'package:open_file/open_file.dart' as o;
 
 import 'package:dartz/dartz.dart';
@@ -35,8 +36,11 @@ abstract class ScientificSessionDataSource {
       getStudentScientificSessions();
   Future<Either<Failure, List<SessionTypesModel>>> getListSessionTypes();
   Future<Either<Failure, List<ScientificRoles>>> getListScientificRoles();
-  Future<List<ScientificSessionOnListModel>>
-      getScientificSessionsBySupervisor();
+  Future<List<ScientificSessionOnListModel>> getScientificSessionsBySupervisor(
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType});
   Future<void> verifyScientificSession(
       {required String id, required VerifyScientificSessionModel model});
   Future<String> downloadFile({required String crId, required String filename});
@@ -208,13 +212,22 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
   }
 
   @override
-  Future<List<ScientificSessionOnListModel>>
-      getScientificSessionsBySupervisor() async {
+  Future<List<ScientificSessionOnListModel>> getScientificSessionsBySupervisor(
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType}) async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/scientific-sessions',
-        options: await apiHeader.userOptions(),
-      );
+          '${ApiService.baseUrl}/scientific-sessions/v2',
+          options: await apiHeader.userOptions(),
+          queryParameters: {
+            if (unitId != null) "unit": unitId,
+            if (page != null) "page": page,
+            if (query != null) "query": query,
+            if (filterType != FilterType.all)
+              'type': filterType.name.toUpperCase(),
+          });
 
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<ScientificSessionOnListModel> listData = dataResponse.data
@@ -222,6 +235,7 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
           .toList();
       return listData;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }
@@ -257,7 +271,8 @@ class ScientificSessionDataSourceImpl implements ScientificSessionDataSource {
   Future<Either<Failure, void>> updateScientificSession(
       {required ScientificSessionPostModel scientificSessionPostModel}) async {
     try {
-      await dio.put('${ApiService.baseUrl}/scientific-sessions/${scientificSessionPostModel.id}/v2',
+      await dio.put(
+          '${ApiService.baseUrl}/scientific-sessions/${scientificSessionPostModel.id}/v2',
           options: await apiHeader.userOptions(),
           data: {
             'supervisorId': scientificSessionPostModel.supervisorId,
