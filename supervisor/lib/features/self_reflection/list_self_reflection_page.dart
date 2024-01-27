@@ -85,6 +85,10 @@ class _SupervisorListSelfReflectionsPageState
                                     listStudent.value = [...data];
                                   }
                                 },
+                                onClear: () {
+                                  listStudent.value.clear();
+                                  listStudent.value = [...state.listData!];
+                                },
                                 text: '',
                                 hint: 'Search for student',
                               ),

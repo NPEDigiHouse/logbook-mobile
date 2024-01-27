@@ -108,7 +108,7 @@ class ClinicalRecordCard extends StatelessWidget {
                         ),
                         children: <TextSpan>[
                           const TextSpan(
-                            text: 'Unit:\t',
+                            text: 'Department:\t',
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                             ),

@@ -141,20 +141,7 @@ class _AddWeekDialogState extends State<AddWeekDialog> {
                           ),
                         ],
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                      //   child: BuildTextField(
-                      //     onChanged: (s) {},
-                      //     isOnlyDigit: true,
-                      //     isDisable: true,
-                      //     isOnlyNumber: true,
-                      //     label: 'Week Num',
-                      //     controller: weekNumController,
-                      //     validator: FormBuilderValidators.required(
-                      //       errorText: 'This field is required',
-                      //     ),
-                      //   ),
-                      // ),
+                   
                       if (widget.isEdit)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),

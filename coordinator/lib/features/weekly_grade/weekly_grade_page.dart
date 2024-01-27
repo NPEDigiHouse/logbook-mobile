@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
+import 'package:main/blocs/supervisor_cubit2/supervisors_cubit2.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/custom_shimmer.dart';
 import 'package:main/widgets/inputs/search_field.dart';
@@ -22,20 +24,40 @@ class WeeklyGradePage extends StatefulWidget {
 }
 
 class _WeeklyGradePageState extends State<WeeklyGradePage> {
-  ValueNotifier<List<StudentDepartmentModel>> listStudent = ValueNotifier([]);
-  bool isMounted = false;
+  late int page;
+  String? query;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
-    BlocProvider.of<SupervisorsCubit>(context).getAllStudentDepartment();
     super.initState();
+    _scrollController.addListener(_onScroll);
+    page = 1;
+    Future.microtask(() => BlocProvider.of<SupervisorCubit2>(context)
+        .getAllStudentDepartment(page: page));
+  }
+
+  void _onScroll() {
+    final state = context.read<SupervisorCubit2>().state.state;
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        state != RequestState.loading) {
+      _loadMoreData();
+    }
+  }
+
+  void _loadMoreData() {
+    BlocProvider.of<SupervisorCubit2>(context).getAllStudentDepartment(
+      query: query,
+      page: page + 1,
+      onScroll: true,
+    );
+    page++;
   }
 
   @override
   void dispose() {
-    // _query.dispose();
-    // _selectedMenu.dispose();
-
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -44,7 +66,8 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => Future.wait([
-          BlocProvider.of<SupervisorsCubit>(context).getAllStudentDepartment()
+          BlocProvider.of<SupervisorCubit2>(context)
+              .getAllStudentDepartment(page: page, query: query),
         ]),
         child: NestedScrollView(
           floatHeaderSlivers: true,
@@ -77,121 +100,103 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
               ),
             ];
           },
-          body: ValueListenableBuilder(
-              valueListenable: listStudent,
-              builder: (context, s, _) {
-                return BlocConsumer<SupervisorsCubit, SupervisorsState>(
-                  listener: (context, state) {
-                    if (state is FetchStudentDepartmentSuccess) {
-                      if (!isMounted) {
-                        Future.microtask(() {
-                          listStudent.value = [...state.students];
-                        });
-                        isMounted = true;
-                      }
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is SupervisorLoading) {
-                      return const CustomLoading();
-                    }
-                    if (state is FetchStudentDepartmentSuccess) {
-                      return CustomScrollView(
-                        slivers: <Widget>[
-                          SliverPadding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            sliver: SliverList.separated(
-                              itemCount: s.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  leading: FutureBuilder(
-                                    future: BlocProvider.of<SupervisorsCubit>(
-                                            context)
-                                        .getImageProfile(
-                                            id: s[index].userId ?? ''),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CustomShimmer(
-                                            child: Container(
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.white,
-                                          ),
-                                          width: 50,
-                                          height: 50,
-                                        ));
-                                      } else if (snapshot.hasData) {
-                                        s[index].profileImage = snapshot.data;
-                                        return CircleAvatar(
-                                          radius: 25,
-                                          foregroundImage:
-                                              MemoryImage(snapshot.data!),
-                                        );
-                                      } else {
-                                        return ProfilePicPlaceholder(
-                                            height: 50,
-                                            name: s[index].studentName ?? '-',
-                                            isSmall: true,
-                                            width: 50);
-                                      }
-                                    },
+          body: BlocSelector<SupervisorCubit2, SupervisorState2,
+              (List<StudentDepartmentModel>?, RequestState)>(
+            selector: (state) => (state.listData, state.state),
+            builder: (context, state) {
+              final data = state.$1;
+
+              if (data == null || state.$2 == RequestState.loading) {
+                return const CustomLoading();
+              }
+              return CustomScrollView(
+                slivers: <Widget>[
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    sliver: SliverList.separated(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: FutureBuilder(
+                            future: BlocProvider.of<SupervisorsCubit>(context)
+                                .getImageProfile(id: data[index].userId ?? ''),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CustomShimmer(
+                                    child: Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
                                   ),
-                                  title: Text(
-                                    s[index].studentName ?? '',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        s[index].studentId ?? '',
-                                        style: textTheme.bodySmall?.copyWith(
-                                          color: borderColor,
-                                        ),
-                                      ),
-                                      RichText(
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        text: TextSpan(
-                                          style: textTheme.bodySmall?.copyWith(
-                                            color: secondaryTextColor,
-                                          ),
-                                          children: <TextSpan>[
-                                            const TextSpan(
-                                              text: 'Department:\t',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                                text: s[index]
-                                                    .activeDepartmentName),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  onTap: () => context.navigateTo(
-                                    WeeklyGradeDetailPage(student: s[index]),
-                                  ),
+                                  width: 50,
+                                  height: 50,
+                                ));
+                              } else if (snapshot.hasData) {
+                                data[index].profileImage = snapshot.data;
+                                return CircleAvatar(
+                                  radius: 25,
+                                  foregroundImage: MemoryImage(snapshot.data!),
                                 );
-                              },
-                              separatorBuilder: (context, index) {
-                                return const SizedBox(height: 8);
-                              },
+                              } else {
+                                return ProfilePicPlaceholder(
+                                    height: 50,
+                                    name: data[index].studentName ?? '-',
+                                    isSmall: true,
+                                    width: 50);
+                              }
+                            },
+                          ),
+                          title: Text(
+                            data[index].studentName ?? '',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ],
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                );
-              }),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data[index].studentId ?? '',
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: borderColor,
+                                ),
+                              ),
+                              RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  style: textTheme.bodySmall?.copyWith(
+                                    color: secondaryTextColor,
+                                  ),
+                                  children: <TextSpan>[
+                                    const TextSpan(
+                                      text: 'Department:\t',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                        text: data[index].activeDepartmentName),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          onTap: () => context.navigateTo(
+                            WeeklyGradeDetailPage(student: data[index]),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(height: 8);
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -207,9 +212,9 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
             AssetPath.getVector('circle_bg4.svg'),
           ),
         ),
-        BlocBuilder<SupervisorsCubit, SupervisorsState>(
+        BlocBuilder<SupervisorCubit2, SupervisorState2>(
           builder: (context, state) {
-            if (state is FetchStudentDepartmentSuccess) {
+            if (state.state == RequestState.data || state.listData != null) {
               return Padding(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
                 child: Column(
@@ -240,18 +245,23 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
                     ),
                     const SizedBox(height: 14),
                     SearchField(
+                      onClear: () {
+                        query = null;
+                        context
+                            .read<SupervisorCubit2>()
+                            .getAllStudentDepartment(
+                              page: page,
+                              query: query,
+                            );
+                      },
                       onChanged: (value) {
-                        final data = state.students
-                            .where((element) => element.studentName!
-                                .toLowerCase()
-                                .contains(value.toLowerCase()))
-                            .toList();
-                        if (value.isEmpty) {
-                          listStudent.value.clear();
-                          listStudent.value = [...state.students];
-                        } else {
-                          listStudent.value = [...data];
-                        }
+                        query = value;
+                        context
+                            .read<SupervisorCubit2>()
+                            .getAllStudentDepartment(
+                              page: page,
+                              query: query,
+                            );
                       },
                       text: '',
                       hint: 'Search for student',
@@ -266,44 +276,4 @@ class _WeeklyGradePageState extends State<WeeklyGradePage> {
       ],
     );
   }
-
-  // SizedBox buildFilterSection() {
-  //   return SizedBox(
-  //     height: 64,
-  //     child: ListView.separated(
-  //       padding: const EdgeInsets.symmetric(horizontal: 20),
-  //       scrollDirection: Axis.horizontal,
-  //       itemCount: _menuList.length,
-  //       itemBuilder: (context, index) {
-  //         return ValueListenableBuilder(
-  //           valueListenable: _selectedMenu,
-  //           builder: (context, value, child) {
-  //             final selected = value == _menuList[index];
-
-  //             return RawChip(
-  //               pressElevation: 0,
-  //               clipBehavior: Clip.antiAlias,
-  //               label: Text(_menuList[index]),
-  //               labelPadding: const EdgeInsets.symmetric(horizontal: 6),
-  //               labelStyle: textTheme.bodyMedium?.copyWith(
-  //                 color: selected ? primaryColor : primaryTextColor,
-  //               ),
-  //               side: BorderSide(
-  //                 color: selected ? Colors.transparent : borderColor,
-  //               ),
-  //               shape: RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.circular(10),
-  //               ),
-  //               selected: selected,
-  //               selectedColor: primaryColor.withOpacity(.2),
-  //               checkmarkColor: primaryColor,
-  //               onSelected: (_) => _selectedMenu.value = _menuList[index],
-  //             );
-  //           },
-  //         );
-  //       },
-  //       separatorBuilder: (_, __) => const SizedBox(width: 8),
-  //     ),
-  //   );
-  // }
 }

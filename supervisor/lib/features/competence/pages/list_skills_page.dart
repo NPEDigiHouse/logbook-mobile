@@ -43,10 +43,9 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
   @override
   void initState() {
     Future.microtask(() {
-      BlocProvider.of<CompetenceCubit>(context)
-        .getSkillsByStudentId(
-          studentId: widget.studentId,
-        );
+      BlocProvider.of<CompetenceCubit>(context).getSkillsByStudentId(
+        studentId: widget.studentId,
+      );
     });
 
     _query = ValueNotifier('');
@@ -80,13 +79,6 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
             !isMounted &&
             state.requestState == RequestState.data) {
           listData.value = [...state.listSkillsModel!.listSkills!];
-
-          // if (listData.value.indexWhere(
-          //         (element) => element.verificationStatus == 'INPROCESS') ==
-          //     -1) {
-          //   BlocProvider.of<CompetenceCubit>(context)..getSkillStudents();
-          //   context.back();
-          // }
         }
       },
       builder: (context, state) {
@@ -109,8 +101,8 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
                           builder: (_) => VerifyDialog(
                                 onTap: () {
                                   BlocProvider.of<CompetenceCubit>(context)
-                                    .verifyAllSkillOfStudent(
-                                        studentId: widget.studentId);
+                                      .verifyAllSkillOfStudent(
+                                          studentId: widget.studentId);
                                   Navigator.pop(context);
                                 },
                               ));
@@ -189,7 +181,8 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
                                 ],
                                 if (s.isNotEmpty)
                                   ListView.separated(
-                                    physics: const NeverScrollableScrollPhysics(),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemBuilder: (context, index) =>
                                         TestGradeScoreCard(
@@ -211,7 +204,8 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
                             ),
                           );
                         } else {
-                          return const SliverFillRemaining(child: CustomLoading());
+                          return const SliverFillRemaining(
+                              child: CustomLoading());
                         }
                       },
                     ),

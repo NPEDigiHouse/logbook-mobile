@@ -29,5 +29,16 @@ class FetchStudentSuccess extends SupervisorsState {
 
 class FetchStudentDepartmentSuccess extends SupervisorsState {
   final List<StudentDepartmentModel> students;
-  const FetchStudentDepartmentSuccess({required this.students});
+
+  const FetchStudentDepartmentSuccess({
+    required this.students,
+  });
+
+  FetchStudentDepartmentSuccess copyWith({
+    List<StudentDepartmentModel>? students,
+  }) {
+    return FetchStudentDepartmentSuccess(
+      students: students ?? this.students,
+    );
+  }
 }

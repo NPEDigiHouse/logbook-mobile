@@ -210,19 +210,7 @@ class FinalGradeScoreCard extends StatelessWidget {
                         ),
                       ),
                     )
-                  // Text(
-                  //   'Exam date',
-                  //   style: textTheme.bodySmall?.copyWith(
-                  //     color: primaryTextColor,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
-                  // Text(
-                  //   date,
-                  //   style: textTheme.bodySmall?.copyWith(
-                  //     color: secondaryTextColor,
-                  //   ),
-                  // ),
+   
                 ],
               ),
             ),

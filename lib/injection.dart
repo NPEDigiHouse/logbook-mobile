@@ -181,6 +181,11 @@ void _injectStateManagement() {
     ),
   );
   locator.registerFactory(
+    () => SupervisorCubit2(
+      dataSource: locator(),
+    ),
+  );
+  locator.registerFactory(
     () => ClinicalRecordCubit(
       clinicalRecordsDatasource: locator(),
     ),

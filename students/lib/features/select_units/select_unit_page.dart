@@ -1,13 +1,11 @@
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
-import 'package:core/styles/text_style.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/unit_cubit/unit_cubit.dart';
 import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/skeleton/list_skeleton_template.dart';
-import 'widgets/custom_bottom_alert.dart';
 import 'widgets/select_unit_card.dart';
 
 class SelectDepartmentPage extends StatefulWidget {

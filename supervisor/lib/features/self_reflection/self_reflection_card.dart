@@ -79,6 +79,24 @@ class SelfReflectionCard extends StatelessWidget {
                         ),
                         children: <TextSpan>[
                           const TextSpan(
+                            text: 'Department:\t',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          TextSpan(text: selfReflection.unitName),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: textTheme.bodySmall?.copyWith(
+                          color: secondaryTextColor,
+                        ),
+                        children: <TextSpan>[
+                          const TextSpan(
                             text: 'Latest:\t',
                             style: TextStyle(
                               fontWeight: FontWeight.w700,

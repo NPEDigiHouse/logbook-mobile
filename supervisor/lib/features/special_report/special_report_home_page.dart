@@ -26,7 +26,7 @@ class _SpecialReportDetailPageState extends State<SpecialReportDetailPage> {
   void initState() {
     super.initState();
     BlocProvider.of<SpecialReportCubit>(context)
-      .getSpecialReportByStudentId(studentId: widget.studentId);
+        .getSpecialReportByStudentId(studentId: widget.studentId);
   }
 
   @override
@@ -61,6 +61,7 @@ class _SpecialReportDetailPageState extends State<SpecialReportDetailPage> {
                           if (state.specialReport!.listProblemConsultations!
                               .isNotEmpty) {
                             return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(
                                   height: 12,

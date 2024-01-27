@@ -14,7 +14,8 @@ import 'package:dio/dio.dart';
 abstract class SupervisorsDataSource {
   Future<Either<Failure, List<SupervisorModel>>> getAllSupervisors();
   Future<List<SupervisorStudent>> getAllStudents();
-  Future<List<StudentDepartmentModel>> getAllStudentsByCeu();
+  Future<List<StudentDepartmentModel>> getAllStudentsByCeu(
+      {String? query, int? page});
   Future<StudentStatistic> getStatisticByStudentId({required String studentId});
 }
 
@@ -63,11 +64,16 @@ class SupervisorsDataSourceImpl implements SupervisorsDataSource {
   }
 
   @override
-  Future<List<StudentDepartmentModel>> getAllStudentsByCeu() async {
+  Future<List<StudentDepartmentModel>> getAllStudentsByCeu(
+      {String? query, int? page}) async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/supervisors/students?ceu=true',
+        '${ApiService.baseUrl}/supervisors/students/v2',
         options: await apiHeader.userOptions(),
+        queryParameters: {
+          "search": query,
+          "page": page,
+        },
       );
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentDepartmentModel> students = dataResponse.data

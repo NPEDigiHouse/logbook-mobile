@@ -9,8 +9,6 @@ import 'package:main/widgets/dividers/section_divider.dart';
 import 'package:main/widgets/headers/unit_student_header.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'package:main/widgets/top_stat_card.dart';
-
-import '../assesment/providers/scientific_assignment_provider.dart';
 import 'widgets/input_score_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

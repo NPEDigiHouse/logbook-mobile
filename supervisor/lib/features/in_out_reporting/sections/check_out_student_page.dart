@@ -213,13 +213,7 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
               ),
               const SizedBox(height: 16),
 
-              // TextFormField(
-              //   minLines: 5,
-              //   maxLines: 5,
-              //   decoration: const InputDecoration(
-              //     label: Text('Additional Notes'),
-              //   ),
-              // ),
+           
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,

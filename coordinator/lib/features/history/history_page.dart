@@ -365,9 +365,17 @@ class _CoordinatorHistoryPageState extends State<CoordinatorHistoryPage> {
               child: SearchField(
                 text: '',
                 hint: 'Search Student',
+                onClear: () {
+                  listData.value.clear();
+                  listData.value = [
+                    ...HistoryHelper.convertHistoryToActivity(
+                        state.histories!, RoleHistory.supervisor, context,
+                        isCoordinator: true)
+                  ];
+                },
                 onChanged: (value) {
                   final data = state.histories!
-                      .where((element) => element.studentName!
+                      .where((element) => (element.studentName ?? '')
                           .toLowerCase()
                           .contains(value.toLowerCase()))
                       .toList();

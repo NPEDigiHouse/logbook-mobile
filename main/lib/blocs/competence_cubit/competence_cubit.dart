@@ -6,6 +6,7 @@ import 'package:data/models/competences/list_student_cases_model.dart';
 import 'package:data/models/competences/list_student_skills_model.dart';
 import 'package:data/models/competences/skill_post_model.dart';
 import 'package:data/models/competences/student_competence_model.dart';
+import 'package:data/utils/filter_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
@@ -227,20 +228,28 @@ class CompetenceCubit extends Cubit<CompetenceState> {
     }
   }
 
-  Future<void> getCaseStudents() async {
+  Future<void> getCaseStudents(
+      {String? unitId,
+      int? page,
+      String? query,
+      bool onScroll = false,
+      FilterType? type}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      final result = await competenceDataSource.getCaseListStudent(
+        filterType: type ?? FilterType.unverified,
+        page: page,
+        query: query,
+        unitId: unitId,
+      );
+      if (!onScroll) emit(state.copyWith(fetchState: RequestState.loading));
 
-      final result = await competenceDataSource.getCaseListStudent();
-
-      try {
+      if (page == 1 && !onScroll) {
         emit(state.copyWith(
-          caseListStudent: result,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+            caseListStudent: result, fetchState: RequestState.data));
+      } else {
+        emit(state.copyWith(
+            caseListStudent: result + state.caseListStudent!,
+            fetchState: RequestState.data));
       }
     } catch (e) {
       emit(
@@ -251,20 +260,28 @@ class CompetenceCubit extends Cubit<CompetenceState> {
     }
   }
 
-  Future<void> getSkillStudents() async {
+  Future<void> getSkillStudents(
+      {String? unitId,
+      int? page,
+      String? query,
+      bool onScroll = false,
+      FilterType? type}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+      final result = await competenceDataSource.getSkillListStudent(
+        filterType: type ?? FilterType.unverified,
+        page: page,
+        query: query,
+        unitId: unitId,
+      );
+      if (!onScroll) emit(state.copyWith(fetchState: RequestState.loading));
 
-      final result = await competenceDataSource.getSkillListStudent();
-
-      try {
+      if (page == 1 && !onScroll) {
         emit(state.copyWith(
-          skillListStudent: result,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+            skillListStudent: result, fetchState: RequestState.data));
+      } else {
+        emit(state.copyWith(
+            skillListStudent: result + state.skillListStudent!,
+            fetchState: RequestState.data));
       }
     } catch (e) {
       emit(

@@ -26,7 +26,6 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
       result.fold((l) => emit(SupervisorFailed(message: l.message)),
           (r) => emit(SupervisorFetchSuccess(supervisors: r)));
     } catch (e) {
-      print(e.toString());
       emit(
         SupervisorFailed(
           message: e.toString(),
@@ -40,20 +39,36 @@ class SupervisorsCubit extends Cubit<SupervisorsState> {
     return image.fold((l) => null, (r) => r);
   }
 
-  Future<void> getAllStudentDepartment() async {
+  Future<void> getAllStudentDepartment({
+    String? query,
+    int? page,
+    bool onScroll = false,
+  }) async {
     try {
-      emit(SupervisorLoading());
+      final result = await dataSource.getAllStudentsByCeu(
+        query: query,
+        page: page,
+      );
 
-      final result = await dataSource.getAllStudentsByCeu();
+      // if (!onScroll) {
+      //   emit(SupervisorLoading());
+      // }
 
-      emit(FetchStudentDepartmentSuccess(
-          students: result
-              .where(
-                (element) => element.activeDepartmentId != null,
-              )
-              .toList()));
+      List<StudentDepartmentModel> filteredStudents = result
+          .where((element) => element.activeDepartmentId != null)
+          .toList();
+
+      if (page == 1 && !onScroll) {
+        emit(FetchStudentDepartmentSuccess(students: filteredStudents));
+      } else {
+        if (state is FetchStudentDepartmentSuccess) {
+          List<StudentDepartmentModel> existingStudents =
+              (state as FetchStudentDepartmentSuccess).students;
+          emit(FetchStudentDepartmentSuccess(
+              students: [...existingStudents, ...filteredStudents]));
+        }
+      }
     } catch (e) {
-      print(e.toString());
       emit(
         SupervisorFailed(
           message: e.toString(),

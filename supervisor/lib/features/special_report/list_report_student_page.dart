@@ -90,6 +90,12 @@ class _SupervisorListSpecialReportPageState
                                     listStudent.value = [...data];
                                   }
                                 },
+                                onClear: () {
+                                  listStudent.value.clear();
+                                  listStudent.value = [
+                                    ...state.specialReportStudents!
+                                  ];
+                                },
                                 text: '',
                                 hint: 'Search for student',
                               ),

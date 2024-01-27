@@ -88,6 +88,10 @@ class _SupervisorAssesmentStudentPageState
                                     listData.value = [...data];
                                   }
                                 },
+                                onClear: () {
+                                  listData.value.clear();
+                                  listData.value = [...state.students!];
+                                },
                                 text: '',
                                 hint: 'Search student',
                               ),

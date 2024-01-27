@@ -22,5 +22,6 @@ export 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 export 'package:main/blocs/special_report/special_report_cubit.dart';
 export 'package:main/blocs/student_cubit/student_cubit.dart';
 export 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
+export 'package:main/blocs/supervisor_cubit2/supervisors_cubit2.dart';
 export 'package:main/blocs/unit_cubit/unit_cubit.dart';
 export 'package:main/blocs/wrapper_cubit/wrapper_cubit.dart';

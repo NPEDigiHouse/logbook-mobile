@@ -21,9 +21,6 @@ class ClinicalRecordSupervisorCubit
       bool onScroll = false,
       FilterType? type}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
 
       final result = await datasource.getClinicalRecordsBySupervisor(
         filterType: type ?? FilterType.unverified,

@@ -217,19 +217,7 @@ class FinalGradeScoreCard extends StatelessWidget {
                   const SizedBox(
                     height: 12,
                   ),
-                  // Text(
-                  //   'Exam date',
-                  //   style: textTheme.bodySmall?.copyWith(
-                  //     color: primaryTextColor,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
-                  // Text(
-                  //   date,
-                  //   style: textTheme.bodySmall?.copyWith(
-                  //     color: secondaryTextColor,
-                  //   ),
-                  // ),
+            
                 ],
               ),
             ),

@@ -261,6 +261,7 @@ class __SupervisorListClinicalRecordViewState
                           ),
                         ),
                       ),
+                      
                       data.isNotEmpty
                           ? SliverList.separated(
                               itemCount: data.length,

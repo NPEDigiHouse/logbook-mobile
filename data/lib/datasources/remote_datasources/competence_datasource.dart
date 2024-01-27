@@ -10,15 +10,24 @@ import 'package:data/services/token_manager.dart';
 import 'package:data/utils/api_header.dart';
 import 'package:data/utils/data_response.dart';
 import 'package:data/utils/exception_handler.dart';
+import 'package:data/utils/filter_type.dart';
 import 'package:dio/dio.dart';
 
 abstract class CompetenceDataSource {
   Future<List<StudentCaseModel>> getStudentCases({required String unitId});
-  Future<List<StudentCompetenceModel>> getCaseListStudent();
+  Future<List<StudentCompetenceModel>> getCaseListStudent(
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType});
   Future<ListCasesModel> getListCaseOfStudent({required String studentId});
   Future<void> verifyCaseById({required String id, required int rating});
   Future<void> verifyAllCases({required String studentId});
-  Future<List<StudentCompetenceModel>> getSkillListStudent();
+  Future<List<StudentCompetenceModel>> getSkillListStudent(
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType});
   Future<ListSkillsModel> getListSkillOfStudent({required String studentId});
   Future<void> verifySkillById({required String id, required int rating});
   Future<void> verifyAllSkills({required String studentId});
@@ -138,12 +147,51 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
   }
 
   @override
-  Future<List<StudentCompetenceModel>> getCaseListStudent() async {
+  Future<List<StudentCompetenceModel>> getCaseListStudent(
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType}) async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/competencies/cases',
-        options: await apiHeader.userOptions(),
-      );
+          '${ApiService.baseUrl}/competencies/cases/v2',
+          options: await apiHeader.userOptions(),
+          queryParameters: {
+            if (unitId != null) "unit": unitId,
+            if (page != null) "page": page,
+            if (query != null) "query": query,
+            if (filterType != FilterType.all)
+              'type': filterType.name.toUpperCase(),
+          });
+
+      final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
+      List<StudentCompetenceModel> listData = dataResponse.data
+          .map((e) => StudentCompetenceModel.fromJson(e))
+          .toList();
+      return listData;
+    } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<List<StudentCompetenceModel>> getSkillListStudent(
+      {String? unitId,
+      int? page,
+      String? query,
+      required FilterType filterType}) async {
+    try {
+      final response = await dio.get(
+          '${ApiService.baseUrl}/competencies/skills/v2',
+          options: await apiHeader.userOptions(),
+          queryParameters: {
+            if (unitId != null) "unit": unitId,
+            if (page != null) "page": page,
+            if (query != null) "query": query,
+            if (filterType != FilterType.all)
+              'type': filterType.name.toUpperCase(),
+          });
+
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<StudentCompetenceModel> listData = dataResponse.data
           .map((e) => StudentCompetenceModel.fromJson(e))
@@ -181,25 +229,6 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = ListSkillsModel.fromJson(dataResponse.data);
       return result;
-    } catch (e) {
-      throw failure(e);
-    }
-  }
-
-  @override
-  Future<List<StudentCompetenceModel>> getSkillListStudent() async {
-    try {
-      final response = await dio.get(
-        '${ApiService.baseUrl}/competencies/skills',
-        options: await apiHeader.userOptions(),
-      );
-      print(response.data);
-
-      final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
-      List<StudentCompetenceModel> listData = dataResponse.data
-          .map((e) => StudentCompetenceModel.fromJson(e))
-          .toList();
-      return listData;
     } catch (e) {
       throw failure(e);
     }

@@ -417,7 +417,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             children: <TextSpan>[
                               const TextSpan(text: 'Activity\t'),
                               TextSpan(
-                                text: data['activity']!.toCapitalize(),
+                                text: (data['activity'] ?? '').toCapitalize(),
                                 style: textTheme.bodyLarge?.copyWith(
                                   color: primaryColor,
                                 ),
@@ -434,7 +434,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             children: <TextSpan>[
                               const TextSpan(text: 'Status\t'),
                               TextSpan(
-                                text: data['status']!.toCapitalize(),
+                                text: (data['status'] ?? '').toCapitalize(),
                                 style: textTheme.bodyLarge?.copyWith(
                                   color: primaryColor,
                                 ),
@@ -468,9 +468,19 @@ class _HistoryPageState extends State<HistoryPage> {
                         return SearchField(
                           text: '',
                           hint: 'Search History',
+                          onClear: () {
+                            listData.value.clear();
+                            listData.value = [
+                              ...HistoryHelper.convertHistoryToActivity(
+                                  isStudent: true,
+                                  state.histories!,
+                                  RoleHistory.student,
+                                  context)
+                            ];
+                          },
                           onChanged: (value) {
                             final data = state.histories!
-                                .where((element) => element.studentName!
+                                .where((element) => (element.studentName ?? '')
                                     .toLowerCase()
                                     .contains(value.toLowerCase()))
                                 .toList();
@@ -536,7 +546,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 1:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'CLINICAL RECORD')
                                         .toList();
                                     listData.value = [
@@ -550,7 +560,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 2:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'SCIENTIFIC SESSION'.toUpperCase())
                                         .toList();
                                     listData.value = [
@@ -565,7 +575,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 3:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'SGL'.toUpperCase())
                                         .toList();
                                     listData.value = [
@@ -579,7 +589,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 4:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'CST'.toUpperCase())
                                         .toList();
                                     listData.value = [
@@ -593,7 +603,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 5:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'Self-Reflection'.toUpperCase())
                                         .toList();
                                     listData.value = [
@@ -607,7 +617,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 6:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'CASE'.toUpperCase())
                                         .toList();
                                     listData.value = [
@@ -621,7 +631,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 7:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'SKILL'.toUpperCase())
                                         .toList();
                                     listData.value = [
@@ -635,7 +645,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 8:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'MINI_CEX'.toUpperCase())
                                         .toList();
                                     listData.value = [
@@ -649,7 +659,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 9:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'PERSONAL_BEHAVIOUR'.toUpperCase())
                                         .toList();
                                     listData.value = [
@@ -663,7 +673,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 10:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'SCIENTIFIC_ASSESMENT'
                                                 .toUpperCase())
                                         .toList();
@@ -678,7 +688,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 11:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'Problem Consultation'
                                                 .toUpperCase())
                                         .toList();
@@ -693,7 +703,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 12:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'DAILY_ACTIVITY'.toUpperCase())
                                         .toList();
                                     listData.value = [
@@ -707,7 +717,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 13:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'Check-in'.toUpperCase())
                                         .toList();
                                     listData.value = [
@@ -721,7 +731,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   case 14:
                                     final data = state.histories!
                                         .where((element) =>
-                                            element.type!.toUpperCase() ==
+                                            element.type?.toUpperCase() ==
                                             'Check-out'.toUpperCase())
                                         .toList();
                                     listData.value = [

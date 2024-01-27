@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-
 import 'package:common/features/file/file_management.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/utils.dart';
@@ -96,21 +95,11 @@ class _SupervisorDetailClinicalRecordPageState
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),
-                              // SizedBox(
-                              //   height: 4,
-                              // ),
-                              // Text(
-                              //   ReusableFunctionHelper.datetimeToString(state.detailClinicalRecordModel!.,),
-                              //   style: textTheme.bodyMedium?.copyWith(
-                              //     color: secondaryTextColor,
-                              //   ),
-                              // )
                             ],
                           ),
                         ],
                       ),
                     ),
-
                     const SectionDivider(),
                     const SizedBox(
                       height: 24,
@@ -186,25 +175,9 @@ class _SupervisorDetailClinicalRecordPageState
                               color: primaryTextColor,
                             ),
                           ),
-                          // SizedBox(
-                          //   height: 8,
-                          // ),
-                          // Text(
-                          //   'Age',
-                          //   style: textTheme.bodyMedium?.copyWith(
-                          //     color: secondaryTextColor,
-                          //   ),
-                          // ),
-                          // Text(
-                          //    state.detailClinicalRecordModel!.p ?? '',
-                          //   style: textTheme.titleMedium?.copyWith(
-                          //     color: primaryTextColor,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
-
                     const SizedBox(
                       height: 16,
                     ),
@@ -550,68 +523,6 @@ class _SupervisorDetailClinicalRecordPageState
                         height: 24,
                       ),
                     ],
-
-                    // Container(
-                    //   margin: EdgeInsets.symmetric(horizontal: 24),
-                    //   padding: EdgeInsets.only(
-                    //     bottom: 20,
-                    //     left: 20,
-                    //     right: 20,
-                    //   ),
-                    //   decoration: BoxDecoration(
-                    //     color: scaffoldBackgroundColor,
-                    //     borderRadius: BorderRadius.circular(12),
-                    //     boxShadow: [
-                    //       BoxShadow(
-                    //           offset: Offset(0, 0),
-                    //           spreadRadius: 0,
-                    //           blurRadius: 6,
-                    //           color: Color(0xFFD4D4D4).withOpacity(.25)),
-                    //       BoxShadow(
-                    //           offset: Offset(0, 4),
-                    //           spreadRadius: 0,
-                    //           blurRadius: 24,
-                    //           color: Color(0xFFD4D4D4).withOpacity(.25)),
-                    //     ],
-                    //   ),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       FormSectionHeader(
-                    //           label: 'Notes',
-                    //           pathPrefix: 'icon_note.svg',
-                    //           padding: 0),
-                    //       ItemDivider(),
-                    //       SizedBox(
-                    //         height: 16,
-                    //       ),
-                    //       Text(
-                    //           state.detailClinicalRecordModel.),
-                    //       SizedBox(
-                    //         height: 8,
-                    //       ),
-                    //       Row(
-                    //         crossAxisAlignment: CrossAxisAlignment.center,
-                    //         children: [
-                    //           SizedBox(
-                    //             height: 24,
-                    //             child: Text(
-                    //               'Show more',
-                    //               style: textTheme.bodyMedium?.copyWith(
-                    //                 color: primaryColor,
-                    //               ),
-                    //             ),
-                    //           ),
-                    //           Icon(
-                    //             Icons.keyboard_arrow_down_rounded,
-                    //             color: primaryColor,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-
                     const SizedBox(
                       height: 24,
                     ),
@@ -841,69 +752,9 @@ class _SupervisorDetailClinicalRecordPageState
                                   ),
                                 ),
                               ),
-
-                            // ItemDivider(),
-                            // SizedBox(
-                            //   height: 16,
-                            // ),
-                            // Align(
-                            //   alignment: Alignment.centerLeft,
-                            //   child: Column(
-                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                            //     children: [
-                            //       Text(
-                            //         'Feedback',
-                            //         style: textTheme.bodyLarge?.copyWith(
-                            //           fontWeight: FontWeight.bold,
-                            //         ),
-                            //       ),
-                            //       Container(
-                            //         margin: EdgeInsets.only(left: 4),
-                            //         child: Text(
-                            //           'nice work!!',
-                            //           style: textTheme.bodyMedium,
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
                             const SizedBox(
                               height: 24,
                             ),
-                            // Container(
-                            //   height: 56,
-                            //   width: double.infinity,
-                            //   padding: EdgeInsets.symmetric(horizontal: 12),
-                            //   decoration: BoxDecoration(
-                            //     borderRadius: BorderRadius.circular(12),
-                            //     color: dividerColor,
-                            //   ),
-                            //   child: Row(
-                            //     children: [
-                            //       Expanded(
-                            //         child: TextField(
-                            //           decoration: InputDecoration(
-                            //             hintText: 'Reply',
-                            //             border: OutlineInputBorder(
-                            //               borderSide: BorderSide.none,
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       Container(
-                            //         padding: EdgeInsets.all(4),
-                            //         decoration: BoxDecoration(
-                            //           shape: BoxShape.circle,
-                            //           color: Colors.grey,
-                            //         ),
-                            //         child: Icon(
-                            //           Icons.arrow_upward_rounded,
-                            //           color: Colors.white,
-                            //         ),
-                            //       )
-                            //     ],
-                            //   ),
-                            // ),
                           ],
                         ],
                       ),

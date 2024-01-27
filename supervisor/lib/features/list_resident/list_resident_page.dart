@@ -96,6 +96,10 @@ class _ListResidentPageState extends State<ListResidentPage> {
                                     listStudent.value = [...data];
                                   }
                                 },
+                                onClear: () {
+                                  listStudent.value.clear();
+                                  listStudent.value = [...state.students!];
+                                },
                                 text: '',
                                 hint: 'Search student',
                               ),

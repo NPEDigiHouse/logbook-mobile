@@ -129,17 +129,6 @@ class CoordinatorHomePage extends StatelessWidget {
         ),
       ],
     );
-    // return MainMenu(
-    //   username: credential.fullname ?? '',
-    //   role: 'Coordinator',
-    //   menuItems: <MenuItem>[
-    //     MenuItem(
-    //       isVerification: false,
-    //       name: 'Weekly Grades',
-    //       iconPath: 'exam_filled.svg',
-    //       onTap: () => context.navigateTo(const WeeklyGradePage()),
-    //     ),
-    //   ],
-    // );
+   
   }
 }

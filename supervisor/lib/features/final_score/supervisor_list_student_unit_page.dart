@@ -1,6 +1,7 @@
 import 'package:core/context/navigation_extension.dart';
 import 'package:data/models/supervisors/student_unit_model.dart';
-import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:main/blocs/supervisor_cubit2/supervisors_cubit2.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/inputs/search_field.dart';
 
@@ -18,14 +19,41 @@ class SupervisorListStudentDepartmentPage extends StatefulWidget {
 
 class _SupervisorListStudentDepartmentPageState
     extends State<SupervisorListStudentDepartmentPage> {
-  ValueNotifier<List<StudentDepartmentModel>> listStudent = ValueNotifier([]);
-  bool isMounted = false;
-  bool isLoad = true;
+  late int page;
+  String? query;
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        BlocProvider.of<SupervisorsCubit>(context)..getAllStudentDepartment());
+    _scrollController.addListener(_onScroll);
+    page = 1;
+    Future.microtask(() => BlocProvider.of<SupervisorCubit2>(context)
+        .getAllStudentDepartment(page: page));
+  }
+
+  void _onScroll() {
+    final state = context.read<SupervisorCubit2>().state.state;
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        state != RequestState.loading) {
+      _loadMoreData();
+    }
+  }
+
+  void _loadMoreData() {
+    BlocProvider.of<SupervisorCubit2>(context).getAllStudentDepartment(
+      query: query,
+      page: page + 1,
+      onScroll: true,
+    );
+    page++;
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -38,83 +66,76 @@ class _SupervisorListStudentDepartmentPageState
         child: RefreshIndicator(
           onRefresh: () async {
             await Future.wait([
-              BlocProvider.of<SupervisorsCubit>(context)
-                  .getAllStudentDepartment(),
+              BlocProvider.of<SupervisorCubit2>(context)
+                  .getAllStudentDepartment(page: page, query: query),
             ]);
           },
-          child: ValueListenableBuilder(
-              valueListenable: listStudent,
-              builder: (context, s, _) {
-                return BlocConsumer<SupervisorsCubit, SupervisorsState>(
-                  listener: (context, state) {
-                    if (state is FetchStudentDepartmentSuccess) {
-                      if (!isMounted) {
-                        Future.microtask(() {
-                          listStudent.value = [...state.students];
-                        });
-                        isMounted = true;
-                      }
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is SupervisorLoading) {
-                      return const CustomLoading();
-                    }
-                    if (state is FetchStudentDepartmentSuccess) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: CustomScrollView(
-                          slivers: [
-                            const SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: 16,
-                              ),
-                            ),
-                            SliverToBoxAdapter(
-                              child: SearchField(
-                                onChanged: (value) {
-                                  final data = state.students
-                                      .where((element) => element.studentName!
-                                          .toLowerCase()
-                                          .contains(value.toLowerCase()))
-                                      .toList();
-                                  if (value.isEmpty) {
-                                    listStudent.value.clear();
-                                    listStudent.value = [...state.students];
-                                  } else {
-                                    listStudent.value = [...data];
-                                  }
-                                },
-                                text: '',
-                                hint: 'Search for student',
-                              ),
-                            ),
-                            const SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: 12,
-                              ),
-                            ),
-                            SliverList.separated(
-                              itemCount: s.length,
-                              itemBuilder: (context, index) {
-                                return StudentDepartmentCard(
-                                  data: s[index],
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return const SizedBox(
-                                  height: 12,
-                                );
-                              },
-                            )
-                          ],
-                        ),
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                );
-              }),
+          child: BlocSelector<SupervisorCubit2, SupervisorState2,
+              (List<StudentDepartmentModel>?, RequestState)>(
+            selector: (state) => (state.listData, state.state),
+            builder: (context, state) {
+              final data = state.$1;
+
+              if (data == null || state.$2 == RequestState.loading) {
+                return const CustomLoading();
+              }
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 16,
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: SearchField(
+                        onClear: () {
+                          query = null;
+                          context
+                              .read<SupervisorCubit2>()
+                              .getAllStudentDepartment(
+                                page: page,
+                                query: query,
+                              );
+                        },
+                        onChanged: (value) {
+                          query = value;
+                          context
+                              .read<SupervisorCubit2>()
+                              .getAllStudentDepartment(
+                                page: page,
+                                query: query,
+                              );
+                        },
+                        text: '',
+                        hint: 'Search for student',
+                      ),
+                    ),
+                    const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 12,
+                      ),
+                    ),
+                    SliverList.separated(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        return StudentDepartmentCard(
+                          data: data[index],
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                          height: 12,
+                        );
+                      },
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

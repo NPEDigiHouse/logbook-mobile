@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/unit_cubit/unit_cubit.dart';
 import 'package:main/widgets/custom_alert.dart';
-import 'package:students/features/select_units/widgets/custom_bottom_alert.dart';
 
 class SelectDepartmentCard extends StatelessWidget {
   const SelectDepartmentCard({

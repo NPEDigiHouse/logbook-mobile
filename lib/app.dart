@@ -42,6 +42,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => di.locator<DeleteAccountCubit>()),
         BlocProvider(create: (_) => di.locator<DepartmentCubit>()),
         BlocProvider(create: (_) => di.locator<SupervisorsCubit>()),
+        BlocProvider(create: (_) => di.locator<SupervisorCubit2>()),
         BlocProvider(create: (_) => di.locator<ClinicalRecordCubit>()),
         BlocProvider(create: (_) => di.locator<ScientificSessionCubit>()),
         BlocProvider(create: (_) => di.locator<SelfReflectionCubit>()),

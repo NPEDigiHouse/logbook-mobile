@@ -493,6 +493,17 @@ class _SupervisorHistoryPageState extends State<SupervisorHistoryPage> {
                     child: SearchField(
                       text: '',
                       hint: 'Search Student',
+                      onClear: () {
+                        listData.value.clear();
+                        listData.value = [
+                          ...HistoryHelper.convertHistoryToActivity(
+                              state.histories!, RoleHistory.supervisor, context,
+                              isCeu: widget.isCeu,
+                              isHeadDiv: widget.isKabag,
+                              unitIds: widget.departmentName,
+                              supervisorId: widget.supervisorId)
+                        ];
+                      },
                       onChanged: (value) {
                         final data = state.histories!
                             .where((element) => (element.studentName ?? '')

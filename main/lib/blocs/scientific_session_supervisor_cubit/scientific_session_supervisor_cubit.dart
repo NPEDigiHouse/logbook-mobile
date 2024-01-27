@@ -22,10 +22,6 @@ class ScientificSessionSupervisorCubit
       bool onScroll = false,
       FilterType? type}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
-
       final result = await datasource.getScientificSessionsBySupervisor(
         filterType: type ?? FilterType.unverified,
         page: page,

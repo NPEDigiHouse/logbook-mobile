@@ -383,9 +383,6 @@ class DailyActivityHomeCard extends StatelessWidget {
   void onWeekTab(BuildContext context) {
     bool active = !endDate.isBefore(DateTime.now());
     bool status = activeStatus || active;
-    // if (DateTime.now().isBefore(startDate) && !isSupervisor) {
-    //   return;
-    // }
     context.navigateTo(
       DailyActivityWeekStatusPage(
         da: da,

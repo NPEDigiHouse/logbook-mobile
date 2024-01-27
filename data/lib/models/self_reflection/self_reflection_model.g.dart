@@ -13,6 +13,7 @@ SelfReflectionModel _$SelfReflectionModelFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['latest'] as String),
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
+      unitName: json['unitName'] as String?,
     );
 
 Map<String, dynamic> _$SelfReflectionModelToJson(
@@ -21,4 +22,5 @@ Map<String, dynamic> _$SelfReflectionModelToJson(
       'studentId': instance.studentId,
       'studentName': instance.studentName,
       'latest': instance.latest?.toIso8601String(),
+      'unitName': instance.unitName,
     };

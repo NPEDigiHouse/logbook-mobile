@@ -553,13 +553,6 @@ class PdfHelper {
             ),
           ),
           SizedBox(height: 12),
-          // Text(
-          //   'Notes: Attend ${data?.weeklyAssesment?.assesments} Days, Not Attend 11 Days',
-          //   style: TextStyle(
-          //     fontSize: 14,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
           Table(
               tableWidth: TableWidth.min,
               border: TableBorder.all(width: 1.2),

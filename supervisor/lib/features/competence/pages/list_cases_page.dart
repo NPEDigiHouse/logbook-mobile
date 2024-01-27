@@ -42,11 +42,7 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
 
   @override
   void initState() {
-    // _menuList = [
-    //   'All',
-    //   'Verified',
-    //   'Unverified',
-    // ];
+
 
     Future.microtask(() {
       BlocProvider.of<CompetenceCubit>(context)
