@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "896688723820",
+    "project_id": "elogbook-service-fa5d4",
+    "storage_bucket": "elogbook-service-fa5d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896688723820:android:faf4cd8922d594bd2d4549",
+        "android_client_info": {
+          "package_name": "com.npedigital.elogbook"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtoBmDsdgoNwM8AV3HcIehlpBqMileoSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
