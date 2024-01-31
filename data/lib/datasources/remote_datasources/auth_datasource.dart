@@ -109,9 +109,17 @@ class AuthDataSourceImpl implements AuthDataSource {
       UserToken credential = UserToken.fromJson(dataResponse.data);
       await preferenceHandler.setUserData(credential);
       CredentialSaver.credential = credential;
+      // send notification token
+
+      final token = await preferenceHandler.getFcmToken();
+      await dio.put('${ApiService.baseUrl}/notifications/token',
+          options: await apiHeader.userOptions(),
+          data: {
+            "token": token,
+          });
+
       return const Right(true);
     } catch (e) {
-      print(e.toString());
       return Left(failure(e));
     }
   }

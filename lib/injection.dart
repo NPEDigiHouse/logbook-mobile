@@ -1,5 +1,7 @@
+import 'package:data/datasources/remote_datasources/notification_datasource.dart';
 import 'package:data/services/token_manager.dart';
 import 'package:data/utils/api_header.dart';
+import 'package:data/utils/notification_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:main/main.exports.dart';
 import 'package:data/data.exports.dart';
@@ -77,6 +79,13 @@ void _injectDatasource() {
   );
   locator.registerLazySingleton<SelfReflectionDataSource>(
     () => SelfReflectionDataSourceImpl(
+      tokenInterceptor: locator(),
+      dio: locator(),
+      apiHeader: locator(),
+    ),
+  );
+  locator.registerLazySingleton<NotificationDataSource>(
+    () => NotificationDataSourceImpl(
       tokenInterceptor: locator(),
       dio: locator(),
       apiHeader: locator(),

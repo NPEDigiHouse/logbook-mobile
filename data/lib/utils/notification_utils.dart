@@ -1,7 +1,9 @@
+import 'package:data/data.exports.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationUtils {
-  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  static final FirebaseMessaging _firebaseMessaging =
+      FirebaseMessaging.instance;
 
   static Future<void> configureFirebaseMessaging() async {
     // Set up notification handlers
@@ -15,6 +17,7 @@ class NotificationUtils {
     // Get device token
     try {
       String? token = await _firebaseMessaging.getToken();
+      AuthPreferenceHandler.setFCMToken(token);
       print("FCM Token: $token");
     } catch (e) {
       print("Error getting device token: $e");

@@ -1,4 +1,3 @@
-
 import 'package:data/models/user/user_token.dart';
 import 'package:data/utils/api_header.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +27,20 @@ class AuthPreferenceHandler {
   // Key
   static const accessTokenKey = 'ACCESS_TOKEN';
   static const refreshTokenKey = 'REFRESH_TOKEN';
+  static const fcmTokenKey = 'FCM_TOKEN';
+
+  static Future<bool> setFCMToken(
+    String? fcmToken,
+  ) async {
+    final pr = await SharedPreferences.getInstance();
+    try {
+      print(fcmToken);
+      if (pr.containsKey(fcmTokenKey) || fcmToken == null) return false;
+      return pr.setString(fcmTokenKey, fcmToken);
+    } catch (e) {
+      return false;
+    }
+  }
 
   Future<bool> setUserData(
     UserToken user,
@@ -50,13 +63,28 @@ class AuthPreferenceHandler {
         String accessToken = pr.getString(accessTokenKey) ?? '';
         String refreshToken = pr.getString(refreshTokenKey) ?? '';
         CredentialSaver.credential ??= UserToken(
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-          );
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        );
         return UserToken(
           accessToken: accessToken,
           refreshToken: refreshToken,
         );
+      } else {
+        return null;
+      }
+    } catch (e) {
+      // Handle or log the error as needed
+      return null;
+    }
+  }
+
+  Future<String?> getFcmToken() async {
+    try {
+      final pr = await preferences;
+      if (pr!.containsKey(fcmTokenKey)) {
+        String? fcmToken = pr.getString(fcmTokenKey);
+        return fcmToken;
       } else {
         return null;
       }

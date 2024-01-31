@@ -1,5 +1,6 @@
-import 'package:core/configure/notification_configure.dart';
+
 import 'package:data/utils/api_header.dart';
+import 'package:data/utils/notification_utils.dart';
 import 'package:elogbook/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
