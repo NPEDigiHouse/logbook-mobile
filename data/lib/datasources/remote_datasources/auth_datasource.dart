@@ -140,8 +140,13 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   Future<Either<Failure, void>> logout() async {
     try {
+      await dio.delete(
+        '${ApiService.baseUrl}/notifications/token',
+        options: await apiHeader.userOptions(),
+      );
       await preferenceHandler.removeCredential();
       CredentialSaver.credential = null;
+
       return const Right(true);
     } catch (e) {
       return Left(failure(e));

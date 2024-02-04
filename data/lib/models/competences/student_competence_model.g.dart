@@ -15,6 +15,7 @@ StudentCompetenceModel _$StudentCompetenceModelFromJson(
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
       activeDepartmentName: json['unitName'] as String?,
+      verificationStatus: json['verificationStatus'] as String?,
     );
 
 Map<String, dynamic> _$StudentCompetenceModelToJson(
@@ -24,4 +25,5 @@ Map<String, dynamic> _$StudentCompetenceModelToJson(
       'studentId': instance.studentId,
       'studentName': instance.studentName,
       'unitName': instance.activeDepartmentName,
+      'verificationStatus': instance.verificationStatus,
     };

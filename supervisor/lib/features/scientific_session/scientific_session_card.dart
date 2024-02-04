@@ -18,7 +18,7 @@ class ScientificSessionCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () => context.navigateTo(
-          DetailScientificSessionPage(
+          SupervisorDetailScientificSessionPage(
             id: scientificSession.id!,
             unitName: scientificSession.activeDepartmentName,
           ),

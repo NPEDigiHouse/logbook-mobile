@@ -77,8 +77,10 @@ extension FilledButtonFullWidth on FilledButton {
 
 extension Capitalize on String {
   String toCapitalize() {
+    if (trim().isEmpty) return '';
     return split(' ').map((e) {
-      return '${e.substring(0, 1).toUpperCase()}${e.substring(1, e.length)}';
+      if (e.isEmpty) return ''; // Check if the substring is empty
+      return '${e.substring(0, 1).toUpperCase()}${e.substring(1)}';
     }).join(' ');
   }
 }

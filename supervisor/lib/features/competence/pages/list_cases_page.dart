@@ -1,4 +1,3 @@
-
 import 'package:core/helpers/app_size.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
@@ -42,13 +41,10 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
 
   @override
   void initState() {
-
-
     Future.microtask(() {
-      BlocProvider.of<CompetenceCubit>(context)
-        .getCasesByStudentId(
-          studentId: widget.studentId,
-        );
+      BlocProvider.of<CompetenceCubit>(context).getCasesByStudentId(
+        studentId: widget.studentId,
+      );
     });
 
     _query = ValueNotifier('');
@@ -71,10 +67,9 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
     return BlocConsumer<CompetenceCubit, CompetenceState>(
       listener: (context, state) {
         if (state.isCaseSuccessVerify || state.isAllCasesSuccessVerify) {
-          BlocProvider.of<CompetenceCubit>(context)
-            .getCasesByStudentId(
-              studentId: widget.studentId,
-            );
+          BlocProvider.of<CompetenceCubit>(context).getCasesByStudentId(
+            studentId: widget.studentId,
+          );
           isMounted = false;
         }
         if (state.listCasesModel != null &&
@@ -103,8 +98,8 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
                           builder: (_) => VerifyDialog(
                                 onTap: () {
                                   BlocProvider.of<CompetenceCubit>(context)
-                                    .verifyAllCaseOfStudent(
-                                        studentId: widget.studentId);
+                                      .verifyAllCaseOfStudent(
+                                          studentId: widget.studentId);
                                   Navigator.pop(context);
                                 },
                               ));
@@ -181,7 +176,8 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
                                 ],
                                 if (s.isNotEmpty)
                                   ListView.separated(
-                                    physics: const NeverScrollableScrollPhysics(),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemBuilder: (context, index) =>
                                         TestGradeScoreCard(
@@ -203,7 +199,8 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
                             ),
                           );
                         } else {
-                          return const SliverFillRemaining(child: CustomLoading());
+                          return const SliverFillRemaining(
+                              child: CustomLoading());
                         }
                       },
                     ),

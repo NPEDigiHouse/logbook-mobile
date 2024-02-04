@@ -319,16 +319,27 @@ class _ListStudentTasksViewState extends State<_ListStudentTasksView> {
                     height: 1.2,
                   ),
                 ),
-                Text(
-                  Utils.datetimeToString(student.latest!,
-                      format: 'EEE, dd MMM'),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: primaryTextColor,
-                    height: 1.2,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      Utils.datetimeToString(student.latest!,
+                          format: 'EEE, dd MMM'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: primaryTextColor,
+                        height: 1.2,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    if (student.verificationStatus == 'VERIFIED')
+                      const Icon(
+                        Icons.verified_rounded,
+                        size: 16,
+                        color: primaryColor,
+                      ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Row(

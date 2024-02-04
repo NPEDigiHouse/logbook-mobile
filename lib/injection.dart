@@ -3,6 +3,7 @@ import 'package:data/services/token_manager.dart';
 import 'package:data/utils/api_header.dart';
 import 'package:data/utils/notification_utils.dart';
 import 'package:dio/dio.dart';
+import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 import 'package:main/main.exports.dart';
 import 'package:data/data.exports.dart';
 import 'package:get_it/get_it.dart';
@@ -254,6 +255,11 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => ActivityCubit(
       datasource: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => NotificationCubit(
+      dataSource: locator(),
     ),
   );
   locator.registerFactory(

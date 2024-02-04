@@ -41,6 +41,8 @@ dependencies:
     path: ../students
   pdf: ^3.10.7
   file_saver: ^0.2.9
+  grouped_list: ^5.1.2
+  timeago: ^3.6.1
 
 dev_dependencies:
   flutter_test:

@@ -130,6 +130,7 @@ class _ListStudentCasesPageView extends State<_ListStudentCasesView> {
                 if (data == null || state.$2 == RequestState.loading) {
                   return const CustomLoading();
                 }
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: CustomScrollView(
@@ -181,8 +182,8 @@ class _ListStudentCasesPageView extends State<_ListStudentCasesView> {
                                     ),
                                     side: BorderSide(
                                         color: secondaryColor.withOpacity(.5)),
-                                    label: Text(
-                                        ntf.filterType.name.toCapitalize()),
+                                    label: Text(Utils.capitalizeFirstLetter(
+                                        ntf.filterType.name)),
                                     labelStyle: textTheme.bodyMedium
                                         ?.copyWith(color: primaryColor),
                                     deleteIcon: const Icon(
@@ -215,8 +216,8 @@ class _ListStudentCasesPageView extends State<_ListStudentCasesView> {
                                     ),
                                     side: BorderSide(
                                         color: secondaryColor.withOpacity(.5)),
-                                    label: Text(
-                                        '${ntf.unit?.name.toCapitalize()}'),
+                                    label: Text(Utils.capitalizeFirstLetter(
+                                        ntf.unit?.name)),
                                     labelStyle: textTheme.bodyMedium
                                         ?.copyWith(color: primaryColor),
                                     deleteIcon: const Icon(
@@ -315,16 +316,27 @@ class _ListStudentCasesPageView extends State<_ListStudentCasesView> {
                     height: 1.2,
                   ),
                 ),
-                Text(
-                  Utils.datetimeToString(student.latest!,
-                      format: 'EEE, dd MMM'),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: primaryTextColor,
-                    height: 1.2,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      Utils.datetimeToString(student.latest!,
+                          format: 'EEE, dd MMM'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: primaryTextColor,
+                        height: 1.2,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    if (student.verificationStatus == 'VERIFIED')
+                      const Icon(
+                        Icons.verified_rounded,
+                        size: 16,
+                        color: primaryColor,
+                      ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Row(

@@ -12,11 +12,14 @@ import 'package:main/widgets/verify_dialog.dart';
 import 'package:students/features/self_reflection/create_self_reflection_page.dart';
 
 class StudentSelfReflectionCard extends StatelessWidget {
-  final UserCredential credential;
+  final UserCredential? credential;
+  final bool isFromNotif;
+
   const StudentSelfReflectionCard({
     super.key,
-    required this.credential,
+    this.credential,
     required this.model,
+    this.isFromNotif = false,
   });
 
   final SelfReflectionData model;
@@ -125,6 +128,7 @@ class StudentSelfReflectionCard extends StatelessWidget {
                           credential: credential,
                           id: model.selfReflectionId!,
                           content: model.content,
+                          isFromNotif: isFromNotif,
                         ),
                       );
                       // context.read<SelfReflectionCubit>().updateSelfReflection(id: model.selfReflectionId!, content: model.content??'')

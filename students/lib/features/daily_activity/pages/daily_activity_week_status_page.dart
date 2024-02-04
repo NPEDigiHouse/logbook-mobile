@@ -17,7 +17,7 @@ import 'package:main/widgets/spacing_column.dart';
 import 'package:students/features/daily_activity/pages/create_daily_activity_page.dart';
 
 class DailyActivityWeekStatusPage extends StatefulWidget {
-  final DailyActivity da;
+  final String daId;
   final int weekName;
   final DateTime startDate;
   final DateTime endDate;
@@ -31,7 +31,7 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
     required this.isSupervisor,
     required this.startDate,
     required this.endDate,
-    required this.da,
+    required this.daId,
     this.studentId,
     required this.weekName,
   });
@@ -49,11 +49,11 @@ class _DailyActivityWeekStatusPageState
     if (widget.isSupervisor) {
       BlocProvider.of<DailyActivityCubit>(context)
           .getActivitiesByWeekIdStudentId(
-        weekId: widget.da.dailyActivityId!,
+        weekId: widget.daId,
       );
     } else {
       BlocProvider.of<DailyActivityCubit>(context)
-          .getDailyActivityDays(weekId: widget.da.dailyActivityId!);
+          .getDailyActivityDays(weekId: widget.daId);
     }
   }
 
@@ -65,11 +65,11 @@ class _DailyActivityWeekStatusPageState
           if (widget.isSupervisor) {
             BlocProvider.of<DailyActivityCubit>(context)
                 .getActivitiesByWeekIdStudentId(
-              weekId: widget.da.dailyActivityId!,
+              weekId: widget.daId,
             );
           } else {
             BlocProvider.of<DailyActivityCubit>(context)
-                .getDailyActivityDays(weekId: widget.da.dailyActivityId!);
+                .getDailyActivityDays(weekId: widget.daId);
           }
 
           BlocProvider.of<DailyActivityCubit>(context)
@@ -87,7 +87,7 @@ class _DailyActivityWeekStatusPageState
                       child: const Icon(Icons.add_rounded),
                       onPressed: () {
                         context.navigateTo(CreateDailyActivityPage(
-                          id: widget.da.dailyActivityId ?? '',
+                          id: widget.daId,
                           dayExist: state.activityPerDays?.dayNotExist,
                         ));
                       },
@@ -265,7 +265,7 @@ class _DailyActivityWeekStatusPageState
                                                   'PENDING',
                                       day: data[index].day ?? 'ERR',
                                       dailyActivityId:
-                                          widget.da.dailyActivityId,
+                                          widget.daId,
                                       status: data[index].activityStatus,
                                       detail: data[index].detail,
                                       activity: data[index].activityName,

@@ -3,14 +3,15 @@
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class MainAppBar extends StatelessWidget {
   final bool withLogout;
   final VoidCallback? onTap;
-  const MainAppBar({super.key, this.withLogout = true, this.onTap});
+  final Widget? notifIcon;
+  const MainAppBar(
+      {super.key, this.withLogout = true, this.onTap, this.notifIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -50,20 +51,7 @@ class MainAppBar extends StatelessWidget {
         fontSize: 20,
       ),
       leadingWidth: 56,
-      actions: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 6),
-          child: IconButton(
-            onPressed: () async {},
-            icon: const Icon(
-              CupertinoIcons.bell,
-              color: primaryTextColor,
-              size: 24,
-            ),
-            tooltip: 'Notification',
-          ),
-        ),
-      ],
+      actions: (notifIcon != null) ? <Widget>[notifIcon!] : null,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
         child: Container(

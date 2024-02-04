@@ -21,12 +21,14 @@ import 'widgets/self_reflection_card.dart';
 
 class StudentSelfReflectionHomePage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
-  final UserCredential credential;
+  final UserCredential? credential;
+  final bool isFromNotif;
 
   const StudentSelfReflectionHomePage(
       {super.key,
+      this.isFromNotif = false,
       required this.activeDepartmentModel,
-      required this.credential});
+      this.credential});
 
   @override
   State<StudentSelfReflectionHomePage> createState() =>
@@ -94,9 +96,10 @@ class _StudentSelfReflectionHomePageState
                                     height: 12,
                                   ),
                                   const ItemDivider(),
-                                  if (widget
-                                          .credential.student?.examinerDPKId ==
-                                      null)
+                                  if (widget.credential?.student
+                                              ?.examinerDPKId ==
+                                          null &&
+                                      !widget.isFromNotif)
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
@@ -106,9 +109,10 @@ class _StudentSelfReflectionHomePageState
                                         ),
                                       ),
                                     ),
-                                  if (widget.credential.student
-                                          ?.supervisingDPKId !=
-                                      null)
+                                  if (widget.credential?.student
+                                              ?.supervisingDPKId !=
+                                          null ||
+                                      widget.isFromNotif)
                                     _AddNewSelfReflectionCard(
                                         credential: widget.credential),
                                   Builder(
@@ -137,6 +141,7 @@ class _StudentSelfReflectionHomePageState
                                               itemBuilder: (context, index) =>
                                                   StudentSelfReflectionCard(
                                                 credential: widget.credential,
+                                                isFromNotif: widget.isFromNotif,
                                                 model: state
                                                         .selfReflectionResponse!
                                                         .listSelfReflections![
@@ -179,8 +184,10 @@ class _StudentSelfReflectionHomePageState
 }
 
 class _AddNewSelfReflectionCard extends StatelessWidget {
-  final UserCredential credential;
-  const _AddNewSelfReflectionCard({super.key, required this.credential});
+  final UserCredential? credential;
+  final bool? isFromNotif;
+  const _AddNewSelfReflectionCard(
+      {super.key, this.credential, this.isFromNotif});
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +196,7 @@ class _AddNewSelfReflectionCard extends StatelessWidget {
       onTap: () {
         context.navigateTo(CreateSelfReflectionPage(
           credential: credential,
+          isFromNotif: isFromNotif ?? false,
         ));
       },
       color: primaryColor,

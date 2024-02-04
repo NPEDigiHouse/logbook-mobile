@@ -92,9 +92,11 @@ class HistoryHelper {
       Map<String, HistoryData> types = {
         'SGL': HistoryData(
             name: 'SGL',
-            onTap: () => context.navigateTo(HistorySglPage(
-                  id: element.attachment ?? '',
-                )),
+            onTap: () => context.navigateTo(
+                  HistorySglPage(
+                    id: element.attachment ?? '',
+                  ),
+                ),
             pathIcon: 'diversity_3_rounded.svg'),
         'CST': HistoryData(
             name: 'CST',
@@ -134,7 +136,6 @@ class HistoryHelper {
                 ? context.navigateTo(ListCasesPage(
                     unitName: element.unitName ?? '',
                     unitId: element.unitId ?? '',
-          
                   ))
                 : context.navigateTo(SupervisorListCasesPage(
                     studentName: element.studentName ?? '',
@@ -147,7 +148,6 @@ class HistoryHelper {
                 ? context.navigateTo(ListSkillsPage(
                     unitName: element.unitName ?? '',
                     unitId: element.unitId ?? '',
-            
                   ))
                 : context.navigateTo(SupervisorListSkillsPage(
                     studentName: element.studentName ?? '',

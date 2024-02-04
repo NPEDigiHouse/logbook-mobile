@@ -2,6 +2,7 @@ import 'package:common/features/splash/splash_page.dart';
 import 'package:core/app/app_settings.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/utils/keys.dart';
+import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 import 'package:main/main.exports.dart';
 import 'package:students/features/clinical_record/providers/clinical_record_data_notifier.dart';
 import 'package:supervisor/features/assesment/providers/mini_cex_provider.dart';
@@ -49,6 +50,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => di.locator<CompetenceCubit>()),
         BlocProvider(create: (_) => di.locator<SglCstCubit>()),
         BlocProvider(create: (_) => di.locator<UserCubit>()),
+        BlocProvider(create: (_) => di.locator<NotificationCubit>()),
         BlocProvider(
             create: (_) => di.locator<SelfReflectionSupervisorCubit>()),
         BlocProvider(

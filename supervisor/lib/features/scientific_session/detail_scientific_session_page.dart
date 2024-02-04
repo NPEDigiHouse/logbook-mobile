@@ -14,25 +14,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class DetailScientificSessionPage extends StatefulWidget {
+class SupervisorDetailScientificSessionPage extends StatefulWidget {
   final String id;
   final String? unitName;
-  const DetailScientificSessionPage(
+  const SupervisorDetailScientificSessionPage(
       {super.key, required this.id, this.unitName});
 
   @override
-  State<DetailScientificSessionPage> createState() =>
-      _DetailScientificSessionPageState();
+  State<SupervisorDetailScientificSessionPage> createState() =>
+      _SupervisorDetailScientificSessionPageState();
 }
 
-class _DetailScientificSessionPageState
-    extends State<DetailScientificSessionPage> {
+class _SupervisorDetailScientificSessionPageState
+    extends State<SupervisorDetailScientificSessionPage> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     BlocProvider.of<ScientificSessionSupervisorCubit>(context)
-      .getScientificSessionDetail(id: widget.id);
+        .getScientificSessionDetail(id: widget.id);
   }
 
   @override
@@ -340,8 +340,7 @@ class _DetailScientificSessionPageState
                                 Icons.star,
                                 color: primaryColor,
                               ),
-                              onRatingUpdate: (rating) {
-                              },
+                              onRatingUpdate: (rating) {},
                             ),
                             Text(
                               '"Good"',

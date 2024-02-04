@@ -242,7 +242,7 @@ class DailyActivityHomeCard extends StatelessWidget {
                   width: 4,
                 ),
                 Text(
-                  status.name.toCapitalize(),
+                  Utils.capitalizeFirstLetter(status.name),
                   style: textTheme.bodySmall?.copyWith(
                     color: Colors.white,
                   ),
@@ -385,7 +385,7 @@ class DailyActivityHomeCard extends StatelessWidget {
     bool status = activeStatus || active;
     context.navigateTo(
       DailyActivityWeekStatusPage(
-        da: da,
+        daId: da.dailyActivityId ?? '',
         isSupervisor: isSupervisor,
         weekName: da.weekName!,
         studentId: studentId,

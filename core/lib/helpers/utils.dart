@@ -84,4 +84,29 @@ class Utils {
     Duration interval = end.difference(start);
     return interval.inDays;
   }
+
+  static String capitalizeFirstLetter(String? text) {
+    if (text == null || text.isEmpty) return '';
+
+    // Pisahkan kalimat menjadi array berdasarkan titik, tanda seru, dan tanda tanya
+    List<String> sentences = text.split(RegExp(' '));
+
+    // Kapitalisasi huruf pertama dari setiap kalimat
+    List<String> capitalizedSentences = sentences.map((sentence) {
+      // Bersihkan spasi ekstra di awal kalimat
+      sentence = sentence.trim();
+
+      if (sentence.isNotEmpty) {
+        // Jika panjang kalimat lebih dari satu karakter, maka kapitalisasi huruf pertama
+        return sentence.substring(0, 1).toUpperCase() + sentence.substring(1);
+      } else {
+        return sentence; // Jika kalimat kosong, kembalikan seperti apa adanya
+      }
+    }).toList();
+
+    // Gabungkan kembali kalimat-kalimat yang telah diubah menjadi string
+    String result = capitalizedSentences.join(' ');
+
+    return result;
+  }
 }

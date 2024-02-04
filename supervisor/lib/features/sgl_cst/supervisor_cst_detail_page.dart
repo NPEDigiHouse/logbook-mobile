@@ -1,11 +1,9 @@
 import 'package:core/helpers/app_size.dart';
-import 'package:core/helpers/asset_path.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';

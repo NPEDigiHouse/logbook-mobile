@@ -1,9 +1,12 @@
+import 'package:common/features/notification/notification_page.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/datasources/local_datasources/static_datasource.dart';
 import 'package:data/models/user/user_credential.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 import 'package:main/blocs/profile_cubit/profile_cubit.dart';
 import 'package:main/widgets/grid_menu_row.dart';
 import 'package:main/widgets/list_menu_column.dart';
@@ -38,8 +41,11 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<UserCubit>(context).getProfilePic();
 
+    Future.microtask(() {
+      BlocProvider.of<UserCubit>(context).getProfilePic();
+      BlocProvider.of<NotificationCubit>(context).getNotifications(page: 1);
+    });
     _isList = ValueNotifier(false);
   }
 
@@ -54,8 +60,32 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: <Widget>[
-        const MainAppBar(
-          withLogout: false,
+        MainAppBar(
+          notifIcon: BlocSelector<NotificationCubit, NotificationState, int>(
+            selector: (state) => state.unreadNotification,
+            builder: (context, state) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: Badge(
+                  alignment: Alignment.topRight,
+                  offset: const Offset(-6, 6),
+                  label: Text(state.toString()),
+                  isLabelVisible: state > 0,
+                  child: IconButton(
+                    onPressed: () => context.navigateTo(
+                      const NotificationPage(role: NotificationRole.supervisor),
+                    ),
+                    icon: const Icon(
+                      CupertinoIcons.bell,
+                      color: primaryTextColor,
+                      size: 24,
+                    ),
+                    tooltip: 'Notification',
+                  ),
+                ),
+              );
+            },
+          ),
         ),
         SliverFillRemaining(
           child: SingleChildScrollView(

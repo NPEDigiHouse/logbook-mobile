@@ -1,4 +1,5 @@
 import 'package:core/context/navigation_extension.dart';
+import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/units/unit_model.dart';
@@ -162,7 +163,7 @@ class _BuildViewState extends State<_BuildView> {
               items: types
                   .map((e) => DropdownMenuItem(
                         value: e,
-                        child: Text(e.name.toCapitalize()),
+                        child: Text(Utils.capitalizeFirstLetter(e.name)),
                       ))
                   .toList(),
               onChanged: (value) {
@@ -179,7 +180,7 @@ class _BuildViewState extends State<_BuildView> {
               items: widget.departments
                   .map((e) => DropdownMenuItem(
                         value: e,
-                        child: Text(e.name.toCapitalize()),
+                        child: Text(Utils.capitalizeFirstLetter(e.name)),
                       ))
                   .toList(),
               onChanged: (value) {

@@ -1,10 +1,13 @@
-import 'package:coordinator/features/daily_activity/daily_activity_page.dart';
+import 'package:common/features/notification/notification_page.dart';
 import 'package:coordinator/features/daily_activity/daily_activity_student_page.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/models/user/user_credential.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 import 'package:main/widgets/main_app_bar.dart';
 import 'package:main/widgets/main_menu.dart';
 import 'package:main/widgets/spacing_column.dart';
@@ -22,7 +25,34 @@ class CoordinatorHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        const MainAppBar(),
+        MainAppBar(
+          notifIcon: BlocSelector<NotificationCubit, NotificationState, int>(
+            selector: (state) => state.unreadNotification,
+            builder: (context, state) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: Badge(
+                  alignment: Alignment.topRight,
+                  offset: const Offset(-6, 6),
+                  label: Text(state.toString()),
+                  isLabelVisible: state > 0,
+                  child: IconButton(
+                    onPressed: () => context.navigateTo(
+                      const NotificationPage(
+                          role: NotificationRole.coordinator),
+                    ),
+                    icon: const Icon(
+                      CupertinoIcons.bell,
+                      color: primaryTextColor,
+                      size: 24,
+                    ),
+                    tooltip: 'Notification',
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
         SliverFillRemaining(
           child: SingleChildScrollView(
             child: SpacingColumn(
@@ -129,6 +159,5 @@ class CoordinatorHomePage extends StatelessWidget {
         ),
       ],
     );
-   
   }
 }

@@ -13,11 +13,17 @@ import 'package:main/widgets/spacing_column.dart';
 import 'package:main/widgets/verify_dialog.dart';
 
 class CreateSelfReflectionPage extends StatefulWidget {
-  final UserCredential credential;
+  final UserCredential? credential;
   final String? content;
   final String? id;
+  final bool isFromNotif;
+
   const CreateSelfReflectionPage(
-      {super.key, required this.credential, this.content, this.id});
+      {super.key,
+      this.credential,
+      this.content,
+      this.id,
+      this.isFromNotif = false});
 
   @override
   State<CreateSelfReflectionPage> createState() =>
@@ -63,7 +69,7 @@ class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
                     const SizedBox(
                       height: 16,
                     ),
-                    if (widget.credential.student?.supervisingDPKId == null)
+                    if (widget.credential?.student?.supervisingDPKId == null && !widget.isFromNotif)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -73,8 +79,8 @@ class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
                           ),
                         ),
                       ),
-                    if (widget.credential.student?.supervisingDPKId !=
-                        null) ...[
+                    if (widget.credential?.student?.supervisingDPKId !=
+                        null || widget.isFromNotif) ...[
                       TextFormField(
                         minLines: 7,
                         maxLines: 7,

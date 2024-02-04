@@ -1,3 +1,4 @@
+import 'package:common/features/notification/notification_page.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/helpers/asset_path.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 import 'package:main/blocs/unit_cubit/unit_cubit.dart';
 import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/glassmorphism.dart';
@@ -48,9 +50,11 @@ class _StudentHomePageState extends State<StudentHomePage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        BlocProvider.of<DepartmentCubit>(context, listen: false)
-          ..getActiveDepartment());
+    Future.microtask(() {
+      BlocProvider.of<DepartmentCubit>(context, listen: false)
+          .getActiveDepartment();
+      BlocProvider.of<NotificationCubit>(context).getNotifications(page: 1);
+    });
     _isList = ValueNotifier(false);
   }
 
@@ -120,14 +124,42 @@ class _StudentHomePageState extends State<StudentHomePage> {
     final unitCubit = context.watch<DepartmentCubit>().state;
     return RefreshIndicator(
       onRefresh: () => Future.wait([
-        Future.microtask(() =>
-            BlocProvider.of<DepartmentCubit>(context, listen: false)
-              ..getActiveDepartment())
+        Future.microtask(() {
+          BlocProvider.of<DepartmentCubit>(context, listen: false)
+              .getActiveDepartment();
+          BlocProvider.of<NotificationCubit>(context).getNotifications(page: 1);
+        })
       ]),
       child: CustomScrollView(
         slivers: <Widget>[
           MainAppBar(
-              withLogout: false,
+              notifIcon:
+                  BlocSelector<NotificationCubit, NotificationState, int>(
+                selector: (state) => state.unreadNotification,
+                builder: (context, state) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Badge(
+                      alignment: Alignment.topRight,
+                      offset: const Offset(-6, 6),
+                      label: Text(state.toString()),
+                      isLabelVisible: state > 0,
+                      child: IconButton(
+                        onPressed: () => context.navigateTo(
+                          const NotificationPage(
+                              role: NotificationRole.student),
+                        ),
+                        icon: const Icon(
+                          CupertinoIcons.bell,
+                          color: primaryTextColor,
+                          size: 24,
+                        ),
+                        tooltip: 'Notification',
+                      ),
+                    ),
+                  );
+                },
+              ),
               onTap: () {
                 BlocProvider.of<DepartmentCubit>(context, listen: false)
                     .getActiveDepartment();
