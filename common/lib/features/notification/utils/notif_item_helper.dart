@@ -2,19 +2,19 @@ import 'package:common/features/notification/notification_page.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:data/models/notification/notification_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 import 'package:students/features/assesment/pages/mini_cex/student_test_grade_page.dart';
 import 'package:students/features/assesment/pages/personal_behavior/student_personal_behavior_page.dart';
 import 'package:students/features/assesment/pages/scientific_assigment/student_scientific_assignment_page.dart';
 import 'package:students/features/clinical_record/pages/detail_clinical_record_page.dart';
 import 'package:students/features/competences/list_cases_page.dart';
 import 'package:students/features/competences/list_skills_page.dart';
-import 'package:students/features/daily_activity/pages/daily_activity_week_status_page.dart';
 import 'package:students/features/scientific_session/detail_scientific_session_page.dart';
 import 'package:students/features/self_reflection/self_reflection_home_page.dart';
 import 'package:students/features/sgl_cst/list_cst_page.dart';
-import 'package:students/features/sgl_cst/list_done_cst_page.dart';
-import 'package:students/features/sgl_cst/list_done_sgl_page.dart';
 import 'package:students/features/sgl_cst/list_sgl_page.dart';
+import 'package:students/features/special_reports/special_report_home_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_mini_cex_detail_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_personal_behavior_detail_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_scientific_assignment_detail_page.dart';
@@ -26,25 +26,7 @@ import 'package:supervisor/features/scientific_session/detail_scientific_session
 import 'package:supervisor/features/self_reflection/self_reflection_student_page.dart';
 import 'package:supervisor/features/sgl_cst/supervisor_cst_detail_page.dart';
 import 'package:supervisor/features/sgl_cst/supervisor_sgl_detail_page.dart';
-
-enum ActivityType {
-  sgl,
-  cst,
-  clinicalRecord,
-  scientificSession,
-  personalBehavior,
-  problemConsultation,
-  skills,
-  cases,
-  finalScore,
-  weeklyAssessment,
-  dailyActivity,
-  miniCex,
-  scientificAssignment,
-  checkIn,
-  checkOut,
-  selfReflection,
-}
+import 'package:supervisor/features/special_report/special_report_home_page.dart';
 
 class NotifData {
   final String name;
@@ -96,6 +78,9 @@ class NotifiItemHelper {
     }
   }
 
+  static Map<ActivityType, String> getActivityTypeReverse = getActivityType.map(
+      (key, value) => MapEntry(value, key.replaceAll("_", " ").toUpperCase()));
+
   static Map<String, ActivityType> getActivityType = {
     "SGL": ActivityType.sgl,
     "CST": ActivityType.cst,
@@ -104,8 +89,8 @@ class NotifiItemHelper {
     "SELF_REFLECTION": ActivityType.selfReflection,
     "CASE": ActivityType.cases,
     "SKILL": ActivityType.skills,
-    "OSCE": ActivityType.finalScore, // Tipe yang sama dengan "SKILL"?
-    "CBT": ActivityType.finalScore, // Tipe yang sama dengan "SKILL"?
+    "OSCE": ActivityType.osce, // Tipe yang sama dengan "SKILL"?
+    "CBT": ActivityType.cbt, // Tipe yang sama dengan "SKILL"?
     "FINAL_SCORE": ActivityType.finalScore,
     "MINI_CEX": ActivityType.miniCex,
     "PERSONAL_BEHAVIOUR": ActivityType.personalBehavior,
@@ -115,8 +100,8 @@ class NotifiItemHelper {
     "PROBLEM_CONSULTATION": ActivityType.problemConsultation,
     "CHECK_IN": ActivityType.checkIn,
     "CHECK_OUT": ActivityType.checkOut,
-    "CEU_SGL": ActivityType.sgl, // Tipe yang sama dengan "SGL"?
-    "CEU_CST": ActivityType.cst, // Tipe yang sama dengan "CST"?
+    "CEU_SGL": ActivityType.ceuSgl, // Tipe yang sama dengan "SGL"?
+    "CEU_CST": ActivityType.ceuCst, // Tipe yang sama dengan "CST"?
     "DAILY_ACTIVITY": ActivityType.dailyActivity,
   };
   static Map<ActivityType, NotifData> getNotifData(BuildContext context,
@@ -125,6 +110,11 @@ class NotifiItemHelper {
         ActivityType.sgl: NotifData(
             name: 'SGL',
             onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
               //supervisor
               if (role == NotificationRole.supervisor) {
                 context.navigateTo(SupervisorSglDetailPage(
@@ -147,6 +137,11 @@ class NotifiItemHelper {
         ActivityType.cst: NotifData(
             name: 'CST',
             onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
               //supervisor
               if (role == NotificationRole.supervisor) {
                 context.navigateTo(SupervisorCstDetailPage(
@@ -169,6 +164,11 @@ class NotifiItemHelper {
         ActivityType.clinicalRecord: NotifData(
             name: 'Clinical Record',
             onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
               //supervisor
               if (role == NotificationRole.supervisor) {
                 context.navigateTo(SupervisorDetailClinicalRecordPage(
@@ -190,6 +190,11 @@ class NotifiItemHelper {
         ActivityType.scientificSession: NotifData(
             name: 'Scientific Session',
             onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
               //supervisor
               if (role == NotificationRole.supervisor) {
                 context.navigateTo(
@@ -212,6 +217,11 @@ class NotifiItemHelper {
         ActivityType.selfReflection: NotifData(
             name: 'Self Reflection',
             onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
               //supervisor
               if (role == NotificationRole.supervisor) {
                 context.navigateTo(SupervisorSelfReflectionStudentPage(
@@ -234,6 +244,11 @@ class NotifiItemHelper {
         ActivityType.cases: NotifData(
             name: 'CASE',
             onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
               //supervisor
               if (role == NotificationRole.supervisor) {
                 context.navigateTo(
@@ -258,6 +273,11 @@ class NotifiItemHelper {
         ActivityType.skills: NotifData(
             name: 'SKILL',
             onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
               //supervisor
               if (role == NotificationRole.supervisor) {
                 context.navigateTo(
@@ -282,6 +302,11 @@ class NotifiItemHelper {
         ActivityType.miniCex: NotifData(
             name: 'Mini Cex',
             onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
               //supervisor
               if (role == NotificationRole.supervisor) {
                 context.navigateTo(SupervisorMiniCexDetailPage(
@@ -301,6 +326,11 @@ class NotifiItemHelper {
         ActivityType.personalBehavior: NotifData(
           name: 'Personal Behavior',
           onTap: () {
+            Future.microtask(() {
+              context
+                  .read<NotificationCubit>()
+                  .readNotification(id: notification.id ?? '');
+            });
             //supervisor
             if (role == NotificationRole.supervisor) {
               context.navigateTo(SupervisorPersonalBehaviorDetailPage(
@@ -318,6 +348,11 @@ class NotifiItemHelper {
         ActivityType.scientificAssignment: NotifData(
             name: 'Scientific Assesment',
             onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
               //supervisor
               if (role == NotificationRole.supervisor) {
                 context.navigateTo(SupervisorScientificAssignmentDetailPage(
@@ -336,21 +371,67 @@ class NotifiItemHelper {
             pathIcon: 'icon_scientific_assignment.svg'),
         ActivityType.problemConsultation: NotifData(
             name: 'Problem Consultation',
-            onTap: () {},
+            onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
+              //supervisor
+              if (role == NotificationRole.supervisor) {
+                context.navigateTo(SpecialReportDetailPage(
+                  studentId: notification.senderActorId ?? '',
+                ));
+              }
+              //student
+              if (role == NotificationRole.student) {
+                if (notification.unit != null) {
+                  context.navigateTo(SpecialReportHomePage(
+                    activeDepartmentModel: notification.unit!,
+                    isFromNotif: true,
+                  ));
+                }
+              }
+            },
             pathIcon: 'consultation_icon.svg'),
         ActivityType.checkIn: NotifData(
             name: 'CHECK-IN',
-            onTap: () {},
+            onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
+            },
             pathIcon: 'wifi_protected_setup_rounded.svg'),
         ActivityType.checkOut: NotifData(
             name: 'CHECK-OUT',
-            onTap: () {},
+            onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
+            },
             pathIcon: 'wifi_protected_setup_rounded.svg'),
         ActivityType.finalScore: NotifData(
-            name: 'Final Score', onTap: () {}, pathIcon: 'feed_rounded.svg'),
+            name: 'Final Score',
+            onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
+            },
+            pathIcon: 'feed_rounded.svg'),
         ActivityType.dailyActivity: NotifData(
             name: 'Daily Activity',
             onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
               //supervisor
               if (role == NotificationRole.supervisor) {
                 context.navigateTo(SupervisorDailyActivityDetailPage(
@@ -368,7 +449,13 @@ class NotifiItemHelper {
             pathIcon: 'summarize_rounded.svg'),
         ActivityType.weeklyAssessment: NotifData(
             name: 'Weekly Assesment',
-            onTap: () {},
+            onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
+            },
             pathIcon: 'icon_weekly.svg'),
       };
 }

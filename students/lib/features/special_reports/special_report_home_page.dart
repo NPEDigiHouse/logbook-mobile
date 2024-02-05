@@ -15,12 +15,15 @@ import 'widgets/special_report_card.dart';
 
 class SpecialReportHomePage extends StatefulWidget {
   final ActiveDepartmentModel activeDepartmentModel;
-  final UserCredential credential;
+  final UserCredential? credential;
+  final bool isFromNotif;
 
-  const SpecialReportHomePage(
-      {super.key,
-      required this.activeDepartmentModel,
-      required this.credential});
+  const SpecialReportHomePage({
+    super.key,
+    required this.activeDepartmentModel,
+    this.credential,
+    this.isFromNotif = false,
+  });
 
   @override
   State<SpecialReportHomePage> createState() => _SpecialReportHomePageState();
@@ -72,8 +75,9 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                           const SizedBox(
                             height: 12,
                           ),
-                          if (widget.credential.student?.supervisingDPKId ==
-                              null)
+                          if (widget.credential?.student?.supervisingDPKId ==
+                                  null &&
+                              !widget.isFromNotif)
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
@@ -83,8 +87,9 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                                 ),
                               ),
                             ),
-                          if (widget.credential.student?.supervisingDPKId !=
-                              null)
+                          if (widget.credential?.student?.supervisingDPKId !=
+                                  null ||
+                              widget.isFromNotif)
                             const AddNewConsultationCard(),
                           BlocBuilder<SpecialReportCubit, SpecialReportState>(
                             builder: (context, state) {

@@ -7,11 +7,18 @@ import 'package:data/utils/data_response.dart';
 import 'package:data/utils/exception_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:data/utils/failure.dart';
+import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 
 abstract class NotificationDataSource {
-  Future<Either<Failure, List<NotificationModel>>> getNotifications(
-      {String? query, required int page, String? unitId, bool? isUnread});
-  Future<Either<bool, Failure>> deleteNotification(List<String> ids);
+  Future<Either<Failure, List<NotificationModel>>> getNotifications({
+    String? query,
+    required int page,
+    String? unitId,
+    bool? isUnread,
+    ActivityType? activityType,
+  });
+  Future<Either<Failure, bool>> deleteNotification(List<String> ids);
+  Future<Either<Failure, bool>> readNotification({required String id});
 }
 
 class NotificationDataSourceImpl extends NotificationDataSource {
@@ -27,16 +34,22 @@ class NotificationDataSourceImpl extends NotificationDataSource {
   }
 
   @override
-  Future<Either<Failure, List<NotificationModel>>> getNotifications(
-      {String? query,
-      required int page,
-      String? unitId,
-      bool? isUnread}) async {
+  Future<Either<Failure, List<NotificationModel>>> getNotifications({
+    String? query,
+    required int page,
+    String? unitId,
+    bool? isUnread,
+    ActivityType? activityType,
+  }) async {
     try {
-      final response = await dio.get(
-        '${ApiService.baseUrl}/notifications',
-        options: await apiHeader.userOptions(),
-      );
+      final response = await dio.get('${ApiService.baseUrl}/notifications',
+          options: await apiHeader.userOptions(),
+          queryParameters: {
+            if (isUnread != null) "isUnread": isUnread,
+            if (query != null) "query": query,
+            if (activityType != null) "submissionType": activityType,
+            if (unitId != null) "unit": unitId,
+          });
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<NotificationModel> listData =
           dataResponse.data.map((e) => NotificationModel.fromJson(e)).toList();
@@ -47,8 +60,21 @@ class NotificationDataSourceImpl extends NotificationDataSource {
   }
 
   @override
-  Future<Either<bool, Failure>> deleteNotification(List<String> ids) async {
+  Future<Either<Failure, bool>> deleteNotification(List<String> ids) async {
     // TODO: implement deleteNotification
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, bool>> readNotification({required String id}) async {
+    try {
+      await dio.put(
+        '${ApiService.baseUrl}/notifications/read/$id',
+        options: await apiHeader.userOptions(),
+      );
+      return const Right(true);
+    } catch (e) {
+      throw failure(e);
+    }
   }
 }

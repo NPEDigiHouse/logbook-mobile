@@ -91,7 +91,8 @@ class _StudentSelfReflectionHomePageState
                                 children: [
                                   DepartmentHeader(
                                       unitName: widget
-                                          .activeDepartmentModel.unitName!),
+                                              .activeDepartmentModel.unitName ??
+                                          ''),
                                   const SizedBox(
                                     height: 12,
                                   ),

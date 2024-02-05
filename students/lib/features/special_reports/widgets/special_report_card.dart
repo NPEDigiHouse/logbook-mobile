@@ -12,6 +12,7 @@ import 'package:students/features/special_reports/create_special_report_page.dar
 class SpecialReportCard extends StatelessWidget {
   final int index;
   final ListProblemConsultation data;
+  
   const SpecialReportCard({super.key, required this.index, required this.data});
 
   @override

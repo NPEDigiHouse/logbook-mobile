@@ -11,23 +11,39 @@ class NotificationCubit extends Cubit<NotificationState> {
     getNotifications(page: 1);
   }
 
-  Future<void> getNotifications(
-      {String? query,
-      required int page,
-      String? unitId,
-      bool? isUnread}) async {
+  Future<void> readNotification({required String id}) async {
+    try {
+      await dataSource.readNotification(id: id);
+      emit(state.copyWith(isReadNotification: true));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          fetchState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getNotifications({
+    String? query,
+    required int page,
+    String? unitId,
+    bool? isUnread,
+    ActivityType? activityType,
+  }) async {
     try {
       emit(state.copyWith(
         fetchState: RequestState.loading,
       ));
 
       final result = await dataSource.getNotifications(
-          unitId: unitId, page: page, isUnread: isUnread, query: query);
+          unitId: unitId, page: page, isUnread: isUnread, query: query, activityType: activityType);
       result.fold(
           (l) => emit(state.copyWith(fetchState: RequestState.error)),
           (r) => emit(state.copyWith(
                 notification: r,
                 fetchState: RequestState.data,
+                isReadNotification: false,
               )));
     } catch (e) {
       emit(

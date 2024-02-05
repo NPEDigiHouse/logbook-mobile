@@ -7,6 +7,7 @@ import 'package:core/styles/text_style.dart';
 import 'package:data/models/notification/notification_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 
 class NotificationCard extends StatelessWidget {
   final ActivityType activityType;
@@ -58,7 +59,7 @@ class NotificationCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     RichText(
-                      maxLines: 2,
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
                         style: textTheme.bodyMedium
