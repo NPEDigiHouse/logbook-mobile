@@ -337,7 +337,8 @@ class _BuildView2State extends State<_BuildView2> {
         });
       }
       context.read<FilterNotifier>().setActivityType = widget.filterType;
-      context.read<FilterNotifier>().setUnreadOnlyStatus = widget.isUnreadOnly;
+      context.read<FilterNotifier>().setUnreadOnlyStatus =
+          widget.isUnreadOnly ?? false;
     });
   }
 
@@ -420,10 +421,11 @@ class _BuildView2State extends State<_BuildView2> {
               value: ctf.unit,
             ),
             CheckboxListTile(
-              value: ctf.isUnreadOnly ?? false,
+              value: ctf.isUnreadOnly,
               title: const Text('Show Unread Only'),
               onChanged: (value) {
-                context.read<FilterNotifier>().setUnreadOnlyStatus = value;
+                context.read<FilterNotifier>().setUnreadOnlyStatus =
+                    value ?? false;
               },
             ),
             const SizedBox(
@@ -444,7 +446,7 @@ class _BuildView2State extends State<_BuildView2> {
                             borderRadius: BorderRadius.circular(100)),
                       ),
                       onPressed: () {
-                        widget.onTap(null, null, null);
+                        widget.onTap(null, null, false);
                       },
                       child: const Text('Reset'),
                     ),

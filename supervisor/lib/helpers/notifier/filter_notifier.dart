@@ -18,9 +18,9 @@ class FilterNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  bool? _isUnreadOnly;
-  bool? get isUnreadOnly => _isUnreadOnly;
-  set setUnreadOnlyStatus(bool? isUnreadOnly) {
+  bool _isUnreadOnly = false;
+  bool get isUnreadOnly => _isUnreadOnly;
+  set setUnreadOnlyStatus(bool isUnreadOnly) {
     _isUnreadOnly = isUnreadOnly;
     notifyListeners();
   }
@@ -31,4 +31,7 @@ class FilterNotifier with ChangeNotifier {
     _unit = unit;
     notifyListeners();
   }
+
+  bool get isActive =>
+      _activityType != null || _isUnreadOnly == true || _unit != null;
 }

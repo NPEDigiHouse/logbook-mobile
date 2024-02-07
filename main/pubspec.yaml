@@ -28,6 +28,7 @@ dependencies:
   file_saver: ^0.2.8
   flutter_switch: ^0.3.2
   countup: ^0.1.4
+  geolocator: ^7.6.2
 
   # modul
   data:

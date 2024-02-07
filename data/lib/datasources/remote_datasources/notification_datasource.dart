@@ -15,7 +15,7 @@ abstract class NotificationDataSource {
     required int page,
     String? unitId,
     bool? isUnread,
-    ActivityType? activityType,
+    String? activityType,
   });
   Future<Either<Failure, bool>> deleteNotification(List<String> ids);
   Future<Either<Failure, bool>> readNotification({required String id});
@@ -39,7 +39,7 @@ class NotificationDataSourceImpl extends NotificationDataSource {
     required int page,
     String? unitId,
     bool? isUnread,
-    ActivityType? activityType,
+    String? activityType,
   }) async {
     try {
       final response = await dio.get('${ApiService.baseUrl}/notifications',

@@ -162,7 +162,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                                       height: 8,
                                     ),
                                     Text(
-                                      '${state.studentDailyActivity?.inprocessDailyActivity}',
+                                      '${state.studentDailyActivity?.inprocessDailyActivity ?? '...'}',
                                       style: textTheme.titleMedium?.copyWith(
                                         fontWeight: FontWeight.bold,
                                         height: 1,
@@ -206,7 +206,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                                       height: 8,
                                     ),
                                     Text(
-                                      '${state.studentDailyActivity?.verifiedDailyActivity}',
+                                      '${state.studentDailyActivity?.verifiedDailyActivity ?? '...'}',
                                       style: textTheme.titleMedium?.copyWith(
                                         fontWeight: FontWeight.bold,
                                         height: 1,

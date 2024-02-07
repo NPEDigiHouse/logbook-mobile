@@ -78,8 +78,9 @@ class NotifiItemHelper {
     }
   }
 
-  static Map<ActivityType, String> getActivityTypeReverse = getActivityType.map(
-      (key, value) => MapEntry(value, key.replaceAll("_", " ").toUpperCase()));
+  static Map<ActivityType, String> getActivityTypeReverse =
+      Map<String, ActivityType>.from(getActivityType)
+          .map((key, value) => MapEntry(value, key));
 
   static Map<String, ActivityType> getActivityType = {
     "SGL": ActivityType.sgl,

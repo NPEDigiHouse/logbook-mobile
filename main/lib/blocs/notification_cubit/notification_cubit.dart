@@ -29,15 +29,22 @@ class NotificationCubit extends Cubit<NotificationState> {
     required int page,
     String? unitId,
     bool? isUnread,
-    ActivityType? activityType,
+    String? activityType,
+    bool withLoading = true,
   }) async {
     try {
-      emit(state.copyWith(
-        fetchState: RequestState.loading,
-      ));
+      if (withLoading) {
+        emit(state.copyWith(
+          fetchState: RequestState.loading,
+        ));
+      }
 
       final result = await dataSource.getNotifications(
-          unitId: unitId, page: page, isUnread: isUnread, query: query, activityType: activityType);
+          unitId: unitId,
+          page: page,
+          isUnread: isUnread,
+          query: query,
+          activityType: activityType);
       result.fold(
           (l) => emit(state.copyWith(fetchState: RequestState.error)),
           (r) => emit(state.copyWith(
