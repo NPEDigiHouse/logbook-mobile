@@ -4,12 +4,14 @@ import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/supervisors/supervisor_student_model.dart';
 import 'package:data/models/user/user_credential.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
 import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/custom_shimmer.dart';
+import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/inputs/search_field.dart';
 
@@ -28,6 +30,8 @@ class _SupervisorAssesmentStudentPageState
     extends State<SupervisorAssesmentStudentPage> {
   ValueNotifier<List<SupervisorStudent>> listData = ValueNotifier([]);
   bool isMounted = false;
+  ValueNotifier<bool> isSearchExpand = ValueNotifier(false);
+
   @override
   void initState() {
     super.initState();
@@ -37,92 +41,180 @@ class _SupervisorAssesmentStudentPageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Assesment'),
-      ).variant(),
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            isMounted = false;
-            await Future.wait(
-                [BlocProvider.of<StudentCubit>(context).getAllStudents()]);
-          },
-          child: ValueListenableBuilder(
-              valueListenable: listData,
-              builder: (context, s, _) {
-                return BlocConsumer<StudentCubit, StudentState>(
-                  listener: (context, state) {
-                    if (state.students != null) {
-                      if (!isMounted) {
-                        Future.microtask(() {
-                          listData.value = [...state.students!];
-                        });
-                        isMounted = true;
-                      }
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state.students != null) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: CustomScrollView(
-                          slivers: [
-                            const SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: 16,
-                              ),
-                            ),
-                            SliverToBoxAdapter(
-                              child: SearchField(
-                                onChanged: (value) {
-                                  final data = state.students!
-                                      .where((element) => element.studentName!
-                                          .toLowerCase()
-                                          .contains(value.toLowerCase()))
-                                      .toList();
-                                  if (value.isEmpty) {
-                                    listData.value.clear();
-                                    listData.value = [...state.students!];
-                                  } else {
-                                    listData.value = [...data];
-                                  }
-                                },
-                                onClear: () {
-                                  listData.value.clear();
-                                  listData.value = [...state.students!];
-                                },
-                                text: '',
-                                hint: 'Search student',
-                              ),
-                            ),
-                            const SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: 16,
-                              ),
-                            ),
-                            SliverList.separated(
-                              itemCount: s.length,
-                              itemBuilder: (context, index) {
-                                return _buildStudentCard(context, s[index]);
-                              },
-                              separatorBuilder: (context, index) {
-                                return const SizedBox(
-                                  height: 12,
-                                );
-                              },
-                            )
-                          ],
-                        ),
+    return ValueListenableBuilder(
+        valueListenable: listData,
+        builder: (context, s, _) {
+          return BlocConsumer<StudentCubit, StudentState>(
+              listener: (context, state) {
+            if (state.students != null) {
+              if (!isMounted) {
+                Future.microtask(() {
+                  listData.value = [...state.students!];
+                });
+                isMounted = true;
+              }
+            }
+          }, builder: (context, state) {
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Assesment'),
+                actions: [
+                  ValueListenableBuilder(
+                    valueListenable: isSearchExpand,
+                    builder: (context, value, child) {
+                      return Stack(
+                        children: [
+                          if (value)
+                            Positioned(
+                                right: 10,
+                                top: 10,
+                                child: Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.red),
+                                )),
+                          IconButton(
+                            onPressed: () {
+                              isSearchExpand.value = !value;
+
+                              listData.value.clear();
+                              listData.value = [...state.students!];
+                            },
+                            icon: const Icon(CupertinoIcons.search),
+                          ),
+                        ],
                       );
+                    },
+                  ),
+                ],
+              ).variant(),
+              body: SafeArea(
+                child: RefreshIndicator(onRefresh: () async {
+                  isMounted = false;
+                  await Future.wait([
+                    BlocProvider.of<StudentCubit>(context).getAllStudents()
+                  ]);
+                }, child: Builder(
+                  builder: (context) {
+                    if (state.students == null) {
+                      return const CustomLoading();
                     }
-                    return const CustomLoading();
+                    return ValueListenableBuilder(
+                        valueListenable: isSearchExpand,
+                        builder: (context, status, _) {
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Positioned.fill(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Builder(builder: (context) {
+                                    if (s.isEmpty) {
+                                      return const EmptyData(
+                                          title: 'No Assessment Submitted',
+                                          subtitle:
+                                              'wait for submission from students');
+                                    }
+                                    return CustomScrollView(
+                                      slivers: [
+                                        if (status)
+                                          const SliverToBoxAdapter(
+                                            child: SizedBox(
+                                              height: 82,
+                                            ),
+                                          ),
+                                        const SliverToBoxAdapter(
+                                          child: SizedBox(
+                                            height: 16,
+                                          ),
+                                        ),
+                                        SliverList.separated(
+                                          itemCount: s.length,
+                                          itemBuilder: (context, index) {
+                                            return _buildStudentCard(
+                                                context, s[index]);
+                                          },
+                                          separatorBuilder: (context, index) {
+                                            return const SizedBox(
+                                              height: 12,
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  }),
+                                ),
+                              ),
+                              if (status)
+                                Column(
+                                  children: [
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                          color: scaffoldBackgroundColor,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                offset: Offset(0, 2),
+                                                color: Colors.black12,
+                                                blurRadius: 12,
+                                                spreadRadius: 4)
+                                          ]),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20),
+                                            child: SearchField(
+                                              onChanged: (value) {
+                                                final data = state.students!
+                                                    .where((element) => element
+                                                        .studentName!
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase()))
+                                                    .toList();
+                                                if (value.isEmpty) {
+                                                  listData.value.clear();
+                                                  listData.value = [
+                                                    ...state.students!
+                                                  ];
+                                                } else {
+                                                  listData.value = [...data];
+                                                }
+                                              },
+                                              onClear: () {
+                                                listData.value.clear();
+                                                listData.value = [
+                                                  ...state.students!
+                                                ];
+                                              },
+                                              text: '',
+                                              hint: 'Search student',
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          );
+                        });
                   },
-                );
-              }),
-        ),
-      ),
-    );
+                )),
+              ),
+            );
+          });
+        });
   }
 
   Widget _buildStudentCard(BuildContext context, SupervisorStudent student) {

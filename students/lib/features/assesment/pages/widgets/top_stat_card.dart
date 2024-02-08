@@ -1,3 +1,4 @@
+import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:flutter/material.dart';
@@ -76,12 +77,12 @@ class TopStatCard extends StatelessWidget {
                   backgroundColor: const Color(0xFFB0EAFC),
                   child: Column(
                     children: [
-                      Text(score.toString(),
+                      Text(score.toStringAsFixed(2),
                           style: textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           )),
                       Text(
-                        'Very Good',
+                        Utils.rateToText(score.toInt()),
                         style: textTheme.bodyMedium?.copyWith(
                           color: secondaryColor,
                         ),

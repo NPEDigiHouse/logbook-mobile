@@ -34,4 +34,6 @@ class FilterNotifier with ChangeNotifier {
 
   bool get isActive =>
       _activityType != null || _isUnreadOnly == true || _unit != null;
+
+  bool get isFilter => _filterType != FilterType.all || _unit != null;
 }

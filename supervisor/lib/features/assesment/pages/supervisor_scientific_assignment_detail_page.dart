@@ -387,7 +387,7 @@ class TopStatCard extends StatelessWidget {
                     contain: true,
                     radius: 100,
                     progress: totalGrade != null && !totalGrade!.value.isNaN
-                        ? totalGrade!.value
+                        ? totalGrade!.value / 100
                         : 0,
                     strokeCap: StrokeCap.round,
                     color: totalGrade != null
@@ -407,7 +407,7 @@ class TopStatCard extends StatelessWidget {
                         ),
                         Text(
                           totalGrade != null && !totalGrade!.value.isNaN
-                              ? 'Avg : ${((totalGrade?.value ?? 0) * 100).toInt().toString()}'
+                              ? 'Avg : ${((totalGrade?.value ?? 0)).toStringAsFixed(2)}'
                               : '-',
                           style: textTheme.bodyMedium?.copyWith(
                             color: secondaryColor,

@@ -60,6 +60,7 @@ class _SelectDepartmentSheetState extends State<SelectDepartmentSheet> {
           }
           return Container(
             width: double.infinity,
+            height: 300,
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
             decoration: const BoxDecoration(
               color: backgroundColor,
@@ -68,7 +69,16 @@ class _SelectDepartmentSheetState extends State<SelectDepartmentSheet> {
               ),
             ),
             child: const Column(
-              children: [CircularProgressIndicator()],
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                )
+              ],
             ),
           );
         },

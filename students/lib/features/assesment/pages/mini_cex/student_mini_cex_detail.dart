@@ -67,7 +67,8 @@ class _StudentMiniCexDetailState extends State<StudentMiniCexDetail> {
                                 height: 16,
                               ),
                               TitleAssesmentCard(
-                                title: state.miniCexStudentDetail?.dataCase ?? '',
+                                title:
+                                    state.miniCexStudentDetail?.dataCase ?? '',
                                 subtitle:
                                     state.miniCexStudentDetail?.location ?? '',
                               ),
@@ -201,7 +202,7 @@ class TopStatCard extends StatelessWidget {
                 SemicircularIndicator(
                   contain: true,
                   radius: 100,
-                  progress: totalGrade != null ? totalGrade!.value : 0,
+                  progress: totalGrade != null ? totalGrade!.value / 100 : 0,
                   strokeCap: StrokeCap.round,
                   color: totalGrade != null
                       ? totalGrade!.gradientScore.color
@@ -220,7 +221,7 @@ class TopStatCard extends StatelessWidget {
                       ),
                       Text(
                         totalGrade != null
-                            ? 'Avg : ${(totalGrade!.value * 100).toInt().toString()}'
+                            ? 'Avg : ${(totalGrade!.value).toStringAsFixed(2)}'
                             : '-',
                         style: textTheme.bodyMedium?.copyWith(
                           color: secondaryColor,

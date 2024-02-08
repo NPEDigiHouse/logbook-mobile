@@ -87,7 +87,7 @@ TotalGradeHelper? getTotalGrades(double grades) {
   }
 
   return TotalGradeHelper(
-    value: grades / 100,
+    value: grades,
     gradientScore: ScoreGradientName(
       title: scoreLevel,
       color: Color(scoreColors[scoreLevel]!),

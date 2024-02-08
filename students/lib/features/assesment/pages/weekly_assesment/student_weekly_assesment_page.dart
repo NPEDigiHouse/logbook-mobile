@@ -191,7 +191,7 @@ class TopStatCard extends StatelessWidget {
                   return SemicircularIndicator(
                     contain: true,
                     radius: 100,
-                    progress: totalGrade != null ? totalGrade!.value : 0,
+                    progress: totalGrade != null ? totalGrade!.value / 100 : 0,
                     strokeCap: StrokeCap.round,
                     color: totalGrade != null
                         ? totalGrade!.gradientScore.color
@@ -211,7 +211,7 @@ class TopStatCard extends StatelessWidget {
                         Builder(builder: (context) {
                           return Text(
                             totalGrade != null
-                                ? 'Avg : ${(totalGrade!.value * 100).toInt().toString()}'
+                                ? 'Avg : ${totalGrade!.value.toStringAsFixed(2)}'
                                 : '-',
                             style: textTheme.bodyMedium?.copyWith(
                               color: secondaryColor,

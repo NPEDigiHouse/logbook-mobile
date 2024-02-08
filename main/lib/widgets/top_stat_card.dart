@@ -90,7 +90,7 @@ class FinalGradeTopStatCard extends StatelessWidget {
                       ),
                       Text(
                         totalGrade != null
-                            ? 'Avg : ${(totalGrade!.value).toInt().toString()}'
+                            ? 'Avg : ${(totalGrade!.value).toStringAsFixed(2)}'
                             : '-',
                         style: textTheme.bodyMedium?.copyWith(
                           color: secondaryColor,

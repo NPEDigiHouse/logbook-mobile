@@ -53,7 +53,9 @@ class DailyActivityCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      dailyActivityStudent.activityName ?? '',
+                      dailyActivityStudent.activityName ??
+                          dailyActivityStudent.activityStatus ??
+                          '',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: textTheme.bodySmall?.copyWith(
