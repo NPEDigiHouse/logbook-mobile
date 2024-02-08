@@ -12,11 +12,13 @@ class SpecialReportOnList {
   DateTime? latest;
   @JsonKey(name: "unitName")
   String? activeDepartmentName;
+  String? verificationStatus;
 
   SpecialReportOnList({
     this.studentName,
     this.studentId,
     this.latest,
+    this.verificationStatus,
     this.activeDepartmentName,
   });
 

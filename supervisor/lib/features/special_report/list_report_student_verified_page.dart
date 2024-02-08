@@ -6,22 +6,21 @@ import 'package:main/blocs/special_report/special_report_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/inputs/search_field.dart';
-import 'package:supervisor/features/special_report/list_report_student_verified_page.dart';
 
 import 'widgets/special_report_student_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SupervisorListSpecialReportPage extends StatefulWidget {
-  const SupervisorListSpecialReportPage({super.key});
+class SupervisorListSpecialReportVerifiedPage extends StatefulWidget {
+  const SupervisorListSpecialReportVerifiedPage({super.key});
 
   @override
-  State<SupervisorListSpecialReportPage> createState() =>
-      _SupervisorListSpecialReportPageState();
+  State<SupervisorListSpecialReportVerifiedPage> createState() =>
+      _SupervisorListSpecialReportVerifiedPageState();
 }
 
-class _SupervisorListSpecialReportPageState
-    extends State<SupervisorListSpecialReportPage> {
+class _SupervisorListSpecialReportVerifiedPageState
+    extends State<SupervisorListSpecialReportVerifiedPage> {
   ValueNotifier<List<SpecialReportOnList>> listStudent = ValueNotifier([]);
   bool isMounted = false;
   ValueNotifier<bool> isSearchExpand = ValueNotifier(false);
@@ -30,7 +29,7 @@ class _SupervisorListSpecialReportPageState
   void initState() {
     super.initState();
     Future.microtask(() => BlocProvider.of<SpecialReportCubit>(context)
-      ..getSpecialReportStudents());
+      ..getSpecialReportStudentsVerified());
   }
 
   @override
@@ -40,10 +39,10 @@ class _SupervisorListSpecialReportPageState
         builder: (context, s, _) {
           return BlocConsumer<SpecialReportCubit, SpecialReportState>(
               listener: (context, state) {
-            if (state.specialReportStudents != null) {
+            if (state.specialReportStudentsVerified != null) {
               if (!isMounted) {
                 Future.microtask(() {
-                  listStudent.value = [...state.specialReportStudents!];
+                  listStudent.value = [...state.specialReportStudentsVerified!];
                 });
                 isMounted = true;
               }
@@ -51,7 +50,7 @@ class _SupervisorListSpecialReportPageState
           }, builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
-                title: const Text('Problem Consultations'),
+                title: const Text('Verified Problem Consultations'),
                 actions: [
                   ValueListenableBuilder(
                     valueListenable: isSearchExpand,
@@ -75,20 +74,12 @@ class _SupervisorListSpecialReportPageState
 
                               listStudent.value.clear();
                               listStudent.value = [
-                                ...state.specialReportStudents!
+                                ...state.specialReportStudentsVerified!
                               ];
                             },
                             icon: const Icon(CupertinoIcons.search),
                           ),
                         ],
-                      );
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(CupertinoIcons.check_mark_circled),
-                    onPressed: () {
-                      context.navigateTo(
-                        const SupervisorListSpecialReportVerifiedPage(),
                       );
                     },
                   ),
@@ -99,11 +90,11 @@ class _SupervisorListSpecialReportPageState
                   isMounted = false;
                   await Future.wait([
                     BlocProvider.of<SpecialReportCubit>(context)
-                        .getSpecialReportStudents(),
+                        .getSpecialReportStudentsVerified(),
                   ]);
                 }, child: Builder(
                   builder: (context) {
-                    if (state.specialReportStudents == null) {
+                    if (state.specialReportStudentsVerified == null) {
                       return const CustomLoading();
                     }
                     return ValueListenableBuilder(
@@ -180,7 +171,7 @@ class _SupervisorListSpecialReportPageState
                                           child: SearchField(
                                             onChanged: (value) {
                                               final data = state
-                                                  .specialReportStudents!
+                                                  .specialReportStudentsVerified!
                                                   .where((element) => element
                                                       .studentName!
                                                       .toLowerCase()
@@ -191,7 +182,7 @@ class _SupervisorListSpecialReportPageState
                                                 listStudent.value.clear();
                                                 listStudent.value = [
                                                   ...state
-                                                      .specialReportStudents!
+                                                      .specialReportStudentsVerified!
                                                 ];
                                               } else {
                                                 listStudent.value = [...data];
@@ -200,7 +191,8 @@ class _SupervisorListSpecialReportPageState
                                             onClear: () {
                                               listStudent.value.clear();
                                               listStudent.value = [
-                                                ...state.specialReportStudents!
+                                                ...state
+                                                    .specialReportStudentsVerified!
                                               ];
                                             },
                                             text: '',

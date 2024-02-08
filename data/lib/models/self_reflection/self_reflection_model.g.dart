@@ -14,6 +14,7 @@ SelfReflectionModel _$SelfReflectionModelFromJson(Map<String, dynamic> json) =>
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
       unitName: json['unitName'] as String?,
+      verificationStatus: json['verificationStatus'] as String?,
     );
 
 Map<String, dynamic> _$SelfReflectionModelToJson(
@@ -21,6 +22,7 @@ Map<String, dynamic> _$SelfReflectionModelToJson(
     <String, dynamic>{
       'studentId': instance.studentId,
       'studentName': instance.studentName,
+      'verificationStatus': instance.verificationStatus,
       'latest': instance.latest?.toIso8601String(),
       'unitName': instance.unitName,
     };

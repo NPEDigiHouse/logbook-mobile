@@ -53,23 +53,50 @@ class SelfReflectionCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      selfReflection.studentId ?? '-',
+                      'Self Reflection',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: onFormDisableColor,
+                        height: 1.2,
+                      ),
                     ),
+                    Row(
+                      children: [
+                        Text(
+                          Utils.datetimeToString(selfReflection.latest!,
+                              format: 'EEE, dd MMM'),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: primaryTextColor,
+                            height: 1.2,
+                          ),
+                        ),
+                        if (selfReflection.verificationStatus == 'VERIFIED')
+                          const Icon(
+                            Icons.verified_rounded,
+                            color: primaryColor,
+                            size: 16,
+                          )
+                      ],
+                    ),
+                    const SizedBox(height: 4),
                     Row(
                       children: <Widget>[
                         Text(
                           selfReflection.studentName ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
+                          style: textTheme.bodyMedium?.copyWith(
+                            height: 1,
+                            color: secondaryColor,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 4),
                     RichText(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

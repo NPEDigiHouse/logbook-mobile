@@ -19,10 +19,33 @@ class SelfReflectionSupervisorCubit
         requestState: RequestState.loading,
       ));
 
-      final result = await dataSource.getSelfReflections();
+      final result = await dataSource.getSelfReflections(verified: false);
       try {
         emit(state.copyWith(
           listData: result,
+        ));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getSelfReflectionsVerified() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getSelfReflections(verified: true);
+      try {
+        emit(state.copyWith(
+          listData2: result,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
@@ -59,7 +82,6 @@ class SelfReflectionSupervisorCubit
     }
   }
 
-  
   void reset() {
     emit(state.copyWith(requestStateVerifiy: RequestState.init));
   }

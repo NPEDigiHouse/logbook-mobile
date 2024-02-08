@@ -14,7 +14,8 @@ abstract class SpecialReportDataSource {
   Future<bool> updateSpecialReport(
       {required String id, required String content});
   Future<void> postSpecialReport({required String content});
-  Future<List<SpecialReportOnList>> getSpecialReportBySupervisor();
+  Future<List<SpecialReportOnList>> getSpecialReportBySupervisor(
+      {required bool verified});
   Future<SpecialReportResponse> getSpecialReportByStudentId(
       {required String studentId});
   Future<void> verifySpecialReport(
@@ -65,12 +66,13 @@ class SpecialReportDataSourceImpl implements SpecialReportDataSource {
   }
 
   @override
-  Future<List<SpecialReportOnList>> getSpecialReportBySupervisor() async {
+  Future<List<SpecialReportOnList>> getSpecialReportBySupervisor(
+      {required bool verified}) async {
     try {
       final response = await dio.get(
-        '${ApiService.baseUrl}/problem-consultations/',
-        options: await apiHeader.userOptions(),
-      );
+          '${ApiService.baseUrl}/problem-consultations/',
+          options: await apiHeader.userOptions(),
+          data: {"verified": verified});
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<SpecialReportOnList> listData = dataResponse.data
           .map((e) => SpecialReportOnList.fromJson(e))

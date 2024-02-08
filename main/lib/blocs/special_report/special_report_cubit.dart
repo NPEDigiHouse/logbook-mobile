@@ -152,9 +152,32 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
         requestState: RequestState.loading,
       ));
 
-      final data = await specialReportDataSource.getSpecialReportBySupervisor();
+      final data = await specialReportDataSource.getSpecialReportBySupervisor(
+          verified: false);
       try {
         emit(state.copyWith(specialReportStudents: data));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getSpecialReportStudentsVerified() async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final data = await specialReportDataSource.getSpecialReportBySupervisor(
+          verified: true);
+      try {
+        emit(state.copyWith(specialReportStudentsVerified: data));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

@@ -15,7 +15,8 @@ abstract class SelfReflectionDataSource {
   Future<Either<Failure, void>> uploadSelfReflection({
     required SelfReflectionPostModel selfReflectionPostModel,
   });
-  Future<List<SelfReflectionModel>> getSelfReflections();
+  Future<List<SelfReflectionModel>> getSelfReflections(
+      {required bool verified});
   Future<void> verify(
       {required String id, required VerifySelfReflectionModel model});
   Future<String> getDetail({required String id});
@@ -66,12 +67,14 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
   }
 
   @override
-  Future<List<SelfReflectionModel>> getSelfReflections() async {
+  Future<List<SelfReflectionModel>> getSelfReflections(
+      {required bool verified}) async {
     try {
-      final response = await dio.get(
-        '${ApiService.baseUrl}/self-reflections',
-        options: await apiHeader.userOptions(),
-      );
+      final response = await dio.get('${ApiService.baseUrl}/self-reflections',
+          options: await apiHeader.userOptions(),
+          data: {
+            "verified": verified,
+          });
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<SelfReflectionModel> listData = dataResponse.data
           .map((e) => SelfReflectionModel.fromJson(e))

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/models/self_reflection/self_reflection_model.dart';
@@ -6,22 +7,20 @@ import 'package:main/blocs/self_reflection_supervisor_cubit/self_reflection_supe
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/inputs/search_field.dart';
-import 'package:supervisor/features/self_reflection/list_self_reflection_verified_page.dart';
 
 import 'self_reflection_card.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SupervisorListSelfReflectionsPage extends StatefulWidget {
-  const SupervisorListSelfReflectionsPage({super.key});
+class SupervisorListSelfReflectionsVerifiedPage extends StatefulWidget {
+  const SupervisorListSelfReflectionsVerifiedPage({super.key});
 
   @override
-  State<SupervisorListSelfReflectionsPage> createState() =>
-      _SupervisorListSelfReflectionsPageState();
+  State<SupervisorListSelfReflectionsVerifiedPage> createState() =>
+      _SupervisorListSelfReflectionsVerifiedPageState();
 }
 
-class _SupervisorListSelfReflectionsPageState
-    extends State<SupervisorListSelfReflectionsPage> {
+class _SupervisorListSelfReflectionsVerifiedPageState
+    extends State<SupervisorListSelfReflectionsVerifiedPage> {
   ValueNotifier<List<SelfReflectionModel>> listStudent = ValueNotifier([]);
   ValueNotifier<bool> isSearchExpand = ValueNotifier(false);
 
@@ -31,7 +30,7 @@ class _SupervisorListSelfReflectionsPageState
     super.initState();
     Future.microtask(
       () => BlocProvider.of<SelfReflectionSupervisorCubit>(context)
-        ..getSelfReflections(),
+        ..getSelfReflectionsVerified(),
     );
   }
 
@@ -45,7 +44,7 @@ class _SupervisorListSelfReflectionsPageState
             builder: (context, state) {
               return Scaffold(
                 appBar: AppBar(
-                  title: const Text('Self Reflections'),
+                  title: const Text('Verified Self Reflections'),
                   actions: [
                     ValueListenableBuilder(
                       valueListenable: isSearchExpand,
@@ -68,18 +67,12 @@ class _SupervisorListSelfReflectionsPageState
                                 isSearchExpand.value = !value;
 
                                 listStudent.value.clear();
-                                listStudent.value = [...state.listData!];
+                                listStudent.value = [...state.listData2!];
                               },
                               icon: const Icon(CupertinoIcons.search),
                             ),
                           ],
                         );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(CupertinoIcons.check_mark_circled),
-                      onPressed: () {
-                        context.navigateTo(const SupervisorListSelfReflectionsVerifiedPage());
                       },
                     ),
                   ],
@@ -90,17 +83,17 @@ class _SupervisorListSelfReflectionsPageState
                       isMounted = false;
                       await Future.wait([
                         BlocProvider.of<SelfReflectionSupervisorCubit>(context)
-                            .getSelfReflections(),
+                            .getSelfReflectionsVerified(),
                       ]);
                     },
                     child: Builder(
                       builder: (context) {
-                        if (state.listData == null) {
+                        if (state.listData2 == null) {
                           return const CustomLoading();
                         }
                         if (!isMounted) {
                           Future.microtask(() {
-                            listStudent.value = [...state.listData!];
+                            listStudent.value = [...state.listData2!];
                           });
                           isMounted = true;
                         }
@@ -181,7 +174,8 @@ class _SupervisorListSelfReflectionsPageState
                                                         horizontal: 20),
                                                 child: SearchField(
                                                   onChanged: (value) {
-                                                    final data = state.listData!
+                                                    final data = state
+                                                        .listData2!
                                                         .where((element) => element
                                                             .studentName!
                                                             .toLowerCase()
@@ -191,7 +185,7 @@ class _SupervisorListSelfReflectionsPageState
                                                     if (value.isEmpty) {
                                                       listStudent.value.clear();
                                                       listStudent.value = [
-                                                        ...state.listData!
+                                                        ...state.listData2!
                                                       ];
                                                     } else {
                                                       listStudent.value = [
@@ -202,7 +196,7 @@ class _SupervisorListSelfReflectionsPageState
                                                   onClear: () {
                                                     listStudent.value.clear();
                                                     listStudent.value = [
-                                                      ...state.listData!
+                                                      ...state.listData2!
                                                     ];
                                                   },
                                                   text: '',
@@ -228,6 +222,5 @@ class _SupervisorListSelfReflectionsPageState
             },
           );
         });
-  
   }
 }

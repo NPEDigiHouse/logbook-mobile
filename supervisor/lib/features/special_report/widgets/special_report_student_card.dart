@@ -56,23 +56,68 @@ class SpecialReportStudentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      sr.studentId ?? '-',
+                      'Problem Consultation',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: onFormDisableColor,
+                        height: 1.2,
+                      ),
                     ),
+                    Row(
+                      children: [
+                        Text(
+                          Utils.datetimeToString(sr.latest!,
+                              format: 'EEE, dd MMM'),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: primaryTextColor,
+                            height: 1.2,
+                          ),
+                        ),
+                        if (sr.verificationStatus == 'VERIFIED')
+                          const Icon(
+                            Icons.verified_rounded,
+                            color: primaryColor,
+                            size: 16,
+                          )
+                      ],
+                    ),
+                    const SizedBox(height: 4),
                     Row(
                       children: <Widget>[
                         Text(
                           sr.studentName ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
+                          style: textTheme.bodyMedium?.copyWith(
+                            height: 1,
+                            color: secondaryColor,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        style: textTheme.bodySmall?.copyWith(
+                          color: secondaryTextColor,
+                        ),
+                        children: <TextSpan>[
+                          const TextSpan(
+                            text: 'Department:\t',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          TextSpan(text: sr.activeDepartmentName),
+                        ],
+                      ),
+                    ),
                     RichText(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

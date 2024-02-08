@@ -4,6 +4,7 @@ class SpecialReportState {
   final SpecialReportResponse? specialReport;
   final SpecialReportDetail? specialReportDetail;
   final List<SpecialReportOnList>? specialReportStudents;
+  final List<SpecialReportOnList>? specialReportStudentsVerified;
   final bool isVerifySpecialReportSuccess;
   final bool isSuccessPostSpecialReport;
   final bool isDeleteSpecialReport;
@@ -14,6 +15,7 @@ class SpecialReportState {
     this.specialReportDetail,
     this.isVerifySpecialReportSuccess = false,
     this.specialReportStudents,
+    this.specialReportStudentsVerified,
     this.isSuccessPostSpecialReport = false,
     this.isDeleteSpecialReport = false,
     this.isUpdateSpecialReport = false,
@@ -25,6 +27,7 @@ class SpecialReportState {
     SpecialReportDetail? specialReportDetail,
     bool isVerifySpecialReportSuccess = false,
     List<SpecialReportOnList>? specialReportStudents,
+    List<SpecialReportOnList>? specialReportStudentsVerified,
     bool isSuccessPostSpecialReport = false,
     bool isUpdateSpecialReport = false,
     bool isDeleteSpecialReport = false,
@@ -38,6 +41,8 @@ class SpecialReportState {
       isUpdateSpecialReport: isUpdateSpecialReport,
       specialReportStudents:
           specialReportStudents ?? this.specialReportStudents,
+      specialReportStudentsVerified:
+          specialReportStudentsVerified ?? this.specialReportStudentsVerified,
     );
   }
 }

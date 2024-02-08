@@ -6,10 +6,16 @@ part 'self_reflection_model.g.dart';
 class SelfReflectionModel {
   final String? studentId;
   final String? studentName;
+  final String? verificationStatus;
   final DateTime? latest;
   final String? unitName;
 
-  SelfReflectionModel({this.latest, this.studentId, this.studentName, this.unitName});
+  SelfReflectionModel(
+      {this.latest,
+      this.studentId,
+      this.studentName,
+      this.unitName,
+      this.verificationStatus});
 
   factory SelfReflectionModel.fromJson(Map<String, dynamic> json) =>
       _$SelfReflectionModelFromJson(json);
