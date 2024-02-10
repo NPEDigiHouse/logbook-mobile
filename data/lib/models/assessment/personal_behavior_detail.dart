@@ -10,6 +10,10 @@ class PersonalBehaviorDetailModel {
   String? studentId;
   @JsonKey(name: "studentName")
   String? studentName;
+  @JsonKey(name: "unitName")
+  String? unitName;
+  @JsonKey(name: "supervisingDPKName")
+  String? supervisingDPKName;
   @JsonKey(name: "scores")
   List<Score>? scores;
 
@@ -17,6 +21,8 @@ class PersonalBehaviorDetailModel {
     this.id,
     this.studentId,
     this.studentName,
+    this.unitName,
+    this.supervisingDPKName,
     this.scores,
   });
 

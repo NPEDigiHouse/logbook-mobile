@@ -6,9 +6,10 @@ import 'package:main/blocs/logout_cubit/logout_cubit.dart';
 import 'package:main/blocs/profile_cubit/profile_cubit.dart';
 import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
+import 'package:common/features/history/history_page.dart';
+
 import 'package:main/widgets/custom_navigation_bar.dart';
 
-import '../history/history_page.dart';
 import '../in_out_reporting/in_out_reporting_page.dart';
 import 'unit/supervisor_menu_page.dart';
 import '../profile/profile_page.dart';
@@ -43,19 +44,19 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
         SupervisorMenuPage(
           credential: credential,
         ),
-        // TaskPage(),
         if (credential.badges!.indexWhere((e) => e.name == 'HEAD_DIV') != -1)
           InOutReportingPage(
               departmentName: credential.supervisor?.units ?? []),
         const ListResidentPage(),
-        SupervisorHistoryPage(
-          isKabag:
-              credential.badges!.indexWhere((e) => e.name == 'HEAD_DIV') != -1,
-          isCeu: credential.badges!.indexWhere((e) => e.name == 'CEU') != -1,
+        HistoryView(
+          role: credential.badges!.indexWhere((e) => e.name == 'HEAD_DIV') == -1
+              ? credential.badges!.indexWhere((e) => e.name == 'CEU') == -1
+                  ? UserHistoryRole.supervisor
+                  : UserHistoryRole.supervisorCeu
+              : UserHistoryRole.supervisorCeuKabag,
           departmentName: credential.supervisor?.units ?? [],
           supervisorId: credential.supervisor?.supervisorId ?? '',
         ),
-        // SizedBox(),
         ProfilePage(
           credential: credential,
         ),

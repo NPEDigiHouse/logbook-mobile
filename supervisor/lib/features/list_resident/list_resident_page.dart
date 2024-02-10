@@ -3,6 +3,7 @@ import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/supervisors/supervisor_student_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
 import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
@@ -10,6 +11,7 @@ import 'package:main/widgets/custom_shimmer.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/inputs/search_field.dart';
+import 'package:main/widgets/main_app_bar.dart';
 
 import 'resident_menu_page.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,8 @@ class ListResidentPage extends StatefulWidget {
 
 class _ListResidentPageState extends State<ListResidentPage> {
   ValueNotifier<List<SupervisorStudent>> listStudent = ValueNotifier([]);
+  ValueNotifier<bool> isSearchExpand = ValueNotifier(false);
+
   bool isMounted = false;
   @override
   void initState() {
@@ -58,78 +62,159 @@ class _ListResidentPageState extends State<ListResidentPage> {
                   },
                   builder: (context, state) {
                     if (state.students != null) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: CustomScrollView(
-                          slivers: [
-                            const SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: 16,
-                              ),
-                            ),
-                            SliverToBoxAdapter(
-                              child: Text(
-                                'Students',
-                                style: textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: primaryColor,
-                                ),
-                              ),
-                            ),
-                            const SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: 16,
-                              ),
-                            ),
-                            SliverToBoxAdapter(
-                              child: SearchField(
-                                onChanged: (value) {
-                                  final data = state.students!
-                                      .where((element) => element.studentName!
-                                          .toLowerCase()
-                                          .contains(value.toLowerCase()))
-                                      .toList();
-                                  if (value.isEmpty) {
-                                    listStudent.value.clear();
-                                    listStudent.value = [...state.students!];
-                                  } else {
-                                    listStudent.value = [...data];
-                                  }
+                      return CustomScrollView(
+                        slivers: [
+                          MainTitleAppBar(
+                            title: 'Students',
+                            widget: [
+                              ValueListenableBuilder(
+                                valueListenable: isSearchExpand,
+                                builder: (context, value, child) {
+                                  return Stack(
+                                    children: [
+                                      if (value)
+                                        Positioned(
+                                            right: 10,
+                                            top: 10,
+                                            child: Container(
+                                              width: 8,
+                                              height: 8,
+                                              decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.red),
+                                            )),
+                                      IconButton(
+                                        onPressed: () {
+                                          isSearchExpand.value = !value;
+                                        },
+                                        icon: const Icon(CupertinoIcons.search),
+                                      ),
+                                    ],
+                                  );
                                 },
-                                onClear: () {
-                                  listStudent.value.clear();
-                                  listStudent.value = [...state.students!];
-                                },
-                                text: '',
-                                hint: 'Search student',
                               ),
-                            ),
-                            const SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: 16,
-                              ),
-                            ),
-                            s.isNotEmpty
-                                ? SliverList.separated(
-                                    itemCount: s.length,
-                                    itemBuilder: (context, index) {
-                                      return _buildStudentCard(
-                                          context, s[index]);
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return const SizedBox(
-                                        height: 12,
-                                      );
-                                    },
-                                  )
-                                : const SliverToBoxAdapter(
-                                    child: EmptyData(
-                                        title: 'No Students',
-                                        subtitle:
-                                            'You don\'t have student guidance or assistance yet'),
-                                  )
-                          ],
-                        ),
+                            ],
+                          ),
+                          SliverFillRemaining(
+                            child: ValueListenableBuilder(
+                                valueListenable: isSearchExpand,
+                                builder: (context, status, _) {
+                                  return Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      Positioned.fill(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          child: Builder(builder: (context) {
+                                            if (s.isEmpty) {
+                                              return const EmptyData(
+                                                  title: 'No Students',
+                                                  subtitle:
+                                                      'You don\'t have student guidance or assistance yet');
+                                            }
+                                            return CustomScrollView(
+                                              slivers: [
+                                                if (status)
+                                                  const SliverToBoxAdapter(
+                                                    child: SizedBox(
+                                                      height: 84,
+                                                    ),
+                                                  ),
+                                                const SliverToBoxAdapter(
+                                                  child: SizedBox(
+                                                    height: 16,
+                                                  ),
+                                                ),
+                                                SliverList.separated(
+                                                  itemCount: s.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return _buildStudentCard(
+                                                        context, s[index]);
+                                                  },
+                                                  separatorBuilder:
+                                                      (context, index) {
+                                                    return const SizedBox(
+                                                      height: 12,
+                                                    );
+                                                  },
+                                                )
+                                              ],
+                                            );
+                                          }),
+                                        ),
+                                      ),
+                                      if (status)
+                                        Column(
+                                          children: [
+                                            Container(
+                                              decoration: const BoxDecoration(
+                                                  color:
+                                                      scaffoldBackgroundColor,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        offset: Offset(0, 2),
+                                                        color: Colors.black12,
+                                                        blurRadius: 12,
+                                                        spreadRadius: 4)
+                                                  ]),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 16,
+                                                  ),
+                                                  Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 20),
+                                                    child: SearchField(
+                                                      onChanged: (value) {
+                                                        final data = state
+                                                            .students!
+                                                            .where((element) => element
+                                                                .studentName!
+                                                                .toLowerCase()
+                                                                .contains(value
+                                                                    .toLowerCase()))
+                                                            .toList();
+                                                        if (value.isEmpty) {
+                                                          listStudent.value
+                                                              .clear();
+                                                          listStudent.value = [
+                                                            ...state.students!
+                                                          ];
+                                                        } else {
+                                                          listStudent.value = [
+                                                            ...data
+                                                          ];
+                                                        }
+                                                      },
+                                                      onClear: () {
+                                                        listStudent.value
+                                                            .clear();
+                                                        listStudent.value = [
+                                                          ...state.students!
+                                                        ];
+                                                      },
+                                                      text: '',
+                                                      hint: 'Search student',
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 16,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                    ],
+                                  );
+                                }),
+                          ),
+                        ],
                       );
                     }
                     return const CustomLoading();

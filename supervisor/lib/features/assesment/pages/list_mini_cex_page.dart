@@ -50,7 +50,7 @@ class _ListMiniCexPageState extends State<ListMiniCexPage> {
             if (state.studentMiniCex != null &&
                 state.studentMiniCex!.id != null) {
               context.replace(SupervisorMiniCexDetailPage(
-                  unitName: widget.unitName,
+                 
                   id: state.studentMiniCex!.id!,
                   supervisorId: widget.supervisorId));
             }

@@ -1,4 +1,5 @@
 import 'package:core/context/navigation_extension.dart';
+import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:main/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
@@ -343,7 +344,7 @@ class _SupervisorDetailScientificSessionPageState
                               onRatingUpdate: (rating) {},
                             ),
                             Text(
-                              '"Good"',
+                              Utils.rateToText(state.detail?.rating ?? 0),
                               style: textTheme.bodyLarge
                                   ?.copyWith(color: primaryColor),
                             ),

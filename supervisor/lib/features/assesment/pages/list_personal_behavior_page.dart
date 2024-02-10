@@ -44,7 +44,7 @@ class _ListPersonalBehaviorPageState extends State<ListPersonalBehaviorPage> {
             if (state.personalBehaviorStudent != null &&
                 state.personalBehaviorStudent!.isNotEmpty) {
               context.replace(SupervisorPersonalBehaviorDetailPage(
-                  unitName: widget.unitName,
+                  
                   id: state.personalBehaviorStudent!.first.id!));
             }
           },

@@ -29,7 +29,7 @@ class _ListScientificAssignmentPageState
   @override
   void initState() {
     BlocProvider.of<AssesmentCubit>(context)
-      .studentScientificAssignment(studentId: widget.studentId);
+        .studentScientificAssignment(studentId: widget.studentId);
     super.initState();
   }
 
@@ -51,7 +51,6 @@ class _ListScientificAssignmentPageState
             if (state.scientificAssignmentStudents != null &&
                 state.scientificAssignmentStudents!.isNotEmpty) {
               context.replace(SupervisorScientificAssignmentDetailPage(
-                  unitName: widget.unitName,
                   id: state.scientificAssignmentStudents!.first.id!,
                   supervisorId: widget.supervisorId));
             }

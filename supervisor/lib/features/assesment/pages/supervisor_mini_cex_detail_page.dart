@@ -9,7 +9,8 @@ import 'package:main/widgets/clip_donut_painter.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/dividers/section_divider.dart';
-import 'package:main/widgets/headers/unit_header.dart';
+import 'package:main/widgets/headers/form_section_header.dart';
+import 'package:main/widgets/headers/unit_student_header.dart';
 import 'package:main/widgets/inputs/build_text_field.dart';
 import 'package:main/widgets/spacing_column.dart';
 
@@ -19,16 +20,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:semicircle_indicator/semicircle_indicator.dart';
 
-
 class SupervisorMiniCexDetailPage extends StatefulWidget {
   final String id;
-  final String unitName;
   final String supervisorId;
   const SupervisorMiniCexDetailPage(
-      {super.key,
-      required this.unitName,
-      required this.id,
-      required this.supervisorId});
+      {super.key, required this.id, required this.supervisorId});
 
   @override
   State<SupervisorMiniCexDetailPage> createState() =>
@@ -41,10 +37,9 @@ class _SupervisorMiniCexDetailPageState
   void initState() {
     Future.microtask(
       () {
-        BlocProvider.of<AssesmentCubit>(context)
-          .getMiniCexStudentDetail(
-            id: widget.id,
-          );
+        BlocProvider.of<AssesmentCubit>(context).getMiniCexStudentDetail(
+          id: widget.id,
+        );
         context.read<MiniCexProvider>().reset();
       },
     );
@@ -61,19 +56,19 @@ class _SupervisorMiniCexDetailPageState
       floatingActionButton: BlocBuilder<AssesmentCubit, AssesmentState>(
         builder: (context, state) {
           if (state.miniCexStudentDetail != null &&
-              state.miniCexStudentDetail!.examinerDPKId == widget.supervisorId) {
+              state.miniCexStudentDetail!.examinerDPKId ==
+                  widget.supervisorId) {
             return SizedBox(
               width: AppSize.getAppWidth(context) - 32,
               child: FilledButton.icon(
                 onPressed: () {
                   itemRating.getMiniCexData();
-                  BlocProvider.of<AssesmentCubit>(context)
-                    .assesmentMiniCex(
-                      id: widget.id,
-                      miniCex: {
-                        'scores': itemRating.getMiniCexData(),
-                      },
-                    );
+                  BlocProvider.of<AssesmentCubit>(context).assesmentMiniCex(
+                    id: widget.id,
+                    miniCex: {
+                      'scores': itemRating.getMiniCexData(),
+                    },
+                  );
                 },
                 icon: const Icon(Icons.check_circle),
                 label: const Text('Update Changed'),
@@ -101,14 +96,14 @@ class _SupervisorMiniCexDetailPageState
                 const SizedBox(
                   height: 16,
                 ),
-                DepartmentHeader(unitName: widget.unitName),
+                // DepartmentHeader(unitName: widget.unitName),
                 BlocConsumer<AssesmentCubit, AssesmentState>(
                   listener: (context, state) {
                     if (state.isAssesmentMiniCexSuccess) {
                       BlocProvider.of<AssesmentCubit>(context)
-                        .getMiniCexStudentDetail(
-                          id: widget.id,
-                        );
+                          .getMiniCexStudentDetail(
+                        id: widget.id,
+                      );
                       context.read<MiniCexProvider>().reset();
                     }
                   },
@@ -151,7 +146,7 @@ class _BuildScoreSectionState extends State<BuildScoreSection> {
     super.initState();
     if (widget.miniCex.scores != null) {
       Provider.of<MiniCexProvider>(context, listen: false)
-        .init(widget.miniCex.scores!);
+          .init(widget.miniCex.scores!);
     }
   }
 
@@ -161,6 +156,14 @@ class _BuildScoreSectionState extends State<BuildScoreSection> {
 
     return Column(
       children: [
+        StudentDepartmentHeader(
+          unitName: widget.miniCex.unitName ?? '',
+          studentId: widget.miniCex.studentId,
+          studentName: widget.miniCex.studentName ?? '',
+        ),
+        const SizedBox(
+          height: 12,
+        ),
         MiniCexHeadCard(miniCex: widget.miniCex),
         const SizedBox(
           height: 12,
@@ -404,7 +407,7 @@ class TopStatCard extends StatelessWidget {
                 SemicircularIndicator(
                   contain: true,
                   radius: 100,
-                  progress: totalGrade != null ? totalGrade!.value / 100 : 0,
+                  progress: totalGrade != null ? totalGrade!.value : 0,
                   strokeCap: StrokeCap.round,
                   color: totalGrade != null
                       ? totalGrade!.gradientScore.color
@@ -423,7 +426,7 @@ class TopStatCard extends StatelessWidget {
                       ),
                       Text(
                         totalGrade != null
-                            ? 'Avg : ${(totalGrade!.value).toStringAsFixed(2)}'
+                            ? 'Avg : ${(totalGrade!.value * 100).toStringAsFixed(2)}'
                             : '-',
                         style: textTheme.bodyMedium?.copyWith(
                           color: secondaryColor,
@@ -455,80 +458,90 @@ class MiniCexHeadCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        vertical: 16,
-        horizontal: 12,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         color: scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: <BoxShadow>[
           BoxShadow(
             offset: const Offset(0, 1),
-            blurRadius: 16,
-            color: Colors.black.withOpacity(.1),
-          ),
+            color: Colors.black.withOpacity(.06),
+            blurRadius: 8,
+          )
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Student Name',
-            style: textTheme.bodySmall
-                ?.copyWith(color: secondaryTextColor, height: 1),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          dividerColor: Colors.transparent,
+        ),
+        child: ExpansionTile(
+          iconColor: primaryTextColor,
+          collapsedIconColor: primaryTextColor,
+          tilePadding: const EdgeInsets.only(
+            left: 6,
+            right: 10,
           ),
-          Text(
-            miniCex.studentName ?? '',
-            style: textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+          initiallyExpanded: true,
+          childrenPadding: const EdgeInsets.fromLTRB(6, 8, 6, 12),
+          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+          expandedAlignment: Alignment.centerLeft,
+          title: const FormSectionHeader(
+              label: 'Mini-CEX Detail',
+              pathPrefix: 'icon_test.svg',
+              padding: 0),
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Case Title',
+                  style:
+                      textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
+                ),
+                Text(
+                  miniCex.dataCase ?? '',
+                  style: textTheme.titleMedium?.copyWith(
+                    color: primaryTextColor,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  'Examiner DPK',
+                  style:
+                      textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
+                ),
+                Text(
+                  miniCex.examinerDPKName ?? '',
+                  style: textTheme.titleMedium?.copyWith(
+                    color: primaryTextColor,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  'Location',
+                  style:
+                      textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
+                ),
+                Text(
+                  miniCex.location ?? '',
+                  style: textTheme.titleMedium?.copyWith(
+                    color: primaryTextColor,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Text(
-            'Student Id',
-            style: textTheme.bodySmall
-                ?.copyWith(color: secondaryTextColor, height: 1),
-          ),
-          Text(
-            miniCex.studentId ?? '',
-            style: textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Text(
-            'Case Title',
-            style: textTheme.bodySmall
-                ?.copyWith(color: secondaryTextColor, height: 1),
-          ),
-          Text(
-            miniCex.dataCase ?? '',
-            style: textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Text(
-            'Location',
-            style: textTheme.bodySmall
-                ?.copyWith(color: secondaryTextColor, height: 1),
-          ),
-          Text(miniCex.location ?? '',
-              style: textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              )),
-          const SizedBox(
-            height: 12,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

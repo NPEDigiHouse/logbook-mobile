@@ -16,10 +16,10 @@ import 'package:grouped_list/sliver_grouped_list.dart';
 import 'package:supervisor/features/sgl_cst/widgets/select_department_sheet.dart';
 import 'package:supervisor/helpers/notifier/filter_notifier.dart';
 
-enum NotificationRole { student, supervisor, coordinator }
+enum UserRole { student, supervisor, coordinator }
 
 class NotificationPage extends StatelessWidget {
-  final NotificationRole role;
+  final UserRole role;
   const NotificationPage({super.key, required this.role});
 
   @override
@@ -32,7 +32,7 @@ class NotificationPage extends StatelessWidget {
 }
 
 class _BuildNotificationPage extends StatefulWidget {
-  final NotificationRole role;
+  final UserRole role;
   const _BuildNotificationPage({super.key, required this.role});
 
   @override

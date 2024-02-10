@@ -167,7 +167,7 @@ class _ResidentMenuPageState extends State<ResidentMenuPage> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 1.15,
+                  childAspectRatio: 1.2,
                   crossAxisSpacing: 16,
                 ),
                 itemBuilder: (context, index) {

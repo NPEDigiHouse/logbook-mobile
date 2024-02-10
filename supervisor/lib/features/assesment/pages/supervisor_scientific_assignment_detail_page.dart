@@ -13,7 +13,8 @@ import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/dividers/section_divider.dart';
 import 'package:main/widgets/empty_data.dart';
-import 'package:main/widgets/headers/unit_header.dart';
+import 'package:main/widgets/headers/form_section_header.dart';
+import 'package:main/widgets/headers/unit_student_header.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'package:semicircle_indicator/semicircle_indicator.dart';
 
@@ -23,12 +24,8 @@ class SupervisorScientificAssignmentDetailPage extends StatefulWidget {
   final String id;
   final String supervisorId;
 
-  final String unitName;
   const SupervisorScientificAssignmentDetailPage(
-      {super.key,
-      required this.unitName,
-      required this.id,
-      required this.supervisorId});
+      {super.key, required this.id, required this.supervisorId});
 
   @override
   State<SupervisorScientificAssignmentDetailPage> createState() =>
@@ -70,12 +67,12 @@ class _SupervisorScientificAssignmentDetailPageState
               child: FilledButton.icon(
                 onPressed: () {
                   BlocProvider.of<AssesmentCubit>(context)
-                    .assesmentScientificAssignment(
-                      id: widget.id,
-                      sa: {
-                        'scores': provider.getScientificAssignmentData(),
-                      },
-                    );
+                      .assesmentScientificAssignment(
+                    id: widget.id,
+                    sa: {
+                      'scores': provider.getScientificAssignmentData(),
+                    },
+                  );
                 },
                 icon: const Icon(Icons.check_circle),
                 label: const Text('Update Changed'),
@@ -103,15 +100,15 @@ class _SupervisorScientificAssignmentDetailPageState
                 const SizedBox(
                   height: 16,
                 ),
-                DepartmentHeader(unitName: widget.unitName),
+                // DepartmentHeader(unitName: widget.unitName),
                 BlocConsumer<AssesmentCubit, AssesmentState>(
                   listener: (context, state) {
                     if (state.isAssementScientificAssignmentSuccess) {
                       provider.reset();
                       BlocProvider.of<AssesmentCubit>(context)
-                        .getScientiicAssignmentDetail(
-                          id: widget.id,
-                        );
+                          .getScientiicAssignmentDetail(
+                        id: widget.id,
+                      );
                       setState(() {});
                     }
                     if (state.scientificAssignmentDetail != null &&
@@ -137,6 +134,16 @@ class _SupervisorScientificAssignmentDetailPageState
                             return SpacingColumn(
                               spacing: 12,
                               children: [
+                                StudentDepartmentHeader(
+                                  unitName: state.scientificAssignmentDetail!
+                                          .unitName ??
+                                      '',
+                                  studentId: state
+                                      .scientificAssignmentDetail!.studentId,
+                                  studentName: state.scientificAssignmentDetail!
+                                          .studentName ??
+                                      '',
+                                ),
                                 ScientificAssignmentHeadCard(
                                     scientificAssignment:
                                         state.scientificAssignmentDetail!),
@@ -387,7 +394,7 @@ class TopStatCard extends StatelessWidget {
                     contain: true,
                     radius: 100,
                     progress: totalGrade != null && !totalGrade!.value.isNaN
-                        ? totalGrade!.value / 100
+                        ? totalGrade!.value
                         : 0,
                     strokeCap: StrokeCap.round,
                     color: totalGrade != null
@@ -407,7 +414,7 @@ class TopStatCard extends StatelessWidget {
                         ),
                         Text(
                           totalGrade != null && !totalGrade!.value.isNaN
-                              ? 'Avg : ${((totalGrade?.value ?? 0)).toStringAsFixed(2)}'
+                              ? 'Avg : ${((totalGrade?.value ?? 0) * 100).toStringAsFixed(2)}'
                               : '-',
                           style: textTheme.bodyMedium?.copyWith(
                             color: secondaryColor,
@@ -439,65 +446,90 @@ class ScientificAssignmentHeadCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        vertical: 16,
-        horizontal: 12,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         color: scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: <BoxShadow>[
           BoxShadow(
             offset: const Offset(0, 1),
-            blurRadius: 16,
-            color: Colors.black.withOpacity(.1),
-          ),
+            color: Colors.black.withOpacity(.06),
+            blurRadius: 8,
+          )
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Student Name',
-            style: textTheme.bodySmall
-                ?.copyWith(color: secondaryTextColor, height: 1),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          dividerColor: Colors.transparent,
+        ),
+        child: ExpansionTile(
+          iconColor: primaryTextColor,
+          collapsedIconColor: primaryTextColor,
+          tilePadding: const EdgeInsets.only(
+            left: 6,
+            right: 10,
           ),
-          Text(
-            scientificAssignment.studentName ?? '',
-            style: textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+          initiallyExpanded: true,
+          childrenPadding: const EdgeInsets.fromLTRB(6, 8, 6, 12),
+          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+          expandedAlignment: Alignment.centerLeft,
+          title: const FormSectionHeader(
+              label: 'Assignment Detail',
+              pathPrefix: 'icon_scientific_assignment.svg',
+              padding: 0),
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Case Title',
+                  style:
+                      textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
+                ),
+                Text(
+                  scientificAssignment.listScientificAssignmentCase ?? '',
+                  style: textTheme.titleMedium?.copyWith(
+                    color: primaryTextColor,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  'Location',
+                  style:
+                      textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
+                ),
+                Text(
+                  scientificAssignment.location ?? '',
+                  style: textTheme.titleMedium?.copyWith(
+                    color: primaryTextColor,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  'Supervising DPK',
+                  style:
+                      textTheme.bodyMedium?.copyWith(color: secondaryTextColor),
+                ),
+                Text(
+                  scientificAssignment.supervisingDPKName ?? '',
+                  style: textTheme.titleMedium?.copyWith(
+                    color: primaryTextColor,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Text(
-            'Student Id',
-            style: textTheme.bodySmall
-                ?.copyWith(color: secondaryTextColor, height: 1),
-          ),
-          Text(
-            scientificAssignment.studentId ?? '',
-            style: textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Text(
-            'Case Title',
-            style: textTheme.bodySmall
-                ?.copyWith(color: secondaryTextColor, height: 1),
-          ),
-          Text(
-            scientificAssignment.listScientificAssignmentCase ?? '-',
-            style: textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

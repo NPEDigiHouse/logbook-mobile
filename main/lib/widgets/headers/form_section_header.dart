@@ -10,11 +10,13 @@ class FormSectionHeader extends StatelessWidget {
   final String pathPrefix;
   final double padding;
   final VoidCallback? onTap;
+  final bool? isVerified;
   const FormSectionHeader(
       {super.key,
       required this.label,
       required this.pathPrefix,
       this.onTap,
+      this.isVerified,
       required this.padding});
 
   @override
@@ -47,6 +49,16 @@ class FormSectionHeader extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            if (isVerified ?? false) ...[
+              SizedBox(
+                width: 4,
+              ),
+              const Icon(
+                Icons.verified_rounded,
+                color: primaryColor,
+                size: 16,
+              ),
+            ],
             const Spacer(),
             if (onTap != null)
               SizedBox(

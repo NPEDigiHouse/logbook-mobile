@@ -1,4 +1,5 @@
 import 'package:common/features/auth/login_page.dart';
+import 'package:common/features/history/history_page.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:data/models/user/user_credential.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,7 +46,9 @@ class _StudentMainMenuState extends State<StudentMainMenu> {
   List<Widget> _listMenu(UserCredential credential) {
     return [
       StudentHomePage(credential: credential),
-      const HistoryPage(),
+      const HistoryView(
+        role: UserHistoryRole.student,
+      ),
       ProfilePage(credential: credential),
     ];
   }

@@ -11,6 +11,8 @@ class ListScientificAssignment {
   String? studentId;
   @JsonKey(name: "studentName")
   String? studentName;
+  @JsonKey(name: "unitName")
+  String? unitName;
   @JsonKey(name: "case")
   dynamic listScientificAssignmentCase;
   @JsonKey(name: "location")
@@ -25,6 +27,8 @@ class ListScientificAssignment {
   String? examinerDPKId;
   @JsonKey(name: "supervisingDPKId")
   String? supervisingDPKId;
+  @JsonKey(name: "supervisingDPKName")
+  String? supervisingDPKName;
 
   ListScientificAssignment({
     this.id,

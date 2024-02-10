@@ -134,16 +134,6 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                           builder: (context) {
                                             if (state.clinicalRecordResponse !=
                                                 null) {
-                                              final data = state
-                                                  .clinicalRecordResponse!
-                                                  .listClinicalRecords!;
-                                              if (data.isEmpty) {
-                                                return const EmptyData(
-                                                  subtitle:
-                                                      'Please upload clinical record data first!',
-                                                  title: 'Data Still Empty',
-                                                );
-                                              }
                                               return Column(
                                                 children: [
                                                   buildSearchFilterSection(
@@ -154,22 +144,33 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                                         .clinicalRecordResponse!
                                                         .unverifiedCounts!,
                                                   ),
-                                                  ListView.separated(
-                                                    physics:
-                                                        const NeverScrollableScrollPhysics(),
-                                                    shrinkWrap: true,
-                                                    itemBuilder:
-                                                        (context, index) =>
-                                                            ClinicalRecordCard(
-                                                      model: s[index],
-                                                      department: widget.activeDepartmentModel,
-                                                    ),
-                                                    separatorBuilder:
-                                                        (context, index) =>
-                                                            const SizedBox(
-                                                                height: 12),
-                                                    itemCount: s.length,
-                                                  ),
+                                                  Builder(builder: (context) {
+                                                    if (s.isEmpty) {
+                                                      return const EmptyData(
+                                                        subtitle:
+                                                            'Please upload clinical record data first!',
+                                                        title:
+                                                            'Data Still Empty',
+                                                      );
+                                                    }
+                                                    return ListView.separated(
+                                                      physics:
+                                                          const NeverScrollableScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      itemBuilder: (context,
+                                                              index) =>
+                                                          ClinicalRecordCard(
+                                                        model: s[index],
+                                                        department: widget
+                                                            .activeDepartmentModel,
+                                                      ),
+                                                      separatorBuilder:
+                                                          (context, index) =>
+                                                              const SizedBox(
+                                                                  height: 12),
+                                                      itemCount: s.length,
+                                                    );
+                                                  }),
                                                 ],
                                               );
                                             } else {

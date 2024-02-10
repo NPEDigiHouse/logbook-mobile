@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:common/features/auth/login_page.dart';
+import 'package:common/features/history/history_page.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:data/models/user/user_credential.dart';
 import 'package:main/blocs/logout_cubit/logout_cubit.dart';
@@ -28,7 +29,6 @@ class _MainMenuCoordinatorState extends State<MainMenuCoordinator> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(
         () => BlocProvider.of<UserCubit>(context)..getUserCredential());
@@ -47,7 +47,9 @@ class _MainMenuCoordinatorState extends State<MainMenuCoordinator> {
           CoordinatorHomePage(
             credential: credential,
           ),
-          const CoordinatorHistoryPage(),
+          const HistoryView(
+            role: UserHistoryRole.coordinator,
+          ),
           const CoordinatorProfilePage(),
         ];
 

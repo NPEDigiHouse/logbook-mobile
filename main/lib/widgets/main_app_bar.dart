@@ -62,3 +62,39 @@ class MainAppBar extends StatelessWidget {
     );
   }
 }
+
+class MainTitleAppBar extends StatelessWidget {
+  final List<Widget>? widget;
+  final String title;
+  final bool isPin;
+  const MainTitleAppBar(
+      {super.key, this.widget, required this.title, this.isPin = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      pinned: isPin ? true : false,
+      elevation: 0,
+      floating: isPin ? false : true,
+      snap: false,
+      shadowColor: Colors.transparent,
+      backgroundColor: scaffoldBackgroundColor,
+      surfaceTintColor: scaffoldBackgroundColor,
+      title: Text(title),
+      centerTitle: false,
+      titleTextStyle: textTheme.titleMedium?.copyWith(
+        color: primaryColor,
+        fontWeight: FontWeight.w700,
+        fontSize: 20,
+      ),
+      actions: (widget != null) ? widget! : null,
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Container(
+          height: 1,
+          color: const Color(0xFFE8E4E4),
+        ),
+      ),
+    );
+  }
+}

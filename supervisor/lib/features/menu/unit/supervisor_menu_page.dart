@@ -73,7 +73,7 @@ class _SupervisorMenuPageState extends State<SupervisorMenuPage> {
                   isLabelVisible: state > 0,
                   child: IconButton(
                     onPressed: () => context.navigateTo(
-                      const NotificationPage(role: NotificationRole.supervisor),
+                      const NotificationPage(role: UserRole.supervisor),
                     ),
                     icon: const Icon(
                       CupertinoIcons.bell,

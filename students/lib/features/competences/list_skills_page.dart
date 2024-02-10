@@ -119,13 +119,6 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                             },
                             builder: (context, state) {
                               if (state.listSkillsModel != null) {
-                                final data = state.listSkillsModel!.listSkills!;
-                                if (data.isEmpty) {
-                                  return const EmptyData(
-                                    subtitle: 'Please add skill data first!',
-                                    title: 'Data Still Empty',
-                                  );
-                                }
                                 return SingleChildScrollView(
                                   child: SpacingColumn(
                                     crossAxisAlignment:
@@ -155,42 +148,51 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                                       const SizedBox(
                                         height: 16,
                                       ),
-                                      ListView.separated(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) =>
-                                            TestGradeScoreCard(
-                                          skillId: s[index].skillTypeId ?? -1,
-                                          unitId: widget.unitId,
-                                          onDelete: () {
-                                            isMounted = false;
-                                            BlocProvider.of<CompetenceCubit>(
-                                                    context)
-                                                .deleteSkillById(
-                                                    id: s[index].skillId!);
-                                            BlocProvider.of<CompetenceCubit>(
-                                                    context)
-                                                .getListSkills();
+                                      Builder(builder: (context) {
+                                        if (s.isEmpty) {
+                                          return const EmptyData(
+                                            subtitle:
+                                                'Please add skill data first!',
+                                            title: 'Data Still Empty',
+                                          );
+                                        }
+                                        return ListView.separated(
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) =>
+                                              TestGradeScoreCard(
+                                            skillId: s[index].skillTypeId ?? -1,
+                                            unitId: widget.unitId,
+                                            onDelete: () {
+                                              isMounted = false;
+                                              BlocProvider.of<CompetenceCubit>(
+                                                      context)
+                                                  .deleteSkillById(
+                                                      id: s[index].skillId!);
+                                              BlocProvider.of<CompetenceCubit>(
+                                                      context)
+                                                  .getListSkills();
 
-                                            Navigator.pop(context);
-                                          },
-                                          id: s[index].skillId ?? '',
-                                          createdAt: DateTime
-                                              .fromMillisecondsSinceEpoch(
-                                                  s[index].createdAt ?? 0),
-                                          caseName: s[index].skillName!,
-                                          caseType: s[index].skillType!,
-                                          isVerified:
-                                              s[index].verificationStatus ==
-                                                  'VERIFIED',
-                                          supervisorName:
-                                              s[index].supervisorName ?? '',
-                                        ),
-                                        separatorBuilder: (context, index) =>
-                                            const SizedBox(height: 12),
-                                        itemCount: s.length,
-                                      ),
+                                              Navigator.pop(context);
+                                            },
+                                            id: s[index].skillId ?? '',
+                                            createdAt: DateTime
+                                                .fromMillisecondsSinceEpoch(
+                                                    s[index].createdAt ?? 0),
+                                            caseName: s[index].skillName!,
+                                            caseType: s[index].skillType!,
+                                            isVerified:
+                                                s[index].verificationStatus ==
+                                                    'VERIFIED',
+                                            supervisorName:
+                                                s[index].supervisorName ?? '',
+                                          ),
+                                          separatorBuilder: (context, index) =>
+                                              const SizedBox(height: 12),
+                                          itemCount: s.length,
+                                        );
+                                      }),
                                       const SizedBox(
                                         height: 16,
                                       ),
@@ -505,8 +507,6 @@ class TestGradeScoreCard extends StatelessWidget {
                     ];
                   },
                 ),
-            
-            
             ],
           ),
         ),

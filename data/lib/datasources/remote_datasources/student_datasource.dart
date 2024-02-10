@@ -14,6 +14,7 @@ import 'package:data/models/students/student_check_out_model.dart';
 import 'package:data/models/students/student_post_model.dart';
 import 'package:data/models/students/student_profile_post.dart';
 import 'package:data/models/students/student_statistic.dart';
+import 'package:data/models/units/student_department_recap.dart';
 import 'package:data/services/api_service.dart';
 import 'package:data/services/token_manager.dart';
 import 'package:data/utils/api_header.dart';
@@ -41,6 +42,7 @@ abstract class StudentDataSource {
   Future<List<StudentCheckOutModel>> getStudentCheckOut();
   Future<void> verifyCheckOut({required String studentId});
   Future<StudentById> getStudentById({required String studentId});
+  Future<StudentDepartmentRecap> getStudentRecap({required String studentId});
 
   Future<StudentStatistic> getStudentStatistic();
   Future<void> updateStudentData(
@@ -111,7 +113,6 @@ class StudentDataSourceImpl implements StudentDataSource {
   @override
   Future<void> updateStudentProfile(StudentProfile model) async {
     try {
-      print(model.toJson());
       await dio.put(
         '${ApiService.baseUrl}/students',
         options: await apiHeader.userOptions(),
@@ -371,6 +372,23 @@ class StudentDataSourceImpl implements StudentDataSource {
       if (e is DioException) {
         print(e.message);
       }
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<StudentDepartmentRecap> getStudentRecap(
+      {required String studentId}) async {
+    try {
+      final response = await dio.get(
+        '${ApiService.baseUrl}/students/$studentId/recap',
+        options: await apiHeader.userOptions(),
+      );
+
+      final dataResponse = DataResponse<dynamic>.fromJson(response.data);
+      final result = StudentDepartmentRecap.fromJson(dataResponse.data);
+      return result;
+    } catch (e) {
       throw failure(e);
     }
   }

@@ -68,148 +68,150 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () => Future.wait([
-          BlocProvider.of<SupervisorCubit2>(context)
-              .getAllStudentDepartment(page: page, query: query),
-        ]),
-        child: NestedScrollView(
-          floatHeaderSlivers: true,
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                floating: true,
-                automaticallyImplyLeading: false,
-                toolbarHeight: kToolbarHeight + 140,
-                backgroundColor: Colors.transparent,
-                surfaceTintColor: Colors.transparent,
-                systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarIconBrightness: Brightness.dark,
-                ),
-                flexibleSpace: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    buildTitleSection(),
-                    // buildFilterSection(),
-                  ],
-                ),
-                bottom: const PreferredSize(
-                  preferredSize: Size.fromHeight(6),
-                  child: Divider(
-                    height: 6,
-                    thickness: 6,
-                    color: onDisableColor,
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () => Future.wait([
+            BlocProvider.of<SupervisorCubit2>(context)
+                .getAllStudentDepartment(page: page, query: query),
+          ]),
+          child: NestedScrollView(
+            floatHeaderSlivers: true,
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  floating: true,
+                  snap: true,
+                  automaticallyImplyLeading: false,
+                  toolbarHeight: kToolbarHeight + 140,
+                  backgroundColor: scaffoldBackgroundColor,
+                  surfaceTintColor: Colors.transparent,
+                  systemOverlayStyle: const SystemUiOverlayStyle(
+                    statusBarIconBrightness: Brightness.dark,
+                  ),
+                  flexibleSpace: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      buildTitleSection(),
+                    ],
+                  ),
+                  bottom: const PreferredSize(
+                    preferredSize: Size.fromHeight(6),
+                    child: Divider(
+                      height: 6,
+                      thickness: 6,
+                      color: onDisableColor,
+                    ),
                   ),
                 ),
-              ),
-            ];
-          },
-          body: BlocSelector<DailyActivityCubit, DailyActivityState,
-              RequestState>(
-            selector: (state) => state.isStatus,
-            builder: (context, state2) {
-              return BlocSelector<SupervisorCubit2, SupervisorState2,
-                  (List<StudentDepartmentModel>?, RequestState)>(
-                selector: (state) => (state.listData, state.state),
-                builder: (context, state) {
-                  final data = state.$1;
-
-                  if (data == null || state.$2 == RequestState.loading) {
-                    return const CustomLoading();
-                  }
-                  return CustomScrollView(
-                    slivers: <Widget>[
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        sliver: SliverList.separated(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              leading: FutureBuilder(
-                                future:
-                                    BlocProvider.of<SupervisorsCubit>(context)
-                                        .getImageProfile(
-                                            id: data[index].userId ?? ''),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return CustomShimmer(
-                                        child: Container(
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.white,
-                                      ),
-                                      width: 50,
-                                      height: 50,
-                                    ));
-                                  } else if (snapshot.hasData) {
-                                    data[index].profileImage = snapshot.data;
-                                    return CircleAvatar(
-                                      radius: 25,
-                                      foregroundImage:
-                                          MemoryImage(snapshot.data!),
-                                    );
-                                  } else {
-                                    return ProfilePicPlaceholder(
-                                        height: 50,
-                                        name: data[index].studentName ?? '-',
-                                        isSmall: true,
-                                        width: 50);
-                                  }
-                                },
-                              ),
-                              title: Text(
-                                data[index].studentName ?? '',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    data[index].studentId ?? '',
-                                    style: textTheme.bodySmall?.copyWith(
-                                      color: borderColor,
-                                    ),
-                                  ),
-                                  RichText(
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    text: TextSpan(
-                                      style: textTheme.bodySmall?.copyWith(
-                                        color: secondaryTextColor,
-                                      ),
-                                      children: <TextSpan>[
-                                        const TextSpan(
-                                          text: 'Department:\t',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                            text: data[index]
-                                                .activeDepartmentName),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              onTap: () => context.navigateTo(
-                                DailyActivityDetailPage(student: data[index]),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return const SizedBox(height: 8);
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              );
+              ];
             },
+            body: BlocSelector<DailyActivityCubit, DailyActivityState,
+                RequestState>(
+              selector: (state) => state.isStatus,
+              builder: (context, state2) {
+                return BlocSelector<SupervisorCubit2, SupervisorState2,
+                    (List<StudentDepartmentModel>?, RequestState)>(
+                  selector: (state) => (state.listData, state.state),
+                  builder: (context, state) {
+                    final data = state.$1;
+
+                    if (data == null || state.$2 == RequestState.loading) {
+                      return const CustomLoading();
+                    }
+                    return CustomScrollView(
+                      slivers: <Widget>[
+                        SliverPadding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          sliver: SliverList.separated(
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                leading: FutureBuilder(
+                                  future:
+                                      BlocProvider.of<SupervisorsCubit>(context)
+                                          .getImageProfile(
+                                              id: data[index].userId ?? ''),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CustomShimmer(
+                                          child: Container(
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                        ),
+                                        width: 50,
+                                        height: 50,
+                                      ));
+                                    } else if (snapshot.hasData) {
+                                      data[index].profileImage = snapshot.data;
+                                      return CircleAvatar(
+                                        radius: 25,
+                                        foregroundImage:
+                                            MemoryImage(snapshot.data!),
+                                      );
+                                    } else {
+                                      return ProfilePicPlaceholder(
+                                          height: 50,
+                                          name: data[index].studentName ?? '-',
+                                          isSmall: true,
+                                          width: 50);
+                                    }
+                                  },
+                                ),
+                                title: Text(
+                                  data[index].studentName ?? '',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      data[index].studentId ?? '',
+                                      style: textTheme.bodySmall?.copyWith(
+                                        color: borderColor,
+                                      ),
+                                    ),
+                                    RichText(
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      text: TextSpan(
+                                        style: textTheme.bodySmall?.copyWith(
+                                          color: secondaryTextColor,
+                                        ),
+                                        children: <TextSpan>[
+                                          const TextSpan(
+                                            text: 'Department:\t',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                              text: data[index]
+                                                  .activeDepartmentName),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                onTap: () => context.navigateTo(
+                                  DailyActivityDetailPage(student: data[index]),
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(height: 8);
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),

@@ -118,13 +118,6 @@ class _ListCasesPageState extends State<ListCasesPage> {
                             },
                             builder: (context, state) {
                               if (state.listCasesModel != null) {
-                                final data = state.listCasesModel!.listCases!;
-                                if (data.isEmpty) {
-                                  return const EmptyData(
-                                    subtitle: 'Please add case data first!',
-                                    title: 'Data Still Empty',
-                                  );
-                                }
                                 return SingleChildScrollView(
                                   child: SpacingColumn(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -155,41 +148,50 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                       const SizedBox(
                                         height: 16,
                                       ),
-                                      ListView.separated(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) =>
-                                            TestGradeScoreCard(
-                                          id: s[index].caseId!,
-                                          skillId: s[index].caseTypeId ?? -1,
-                                          unitId: widget.unitId,
-                                          onDelete: () {
-                                            isMounted = false;
-                                            BlocProvider.of<CompetenceCubit>(
-                                                    context)
-                                                .deleteCaseById(
-                                                    id: s[index].caseId!);
-                                            BlocProvider.of<CompetenceCubit>(
-                                                    context)
-                                                .getListCases();
-                                            Navigator.pop(context);
-                                          },
-                                          createdAt: DateTime
-                                              .fromMillisecondsSinceEpoch(
-                                                  (s[index].createdAt ?? 0)),
-                                          caseName: s[index].caseName!,
-                                          caseType: s[index].caseType!,
-                                          supervisorName:
-                                              s[index].supervisorName ?? '',
-                                          isVerified:
-                                              s[index].verificationStatus ==
-                                                  'VERIFIED',
-                                        ),
-                                        separatorBuilder: (context, index) =>
-                                            const SizedBox(height: 12),
-                                        itemCount: s.length,
-                                      ),
+                                      Builder(builder: (context) {
+                                        if (s.isEmpty) {
+                                          return const EmptyData(
+                                            subtitle:
+                                                'Please add case data first!',
+                                            title: 'Data Still Empty',
+                                          );
+                                        }
+                                        return ListView.separated(
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) =>
+                                              TestGradeScoreCard(
+                                            id: s[index].caseId!,
+                                            skillId: s[index].caseTypeId ?? -1,
+                                            unitId: widget.unitId,
+                                            onDelete: () {
+                                              isMounted = false;
+                                              BlocProvider.of<CompetenceCubit>(
+                                                      context)
+                                                  .deleteCaseById(
+                                                      id: s[index].caseId!);
+                                              BlocProvider.of<CompetenceCubit>(
+                                                      context)
+                                                  .getListCases();
+                                              Navigator.pop(context);
+                                            },
+                                            createdAt: DateTime
+                                                .fromMillisecondsSinceEpoch(
+                                                    (s[index].createdAt ?? 0)),
+                                            caseName: s[index].caseName!,
+                                            caseType: s[index].caseType!,
+                                            supervisorName:
+                                                s[index].supervisorName ?? '',
+                                            isVerified:
+                                                s[index].verificationStatus ==
+                                                    'VERIFIED',
+                                          ),
+                                          separatorBuilder: (context, index) =>
+                                              const SizedBox(height: 12),
+                                          itemCount: s.length,
+                                        );
+                                      }),
                                       const SizedBox(
                                         height: 12,
                                       ),

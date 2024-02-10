@@ -9,6 +9,7 @@ import 'package:data/models/students/student_check_out_model.dart';
 import 'package:data/models/students/student_profile_post.dart';
 import 'package:data/models/students/student_statistic.dart';
 import 'package:data/models/supervisors/supervisor_student_model.dart';
+import 'package:data/models/units/student_department_recap.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 
@@ -265,6 +266,24 @@ class StudentCubit extends Cubit<StudentState> {
       final result = await dataSourceSp.getAllStudents();
 
       emit(state.copyWith(students: result));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getStudentRecap({required String studentId}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getStudentRecap(studentId: studentId);
+
+      emit(state.copyWith(studentDepartmentRecap: result));
     } catch (e) {
       emit(
         state.copyWith(

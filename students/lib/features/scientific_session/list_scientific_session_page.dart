@@ -134,16 +134,6 @@ class _StudentListScientificSessionPageState
                                             if (state
                                                     .scientificSessionResponse !=
                                                 null) {
-                                              final data = state
-                                                  .scientificSessionResponse!
-                                                  .listScientificSessions!;
-                                              if (data.isEmpty) {
-                                                return const EmptyData(
-                                                  subtitle:
-                                                      'Please upload scientific session data first!',
-                                                  title: 'Data Still Empty',
-                                                );
-                                              }
                                               return Column(
                                                 children: [
                                                   // SizedBox(
@@ -157,23 +147,33 @@ class _StudentListScientificSessionPageState
                                                         .scientificSessionResponse!
                                                         .unverifiedCounts!,
                                                   ),
-                                                  ListView.separated(
-                                                    physics:
-                                                        const NeverScrollableScrollPhysics(),
-                                                    shrinkWrap: true,
-                                                    itemBuilder: (context,
-                                                            index) =>
-                                                        StudentScientificSessionCard(
-                                                      department: widget
-                                                          .activeDepartmentModel,
-                                                      model: s[index],
-                                                    ),
-                                                    separatorBuilder:
-                                                        (context, index) =>
-                                                            const SizedBox(
-                                                                height: 12),
-                                                    itemCount: s.length,
-                                                  ),
+                                                  Builder(builder: (context) {
+                                                    if (s.isEmpty) {
+                                                      return const EmptyData(
+                                                        subtitle:
+                                                            'Please upload scientific session data first!',
+                                                        title:
+                                                            'Data Still Empty',
+                                                      );
+                                                    }
+                                                    return ListView.separated(
+                                                      physics:
+                                                          const NeverScrollableScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      itemBuilder: (context,
+                                                              index) =>
+                                                          StudentScientificSessionCard(
+                                                        department: widget
+                                                            .activeDepartmentModel,
+                                                        model: s[index],
+                                                      ),
+                                                      separatorBuilder:
+                                                          (context, index) =>
+                                                              const SizedBox(
+                                                                  height: 12),
+                                                      itemCount: s.length,
+                                                    );
+                                                  }),
                                                 ],
                                               );
                                             } else {

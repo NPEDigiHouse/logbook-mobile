@@ -38,8 +38,7 @@ class CoordinatorHomePage extends StatelessWidget {
                   isLabelVisible: state > 0,
                   child: IconButton(
                     onPressed: () => context.navigateTo(
-                      const NotificationPage(
-                          role: NotificationRole.coordinator),
+                      const NotificationPage(role: UserRole.coordinator),
                     ),
                     icon: const Icon(
                       CupertinoIcons.bell,

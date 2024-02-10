@@ -21,7 +21,9 @@ ListScientificAssignment _$ListScientificAssignmentFromJson(
       academicSupervisorId: json['academicSupervisorId'] as String?,
       examinerDPKId: json['examinerDPKId'] as String?,
       supervisingDPKId: json['supervisingDPKId'] as String?,
-    );
+    )
+      ..unitName = json['unitName'] as String?
+      ..supervisingDPKName = json['supervisingDPKName'] as String?;
 
 Map<String, dynamic> _$ListScientificAssignmentToJson(
         ListScientificAssignment instance) =>
@@ -29,6 +31,7 @@ Map<String, dynamic> _$ListScientificAssignmentToJson(
       'id': instance.id,
       'studentId': instance.studentId,
       'studentName': instance.studentName,
+      'unitName': instance.unitName,
       'case': instance.listScientificAssignmentCase,
       'location': instance.location,
       'scores': instance.scores,
@@ -36,6 +39,7 @@ Map<String, dynamic> _$ListScientificAssignmentToJson(
       'academicSupervisorId': instance.academicSupervisorId,
       'examinerDPKId': instance.examinerDPKId,
       'supervisingDPKId': instance.supervisingDPKId,
+      'supervisingDPKName': instance.supervisingDPKName,
     };
 
 Score _$ScoreFromJson(Map<String, dynamic> json) => Score(

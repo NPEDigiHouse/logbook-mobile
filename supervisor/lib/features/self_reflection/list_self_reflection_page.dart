@@ -2,6 +2,7 @@ import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/models/self_reflection/self_reflection_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
@@ -79,7 +80,8 @@ class _SupervisorListSelfReflectionsPageState
                     IconButton(
                       icon: const Icon(CupertinoIcons.check_mark_circled),
                       onPressed: () {
-                        context.navigateTo(const SupervisorListSelfReflectionsVerifiedPage());
+                        context.navigateTo(
+                            const SupervisorListSelfReflectionsVerifiedPage());
                       },
                     ),
                   ],
@@ -95,7 +97,8 @@ class _SupervisorListSelfReflectionsPageState
                     },
                     child: Builder(
                       builder: (context) {
-                        if (state.listData == null) {
+                        if (state.listData == null ||
+                            state.state == RequestState.loading) {
                           return const CustomLoading();
                         }
                         if (!isMounted) {
@@ -228,6 +231,5 @@ class _SupervisorListSelfReflectionsPageState
             },
           );
         });
-  
   }
 }

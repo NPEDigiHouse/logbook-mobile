@@ -10,16 +10,14 @@ import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/dividers/section_divider.dart';
 import 'package:main/widgets/empty_data.dart';
-import 'package:main/widgets/headers/unit_header.dart';
+import 'package:main/widgets/headers/unit_student_header.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'package:main/widgets/spacing_row.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class SupervisorPersonalBehaviorDetailPage extends StatefulWidget {
   final String id;
-  final String unitName;
-  const SupervisorPersonalBehaviorDetailPage(
-      {super.key, required this.unitName, required this.id});
+  const SupervisorPersonalBehaviorDetailPage({super.key, required this.id});
 
   @override
   State<SupervisorPersonalBehaviorDetailPage> createState() =>
@@ -32,10 +30,9 @@ class _SupervisorPersonalBehaviorDetailPageState
   void initState() {
     Future.microtask(
       () {
-        BlocProvider.of<AssesmentCubit>(context)
-          .getPersonalBehaviorDetail(
-            id: widget.id,
-          );
+        BlocProvider.of<AssesmentCubit>(context).getPersonalBehaviorDetail(
+          id: widget.id,
+        );
       },
     );
     super.initState();
@@ -64,14 +61,13 @@ class _SupervisorPersonalBehaviorDetailPageState
                 const SizedBox(
                   height: 16,
                 ),
-                DepartmentHeader(unitName: widget.unitName),
                 BlocConsumer<AssesmentCubit, AssesmentState>(
                   listener: (context, state) {
                     if (state.isPersonalBehaviorVerify) {
                       BlocProvider.of<AssesmentCubit>(context)
-                        .getPersonalBehaviorDetail(
-                          id: widget.id,
-                        );
+                          .getPersonalBehaviorDetail(
+                        id: widget.id,
+                      );
                     }
                   },
                   builder: (context, state) {
@@ -80,6 +76,18 @@ class _SupervisorPersonalBehaviorDetailPageState
                         return SpacingColumn(
                           spacing: 12,
                           children: [
+                            StudentDepartmentHeader(
+                              unitName:
+                                  state.personalBehaviorDetail?.unitName ?? '',
+                              studentId:
+                                  state.personalBehaviorDetail?.studentId,
+                              studentName:
+                                  state.personalBehaviorDetail?.studentName ??
+                                      '',
+                              supervisingDpkName: state.personalBehaviorDetail
+                                      ?.supervisingDPKName ??
+                                  '',
+                            ),
                             TopStatCard(
                               title: 'Overview',
                               achivied: state.personalBehaviorDetail!.scores!
@@ -355,8 +363,8 @@ class PersonalBehaviorCard extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 4),
                           decoration: BoxDecoration(
                             color: scoreData.verificationStatus == 'VERIFIED'
                                 ? primaryColor
@@ -413,8 +421,10 @@ class PersonalBehaviorCard extends StatelessWidget {
                     OutlinedButton(
                       onPressed: () {
                         BlocProvider.of<AssesmentCubit>(context)
-                          .verifyPersonalBehavior(
-                              id: scoreData.id!, isVerified: false, pbId: pbId);
+                            .verifyPersonalBehavior(
+                                id: scoreData.id!,
+                                isVerified: false,
+                                pbId: pbId);
                       },
                       child: const Text('Not Achieved'),
                     ),
@@ -424,8 +434,10 @@ class PersonalBehaviorCard extends StatelessWidget {
                     FilledButton(
                       onPressed: () {
                         BlocProvider.of<AssesmentCubit>(context)
-                          .verifyPersonalBehavior(
-                              id: scoreData.id!, isVerified: true, pbId: pbId);
+                            .verifyPersonalBehavior(
+                                id: scoreData.id!,
+                                isVerified: true,
+                                pbId: pbId);
                       },
                       child: const Text('Achieved'),
                     ),

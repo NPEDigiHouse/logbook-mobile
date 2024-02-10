@@ -12,7 +12,7 @@ import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 class NotificationCard extends StatelessWidget {
   final ActivityType activityType;
   final NotificationModel notification;
-  final NotificationRole role;
+  final UserRole role;
   const NotificationCard(
       {super.key,
       required this.activityType,

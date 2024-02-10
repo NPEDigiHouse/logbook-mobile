@@ -528,7 +528,7 @@ class _DetailScientificSessionPageState
                               onRatingUpdate: (rating) {},
                             ),
                             Text(
-                              '"Good"',
+                              Utils.rateToText(state.detail?.rating??0),
                               style: textTheme.bodyLarge
                                   ?.copyWith(color: primaryColor),
                             ),

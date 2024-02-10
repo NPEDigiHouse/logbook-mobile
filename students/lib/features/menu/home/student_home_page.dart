@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:main/blocs/notification_cubit/notification_cubit.dart';
+import 'package:main/blocs/student_cubit/student_cubit.dart';
 import 'package:main/blocs/unit_cubit/unit_cubit.dart';
 import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/glassmorphism.dart';
@@ -22,6 +23,7 @@ import 'package:main/widgets/main_app_bar.dart';
 import 'package:main/widgets/menu_switch.dart';
 import 'package:main/widgets/verify_dialog.dart';
 import 'package:students/features/menu/home/student_home_page.skeleton.dart';
+import 'package:students/features/recap/recap_page.dart';
 import '../../assesment/assesment_home_page.dart';
 import '../../clinical_record/pages/list_clinical_record_page.dart';
 import '../../competences/competences_home_page.dart';
@@ -54,6 +56,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
       BlocProvider.of<DepartmentCubit>(context, listen: false)
           .getActiveDepartment();
       BlocProvider.of<NotificationCubit>(context).getNotifications(page: 1);
+      Future.microtask(() => BlocProvider.of<StudentCubit>(context)
+          .getStudentRecap(
+              studentId: widget.credential.student?.studentId ?? ''));
     });
     _isList = ValueNotifier(false);
   }
@@ -146,8 +151,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       isLabelVisible: state > 0,
                       child: IconButton(
                         onPressed: () => context.navigateTo(
-                          const NotificationPage(
-                              role: NotificationRole.student),
+                          const NotificationPage(role: UserRole.student),
                         ),
                         icon: const Icon(
                           CupertinoIcons.bell,
@@ -296,26 +300,75 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                         const SizedBox(
                                           width: 8,
                                         ),
-                                        InkWell(
-                                          onTap: () {},
-                                          child: const Glassmorphism(
-                                            blur: 5,
-                                            opacity: .15,
-                                            radius: 99,
-                                            child: Padding(
-                                              padding: EdgeInsets.all(6),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    CupertinoIcons.hourglass,
-                                                    size: 20,
-                                                    color: backgroundColor,
+                                        BlocSelector<StudentCubit, StudentState,
+                                            bool>(
+                                          selector: (state) =>
+                                              state.studentDepartmentRecap
+                                                  ?.isCompleted ??
+                                              false,
+                                          builder: (context, state) {
+                                            return InkWell(
+                                              onTap: () {
+                                                context.navigateTo(
+                                                    StudentRecapPage(
+                                                  studentId: widget.credential
+                                                          .student?.studentId ??
+                                                      '',
+                                                ));
+                                              },
+                                              child: Badge(
+                                                alignment: Alignment.topRight,
+                                                label: Container(
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: errorColor,
+                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: const Text(
+                                                      '!',
+                                                      style: TextStyle(
+                                                          fontSize: 10,
+                                                          height: 1,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              scaffoldBackgroundColor),
+                                                    )),
+                                                padding: EdgeInsets.zero,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                isLabelVisible: !state,
+                                                child: Glassmorphism(
+                                                  blur: 5,
+                                                  opacity: .15,
+                                                  radius: 99,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(6),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: <Widget>[
+                                                        Icon(
+                                                          state
+                                                              ? Icons
+                                                                  .check_circle
+                                                              : CupertinoIcons
+                                                                  .hourglass,
+                                                          size: 20,
+                                                          color:
+                                                              backgroundColor,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ],
+                                                ),
                                               ),
-                                            ),
-                                          ),
+                                            );
+                                          },
                                         ),
                                       ],
                                     ),
@@ -454,32 +507,46 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                   ),
                             children: <Widget>[
                               activeDepartmentModel.checkOutStatus == null
-                                  ? SizedBox(
-                                      width: double.infinity,
-                                      child: FilledButton.icon(
-                                        onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              barrierLabel: '',
-                                              barrierDismissible: false,
-                                              builder: (_) => VerifyDialog(
-                                                    onTap: () {
-                                                      BlocProvider.of<
-                                                                  DepartmentCubit>(
-                                                              context,
-                                                              listen: false)
-                                                          .checkOutActiveDepartment();
-                                                      context.back();
-                                                    },
-                                                  ));
-                                        },
-                                        icon: SvgPicture.asset(
-                                          AssetPath.getIcon(
-                                              'send_alt_filled.svg'),
-                                          width: 20,
-                                        ),
-                                        label: const Text('Send Report'),
-                                      ),
+                                  ? BlocSelector<StudentCubit, StudentState,
+                                      bool>(
+                                      selector: (state) =>
+                                          state.studentDepartmentRecap
+                                              ?.isCompleted ??
+                                          false,
+                                      builder: (context, state) {
+                                        return SizedBox(
+                                          width: double.infinity,
+                                          child: FilledButton.icon(
+                                            onPressed: (state)
+                                                ? () {
+                                                    showDialog(
+                                                        context: context,
+                                                        barrierLabel: '',
+                                                        barrierDismissible:
+                                                            false,
+                                                        builder:
+                                                            (_) => VerifyDialog(
+                                                                  onTap: () {
+                                                                    BlocProvider.of<DepartmentCubit>(
+                                                                            context,
+                                                                            listen:
+                                                                                false)
+                                                                        .checkOutActiveDepartment();
+                                                                    context
+                                                                        .back();
+                                                                  },
+                                                                ));
+                                                  }
+                                                : null,
+                                            icon: SvgPicture.asset(
+                                              AssetPath.getIcon(
+                                                  'send_alt_filled.svg'),
+                                              width: 20,
+                                            ),
+                                            label: const Text('Send Report'),
+                                          ),
+                                        );
+                                      },
                                     )
                                   : Container(
                                       width: double.infinity,

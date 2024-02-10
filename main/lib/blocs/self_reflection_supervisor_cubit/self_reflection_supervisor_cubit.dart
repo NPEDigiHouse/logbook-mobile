@@ -21,9 +21,7 @@ class SelfReflectionSupervisorCubit
 
       final result = await dataSource.getSelfReflections(verified: false);
       try {
-        emit(state.copyWith(
-          listData: result,
-        ));
+        emit(state.copyWith(listData: result, requestState: RequestState.data));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

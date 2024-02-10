@@ -65,10 +65,10 @@ class HistoryData {
 }
 
 class HistoryHelper {
-  static List<Activity> convertHistoryToActivity(
-    List<HistoryModel> history,
-    RoleHistory roleHistory,
-    BuildContext context, {
+  static List<Activity> convertHistoryToActivity({
+    required List<HistoryModel> history,
+    required RoleHistory roleHistory,
+    required BuildContext context,
     bool isCeu = false,
     String? supervisorId,
     bool isCoordinator = false,
@@ -162,7 +162,6 @@ class HistoryHelper {
                     isExaminerDPKExist: true,
                   ))
                 : context.navigateTo(SupervisorMiniCexDetailPage(
-                    unitName: element.unitName ?? '',
                     supervisorId: element.supervisorId ?? '',
                     id: element.attachment ?? '')),
             pathIcon: 'icon_test.svg'),
@@ -172,7 +171,6 @@ class HistoryHelper {
                 ? context.navigateTo(StudentPersonalBehaviorPage(
                     unitName: element.unitName ?? ''))
                 : context.navigateTo(SupervisorPersonalBehaviorDetailPage(
-                    unitName: element.unitName ?? '',
                     id: element.attachment ?? '')),
             pathIcon: 'icon_personal_behavior.svg'),
         'SCIENTIFIC_ASSESMENT': HistoryData(
@@ -182,7 +180,6 @@ class HistoryHelper {
                     isSupervisingDPKExist: true,
                     unitName: element.unitName ?? ''))
                 : context.navigateTo(SupervisorScientificAssignmentDetailPage(
-                    unitName: element.unitName ?? '',
                     id: element.attachment ?? '',
                     supervisorId: element.supervisorId ?? '',
                   )),

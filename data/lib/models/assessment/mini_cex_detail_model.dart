@@ -9,10 +9,13 @@ class MiniCexStudentDetailModel {
   String? id;
   @JsonKey(name: "location")
   String? location;
+  String? unitName;
   @JsonKey(name: "academicSupervisorId")
   String? academicSupervisorId;
   @JsonKey(name: "examinerDPKId")
   String? examinerDPKId;
+  @JsonKey(name: "examinerDPKName")
+  String? examinerDPKName;
   @JsonKey(name: "supervisingDPKId")
   String? supervisingDPKId;
   @JsonKey(name: "studentId")
@@ -31,6 +34,8 @@ class MiniCexStudentDetailModel {
     this.studentId,
     this.studentName,
     this.scores,
+    this.unitName,
+    this.examinerDPKName,
     this.academicSupervisorId,
     this.examinerDPKId,
     this.supervisingDPKId,

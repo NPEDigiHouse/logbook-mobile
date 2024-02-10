@@ -8,9 +8,11 @@ class StudentDepartmentHeader extends StatelessWidget {
   final String studentName;
   final String? studentId;
   final String? supervisorName;
+  final String? supervisingDpkName;
   const StudentDepartmentHeader(
       {super.key,
       this.unitName,
+      this.supervisingDpkName,
       required this.studentName,
       this.supervisorName,
       this.studentId});
@@ -70,7 +72,7 @@ class StudentDepartmentHeader extends StatelessWidget {
                     height: 4,
                   ),
                   Text(
-                    'ID',
+                    'Student ID',
                     style: textTheme.bodyMedium
                         ?.copyWith(color: secondaryTextColor),
                   ),
@@ -116,8 +118,25 @@ class StudentDepartmentHeader extends StatelessWidget {
                     ),
                   ),
                 ],
+                if (supervisingDpkName != null) ...[
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    'Supervising DPK Name',
+                    style: textTheme.bodyMedium
+                        ?.copyWith(color: secondaryTextColor),
+                  ),
+                  Text(
+                    supervisingDpkName!,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: primaryTextColor,
+                      height: 1,
+                    ),
+                  ),
+                ],
                 const SizedBox(
-                  height: 20,
+                  height: 16,
                 ),
               ],
             ),

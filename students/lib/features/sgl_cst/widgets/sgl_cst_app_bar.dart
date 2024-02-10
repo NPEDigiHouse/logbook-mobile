@@ -32,7 +32,7 @@ class SglCstAppBar extends StatelessWidget {
       actions: [
         IconButton(
           icon: const Icon(
-            CupertinoIcons.doc_checkmark,
+            CupertinoIcons.check_mark_circled,
             color: scaffoldBackgroundColor,
           ),
           onPressed: onHistoryClick,

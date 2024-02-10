@@ -66,15 +66,15 @@ class NotifiItemHelper {
     final difference = now.difference(time).inDays;
 
     if (difference == 0) {
-      return 'today';
+      return 'Today';
     } else if (difference == 1) {
-      return 'yesterday';
+      return 'Yesterday';
     } else if (difference <= 7) {
-      return 'last 7 days';
+      return 'Last 7 days';
     } else if (difference <= 30) {
-      return 'last 30 days';
+      return 'Last 30 days';
     } else {
-      return 'older';
+      return 'Older';
     }
   }
 
@@ -106,7 +106,7 @@ class NotifiItemHelper {
     "DAILY_ACTIVITY": ActivityType.dailyActivity,
   };
   static Map<ActivityType, NotifData> getNotifData(BuildContext context,
-          NotificationRole role, NotificationModel notification) =>
+          UserRole role, NotificationModel notification) =>
       {
         ActivityType.sgl: NotifData(
             name: 'SGL',
@@ -117,7 +117,7 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(SupervisorSglDetailPage(
                   studentId: notification.senderId ?? '',
                   isCeu: false,
@@ -127,7 +127,7 @@ class NotifiItemHelper {
                 ));
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 if (notification.unit != null) {
                   context.navigateTo(
                       ListSglPage(activeDepartmentModel: notification.unit!));
@@ -144,7 +144,7 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(SupervisorCstDetailPage(
                   studentId: notification.senderId ?? '',
                   isCeu: false,
@@ -154,7 +154,7 @@ class NotifiItemHelper {
                 ));
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 if (notification.unit != null) {
                   context.navigateTo(
                       ListCstPage(activeDepartmentModel: notification.unit!));
@@ -171,14 +171,14 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(SupervisorDetailClinicalRecordPage(
                   id: notification.submissionId ?? '',
                   unitName: notification.unitName,
                 ));
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 if (notification.unit != null) {
                   context.navigateTo(DetailClinicalRecordPage(
                     id: notification.submissionId ?? '',
@@ -197,7 +197,7 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(
                   SupervisorDetailScientificSessionPage(
                     id: notification.submissionId ?? '',
@@ -205,7 +205,7 @@ class NotifiItemHelper {
                 );
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 context.navigateTo(
                   DetailScientificSessionPage(
                     id: notification.submissionId ?? '',
@@ -224,13 +224,13 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(SupervisorSelfReflectionStudentPage(
                   studentId: notification.senderActorId ?? '',
                 ));
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 if (notification.unit != null) {
                   context.navigateTo(
                     StudentSelfReflectionHomePage(
@@ -251,7 +251,7 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(
                   SupervisorListCasesPage(
                     studentId: notification.senderActorId ?? '',
@@ -261,7 +261,7 @@ class NotifiItemHelper {
                 );
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 context.navigateTo(
                   ListCasesPage(
                     unitId: notification.unitId ?? '',
@@ -280,7 +280,7 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(
                   SupervisorListSkillsPage(
                     studentId: notification.senderActorId ?? '',
@@ -290,7 +290,7 @@ class NotifiItemHelper {
                 );
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 context.navigateTo(
                   ListSkillsPage(
                     unitId: notification.unitId ?? '',
@@ -309,14 +309,13 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(SupervisorMiniCexDetailPage(
-                    unitName: notification.unitName ?? '',
                     supervisorId: notification.receiverId ?? '',
                     id: notification.submissionId ?? ''));
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 context.navigateTo(StudentTestGrade(
                   unitName: notification.unitName ?? '',
                   isExaminerDPKExist: true,
@@ -333,13 +332,12 @@ class NotifiItemHelper {
                   .readNotification(id: notification.id ?? '');
             });
             //supervisor
-            if (role == NotificationRole.supervisor) {
+            if (role == UserRole.supervisor) {
               context.navigateTo(SupervisorPersonalBehaviorDetailPage(
-                  unitName: notification.unitName ?? '',
                   id: notification.submissionId ?? ''));
             }
             //student
-            if (role == NotificationRole.student) {
+            if (role == UserRole.student) {
               context.navigateTo(StudentPersonalBehaviorPage(
                   unitName: notification.unitName ?? ''));
             }
@@ -355,15 +353,14 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(SupervisorScientificAssignmentDetailPage(
-                  unitName: notification.unitName ?? '',
                   id: notification.submissionId ?? '',
                   supervisorId: notification.receiverId ?? '',
                 ));
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 context.navigateTo(StudentScientificAssignmentPage(
                     isSupervisingDPKExist: true,
                     unitName: notification.unitName ?? ''));
@@ -379,13 +376,13 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(SpecialReportDetailPage(
                   studentId: notification.senderActorId ?? '',
                 ));
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 if (notification.unit != null) {
                   context.navigateTo(SpecialReportHomePage(
                     activeDepartmentModel: notification.unit!,
@@ -434,13 +431,13 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
-              if (role == NotificationRole.supervisor) {
+              if (role == UserRole.supervisor) {
                 context.navigateTo(SupervisorDailyActivityDetailPage(
                   id: notification.submissionId ?? '',
                 ));
               }
               //student
-              if (role == NotificationRole.student) {
+              if (role == UserRole.student) {
                 context.navigateTo(SupervisorDailyActivityDetailPage(
                   id: notification.submissionId ?? '',
                   isHistory: true,

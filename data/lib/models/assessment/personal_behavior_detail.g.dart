@@ -12,6 +12,8 @@ PersonalBehaviorDetailModel _$PersonalBehaviorDetailModelFromJson(
       id: json['id'],
       studentId: json['studentId'] as String?,
       studentName: json['studentName'] as String?,
+      unitName: json['unitName'] as String?,
+      supervisingDPKName: json['supervisingDPKName'] as String?,
       scores: (json['scores'] as List<dynamic>?)
           ?.map((e) => Score.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -23,6 +25,8 @@ Map<String, dynamic> _$PersonalBehaviorDetailModelToJson(
       'id': instance.id,
       'studentId': instance.studentId,
       'studentName': instance.studentName,
+      'unitName': instance.unitName,
+      'supervisingDPKName': instance.supervisingDPKName,
       'scores': instance.scores,
     };
 
