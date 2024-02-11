@@ -79,7 +79,6 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
                 ],
               ),
               const SizedBox(height: 16),
-
               const ItemDivider(),
               const SizedBox(height: 16),
               Text(
@@ -133,38 +132,77 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
                 ],
               ),
               const SizedBox(height: 16),
-
-            
               const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        barrierLabel: '',
-                        barrierDismissible: false,
-                        builder: (_) => VerifyDialog(
-                              onTap: () {
-                                BlocProvider.of<StudentCubit>(context)
-                                    .verifyCheckIn(
-                                        studentId: widget.student.studentId!);
-                                Navigator.pop(context);
-                              },
-                              isSubmit: true,
-                            ));
-                  },
-                  icon: const Icon(
-                    Icons.verified_rounded,
-                    size: 18,
-                  ),
-                  label: const Text(
-                    'Verify',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton.icon(
+                      style:
+                          FilledButton.styleFrom(backgroundColor: errorColor),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            barrierLabel: '',
+                            barrierDismissible: false,
+                            builder: (_) => VerifyDialog(
+                                  onTap: () {
+                                    BlocProvider.of<StudentCubit>(context)
+                                        .verifyCheckIn(
+                                            studentId:
+                                                widget.student.studentId!,
+                                            isVerified: false);
+                                    Navigator.pop(context);
+                                  },
+                                  isSubmit: true,
+                                ));
+                      },
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        size: 18,
+                      ),
+                      label: const Text(
+                        'Decline',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            barrierLabel: '',
+                            barrierDismissible: false,
+                            builder: (_) => VerifyDialog(
+                                  onTap: () {
+                                    BlocProvider.of<StudentCubit>(context)
+                                        .verifyCheckIn(
+                                            studentId:
+                                                widget.student.studentId!,
+                                            isVerified: true);
+                                    Navigator.pop(context);
+                                  },
+                                  isSubmit: true,
+                                ));
+                      },
+                      icon: const Icon(
+                        Icons.verified_rounded,
+                        size: 18,
+                      ),
+                      label: const Text(
+                        'Accept',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

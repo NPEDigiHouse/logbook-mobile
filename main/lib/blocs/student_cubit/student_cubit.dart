@@ -179,12 +179,14 @@ class StudentCubit extends Cubit<StudentState> {
     }
   }
 
-  Future<void> verifyCheckIn({required String studentId}) async {
+  Future<void> verifyCheckIn(
+      {required String studentId, required bool isVerified}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
-      await dataSource.verifyCheckIn(studentId: studentId);
+      await dataSource.verifyCheckIn(
+          studentId: studentId, isVerified: isVerified);
       try {
         emit(state.copyWith(successVerifyCheckIn: true));
       } catch (e) {

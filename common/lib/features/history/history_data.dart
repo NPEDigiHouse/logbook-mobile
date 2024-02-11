@@ -6,15 +6,19 @@ import 'package:core/helpers/asset_path.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:data/models/history/history_model.dart';
 import 'package:data/models/supervisors/student_unit_model.dart';
+import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:students/features/assesment/pages/final_score/student_final_score_page.dart';
 import 'package:students/features/assesment/pages/mini_cex/student_test_grade_page.dart';
 import 'package:students/features/assesment/pages/personal_behavior/student_personal_behavior_page.dart';
 import 'package:students/features/assesment/pages/scientific_assigment/student_scientific_assignment_page.dart';
 import 'package:students/features/assesment/pages/weekly_assesment/student_weekly_assesment_page.dart';
+import 'package:students/features/clinical_record/pages/detail_clinical_record_page.dart';
 import 'package:students/features/competences/list_cases_page.dart';
 import 'package:students/features/competences/list_skills_page.dart';
 import 'package:students/features/scientific_session/detail_scientific_session_page.dart';
+import 'package:students/features/sgl_cst/list_cst_page.dart';
+import 'package:students/features/sgl_cst/list_sgl_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_mini_cex_detail_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_personal_behavior_detail_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_scientific_assignment_detail_page.dart';
@@ -33,6 +37,7 @@ class Activity {
   final DateTime? date;
   final String studentId;
   final String studentName;
+  final String? unitName;
   final String? patientName;
   final String? dateTime;
   final String id;
@@ -44,6 +49,7 @@ class Activity {
       required this.date,
       required this.onTap,
       required this.id,
+      this.unitName,
       this.patientName,
       required this.dateTime,
       required this.studentId,
@@ -92,26 +98,62 @@ class HistoryHelper {
       Map<String, HistoryData> types = {
         'SGL': HistoryData(
             name: 'SGL',
-            onTap: () => context.navigateTo(
+            onTap: () {
+              if (isStudent) {
+                context.navigateTo(
+                  ListSglPage(
+                    activeDepartmentModel: ActiveDepartmentModel(
+                      unitId: element.unitId,
+                      unitName: element.unitName,
+                    ),
+                  ),
+                );
+              } else {
+                context.navigateTo(
                   HistorySglPage(
                     id: element.attachment ?? '',
                   ),
-                ),
+                );
+              }
+            },
             pathIcon: 'diversity_3_rounded.svg'),
         'CST': HistoryData(
             name: 'CST',
-            onTap: () => context.navigateTo(HistoryCstPage(
+            onTap: () {
+              if (isStudent) {
+                context.navigateTo(
+                  ListCstPage(
+                    activeDepartmentModel: ActiveDepartmentModel(
+                      unitId: element.unitId,
+                      unitName: element.unitName,
+                    ),
+                  ),
+                );
+              } else {
+                context.navigateTo(HistoryCstPage(
                   id: element.attachment ?? '',
-                )),
+                ));
+              }
+            },
             pathIcon: 'medical_information_rounded.svg'),
         'Clinical Record': HistoryData(
             name: 'Clinical Record',
             onTap: () {
-              context.navigateTo(
-                SupervisorDetailClinicalRecordPage(
-                  id: element.attachment ?? '',
-                ),
-              );
+              if (isStudent) {
+                context.navigateTo(
+                  DetailClinicalRecordPage(
+                    id: element.attachment ?? '',
+                    department: ActiveDepartmentModel(
+                        unitId: element.unitId, unitName: element.unitName),
+                  ),
+                );
+              } else {
+                context.navigateTo(
+                  SupervisorDetailClinicalRecordPage(
+                    id: element.attachment ?? '',
+                  ),
+                );
+              }
             },
             pathIcon: 'clinical_notes_rounded.svg'),
         'Scientific Session': HistoryData(
@@ -119,6 +161,10 @@ class HistoryHelper {
             onTap: () => context.navigateTo(
                   DetailScientificSessionPage(
                     id: element.attachment ?? '',
+                    activeDepartmentModel: isStudent ? ActiveDepartmentModel(
+                      unitId: element.unitId,
+                      unitName: element.unitName
+                    ) : null,
                   ),
                 ),
             pathIcon: 'biotech_rounded.svg'),
@@ -252,6 +298,7 @@ class HistoryHelper {
         studentId: element.studentId ?? '',
         id: element.studentId ?? '',
         studentName: element.studentName ?? '',
+        unitName: element.unitName,
       ));
     }
     return activityList;

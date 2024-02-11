@@ -2,17 +2,16 @@ import 'dart:io';
 import 'package:common/features/file/file_management.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:data/models/students/student_statistic.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
+import 'package:open_file/open_file.dart' as o;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class PdfHelper {
-  static Future<File?> generate({
+  static Future<String?> generate({
     required Uint8List image,
     required Uint8List? profilePhoto,
     Uint8List? skillStat,
@@ -819,7 +818,7 @@ class PdfHelper {
 }
 
 class PdfApi {
-  static Future<File?> saveDocument({
+  static Future<String?> saveDocument({
     required String name,
     required Document pdf,
   }) async {
@@ -828,13 +827,13 @@ class PdfApi {
     if (Platform.isAndroid) {
       final directory = (await getDownloadsDirectory())!;
       final file = File('${directory.path}/$name.pdf');
-
       if (await FileManagement.checkAndRequestPermission()) {
         await file.writeAsBytes(bytes);
-        return file;
+        await o.OpenFile.open(file.path);
       } else {
         return null;
       }
+      return file.path;
     } else if (Platform.isIOS) {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/$name.pdf');
@@ -849,11 +848,11 @@ class PdfApi {
             mimeType: MimeType.pdf,
           );
         } on PlatformException catch (e) {}
-
-        return file;
+        await o.OpenFile.open(file.path);
       } else {
         return null;
       }
+      return file.path;
     } else {
       throw Exception("Platform not supported");
     }

@@ -38,7 +38,8 @@ abstract class StudentDataSource {
   Future<WeeklyAssesmentResponse> getStudentWeeklyAssesment();
   Future<void> updateStudentProfile(StudentProfile model);
   Future<List<StudentCheckInModel>> getStudentCheckIn();
-  Future<void> verifyCheckIn({required String studentId});
+  Future<void> verifyCheckIn(
+      {required String studentId, required bool isVerified});
   Future<List<StudentCheckOutModel>> getStudentCheckOut();
   Future<void> verifyCheckOut({required String studentId});
   Future<StudentById> getStudentById({required String studentId});
@@ -177,12 +178,13 @@ class StudentDataSourceImpl implements StudentDataSource {
   }
 
   @override
-  Future<void> verifyCheckIn({required String studentId}) async {
+  Future<void> verifyCheckIn(
+      {required String studentId, required bool isVerified}) async {
     try {
       await dio.put(
         '${ApiService.baseUrl}/students/checkins/$studentId',
         options: await apiHeader.userOptions(),
-        data: {'verified': true},
+        data: {'verified': isVerified},
       );
     } catch (e) {
       throw failure(e);
@@ -333,14 +335,17 @@ class StudentDataSourceImpl implements StudentDataSource {
   @override
   Future<StudentStatistic> getStudentStatistic() async {
     try {
+      print("te");
       final response = await dio.get(
         '${ApiService.baseUrl}/students/statistics',
         options: await apiHeader.userOptions(),
       );
+      print(response);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentStatistic.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }

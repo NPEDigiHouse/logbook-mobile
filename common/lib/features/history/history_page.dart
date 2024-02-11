@@ -97,7 +97,7 @@ class _HistoryViewState extends State<HistoryView> {
           return <Widget>[
             MainTitleAppBar(
               isPin: false,
-              title: 'History',
+              title: 'Activity History',
               widget: [
                 ValueListenableBuilder(
                   valueListenable: isSearchExpand,
@@ -158,8 +158,6 @@ class _HistoryViewState extends State<HistoryView> {
                               isCoordinator:
                                   widget.role == UserHistoryRole.coordinator,
                               isStudent: widget.role == UserHistoryRole.student,
-                              onlyInOut:
-                                  widget.role == UserHistoryRole.coordinator,
                               supervisorId: widget.supervisorId,
                               roleHistory:
                                   widget.role == UserHistoryRole.student
@@ -218,7 +216,12 @@ class _HistoryViewState extends State<HistoryView> {
                                                 now.year, now.month, now.day);
                                             var difference =
                                                 now2.difference(activity.date!);
-                                            if (difference.inDays <= 7) {
+                                            if (difference.inDays == 0) {
+                                              return now2;
+                                            } else if (difference.inDays <= 1) {
+                                              return now2.subtract(
+                                                  const Duration(days: 1));
+                                            } else if (difference.inDays <= 7) {
                                               return now2.subtract(
                                                   const Duration(days: 6));
                                             } else if (difference.inDays <=
@@ -323,9 +326,6 @@ class _HistoryViewState extends State<HistoryView> {
                                                       isStudent: widget.role ==
                                                           UserHistoryRole
                                                               .student,
-                                                      onlyInOut: widget.role ==
-                                                          UserHistoryRole
-                                                              .coordinator,
                                                       isCeu: (widget.role ==
                                                               UserHistoryRole
                                                                   .supervisorCeu ||
@@ -336,7 +336,8 @@ class _HistoryViewState extends State<HistoryView> {
                                                               UserHistoryRole
                                                                   .supervisorKabag ||
                                                           widget.role ==
-                                                              UserHistoryRole.supervisorCeuKabag,
+                                                              UserHistoryRole
+                                                                  .supervisorCeuKabag,
                                                       unitIds: widget.departmentName,
                                                       supervisorId: widget.supervisorId)
                                                 ];
@@ -357,9 +358,6 @@ class _HistoryViewState extends State<HistoryView> {
                                                       isStudent: widget.role ==
                                                           UserHistoryRole
                                                               .student,
-                                                      onlyInOut: widget.role ==
-                                                          UserHistoryRole
-                                                              .coordinator,
                                                       isCeu: (widget.role ==
                                                               UserHistoryRole
                                                                   .supervisorCeu ||
@@ -370,7 +368,8 @@ class _HistoryViewState extends State<HistoryView> {
                                                               UserHistoryRole
                                                                   .supervisorKabag ||
                                                           widget.role ==
-                                                              UserHistoryRole.supervisorCeuKabag,
+                                                              UserHistoryRole
+                                                                  .supervisorCeuKabag,
                                                       unitIds: widget.departmentName,
                                                       supervisorId: widget.supervisorId)
                                                 ];
@@ -388,14 +387,12 @@ class _HistoryViewState extends State<HistoryView> {
                                                         : RoleHistory
                                                             .supervisor,
                                                     context: context,
-                                                    isCoordinator: widget.role ==
-                                                        UserHistoryRole
-                                                            .coordinator,
+                                                    isCoordinator:
+                                                        widget.role ==
+                                                            UserHistoryRole
+                                                                .coordinator,
                                                     isStudent: widget.role ==
                                                         UserHistoryRole.student,
-                                                    onlyInOut: widget.role ==
-                                                        UserHistoryRole
-                                                            .coordinator,
                                                     isCeu: (widget.role ==
                                                             UserHistoryRole
                                                                 .supervisorCeu ||
@@ -408,7 +405,8 @@ class _HistoryViewState extends State<HistoryView> {
                                                         widget.role ==
                                                             UserHistoryRole
                                                                 .supervisorCeuKabag,
-                                                    unitIds: widget.departmentName,
+                                                    unitIds:
+                                                        widget.departmentName,
                                                     supervisorId: widget.supervisorId)
                                               ];
                                             },
@@ -490,38 +488,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 2:
@@ -536,38 +532,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
 
                                                             break;
@@ -583,38 +577,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 4:
@@ -629,38 +621,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 5:
@@ -675,38 +665,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 6:
@@ -721,38 +709,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 7:
@@ -767,38 +753,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 8:
@@ -813,38 +797,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 9:
@@ -859,38 +841,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 10:
@@ -905,38 +885,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 11:
@@ -951,38 +929,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 12:
@@ -997,38 +973,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 13:
@@ -1043,38 +1017,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 14:
@@ -1089,38 +1061,36 @@ class _HistoryViewState extends State<HistoryView> {
                                                                 .toList();
                                                             listData.value = [
                                                               ...HistoryHelper.convertHistoryToActivity(
-                                                                  isCoordinator: widget.role ==
+                                                                  isCoordinator: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: data,
-                                                                  isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
+                                                                  isCeu: (widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId:
-                                                                      widget
-                                                                          .supervisorId,
+                                                                  supervisorId: widget
+                                                                      .supervisorId,
                                                                   roleHistory: widget.role ==
-                                                                          UserHistoryRole
-                                                                              .student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                             break;
                                                           case 0:
@@ -1131,33 +1101,32 @@ class _HistoryViewState extends State<HistoryView> {
                                                                   isCoordinator: widget.role ==
                                                                       UserHistoryRole
                                                                           .coordinator,
-                                                                  isStudent: widget.role ==
+                                                                  isStudent: widget
+                                                                          .role ==
                                                                       UserHistoryRole
                                                                           .student,
-                                                                  onlyInOut: widget.role ==
-                                                                      UserHistoryRole
-                                                                          .coordinator,
                                                                   history: state
                                                                       .histories!,
                                                                   isCeu: (widget.role == UserHistoryRole.supervisorCeu ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag),
-                                                                  isHeadDiv: widget.role == UserHistoryRole.supervisorKabag ||
+                                                                  isHeadDiv: widget.role ==
+                                                                          UserHistoryRole
+                                                                              .supervisorKabag ||
                                                                       widget.role ==
                                                                           UserHistoryRole
                                                                               .supervisorCeuKabag,
                                                                   unitIds: widget
                                                                       .departmentName,
-                                                                  supervisorId: widget
-                                                                      .supervisorId,
-                                                                  roleHistory: widget.role == UserHistoryRole.student
-                                                                      ? RoleHistory
-                                                                          .student
-                                                                      : RoleHistory
-                                                                          .supervisor,
-                                                                  context:
-                                                                      context),
+                                                                  supervisorId:
+                                                                      widget
+                                                                          .supervisorId,
+                                                                  roleHistory: widget.role ==
+                                                                          UserHistoryRole.student
+                                                                      ? RoleHistory.student
+                                                                      : RoleHistory.supervisor,
+                                                                  context: context),
                                                             ];
                                                           default:
                                                         }
@@ -1329,29 +1298,29 @@ class _NotifCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // if(activity.unitName!=null)
-                      // ...[
-                      // const SizedBox(height: 4),
-                      // RichText(
-                      //   maxLines: 1,
-                      //   overflow: TextOverflow.ellipsis,
-                      //   text: TextSpan(
-                      //     style: textTheme.bodySmall?.copyWith(
-                      //       color: onFormDisableColor,
-                      //     ),
-                      //     children: <TextSpan>[
-                      //       const TextSpan(
-                      //         text: 'Student Id: ',
-                      //       ),
-                      //       TextSpan(
-                      //         text: activity.studentId,
-                      //         style: const TextStyle(
-                      //           fontWeight: FontWeight.w500,
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
+                    ],
+                    if (activity.unitName != null) ...[
+                      const SizedBox(height: 4),
+                      RichText(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(
+                          style: textTheme.bodySmall?.copyWith(
+                            color: onFormDisableColor,
+                          ),
+                          children: <TextSpan>[
+                            const TextSpan(
+                              text: 'Department: ',
+                            ),
+                            TextSpan(
+                              text: activity.unitName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                     const SizedBox(height: 8),
                   ],

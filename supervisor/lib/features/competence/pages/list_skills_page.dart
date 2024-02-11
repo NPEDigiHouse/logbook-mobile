@@ -86,31 +86,31 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
           appBar: AppBar(
             title: const Text("List Skills"),
           ),
-          floatingActionButton: SizedBox(
-            width: AppSize.getAppWidth(context) - 32,
-            child: state.listSkillsModel != null &&
-                    state.listSkillsModel!.listSkills!.indexWhere((element) =>
-                            element.verificationStatus == 'INPROCESS') !=
-                        -1
-                ? FilledButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          barrierLabel: '',
-                          barrierDismissible: false,
-                          builder: (_) => VerifyDialog(
-                                onTap: () {
-                                  BlocProvider.of<CompetenceCubit>(context)
-                                      .verifyAllSkillOfStudent(
-                                          studentId: widget.studentId);
-                                  Navigator.pop(context);
-                                },
-                              ));
-                    },
-                    child: const Text('Verify All Skils'),
-                  )
-                : null,
-          ),
+          // floatingActionButton: SizedBox(
+          //   width: AppSize.getAppWidth(context) - 32,
+          //   child: state.listSkillsModel != null &&
+          //           state.listSkillsModel!.listSkills!.indexWhere((element) =>
+          //                   element.verificationStatus == 'INPROCESS') !=
+          //               -1
+          //       ? FilledButton(
+          //           onPressed: () {
+          //             showDialog(
+          //                 context: context,
+          //                 barrierLabel: '',
+          //                 barrierDismissible: false,
+          //                 builder: (_) => VerifyDialog(
+          //                       onTap: () {
+          //                         BlocProvider.of<CompetenceCubit>(context)
+          //                             .verifyAllSkillOfStudent(
+          //                                 studentId: widget.studentId);
+          //                         Navigator.pop(context);
+          //                       },
+          //                     ));
+          //           },
+          //           child: const Text('Verify All Skils'),
+          //         )
+          //       : null,
+          // ),
           body: RefreshIndicator(
             onRefresh: () async {
               isMounted = false;

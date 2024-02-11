@@ -9,7 +9,6 @@ import 'package:main/blocs/profile_cubit/profile_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/custom_navigation_bar.dart';
 
-import '../history/history_page.dart';
 import '../home/home_page.dart';
 import '../profile/profile_page.dart';
 import 'package:flutter/material.dart';

@@ -44,6 +44,7 @@ dependencies:
   file_saver: ^0.2.9
   grouped_list: ^5.1.2
   timeago: ^3.6.1
+  open_file: ^3.3.2
 
 dev_dependencies:
   flutter_test:

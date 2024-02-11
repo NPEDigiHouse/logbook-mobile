@@ -83,31 +83,31 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
           appBar: AppBar(
             title: const Text("List Cases"),
           ),
-          floatingActionButton: SizedBox(
-            width: AppSize.getAppWidth(context) - 32,
-            child: state.listCasesModel != null &&
-                    state.listCasesModel!.listCases!.indexWhere((element) =>
-                            element.verificationStatus == 'INPROCESS') !=
-                        -1
-                ? FilledButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          barrierLabel: '',
-                          barrierDismissible: false,
-                          builder: (_) => VerifyDialog(
-                                onTap: () {
-                                  BlocProvider.of<CompetenceCubit>(context)
-                                      .verifyAllCaseOfStudent(
-                                          studentId: widget.studentId);
-                                  Navigator.pop(context);
-                                },
-                              ));
-                    },
-                    child: const Text('Verify All Cases'),
-                  )
-                : null,
-          ),
+          // floatingActionButton: SizedBox(
+          //   width: AppSize.getAppWidth(context) - 32,
+          //   child: state.listCasesModel != null &&
+          //           state.listCasesModel!.listCases!.indexWhere((element) =>
+          //                   element.verificationStatus == 'INPROCESS') !=
+          //               -1
+          //       ? FilledButton(
+          //           onPressed: () {
+          //             showDialog(
+          //                 context: context,
+          //                 barrierLabel: '',
+          //                 barrierDismissible: false,
+          //                 builder: (_) => VerifyDialog(
+          //                       onTap: () {
+          //                         BlocProvider.of<CompetenceCubit>(context)
+          //                             .verifyAllCaseOfStudent(
+          //                                 studentId: widget.studentId);
+          //                         Navigator.pop(context);
+          //                       },
+          //                     ));
+          //           },
+          //           child: const Text('Verify All Cases'),
+          //         )
+          //       : null,
+          // ),
           body: SafeArea(
             child: RefreshIndicator(
               onRefresh: () async {
