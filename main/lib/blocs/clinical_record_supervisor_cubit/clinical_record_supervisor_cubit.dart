@@ -21,7 +21,6 @@ class ClinicalRecordSupervisorCubit
       bool onScroll = false,
       FilterType? type}) async {
     try {
-
       final result = await datasource.getClinicalRecordsBySupervisor(
         filterType: type ?? FilterType.unverified,
         page: page,
@@ -54,22 +53,19 @@ class ClinicalRecordSupervisorCubit
   Future<void> getDetailClinicalRecord({required String id}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        detailState: RequestState.loading,
       ));
 
       final result =
           await datasource.getDetailClinicalRecord(clinicalRecordId: id);
-      try {
-        emit(state.copyWith(
-          detailClinicalRecordModel: result,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(
+        detailClinicalRecordModel: result,
+        detailState: RequestState.data,
+      ));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          detailState: RequestState.error,
         ),
       );
     }

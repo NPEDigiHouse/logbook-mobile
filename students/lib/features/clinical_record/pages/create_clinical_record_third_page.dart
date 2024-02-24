@@ -1,13 +1,9 @@
 // ignore_for_file: empty_catches, use_build_context_synchronously
 
-import 'dart:io';
-
 import 'package:common/features/file/file_management.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/models/clinical_records/detail_clinical_record_model.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
@@ -198,47 +194,64 @@ class _CreateClinicalRecordThirdPageState
                     const SizedBox(
                       height: 20,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: FilledButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              barrierLabel: '',
-                              barrierDismissible: false,
-                              builder: (_) => VerifyDialog(
-                                    onTap: () {
-                                      if (state.pathAttachment != null) {
-                                        widget.clinicalRecordData.addAttachment(
-                                            state.pathAttachment!);
-                                      }
-                                      if (notesController.text.isNotEmpty) {
-                                        widget.clinicalRecordData
-                                            .addNotes(notesController.text);
-                                      }
+                    BlocSelector<ClinicalRecordCubit, ClinicalRecordState,
+                        bool>(
+                      selector: (state) =>
+                          state.createState == RequestState.loading,
+                      builder: (context, isLoading) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: FilledButton(
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    showDialog(
+                                        context: context,
+                                        barrierLabel: '',
+                                        barrierDismissible: false,
+                                        builder: (_) => VerifyDialog(
+                                              onTap: () {
+                                                if (state.pathAttachment !=
+                                                    null) {
+                                                  widget.clinicalRecordData
+                                                      .addAttachment(state
+                                                          .pathAttachment!);
+                                                }
+                                                if (notesController
+                                                    .text.isNotEmpty) {
+                                                  widget.clinicalRecordData
+                                                      .addNotes(
+                                                          notesController.text);
+                                                }
 
-                                      if (widget.detail != null) {
-                                        BlocProvider.of<ClinicalRecordCubit>(
-                                                context)
-                                            .updateClinicalRecord(
-                                          id: widget.detail!.id!,
-                                          model: widget.clinicalRecordData
-                                              .clinicalRecordPostModel,
-                                        );
-                                      } else {
-                                        BlocProvider.of<ClinicalRecordCubit>(
-                                                context)
-                                            .uploadClinicalRecord(
-                                          model: widget.clinicalRecordData
-                                              .clinicalRecordPostModel,
-                                        );
-                                      }
-                                      Navigator.pop(context);
-                                    },
-                                  ));
-                        },
-                        child: const Text('Submit'),
-                      ).fullWidth(),
+                                                if (widget.detail != null) {
+                                                  BlocProvider.of<
+                                                              ClinicalRecordCubit>(
+                                                          context)
+                                                      .updateClinicalRecord(
+                                                    id: widget.detail!.id!,
+                                                    model: widget
+                                                        .clinicalRecordData
+                                                        .clinicalRecordPostModel,
+                                                  );
+                                                } else {
+                                                  BlocProvider.of<
+                                                              ClinicalRecordCubit>(
+                                                          context)
+                                                      .uploadClinicalRecord(
+                                                    model: widget
+                                                        .clinicalRecordData
+                                                        .clinicalRecordPostModel,
+                                                  );
+                                                }
+                                                Navigator.pop(context);
+                                              },
+                                            ));
+                                  },
+                            child: const Text('Submit'),
+                          ).fullWidth(),
+                        );
+                      },
                     ),
                     const SizedBox(
                       height: 16,

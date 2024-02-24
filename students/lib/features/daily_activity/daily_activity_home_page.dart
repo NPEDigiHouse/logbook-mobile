@@ -7,11 +7,12 @@ import 'package:data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'package:main/widgets/headers/unit_header.dart';
 import 'package:main/widgets/spacing_column.dart';
-import 'package:students/features/daily_activity/widgets/add_week_dialog.dart';
 
 class DailyActivityTempModel {
   final String day;
@@ -45,244 +46,233 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DailyActivityCubit, DailyActivityState>(
+    return BlocConsumer<DailyActivityCubit, DailyActivityState>(
+        listenWhen: (previous, current) =>
+            current.fetchState == RequestState.error &&
+            current.errorMessage != null,
+        listener: (context, state) {
+          CustomAlert.error(message: state.errorMessage!, context: context);
+        },
         builder: (context, state) {
-      final bool isNotCheckOut =
-          widget.activeDepartmentModel.checkOutTime != null;
-      final bool init = state.studentDailyActivity != null &&
-          state.studentDailyActivity?.dailyActivities != null &&
-          state.studentDailyActivity!.dailyActivities!.isNotEmpty;
-      final DateTime endDate = init
-          ? DateTime.fromMillisecondsSinceEpoch(
-              state.studentDailyActivity?.dailyActivities?.last.endDate ?? 0)
-          : DateTime.now();
-      final bool isLastDateBiggerThenNow = DateTime.now().isAfter(endDate);
-      return Scaffold(
-        floatingActionButton: (isNotCheckOut && isLastDateBiggerThenNow)
-            ? FloatingActionButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierLabel: '',
-                    barrierDismissible: false,
-                    builder: (_) => AddWeekDialog(
-                      endDate: endDate,
-                      departmentId: widget.activeDepartmentModel.unitId ?? '',
-                      weekNum: init
-                          ? (state.studentDailyActivity!.dailyActivities!.last
-                                      .weekName ??
-                                  0) +
-                              1
-                          : 1,
-                    ),
-                  );
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Daily Activity'),
+            ),
+            body: CheckInternetOnetime(child: (context) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await Future.wait([
+                    BlocProvider.of<DailyActivityCubit>(context)
+                        .getStudentDailyActivities(),
+                  ]);
                 },
-                child: const Icon(Icons.add_rounded),
-              )
-            : null,
-        appBar: AppBar(
-          title: const Text('Daily Activity'),
-        ),
-        body: CheckInternetOnetime(child: (context) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              await Future.wait([
-                BlocProvider.of<DailyActivityCubit>(context)
-                    .getStudentDailyActivities(),
-              ]);
-            },
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DepartmentHeader(
-                    unitName: widget.activeDepartmentModel.unitName!,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: AppSize.getAppWidth(context),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 20),
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(.12),
-                          offset: const Offset(0, 2),
-                          blurRadius: 20,
-                        )
-                      ],
-                      borderRadius: BorderRadius.circular(12),
-                      color: scaffoldBackgroundColor,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Overview',
-                              style: textTheme.titleLarge,
-                            ),
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DepartmentHeader(
+                        unitName: widget.activeDepartmentModel.unitName!,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: AppSize.getAppWidth(context),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 20),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(.12),
+                              offset: const Offset(0, 2),
+                              blurRadius: 20,
+                            )
                           ],
+                          borderRadius: BorderRadius.circular(12),
+                          color: scaffoldBackgroundColor,
                         ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        Row(
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF6F7F8),
-                                  borderRadius: BorderRadius.circular(8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Overview',
+                                  style: textTheme.titleLarge,
                                 ),
-                                height: 84,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                          color: variant2Color.withOpacity(
-                                            .2,
-                                          ),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        padding: const EdgeInsets.all(2),
-                                        child: const Icon(
-                                          Icons.hourglass_top_rounded,
-                                          color: variant2Color,
-                                          size: 12,
-                                        )),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    Text(
-                                      '${state.studentDailyActivity?.inprocessDailyActivity ?? '...'}',
-                                      style: textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        height: 1,
-                                      ),
-                                    ),
-                                    const Text('Pending'),
-                                  ],
-                                ),
-                              ),
+                              ],
                             ),
                             const SizedBox(
-                              width: 8,
+                              height: 12,
                             ),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF6F7F8),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                height: 84,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 24,
-                                      height: 24,
-                                      decoration: BoxDecoration(
-                                        color: secondaryColor.withOpacity(
-                                          .2,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF6F7F8),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    height: 84,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                            width: 24,
+                                            height: 24,
+                                            decoration: BoxDecoration(
+                                              color: variant2Color.withOpacity(
+                                                .2,
+                                              ),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            padding: const EdgeInsets.all(2),
+                                            child: const Icon(
+                                              Icons.hourglass_top_rounded,
+                                              color: variant2Color,
+                                              size: 12,
+                                            )),
+                                        const SizedBox(
+                                          height: 8,
                                         ),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      padding: const EdgeInsets.all(2),
-                                      child: const Icon(
-                                        Icons.verified_rounded,
-                                        color: secondaryColor,
-                                        size: 12,
-                                      ),
+                                        Text(
+                                          '${state.studentDailyActivity?.inprocessDailyActivity ?? '...'}',
+                                          style:
+                                              textTheme.titleMedium?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            height: 1,
+                                          ),
+                                        ),
+                                        const Text('Pending'),
+                                      ],
                                     ),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    Text(
-                                      '${state.studentDailyActivity?.verifiedDailyActivity ?? '...'}',
-                                      style: textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        height: 1,
-                                      ),
-                                    ),
-                                    const Text('Verified'),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF6F7F8),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    height: 84,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 24,
+                                          height: 24,
+                                          decoration: BoxDecoration(
+                                            color: secondaryColor.withOpacity(
+                                              .2,
+                                            ),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          padding: const EdgeInsets.all(2),
+                                          child: const Icon(
+                                            Icons.verified_rounded,
+                                            color: secondaryColor,
+                                            size: 12,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        Text(
+                                          '${state.studentDailyActivity?.verifiedDailyActivity ?? '...'}',
+                                          style:
+                                              textTheme.titleMedium?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            height: 1,
+                                          ),
+                                        ),
+                                        const Text('Verified'),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Builder(builder: (context) {
+                        if (state.fetchState == RequestState.loading) {
+                          const ListSkeletonTemplate(
+                            listHeight: [195, 195, 195, 195],
+                            borderRadius: 12,
+                          );
+                        }
+                        if ((state.studentDailyActivity?.dailyActivities !=
+                            null)) {
+                          return SpacingColumn(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 20,
+                            children: [
+                              ...List.generate(
+                                  state.studentDailyActivity!.dailyActivities!
+                                      .length, (index) {
+                                final endDate = state.studentDailyActivity!
+                                            .dailyActivities![index].endDate !=
+                                        null
+                                    ? DateTime.fromMillisecondsSinceEpoch(state
+                                            .studentDailyActivity!
+                                            .dailyActivities![index]
+                                            .endDate!
+                                            .toInt() *
+                                        1000)
+                                    : DateTime.now();
+                                return DailyActivityHomeCard(
+                                  isSupervisor: false,
+                                  startDate: state
+                                              .studentDailyActivity!
+                                              .dailyActivities![index]
+                                              .startDate !=
+                                          null
+                                      ? DateTime.fromMillisecondsSinceEpoch(
+                                          state
+                                                  .studentDailyActivity!
+                                                  .dailyActivities![index]
+                                                  .startDate!
+                                                  .toInt() *
+                                              1000)
+                                      : DateTime.now(),
+                                  endDate: endDate,
+                                  activeStatus: state.studentDailyActivity!
+                                          .dailyActivities![index].status ??
+                                      false,
+                                  da: state.studentDailyActivity!
+                                      .dailyActivities![index],
+                                  status: state.studentDailyActivity!
+                                          .dailyActivities![index].status ??
+                                      false,
+                                  dailyActivity: state.studentDailyActivity!
+                                      .dailyActivities![index],
+                                );
+                              })
+                            ],
+                          );
+                        }
+                        return const ListSkeletonTemplate(
+                          listHeight: [195, 195, 195, 195],
+                          borderRadius: 12,
+                        );
+                      }),
+                    ],
                   ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  Builder(builder: (context) {
-                    if ((state.studentDailyActivity?.dailyActivities != null)) {
-                      return SpacingColumn(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 20,
-                        children: [
-                          ...List.generate(
-                              state.studentDailyActivity!.dailyActivities!
-                                  .length, (index) {
-                            final endDate = state.studentDailyActivity!
-                                        .dailyActivities![index].endDate !=
-                                    null
-                                ? DateTime.fromMillisecondsSinceEpoch(state
-                                        .studentDailyActivity!
-                                        .dailyActivities![index]
-                                        .endDate!
-                                        .toInt() *
-                                    1000)
-                                : DateTime.now();
-                            return DailyActivityHomeCard(
-                              isSupervisor: false,
-                              startDate: state.studentDailyActivity!
-                                          .dailyActivities![index].startDate !=
-                                      null
-                                  ? DateTime.fromMillisecondsSinceEpoch(state
-                                          .studentDailyActivity!
-                                          .dailyActivities![index]
-                                          .startDate!
-                                          .toInt() *
-                                      1000)
-                                  : DateTime.now(),
-                              endDate: endDate,
-                              activeStatus: state.studentDailyActivity!
-                                      .dailyActivities![index].status ??
-                                  false,
-                              da: state.studentDailyActivity!
-                                  .dailyActivities![index],
-                              status: state.studentDailyActivity!
-                                      .dailyActivities![index].status ??
-                                  false,
-                              dailyActivity: state.studentDailyActivity!
-                                  .dailyActivities![index],
-                            );
-                          })
-                        ],
-                      );
-                    }
-                    return const ListSkeletonTemplate(
-                      listHeight: [195, 195, 195, 195],
-                      borderRadius: 12,
-                    );
-                  }),
-                ],
-              ),
-            ),
+                ),
+              );
+            }),
           );
-        }),
-      );
-    });
+        });
   }
 }

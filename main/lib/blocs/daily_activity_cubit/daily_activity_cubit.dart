@@ -16,6 +16,95 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
   final DailyActivityDataSource dataSource;
   DailyActivityCubit({required this.dataSource}) : super(DailyActivityState());
 
+  // DONE
+  Future<void> getStudentDailyActivities() async {
+    try {
+      emit(state.copyWith(
+        fetchState: RequestState.loading,
+      ));
+      final result = await dataSource.getStudentDailyActivities();
+      emit(state.copyWith(
+        fetchState: RequestState.data,
+        studentDailyActivity: result,
+      ));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          errorMessage: e.toString(),
+          fetchState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getDailyActivityDays({required String weekId}) async {
+    emit(state.copyWith(
+      fetchState: RequestState.loading,
+    ));
+    try {
+      final result =
+          await dataSource.getStudentDailyPerDaysActivities(weekId: weekId);
+      emit(state.copyWith(activityPerDays: result));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          fetchState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> updateDailyActivity(
+      {required String id,
+      required DailyActivityPostModel model,
+      required String weekId}) async {
+    try {
+      emit(state.copyWith(
+        updateState: RequestState.loading,
+      ));
+
+      await dataSource.updateDailyActiviy(dayId: id, model: model);
+      emit(state.copyWith(
+          isDailyActivityUpdated: true, updateState: RequestState.data));
+      getDailyActivityDays(weekId: weekId).whenComplete(
+        () => getStudentDailyActivities(),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          updateState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> updateDailyActivity2(
+      {required String day,
+      required DailyActivityPostModel model,
+      required String weekId,
+      required String dailyActivityV2Id}) async {
+    try {
+      emit(state.copyWith(
+        updateState: RequestState.loading,
+      ));
+
+      await dataSource.updateDailyActiviy2(
+          day: day, model: model, dailyActivityV2Id: dailyActivityV2Id);
+      emit(state.copyWith(
+          isDailyActivityUpdated: true, updateState: RequestState.data));
+      getDailyActivityDays(weekId: weekId).whenComplete(
+        () => getStudentDailyActivities(),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          updateState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  // TODO
   Future<void> addWeekByCoordinator({required PostWeek postWeek}) async {
     try {
       emit(state.copyWith(
@@ -141,29 +230,6 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
       );
       try {
         emit(state.copyWith(weekItems: result));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
-    } catch (e) {
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
-    }
-  }
-
-  Future<void> getDailyActivityDays({required String weekId}) async {
-    try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
-
-      final result =
-          await dataSource.getStudentDailyPerDaysActivities(weekId: weekId);
-
-      try {
-        emit(state.copyWith(activityPerDays: result));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }
@@ -318,35 +384,6 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     }
   }
 
-  Future<void> getStudentDailyActivities() async {
-    try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
-
-      final result = await dataSource.getStudentDailyActivities();
-      // result.weeks?.sort(
-      //   (a, b) {
-      //     return a.weekName!.compareTo(b.weekName!);
-      //   },
-      // );
-      try {
-        emit(state.copyWith(
-          studentDailyActivity: result,
-          requestState: RequestState.data,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
-    } catch (e) {
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
-    }
-  }
-
   Future<void> getDailyActivitiesBySupervisor(
       {required String studentId}) async {
     try {
@@ -409,53 +446,6 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
           activityPerweekBySupervisor: result,
           requestState: RequestState.data,
         ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
-    } catch (e) {
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
-    }
-  }
-
-  Future<void> updateDailyActivity(
-      {required String id, required DailyActivityPostModel model}) async {
-    try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
-
-      await dataSource.updateDailyActiviy(dayId: id, model: model);
-      try {
-        emit(state.copyWith(isDailyActivityUpdated: true));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
-    } catch (e) {
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
-    }
-  }
-
-  Future<void> updateDailyActivity2(
-      {required String day,
-      required DailyActivityPostModel model,
-      required String dailyActivityV2Id}) async {
-    try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
-
-      await dataSource.updateDailyActiviy2(
-          day: day, model: model, dailyActivityV2Id: dailyActivityV2Id);
-      try {
-        emit(state.copyWith(isDailyActivityUpdated: true));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }

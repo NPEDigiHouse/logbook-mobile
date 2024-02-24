@@ -16,6 +16,8 @@ class StudentState {
   final StudentById? studentDetail;
   final List<SupervisorStudent>? students;
   final StudentDepartmentRecap? studentDepartmentRecap;
+  // NEW
+  final RequestState fetchCR;
 
   StudentState({
     this.clinicalRecordResponse,
@@ -33,6 +35,7 @@ class StudentState {
     this.successVerifyCheckOut = false,
     this.students,
     this.studentDepartmentRecap,
+    this.fetchCR = RequestState.init,
   });
 
   StudentState copyWith({
@@ -52,26 +55,29 @@ class StudentState {
     bool successVerifyCheckIn = false,
     bool successVerifyCheckOut = false,
     StudentDepartmentRecap? studentDepartmentRecap,
+    RequestState fetchCR = RequestState.init,
   }) {
     return StudentState(
-        studentDepartmentRecap:
-            studentDepartmentRecap ?? this.studentDepartmentRecap,
-        crState: crState ?? this.crState,
-        ssState: ssState ?? this.ssState,
-        clinicalRecordResponse:
-            clinicalRecordResponse ?? this.clinicalRecordResponse,
-        requestState: requestState ?? RequestState.init,
-        selfReflectionResponse:
-            selfReflectionResponse ?? this.selfReflectionResponse,
-        scientificSessionResponse:
-            scientificSessionResponse ?? this.scientificSessionResponse,
-        successUpdateStudentProfile: successUpdateStudentProfile,
-        studentsCheckIn: studentsCheckIn ?? this.studentsCheckIn,
-        successVerifyCheckIn: successVerifyCheckIn,
-        studentDetail: studentDetail ?? this.studentDetail,
-        studentsCheckOut: studentsCheckOut ?? this.studentsCheckOut,
-        successVerifyCheckOut: successVerifyCheckOut,
-        students: students ?? this.students,
-        studentStatistic: studentStatistic ?? this.studentStatistic);
+      studentDepartmentRecap:
+          studentDepartmentRecap ?? this.studentDepartmentRecap,
+      crState: crState ?? this.crState,
+      ssState: ssState ?? this.ssState,
+      clinicalRecordResponse:
+          clinicalRecordResponse ?? this.clinicalRecordResponse,
+      requestState: requestState ?? RequestState.init,
+      selfReflectionResponse:
+          selfReflectionResponse ?? this.selfReflectionResponse,
+      scientificSessionResponse:
+          scientificSessionResponse ?? this.scientificSessionResponse,
+      successUpdateStudentProfile: successUpdateStudentProfile,
+      studentsCheckIn: studentsCheckIn ?? this.studentsCheckIn,
+      successVerifyCheckIn: successVerifyCheckIn,
+      studentDetail: studentDetail ?? this.studentDetail,
+      studentsCheckOut: studentsCheckOut ?? this.studentsCheckOut,
+      successVerifyCheckOut: successVerifyCheckOut,
+      students: students ?? this.students,
+      fetchCR: fetchCR,
+      studentStatistic: studentStatistic ?? this.studentStatistic,
+    );
   }
 }

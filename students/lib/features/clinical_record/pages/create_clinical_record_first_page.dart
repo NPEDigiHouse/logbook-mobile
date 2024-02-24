@@ -208,11 +208,20 @@ class _CreateClinicalRecordFirstPageState
                         label: 'Patient Age (Year)',
                         controller: patientAgeController,
                         isOnlyNumber: true,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                            errorText: 'This field is required',
-                          ),
-                        ]),
+                        isOnlyDigit: true,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter patient age';
+                          }
+                          final age = int.tryParse(value);
+                          if (age == null) {
+                            return 'Please enter a valid number';
+                          }
+                          if (age < 0 || age > 200) {
+                            return 'Please enter an age between 1 and 200';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 20,

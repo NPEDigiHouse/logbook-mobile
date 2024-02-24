@@ -5,10 +5,12 @@ class ClinicalRecordSupervisorState {
   final DetailClinicalRecordModel? detailClinicalRecordModel;
   final bool successVerifyClinicalRecords;
   final RequestState fetchState;
+  final RequestState detailState;
 
   ClinicalRecordSupervisorState({
     this.clinicalRecords,
     this.fetchState = RequestState.init,
+    this.detailState = RequestState.init,
     this.detailClinicalRecordModel,
     this.successVerifyClinicalRecords = false,
   });
@@ -16,6 +18,7 @@ class ClinicalRecordSupervisorState {
   ClinicalRecordSupervisorState copyWith({
     RequestState? requestState,
     RequestState? fetchState = RequestState.init,
+    RequestState detailState = RequestState.init,
     DetailClinicalRecordModel? detailClinicalRecordModel,
     List<ClinicalRecordListModel>? clinicalRecords,
     bool successVerifyClinicalRecords = false,
@@ -23,6 +26,7 @@ class ClinicalRecordSupervisorState {
     return ClinicalRecordSupervisorState(
         clinicalRecords: clinicalRecords ?? this.clinicalRecords,
         fetchState: fetchState ?? this.fetchState,
+        detailState: detailState,
         detailClinicalRecordModel:
             detailClinicalRecordModel ?? this.detailClinicalRecordModel,
         successVerifyClinicalRecords: successVerifyClinicalRecords);

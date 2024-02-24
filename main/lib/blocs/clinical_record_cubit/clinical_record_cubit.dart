@@ -6,13 +6,16 @@ import 'package:data/models/clinical_records/examination_types_model.dart';
 import 'package:data/models/clinical_records/management_role_model.dart';
 import 'package:data/models/clinical_records/management_types_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/student_cubit/student_cubit.dart';
 part 'clinical_record_state.dart';
 
 class ClinicalRecordCubit extends Cubit<ClinicalRecordState> {
   final ClinicalRecordsDatasource clinicalRecordsDatasource;
+  final StudentCubit studentCubit;
 
   ClinicalRecordCubit({
     required this.clinicalRecordsDatasource,
+    required this.studentCubit,
   }) : super(ClinicalRecordState());
 
   Future<void> getAffectedParts({required String unitId}) async {
@@ -55,18 +58,9 @@ class ClinicalRecordCubit extends Cubit<ClinicalRecordState> {
 
   Future<void> deleteClinicalRecord({required String id}) async {
     try {
-      emit(state.copyWith(requestState: RequestState.loading));
-
       await clinicalRecordsDatasource.deleteClinicalRecord(id);
-      emit(state.copyWith(
-          requestState: RequestState.data, isDeleteClinicalRecord: true));
-    } catch (e) {
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
-    }
+      emit(state.copyWith(isDeleteClinicalRecord: true));
+    } catch (e) {}
   }
 
   Future<void> getExaminationTypes({required String unitId}) async {
@@ -159,53 +153,46 @@ class ClinicalRecordCubit extends Cubit<ClinicalRecordState> {
 
   Future<void> uploadClinicalRecord(
       {required ClinicalRecordPostModel model}) async {
-    try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+    emit(state.copyWith(
+      createState: RequestState.loading,
+    ));
 
-      final result = await clinicalRecordsDatasource.uploadClinicalRecord(
-          clinicalRecordPostModel: model);
+    final result = await clinicalRecordsDatasource.uploadClinicalRecord(
+        clinicalRecordPostModel: model);
 
-      result.fold(
-          (l) => emit(
-                state.copyWith(requestState: RequestState.error),
-              ), (r) {
-        return emit(state.copyWith(clinicalRecordPostSuccess: true));
-      });
-    } catch (e) {
+    result.fold(
+        (l) => emit(
+              state.copyWith(createState: RequestState.error),
+            ), (r) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          clinicalRecordPostSuccess: true,
+          createState: RequestState.data,
         ),
       );
-    }
+    });
   }
 
-   Future<void> updateClinicalRecord(
+  Future<void> updateClinicalRecord(
       {required ClinicalRecordPostModel model, required String id}) async {
-    try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+    emit(state.copyWith(
+      createState: RequestState.loading,
+    ));
 
-      final result = await clinicalRecordsDatasource.updateClinicalRecord(
-        id: id,
-          clinicalRecordPostModel: model);
+    final result = await clinicalRecordsDatasource.updateClinicalRecord(
+        id: id, clinicalRecordPostModel: model);
 
-      result.fold(
-          (l) => emit(
-                state.copyWith(requestState: RequestState.error),
-              ), (r) {
-        return emit(state.copyWith(clinicalRecordPostSuccess: true));
-      });
-    } catch (e) {
+    result.fold(
+        (l) => emit(
+              state.copyWith(createState: RequestState.error),
+            ), (r) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          clinicalRecordPostSuccess: true,
+          createState: RequestState.data,
         ),
       );
-    }
+    });
   }
 
   Future<void> addFeedback(

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/empty_data.dart';
@@ -86,9 +87,22 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                         sliver: SliverFillRemaining(
                           child: BlocListener<ClinicalRecordCubit,
                               ClinicalRecordState>(
+                            listenWhen: (previous, current) =>
+                                previous.isDeleteClinicalRecord !=
+                                    current.isDeleteClinicalRecord ||
+                                previous.clinicalRecordPostSuccess !=
+                                    current.clinicalRecordPostSuccess,
                             listener: (context, state) {
+                              isMounted = false;
                               if (state.clinicalRecordPostSuccess) {
-                                isMounted = false;
+                                CustomAlert.success(
+                                    message: 'Success Add New Clinical Record',
+                                    context: context);
+                              }
+                              if (state.isDeleteClinicalRecord) {
+                                CustomAlert.success(
+                                    message: 'Success Delete Clinical Record',
+                                    context: context);
                               }
                             },
                             child: BlocConsumer<StudentCubit, StudentState>(
@@ -107,8 +121,7 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                 }
                               },
                               builder: (context, state) {
-                                if (state.requestState ==
-                                    RequestState.loading) {
+                                if (state.crState == RequestState.loading) {
                                   return const CustomLoading();
                                 } else if (state.clinicalRecordResponse !=
                                         null &&
@@ -130,59 +143,54 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
                                           height: 12,
                                         ),
                                         const ItemDivider(),
-                                        Builder(
-                                          builder: (context) {
-                                            if (state.clinicalRecordResponse !=
-                                                null) {
-                                              return Column(
-                                                children: [
-                                                  buildSearchFilterSection(
-                                                    verifiedCount: state
-                                                        .clinicalRecordResponse!
-                                                        .verifiedCounts!,
-                                                    unverifiedCount: state
-                                                        .clinicalRecordResponse!
-                                                        .unverifiedCounts!,
-                                                  ),
-                                                  Builder(builder: (context) {
-                                                    if (s.isEmpty) {
-                                                      return const EmptyData(
-                                                        subtitle:
-                                                            'Please upload clinical record data first!',
-                                                        title:
-                                                            'Data Still Empty',
-                                                      );
-                                                    }
-                                                    return ListView.separated(
-                                                      physics:
-                                                          const NeverScrollableScrollPhysics(),
-                                                      shrinkWrap: true,
-                                                      itemBuilder: (context,
-                                                              index) =>
-                                                          ClinicalRecordCard(
-                                                        model: s[index],
-                                                        department: widget
-                                                            .activeDepartmentModel,
-                                                      ),
-                                                      separatorBuilder:
-                                                          (context, index) =>
-                                                              const SizedBox(
-                                                                  height: 12),
-                                                      itemCount: s.length,
-                                                    );
-                                                  }),
-                                                ],
+                                        Column(
+                                          children: [
+                                            buildSearchFilterSection(
+                                              verifiedCount: state
+                                                  .clinicalRecordResponse!
+                                                  .verifiedCounts!,
+                                              unverifiedCount: state
+                                                  .clinicalRecordResponse!
+                                                  .unverifiedCounts!,
+                                            ),
+                                            Builder(builder: (context) {
+                                              if (s.isEmpty) {
+                                                return const EmptyData(
+                                                  subtitle:
+                                                      'Please upload clinical record data first!',
+                                                  title: 'Data Still Empty',
+                                                );
+                                              }
+                                              return ListView.separated(
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemBuilder: (context, index) =>
+                                                    ClinicalRecordCard(
+                                                  model: s[index],
+                                                  department: widget
+                                                      .activeDepartmentModel,
+                                                  onUpdate: () {
+                                                    isMounted = false;
+                                                    BlocProvider.of<
+                                                                StudentCubit>(
+                                                            context)
+                                                        .getStudentClinicalRecordOfActiveDepartment();
+                                                  },
+                                                ),
+                                                separatorBuilder: (context,
+                                                        index) =>
+                                                    const SizedBox(height: 12),
+                                                itemCount: s.length,
                                               );
-                                            } else {
-                                              return const SizedBox.shrink();
-                                            }
-                                          },
-                                        )
+                                            }),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   );
                                 }
-                                return const SizedBox.shrink();
+                                return const CustomLoading();
                               },
                             ),
                           ),

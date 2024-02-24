@@ -97,7 +97,7 @@ class AuthDataSourceImpl implements AuthDataSource {
         throw const ClientFailure(
             "User with role admin cannot login in mobile app");
       }
-      const Duration timeoutDuration = Duration(seconds: 7);
+      const Duration timeoutDuration = Duration(seconds: 15);
 
       final response = await dio
           .post(
@@ -196,7 +196,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   Future<Either<Failure, UserCredential>> getUserCredential() async {
     try {
-      const Duration timeoutDuration = Duration(seconds: 7);
+      const Duration timeoutDuration = Duration(seconds: 15);
 
       final response = await dio
           .get(

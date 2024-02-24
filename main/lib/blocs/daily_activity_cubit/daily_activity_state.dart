@@ -21,6 +21,8 @@ class DailyActivityState {
   final RequestState isSync;
   final RequestState isDelete;
   final RequestState isStatus;
+  // NEW
+  final RequestState updateState;
 
   DailyActivityState({
     this.studentDailyActivity,
@@ -43,6 +45,7 @@ class DailyActivityState {
     this.isDelete = RequestState.init,
     this.isStatus = RequestState.init,
     this.stateVerifyDailyActivity = RequestState.init,
+    this.updateState = RequestState.init,
   });
 
   DailyActivityState copyWith({
@@ -66,6 +69,7 @@ class DailyActivityState {
     String? errorMessage,
     List<DailyActivityStudent>? dailyActivityStudents,
     RequestState stateVerifyDailyActivity = RequestState.init,
+    RequestState updateState = RequestState.init,
   }) {
     return DailyActivityState(
       errorMessage: errorMessage ?? this.errorMessage,
@@ -92,6 +96,7 @@ class DailyActivityState {
       isSync: isSync,
       isDelete: isDelete,
       isStatus: isStatus,
+      updateState: updateState,
     );
   }
 }

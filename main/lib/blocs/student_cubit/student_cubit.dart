@@ -31,14 +31,10 @@ class StudentCubit extends Cubit<StudentState> {
       final result =
           await dataSource.getStudentClinicalRecordOfActiveDepartment();
 
-      try {
-        emit(state.copyWith(
-          clinicalRecordResponse: result,
-          crState: RequestState.data,
-        ));
-      } catch (e) {
-        emit(state.copyWith(crState: RequestState.error));
-      }
+      emit(state.copyWith(
+        clinicalRecordResponse: result,
+        crState: RequestState.data,
+      ));
     } catch (e) {
       emit(
         state.copyWith(
@@ -142,11 +138,7 @@ class StudentCubit extends Cubit<StudentState> {
       ));
 
       await dataSource.updateStudentProfile(studentProfile);
-      try {
-        emit(state.copyWith(
-          successUpdateStudentProfile: true,
-        ));
-      } catch (e) {
+      try {} catch (e) {
         emit(state.copyWith(requestState: RequestState.error));
       }
     } catch (e) {

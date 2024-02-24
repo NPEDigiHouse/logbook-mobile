@@ -198,6 +198,7 @@ void _injectStateManagement() {
   locator.registerFactory(
     () => ClinicalRecordCubit(
       clinicalRecordsDatasource: locator(),
+      studentCubit: locator(),
     ),
   );
   locator.registerFactory(

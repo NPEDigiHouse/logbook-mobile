@@ -60,7 +60,7 @@ class _SelectActivityPageState extends State<SelectActivityPage> {
                         : [];
                 final notActive =
                     state.where((element) => element.id != val?.id).toList();
-                final merge = [...activeLocation, ...notActive];
+                final merge = <ActivityModel>[...activeLocation, ...notActive];
 
                 return ListView.separated(
                   padding: const EdgeInsets.all(20),
@@ -75,18 +75,24 @@ class _SelectActivityPageState extends State<SelectActivityPage> {
                         if (val?.id == merge[index].id) {
                           return;
                         }
-                        showModalBottomSheet(
-                          context: context,
-                          isDismissible: true,
-                          builder: (ctx) => LocationSheet(
-                            onTap: (ActivityModel activity) {
-                              selectedLocation.value = activity;
-                              widget.onTap.call(activity);
-                            },
-                            model: merge[index],
-                            isActive: merge[index] == val,
-                          ),
-                        );
+                        if (merge[index].latitude == 0 ||
+                            merge[index].longitude == 0) {
+                          selectedLocation.value = merge[index];
+                          widget.onTap.call(merge[index]);
+                        } else {
+                          showModalBottomSheet(
+                            context: context,
+                            isDismissible: true,
+                            builder: (ctx) => LocationSheet(
+                              onTap: (ActivityModel activity) {
+                                selectedLocation.value = activity;
+                                widget.onTap.call(activity);
+                              },
+                              model: merge[index],
+                              isActive: merge[index] == val,
+                            ),
+                          );
+                        }
                       },
                       padding: const EdgeInsets.symmetric(
                         vertical: 16,

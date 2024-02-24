@@ -14,10 +14,12 @@ class ClinicalRecordCard extends StatelessWidget {
     super.key,
     required this.model,
     this.department,
+    required this.onUpdate,
   });
 
   final StudentClinicalRecordModel model;
   final ActiveDepartmentModel? department;
+  final Function onUpdate;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class ClinicalRecordCard extends StatelessWidget {
           DetailClinicalRecordPage(
             department: department!,
             id: model.clinicalRecordId!,
+            onUpdate: onUpdate,
           ),
         ),
         child: Padding(

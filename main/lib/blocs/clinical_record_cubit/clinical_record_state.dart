@@ -15,20 +15,24 @@ class ClinicalRecordState {
   final String? crDownloadPath;
   final bool clinicalRecordPostSuccess;
   final bool isDeleteClinicalRecord;
+  // NEW
+  final RequestState createState;
 
-  ClinicalRecordState(
-      {this.affectedParts,
-      this.diagnosisTypes,
-      this.examinationTypes,
-      this.managementRoles,
-      this.managementTypes,
-      this.crDownloadPath,
-      this.pathAttachment,
-      this.isDeleteClinicalRecord = false,
-      this.attachState = RequestState.init,
-      this.isPostFeedbackSuccess = false,
-      this.clinicalRecordPostSuccess = false,
-      this.requestState = RequestState.init});
+  ClinicalRecordState({
+    this.affectedParts,
+    this.diagnosisTypes,
+    this.examinationTypes,
+    this.managementRoles,
+    this.managementTypes,
+    this.crDownloadPath,
+    this.pathAttachment,
+    this.isDeleteClinicalRecord = false,
+    this.attachState = RequestState.init,
+    this.isPostFeedbackSuccess = false,
+    this.clinicalRecordPostSuccess = false,
+    this.requestState = RequestState.init,
+    this.createState = RequestState.init,
+  });
 
   ClinicalRecordState copyWith({
     List<AffectedPart>? affectedParts,
@@ -38,6 +42,7 @@ class ClinicalRecordState {
     List<ManagementTypesModel>? managementTypes,
     RequestState? requestState,
     RequestState? attachState,
+    RequestState createState = RequestState.init,
     bool isDeleteClinicalRecord = false,
     String? crDownloadPath,
     bool isPostFeedbackSuccess = false,
@@ -52,6 +57,7 @@ class ClinicalRecordState {
         managementTypes: managementTypes ?? this.managementTypes,
         requestState: requestState ?? RequestState.init,
         attachState: attachState ?? RequestState.init,
+        createState: createState,
         isPostFeedbackSuccess: isPostFeedbackSuccess,
         isDeleteClinicalRecord: isDeleteClinicalRecord,
         crDownloadPath: crDownloadPath,

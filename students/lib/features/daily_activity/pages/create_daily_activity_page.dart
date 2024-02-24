@@ -12,8 +12,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:main/blocs/activity_cubit/activity_cubit.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
 import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/dividers/section_divider.dart';
 import 'package:main/widgets/headers/form_section_header.dart';
 import 'package:main/widgets/inkwell_container.dart';
@@ -92,14 +94,9 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
       body: BlocListener<DailyActivityCubit, DailyActivityState>(
         listener: (context, state) {
           if (state.isDailyActivityUpdated) {
+            CustomAlert.success(
+                message: 'Success Update Daily Activity', context: context);
             Navigator.pop(context);
-            Future.microtask(
-              () {
-                BlocProvider.of<DailyActivityCubit>(context)
-                  ..getStudentActivityPerweek(id: widget.id)
-                  ..getStudentDailyActivities();
-              },
-            );
           }
         },
         child: SafeArea(
@@ -361,49 +358,6 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                             );
                           },
                         ),
-                        // BlocBuilder<ActivityCubit, ActivityState>(
-                        //     builder: (context, state) {
-                        //   List<ActivityModel> activityLocations = [];
-                        //   if (state.activityLocations != null) {
-                        //     activityLocations.clear();
-                        //     activityLocations.addAll(state.activityLocations!);
-                        //   }
-                        //   if (activityLocations.indexWhere(
-                        //           (element) => element.name == locationName) !=
-                        //       -1) {
-                        //     final al = activityLocations.firstWhere(
-                        //         (element) => element.name == locationName);
-                        //     locationId = al.id;
-                        //   }
-                        //   return DropdownButtonFormField(
-                        //     validator: FormBuilderValidators.required(
-                        //       errorText: 'This field is required',
-                        //     ),
-                        //     isExpanded: true,
-                        //     hint: const Text('Location'),
-                        //     items: activityLocations
-                        //         .map(
-                        //           (e) => DropdownMenuItem(
-                        //             value: e,
-                        //             child: Text(
-                        //               e.name!,
-                        //               maxLines: 1,
-                        //               overflow: TextOverflow.ellipsis,
-                        //             ),
-                        //           ),
-                        //         )
-                        //         .toList(),
-                        //     onChanged: (v) {
-                        //       if (v != null) locationId = v.id!;
-                        //     },
-                        //     value: activityLocations.indexWhere((element) =>
-                        //                 element.name == locationName) !=
-                        //             -1
-                        //         ? activityLocations.firstWhere(
-                        //             (element) => element.name == locationName)
-                        //         : null,
-                        //   );
-                        // }),
                         BlocBuilder<ActivityCubit, ActivityState>(
                             builder: (context, state) {
                           List<ActivityModel> activityLocations = [];
@@ -458,12 +412,18 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                   const SizedBox(
                     height: 16,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: FilledButton(
-                      onPressed: onSubmit,
-                      child: const Text('Next'),
-                    ).fullWidth(),
+                  BlocSelector<DailyActivityCubit, DailyActivityState, bool>(
+                    selector: (state) =>
+                        state.updateState == RequestState.loading,
+                    builder: (context, isLoading) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: FilledButton(
+                          onPressed: isLoading ? null : onSubmit,
+                          child: const Text('Next'),
+                        ).fullWidth(),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -483,6 +443,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
       if (widget.dayId != null) {
         BlocProvider.of<DailyActivityCubit>(context).updateDailyActivity(
           id: widget.dayId!,
+          weekId: widget.id,
           model: DailyActivityPostModel(
             activityNameId: activityNameId,
             activityStatus: status,
@@ -494,6 +455,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
       } else {
         BlocProvider.of<DailyActivityCubit>(context).updateDailyActivity2(
           day: day.value!,
+          weekId: widget.id,
           dailyActivityV2Id: widget.id,
           model: DailyActivityPostModel(
             activityNameId: activityNameId,
