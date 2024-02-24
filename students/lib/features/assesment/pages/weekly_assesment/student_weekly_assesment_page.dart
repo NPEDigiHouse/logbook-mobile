@@ -85,9 +85,9 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
                                     !(element.startDate! > 0)) {
                                   return const SizedBox.shrink();
                                 }
-                                final bool isPassed = DateTime.now().isAfter(
+                                final bool isPassed = !(DateTime.now().isBefore(
                                     DateTime.fromMillisecondsSinceEpoch(
-                                        (element.startDate ?? 0) * 1000));
+                                        (element.startDate ?? 0))));
                                 return WeeklyGradeCard(
                                   startTime: element.startDate,
                                   endTime: element.endDate,

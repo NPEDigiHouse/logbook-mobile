@@ -11,8 +11,6 @@ import 'package:main/blocs/logout_cubit/logout_cubit.dart';
 import 'package:main/blocs/profile_cubit/profile_cubit.dart';
 import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
-import 'package:main/widgets/custom_navigation_bar.dart';
-import 'features/menu/history/history_page.dart';
 import 'features/menu/profile/profile_page.dart';
 import 'features/menu/home/student_home_page.dart';
 

@@ -163,11 +163,11 @@ class WeeklyGradeCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (!(isPassed ?? true) || isStudent)
+            if (!(isPassed ?? true))
               const SizedBox.shrink()
             else if (score != 0)
               GestureDetector(
-                onTap: onTap,
+                onTap: isStudent ? null : onTap,
                 child: CircularPercentIndicator(
                   radius: 38.0,
                   lineWidth: 5.0,

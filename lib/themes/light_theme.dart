@@ -21,7 +21,9 @@ ThemeData get lightTheme {
     ),
     appBarTheme: appBarTheme,
     visualDensity: VisualDensity.adaptivePlatformDensity,
+    
     timePickerTheme: TimePickerThemeData(
+      
       hourMinuteTextStyle: TextStyle(
         fontSize: 48,
         fontWeight: FontWeight.w600,

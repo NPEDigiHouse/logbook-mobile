@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:main/helpers/helper.dart';
@@ -58,7 +59,6 @@ class _CreateCstPageState extends State<CreateCstPage> {
       body: BlocListener<SglCstCubit, SglCstState>(
         listener: (context, state) {
           if (state.isCstPostSuccess) {
-            BlocProvider.of<SglCstCubit>(context).getStudentCstDetail(status: "INPROCESS");
             Navigator.pop(context);
           }
         },
@@ -261,7 +261,6 @@ class _CreateCstPageState extends State<CreateCstPage> {
                         }
                         return const SizedBox.shrink();
                       }
-
                       return const CircularProgressIndicator();
                     }),
                     TextFormField(
@@ -279,12 +278,18 @@ class _CreateCstPageState extends State<CreateCstPage> {
                 const SizedBox(
                   height: 16,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: FilledButton(
-                    onPressed: onSubmit,
-                    child: const Text('Submit'),
-                  ).fullWidth(),
+                BlocSelector<SglCstCubit, SglCstState, bool>(
+                  selector: (state) =>
+                      state.createState == RequestState.loading,
+                  builder: (context, state) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: FilledButton(
+                        onPressed: onSubmit,
+                        child: const Text('Submit'),
+                      ).fullWidth(),
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 16,

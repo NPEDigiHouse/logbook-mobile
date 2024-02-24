@@ -27,17 +27,26 @@ class SglCstCubit extends Cubit<SglCstState> {
     emit(state.copyWith(isCstEditSuccess: false, isSglEditSuccess: false));
   }
 
+  // SGL
+
   Future<void> uploadSgl({required SglCstPostModel model}) async {
     emit(state.copyWith(
-      requestState: RequestState.loading,
+      createState: RequestState.loading,
     ));
 
     final result = await dataSource.uploadSgl(
       postModel: model,
     );
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(isSglPostSuccess: true)),
+      (l) => emit(state.copyWith(
+        createState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) {
+        emit(state.copyWith(
+            isSglPostSuccess: true, createState: RequestState.data));
+        getStudentSglDetail(status: 'INPROCESS');
+      },
     );
   }
 
@@ -48,7 +57,7 @@ class SglCstCubit extends Cubit<SglCstState> {
       String? date,
       List<Map<String, dynamic>>? topics}) async {
     emit(state.copyWith(
-      requestState: RequestState.loading,
+      createState: RequestState.loading,
     ));
     final result = await dataSource.editSgl(
       startTime: startTime,
@@ -58,21 +67,35 @@ class SglCstCubit extends Cubit<SglCstState> {
       topics: topics,
     );
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(isSglEditSuccess: true)),
+      (l) => emit(state.copyWith(
+        createState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) {
+        emit(state.copyWith(
+            isSglEditSuccess: true, createState: RequestState.data));
+        getStudentSglDetail(status: "INPROCESS");
+      },
     );
   }
 
   Future<void> deleteSgl({required String id}) async {
     emit(state.copyWith(
-      requestState: RequestState.loading,
+      fetchState: RequestState.loading,
     ));
     final result = await dataSource.deleteSgl(
       id: id,
     );
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(isSglDeleteSuccess: true)),
+      (l) => emit(state.copyWith(
+        fetchState: RequestState.init,
+        errorMessage: l.message,
+      )),
+      (r) {
+        emit(state.copyWith(
+            isSglDeleteSuccess: true, fetchState: RequestState.init));
+        getStudentSglDetail(status: "INPROCESS");
+      },
     );
   }
 
@@ -84,118 +107,39 @@ class SglCstCubit extends Cubit<SglCstState> {
       id: id,
     );
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
       (r) => emit(
           state.copyWith(historySglData: r, requestState: RequestState.data)),
-    );
-  }
-
-  Future<void> getCst({required String id}) async {
-    emit(state.copyWith(
-      requestState: RequestState.loading,
-    ));
-    final result = await dataSource.getCst(
-      id: id,
-    );
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(
-          state.copyWith(historyCstData: r, requestState: RequestState.data)),
-    );
-  }
-
-  Future<void> editCst(
-      {required id,
-      int? startTime,
-      int? endTime,
-      String? date,
-      List<Map<String, dynamic>>? topics}) async {
-    emit(state.copyWith(
-      requestState: RequestState.loading,
-    ));
-    final result = await dataSource.editCst(
-      startTime: startTime,
-      id: id,
-      endTime: endTime,
-      topics: topics,
-      date: date,
-    );
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(isCstEditSuccess: true)),
-    );
-  }
-
-  Future<void> deleteCst({required String id}) async {
-    emit(state.copyWith(
-      requestState: RequestState.loading,
-    ));
-    final result = await dataSource.deleteCst(
-      id: id,
-    );
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(isCstDeleteSuccess: true)),
-    );
-  }
-
-  Future<void> uploadCst({required SglCstPostModel model}) async {
-    emit(state.copyWith(
-      requestState: RequestState.loading,
-    ));
-
-    final result = await dataSource.uploadCst(
-      postModel: model,
-    );
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(isCstPostSuccess: true)),
-    );
-  }
-
-  Future<void> getTopics() async {
-    emit(state.copyWith(
-      requestState: RequestState.loading,
-    ));
-
-    final result = await dataSource.getTopics();
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(topics: r)),
-    );
-  }
-
-  Future<void> getTopicsByDepartmentId({required String unitId}) async {
-    final result = await dataSource.getTopicsByDepartmentId(unitId: unitId);
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(topics: r)),
     );
   }
 
   Future<void> getStudentSglDetail({required String status}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        fetchState: RequestState.loading,
       ));
 
       final result = await studentDataSource.getStudentSgl(status: status);
       try {
         if (status == "VERIFIED") {
           emit(state.copyWith(
-              sglDoneDetail: result, requestState: RequestState.data));
+              sglDoneDetail: result, fetchState: RequestState.data));
         } else {
-          emit(state.copyWith(
-              sglDetail: result, requestState: RequestState.data));
+          emit(
+              state.copyWith(sglDetail: result, fetchState: RequestState.data));
         }
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(
+            fetchState: RequestState.error,
+            errorMessage: 'Failed to load sgl'));
       }
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
-        ),
+            fetchState: RequestState.error, errorMessage: 'Failed to load sgl'),
       );
     }
   }
@@ -203,53 +147,22 @@ class SglCstCubit extends Cubit<SglCstState> {
   Future<void> addNewSglTopic(
       {required String sglId, required TopicPostModel topicModel}) async {
     emit(state.copyWith(
-      requestState: RequestState.loading,
+      createState: RequestState.loading,
     ));
     final result =
         await dataSource.addNewSglTopic(sglId: sglId, topic: topicModel);
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(isNewTopicAddSuccess: true)),
-    );
-  }
-
-  Future<void> getStudentCstDetail({required String status}) async {
-    try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
-
-      final result = await studentDataSource.getStudentCst(status: status);
-      try {
-        if (status == "VERIFIED") {
-          emit(state.copyWith(
-              cstDoneDetail: result, requestState: RequestState.data));
-        } else {
-          emit(state.copyWith(
-              cstDetail: result, requestState: RequestState.data));
-        }
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
-    } catch (e) {
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
-    }
-  }
-
-  Future<void> addNewCstTopic(
-      {required String cstId, required TopicPostModel topicModel}) async {
-    emit(state.copyWith(
-      requestState: RequestState.loading,
-    ));
-    final result =
-        await dataSource.addNewCstTopic(cstId: cstId, topic: topicModel);
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(isNewTopicAddSuccess: true)),
+      (l) => emit(state.copyWith(
+        createState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) {
+        emit(state.copyWith(
+          isNewTopicAddSuccess: true,
+          createState: RequestState.data,
+        ));
+        getStudentSglDetail(status: 'INPROCESS');
+      },
     );
   }
 
@@ -260,7 +173,6 @@ class SglCstCubit extends Cubit<SglCstState> {
     bool onScroll = false,
     FilterType? type,
   }) async {
-    print(type);
     final result = await dataSource.getSglBySupervisor(
         unitId: unitId,
         query: query,
@@ -269,38 +181,15 @@ class SglCstCubit extends Cubit<SglCstState> {
 
     if (!onScroll) emit(state.copyWith(sglState: RequestState.loading));
     result.fold(
-      (l) => emit(state.copyWith(sglState: RequestState.error)),
+      (l) => emit(state.copyWith(
+        sglState: RequestState.error,
+        errorMessage: l.message,
+      )),
       (r) {
         if (page == 1 && !onScroll) {
           emit(state.copyWith(sglStudents: r, sglState: RequestState.data));
         } else {
           emit(state.copyWith(sglStudents: state.sglStudents! + r));
-        }
-      },
-    );
-  }
-
-  Future<void> getListCstStudents(
-      {String? unitId,
-      int? page,
-      String? query,
-      bool onScroll = false,
-      FilterType? type}) async {
-    print(type);
-
-    final result = await dataSource.getCstBySupervisor(
-        unitId: unitId,
-        query: query,
-        page: page,
-        filterType: type ?? FilterType.unverified);
-    if (!onScroll) emit(state.copyWith(cstState: RequestState.loading));
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) {
-        if (page == 1 && !onScroll) {
-          emit(state.copyWith(cstStudents: r, cstState: RequestState.data));
-        } else {
-          emit(state.copyWith(cstStudents: state.cstStudents! + r));
         }
       },
     );
@@ -315,34 +204,10 @@ class SglCstCubit extends Cubit<SglCstState> {
     final result =
         await dataSource.verifySglBySupervisor(id: topicId, status: status);
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(isVerifyTopicSuccess: true)),
-    );
-  }
-
-  Future<void> verifyCstTopic(
-      {required String topicId, required bool status}) async {
-    emit(state.copyWith(
-      requestState: RequestState.loading,
-    ));
-
-    final result =
-        await dataSource.verifyCstBySupervisor(id: topicId, status: status);
-
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(isVerifyTopicSuccess: true)),
-    );
-  }
-
-  Future<void> verifyCst({required String cstId, required bool status}) async {
-    emit(state.copyWith(
-      requestState: RequestState.loading,
-    ));
-
-    final result = await dataSource.verifyCstByCeu(id: cstId, status: status);
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
       (r) => emit(state.copyWith(isVerifyTopicSuccess: true)),
     );
   }
@@ -354,20 +219,11 @@ class SglCstCubit extends Cubit<SglCstState> {
 
     final result = await dataSource.verifySglByCeu(id: sglId, status: status);
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
       (r) => emit(state.copyWith(isVerifyTopicSuccess: true)),
-    );
-  }
-
-  Future<void> getStudentCstDetailById({required String studentId}) async {
-    emit(state.copyWith(
-      requestState: RequestState.loading,
-    ));
-
-    final result = await dataSource.getCstByStudentId(studentId: studentId);
-    result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
-      (r) => emit(state.copyWith(cstDetail: r)),
     );
   }
 
@@ -378,7 +234,10 @@ class SglCstCubit extends Cubit<SglCstState> {
 
     final result = await dataSource.getSglByStudentId(studentId: studentId);
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
       (r) => emit(state.copyWith(sglDetail: r)),
     );
   }
@@ -392,10 +251,240 @@ class SglCstCubit extends Cubit<SglCstState> {
     final result =
         await dataSource.verifyAllSglBySupervisor(id: topicId, status: status);
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
       (r) {
         emit(state.copyWith(isVerifyAllSglCstSuccess: true));
       },
+    );
+  }
+
+  // CST
+  Future<void> uploadCst({required SglCstPostModel model}) async {
+    emit(state.copyWith(
+      createState: RequestState.loading,
+    ));
+
+    final result = await dataSource.uploadCst(
+      postModel: model,
+    );
+    result.fold(
+      (l) => emit(state.copyWith(
+        createState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) {
+        emit(state.copyWith(
+            isCstPostSuccess: true, createState: RequestState.data));
+        getStudentCstDetail(status: 'INPROCESS');
+      },
+    );
+  }
+
+  Future<void> getCst({required String id}) async {
+    emit(state.copyWith(
+      requestState: RequestState.loading,
+    ));
+    final result = await dataSource.getCst(
+      id: id,
+    );
+    result.fold(
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) => emit(
+          state.copyWith(historyCstData: r, requestState: RequestState.data)),
+    );
+  }
+
+  Future<void> editCst(
+      {required id,
+      int? startTime,
+      int? endTime,
+      String? date,
+      List<Map<String, dynamic>>? topics}) async {
+    emit(state.copyWith(
+      createState: RequestState.loading,
+    ));
+    final result = await dataSource.editCst(
+      startTime: startTime,
+      id: id,
+      endTime: endTime,
+      topics: topics,
+      date: date,
+    );
+    result.fold(
+      (l) => emit(state.copyWith(
+        createState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) {
+        emit(state.copyWith(
+            isCstEditSuccess: true, createState: RequestState.data));
+        getStudentCstDetail(status: "INPROCESS");
+      },
+    );
+  }
+
+  Future<void> deleteCst({required String id}) async {
+    final result = await dataSource.deleteCst(
+      id: id,
+    );
+    result.fold(
+      (l) => emit(state.copyWith(errorMessage: l.message)),
+      (r) {
+        emit(state.copyWith(isCstDeleteSuccess: true));
+        getStudentCstDetail(status: "INPROCESS");
+      },
+    );
+  }
+
+  Future<void> addNewCstTopic(
+      {required String cstId, required TopicPostModel topicModel}) async {
+    emit(state.copyWith(
+      createState: RequestState.loading,
+    ));
+    final result =
+        await dataSource.addNewCstTopic(cstId: cstId, topic: topicModel);
+    result.fold(
+      (l) => emit(state.copyWith(
+        createState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) {
+        emit(state.copyWith(
+          isNewTopicAddSuccess: true,
+          createState: RequestState.data,
+        ));
+        getStudentCstDetail(status: 'INPROCESS');
+      },
+    );
+  }
+
+  Future<void> getTopics() async {
+    emit(state.copyWith(
+      requestState: RequestState.loading,
+    ));
+
+    final result = await dataSource.getTopics();
+    result.fold(
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) => emit(state.copyWith(topics: r)),
+    );
+  }
+
+  Future<void> getTopicsByDepartmentId({required String unitId}) async {
+    final result = await dataSource.getTopicsByDepartmentId(unitId: unitId);
+    result.fold(
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) => emit(state.copyWith(topics: r)),
+    );
+  }
+
+  Future<void> getStudentCstDetail({required String status}) async {
+    try {
+      emit(state.copyWith(
+        fetchState: RequestState.loading,
+      ));
+
+      final result = await studentDataSource.getStudentCst(status: status);
+      if (status == "VERIFIED") {
+        emit(state.copyWith(
+            cstDoneDetail: result, fetchState: RequestState.data));
+      } else {
+        emit(state.copyWith(cstDetail: result, fetchState: RequestState.data));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          errorMessage: 'failed fetch cst',
+          fetchState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getListCstStudents(
+      {String? unitId,
+      int? page,
+      String? query,
+      bool onScroll = false,
+      FilterType? type}) async {
+    final result = await dataSource.getCstBySupervisor(
+        unitId: unitId,
+        query: query,
+        page: page,
+        filterType: type ?? FilterType.unverified);
+    if (!onScroll) emit(state.copyWith(cstState: RequestState.loading));
+    result.fold(
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) {
+        if (page == 1 && !onScroll) {
+          emit(state.copyWith(cstStudents: r, cstState: RequestState.data));
+        } else {
+          emit(state.copyWith(cstStudents: state.cstStudents! + r));
+        }
+      },
+    );
+  }
+
+  Future<void> verifyCstTopic(
+      {required String topicId, required bool status}) async {
+    emit(state.copyWith(
+      requestState: RequestState.loading,
+    ));
+
+    final result =
+        await dataSource.verifyCstBySupervisor(id: topicId, status: status);
+
+    result.fold(
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) => emit(state.copyWith(isVerifyTopicSuccess: true)),
+    );
+  }
+
+  Future<void> verifyCst({required String cstId, required bool status}) async {
+    emit(state.copyWith(
+      requestState: RequestState.loading,
+    ));
+
+    final result = await dataSource.verifyCstByCeu(id: cstId, status: status);
+    result.fold(
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) => emit(state.copyWith(isVerifyTopicSuccess: true)),
+    );
+  }
+
+  Future<void> getStudentCstDetailById({required String studentId}) async {
+    emit(state.copyWith(
+      requestState: RequestState.loading,
+    ));
+
+    final result = await dataSource.getCstByStudentId(studentId: studentId);
+    result.fold(
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
+      (r) => emit(state.copyWith(cstDetail: r)),
     );
   }
 
@@ -408,7 +497,10 @@ class SglCstCubit extends Cubit<SglCstState> {
     final result =
         await dataSource.verifyAllCstBySupervisor(id: topicId, status: status);
     result.fold(
-      (l) => emit(state.copyWith(requestState: RequestState.error)),
+      (l) => emit(state.copyWith(
+        requestState: RequestState.error,
+        errorMessage: l.message,
+      )),
       (r) {
         emit(state.copyWith(isVerifyAllSglCstSuccess: true));
       },

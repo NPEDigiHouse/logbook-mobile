@@ -5,6 +5,7 @@ import 'package:data/models/sglcst/topic_model.dart';
 import 'package:data/models/sglcst/topic_post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:main/helpers/helper.dart';
 import 'package:main/widgets/inputs/custom_dropdown.dart';
@@ -63,11 +64,6 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
     return BlocListener<SglCstCubit, SglCstState>(
       listener: (context, state) {
         if (state.isNewTopicAddSuccess) {
-          if (widget.type == TopicDialogType.cst) {
-            BlocProvider.of<SglCstCubit>(context).getStudentCstDetail(status: "INPROCESS");
-          } else {
-            BlocProvider.of<SglCstCubit>(context).getStudentSglDetail(status: "INPROCESS");
-          }
           context.back();
         }
       },
@@ -192,12 +188,17 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
               const SizedBox(
                 height: 16,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: FilledButton(
-                  onPressed: onSubmit,
-                  child: const Text('Submit'),
-                ).fullWidth(),
+              BlocSelector<SglCstCubit, SglCstState, bool>(
+                selector: (state) => state.createState == RequestState.loading,
+                builder: (context, isLoading) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: FilledButton(
+                      onPressed: isLoading ? null : onSubmit,
+                      child: const Text('Submit'),
+                    ).fullWidth(),
+                  );
+                },
               ),
               const SizedBox(
                 height: 16,

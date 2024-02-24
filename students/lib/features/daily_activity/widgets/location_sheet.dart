@@ -29,7 +29,6 @@ class LocationSheet extends StatefulWidget {
 class _LocationSheetState extends State<LocationSheet> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<ActivityCubit>().init();
   }

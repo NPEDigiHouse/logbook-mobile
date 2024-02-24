@@ -2,6 +2,7 @@ import 'package:common/features/no_internet/check_internet_onetime.dart';
 import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/spacing_column.dart';
@@ -46,15 +47,11 @@ class _ListDoneSglPageState extends State<ListDoneSglPage> {
                   child: SpacingColumn(
                     horizontalPadding: 16,
                     children: [
-                      BlocConsumer<SglCstCubit, SglCstState>(
-                        listener: (context, state) {
-                          if (state.isSglDeleteSuccess ||
-                              state.isSglEditSuccess) {
-                            BlocProvider.of<SglCstCubit>(context)
-                                .getStudentSglDetail(status: "VERIFIED");
-                          }
-                        },
+                      BlocBuilder<SglCstCubit, SglCstState>(
                         builder: (context, state) {
+                          if (state.fetchState == RequestState.loading) {
+                            return const ListSglCstPageSkeleton();
+                          }
                           if (state.sglDoneDetail != null) {
                             if ((state.sglDoneDetail?.sgls ?? []).isEmpty) {
                               return const EmptyData(

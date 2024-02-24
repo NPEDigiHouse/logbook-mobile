@@ -23,30 +23,38 @@ class SglCstState {
   final HistorySglModel? historySglData;
   final RequestState sglState;
   final RequestState cstState;
+  // new sgl state
+  final String? errorMessage;
+  final RequestState fetchState;
+  final RequestState createState;
 
-  SglCstState(
-      {this.isSglPostSuccess = false,
-      this.isCstPostSuccess = false,
-      this.isSglDeleteSuccess = false,
-      this.isSglEditSuccess = false,
-      this.isCstDeleteSuccess = false,
-      this.isCstEditSuccess = false,
-      this.historyCstData,
-      this.sglDoneDetail,
-      this.sglState = RequestState.init,
-      this.cstState = RequestState.init,
-      this.cstDoneDetail,
-      this.historySglData,
-      this.isNewTopicAddSuccess = false,
-      this.sglStudents,
-      this.requestState = RequestState.init,
-      this.cstStudents,
-      this.isVerifySglCstSuccess = false,
-      this.isVerifyTopicSuccess = false,
-      this.isVerifyAllSglCstSuccess = false,
-      this.topics,
-      this.sglDetail,
-      this.cstDetail});
+  SglCstState({
+    this.isSglPostSuccess = false,
+    this.isCstPostSuccess = false,
+    this.isSglDeleteSuccess = false,
+    this.isSglEditSuccess = false,
+    this.isCstDeleteSuccess = false,
+    this.isCstEditSuccess = false,
+    this.historyCstData,
+    this.sglDoneDetail,
+    this.sglState = RequestState.init,
+    this.cstState = RequestState.init,
+    this.cstDoneDetail,
+    this.historySglData,
+    this.isNewTopicAddSuccess = false,
+    this.sglStudents,
+    this.requestState = RequestState.init,
+    this.cstStudents,
+    this.isVerifySglCstSuccess = false,
+    this.isVerifyTopicSuccess = false,
+    this.isVerifyAllSglCstSuccess = false,
+    this.topics,
+    this.sglDetail,
+    this.cstDetail,
+    this.fetchState = RequestState.init,
+    this.createState = RequestState.init,
+    this.errorMessage,
+  });
 
   SglCstState copyWith({
     RequestState requestState = RequestState.init,
@@ -71,6 +79,9 @@ class SglCstState {
     SglResponse? sglDoneDetail,
     CstResponse? cstDoneDetail,
     List<TopicModel>? topics,
+    String? errorMessage,
+    RequestState fetchState = RequestState.init,
+    RequestState createState = RequestState.init,
   }) {
     return SglCstState(
       isSglPostSuccess: isSglPostSuccess,
@@ -95,6 +106,9 @@ class SglCstState {
       requestState: requestState,
       sglState: sglState,
       cstState: cstState,
+      errorMessage: errorMessage,
+      fetchState: fetchState,
+      createState: createState,
     );
   }
 }

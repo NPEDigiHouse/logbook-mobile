@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
 import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:main/helpers/helper.dart';
@@ -57,7 +58,6 @@ class _CreateSglPageState extends State<CreateSglPage> {
       body: BlocListener<SglCstCubit, SglCstState>(
         listener: (context, state) {
           if (state.isSglPostSuccess) {
-            BlocProvider.of<SglCstCubit>(context).getStudentSglDetail(status: "INPROCESS");
             Navigator.pop(context);
           }
         },
@@ -86,44 +86,46 @@ class _CreateSglPageState extends State<CreateSglPage> {
                       if (state is SupervisorFetchSuccess) {
                         supervisors.clear();
                         supervisors.addAll(state.supervisors);
-                      }
-                      return CustomDropdown<SupervisorModel>(
-                          errorNotifier: supervisorVal,
-                          onSubmit: (text, controller) {
-                            if (supervisors.indexWhere((element) =>
-                                    element.fullName?.trim() == text.trim()) ==
-                                -1) {
-                              controller.clear();
-                              supervisorId = '';
-                            }
-                          },
-                          hint: 'Supervisor',
-                          onCallback: (pattern) {
-                            final temp = supervisors
-                                .where((competence) =>
-                                    (competence.fullName ?? 'unknown')
-                                        .toLowerCase()
-                                        .trim()
-                                        .contains(pattern.toLowerCase()))
-                                .toList();
+                        return CustomDropdown<SupervisorModel>(
+                            errorNotifier: supervisorVal,
+                            onSubmit: (text, controller) {
+                              if (supervisors.indexWhere((element) =>
+                                      element.fullName?.trim() ==
+                                      text.trim()) ==
+                                  -1) {
+                                controller.clear();
+                                supervisorId = '';
+                              }
+                            },
+                            hint: 'Supervisor',
+                            onCallback: (pattern) {
+                              final temp = supervisors
+                                  .where((competence) =>
+                                      (competence.fullName ?? 'unknown')
+                                          .toLowerCase()
+                                          .trim()
+                                          .contains(pattern.toLowerCase()))
+                                  .toList();
 
-                            return pattern.isEmpty ? supervisors : temp;
-                          },
-                          child: (suggestion) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 16,
-                              ),
-                              child: Text(suggestion?.fullName ?? ''),
-                            );
-                          },
-                          onItemSelect: (v, controller) {
-                            if (v != null) {
-                              supervisorId = v.id!;
-                              controller.text = v.fullName!;
-                            }
-                          });
+                              return pattern.isEmpty ? supervisors : temp;
+                            },
+                            child: (suggestion) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 16,
+                                ),
+                                child: Text(suggestion?.fullName ?? ''),
+                              );
+                            },
+                            onItemSelect: (v, controller) {
+                              if (v != null) {
+                                supervisorId = v.id!;
+                                controller.text = v.fullName!;
+                              }
+                            });
+                      }
+                      return const CircularProgressIndicator();
                     }),
                   ],
                 ),
@@ -269,12 +271,18 @@ class _CreateSglPageState extends State<CreateSglPage> {
                 const SizedBox(
                   height: 16,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: FilledButton(
-                    onPressed: onSubmit,
-                    child: const Text('Submit'),
-                  ).fullWidth(),
+                BlocSelector<SglCstCubit, SglCstState, bool>(
+                  selector: (state) =>
+                      state.createState == RequestState.loading,
+                  builder: (context, isLoading) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: FilledButton(
+                        onPressed: isLoading ? null : onSubmit,
+                        child: const Text('Submit'),
+                      ).fullWidth(),
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 16,

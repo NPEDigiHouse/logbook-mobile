@@ -2,15 +2,13 @@ import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
-import 'package:data/models/sglcst/topic_model.dart';
 import 'package:data/models/sglcst/topic_on_sglcst.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
-import 'package:main/helpers/helper.dart';
-import 'package:main/widgets/inputs/custom_dropdown.dart';
 import 'package:main/widgets/inputs/input_date_time_field.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'add_topic_dialog.dart';
@@ -42,9 +40,6 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
   final _formKey = GlobalKey<FormBuilderState>();
   late DateTime start;
   late DateTime end;
-  List<int> topicId = [];
-  List<String> topicNames = [];
-  final List<ValueNotifier<String?>> topicVal = [];
 
   @override
   void initState() {
@@ -52,12 +47,6 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
     end = DateTime.fromMillisecondsSinceEpoch(widget.endTime * 1000);
     startTimeController.text = Utils.datetimeToStringTime(start);
     endTimeController.text = Utils.datetimeToStringTime(end);
-    for (var i = 0; i < widget.topics.length; i++) {
-      topicNames.add(widget.topics[i].topicName!.first);
-      topicId.add(-1);
-      topicVal.add(ValueNotifier(null));
-    }
-    BlocProvider.of<SglCstCubit>(context, listen: false).getTopics();
     super.initState();
   }
 
@@ -73,13 +62,9 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
     return BlocListener<SglCstCubit, SglCstState>(
       listener: (context, state) {
         if (widget.type == TopicDialogType.cst && state.isCstEditSuccess) {
-          BlocProvider.of<SglCstCubit>(context)
-              .getStudentCstDetail(status: "INPROCESS");
           context.back();
         } else if (state.isSglEditSuccess &&
             widget.type == TopicDialogType.sgl) {
-          BlocProvider.of<SglCstCubit>(context)
-              .getStudentSglDetail(status: "INPROCESS");
           context.back();
         }
       },
@@ -145,81 +130,6 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
                     horizontalPadding: 16,
                     spacing: 12,
                     children: [
-                      BlocBuilder<SglCstCubit, SglCstState>(
-                          builder: (context, state) {
-                        List<TopicModel> topicsModels = [];
-                        if (state.topics != null) {
-                          topicsModels.clear();
-                          topicsModels.addAll(ParseHelper.filterTopic(
-                              listData: state.topics!,
-                              isSGL: widget.type == TopicDialogType.sgl));
-                          return SpacingColumn(
-                            spacing: 8,
-                            children: [
-                              for (int i = 0; i < topicNames.length; i++)
-                                Builder(builder: (context) {
-                                  int indx = topicsModels.indexWhere(
-                                      (element) =>
-                                          element.name == topicNames[i]);
-                                  topicId[i] =
-                                      indx == -1 ? -1 : topicsModels[indx].id!;
-                                  return CustomDropdown<TopicModel>(
-                                    errorNotifier: topicVal[i],
-                                    init: widget
-                                            .topics[i].topicName!.first.isEmpty
-                                        ? null
-                                        : widget.topics[i].topicName?.first,
-                                    onSubmit: (text, controller) {
-                                      if (topicsModels.indexWhere((element) =>
-                                              element.name?.trim() ==
-                                              text.trim()) ==
-                                          -1) {
-                                        controller.clear();
-                                        topicId.clear();
-                                      }
-                                    },
-                                    hint: 'Topics',
-                                    onCallback: (pattern) {
-                                      final temp = topicsModels
-                                          .where((competence) => (competence
-                                                      .name ??
-                                                  'unknown')
-                                              .toLowerCase()
-                                              .trim()
-                                              .contains(pattern.toLowerCase()))
-                                          .toList();
-
-                                      return pattern.isEmpty
-                                          ? topicsModels
-                                          : temp;
-                                    },
-                                    child: (suggestion) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 12.0,
-                                          vertical: 16,
-                                        ),
-                                        child: Text(suggestion?.name ?? ''),
-                                      );
-                                    },
-                                    onClear: (controller) {
-                                      topicId[i] = -1;
-                                      topicNames[i] = '';
-                                    },
-                                    onItemSelect: (v, controller) {
-                                      if (v != null) {
-                                        topicId[i] = v.id ?? -1;
-                                        topicNames[i] = v.name;
-                                        controller.text = v.name!;
-                                      }
-                                    },
-                                  );
-                                }),
-                            ],
-                          );
-                        }
-                        return const CircularProgressIndicator();
-                      }),
                       Row(
                         children: [
                           Expanded(
@@ -266,12 +176,18 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
                   const SizedBox(
                     height: 16,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: FilledButton(
-                      onPressed: onSubmit,
-                      child: const Text('Submit'),
-                    ).fullWidth(),
+                  BlocSelector<SglCstCubit, SglCstState, bool>(
+                    selector: (state) =>
+                        state.createState == RequestState.loading,
+                    builder: (context, isLoading) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: FilledButton(
+                          onPressed: isLoading ? null : onSubmit,
+                          child: const Text('Submit'),
+                        ).fullWidth(),
+                      );
+                    },
                   ),
                   const SizedBox(
                     height: 16,
@@ -289,14 +205,6 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
     FocusScope.of(context).unfocus();
     bool valid = true;
 
-    for (var i = 0; i < topicVal.length; i++) {
-      topicVal[i].value = topicId[i] == -1
-          ? 'This field is required, please select again.'
-          : null;
-      if (topicId[i] == -1) {
-        valid = false;
-      }
-    }
     if (valid && _formKey.currentState!.saveAndValidate()) {
       if (widget.type == TopicDialogType.sgl) {
         BlocProvider.of<SglCstCubit>(context).editSgl(
@@ -304,14 +212,6 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
           startTime: start.millisecondsSinceEpoch ~/ 1000,
           endTime: end.millisecondsSinceEpoch ~/ 1000,
           date: Utils.datetimeToString(widget.date, format: 'yyyy-MM-dd'),
-          topics: [
-            for (int i = 0; i < topicId.length; i++)
-              if (widget.topics[i].topicName != topicNames[i])
-                {
-                  "oldId": widget.topics[i].id,
-                  "newId": topicId[i],
-                }
-          ],
         );
       } else {
         BlocProvider.of<SglCstCubit>(context).editCst(
@@ -319,14 +219,6 @@ class _EditSglCstDialogState extends State<EditSglCstDialog> {
           startTime: start.millisecondsSinceEpoch ~/ 1000,
           endTime: end.millisecondsSinceEpoch ~/ 1000,
           date: Utils.datetimeToString(widget.date, format: 'yyyy-MM-dd'),
-          topics: [
-            for (int i = 0; i < topicId.length; i++)
-              if (widget.topics[i].topicName != topicNames[i])
-                {
-                  "oldId": widget.topics[i].id,
-                  "newId": topicId[i],
-                }
-          ],
         );
       }
     }

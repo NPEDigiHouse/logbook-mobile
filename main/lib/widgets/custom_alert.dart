@@ -40,7 +40,7 @@ class CustomAlert {
     scaffoldMessenger.showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        duration: const Duration(milliseconds: 400),
+        duration: const Duration(milliseconds: 500),
         backgroundColor: successColor,
         content: Row(
           children: [
