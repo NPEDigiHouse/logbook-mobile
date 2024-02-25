@@ -110,21 +110,16 @@ class StudentCubit extends Cubit<StudentState> {
   Future<void> getStudentSelfReflections() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        fetchSR: RequestState.loading,
       ));
 
       final result = await dataSource.getStudentSelfReflection();
-      try {
-        emit(state.copyWith(
-          selfReflectionResponse: result,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(
+          selfReflectionResponse: result, fetchSR: RequestState.data));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          fetchSR: RequestState.error,
         ),
       );
     }

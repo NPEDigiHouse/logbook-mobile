@@ -5,12 +5,14 @@ class ScientificSessionSupervisorState {
   final ScientificSessionDetailModel? detail;
   final bool successVerify;
   final RequestState? fetchState;
+  final RequestState detailState;
 
   ScientificSessionSupervisorState({
     this.listData,
     this.detail,
     this.successVerify = false,
     this.fetchState,
+    this.detailState = RequestState.init,
   });
 
   ScientificSessionSupervisorState copyWith({
@@ -19,11 +21,13 @@ class ScientificSessionSupervisorState {
     ScientificSessionDetailModel? detailClinicalRecordModel,
     List<ScientificSessionOnListModel>? clinicalRecords,
     bool successVerifyClinicalRecords = false,
+    RequestState detailState = RequestState.init,
   }) {
     return ScientificSessionSupervisorState(
         listData: clinicalRecords ?? listData,
         fetchState: fetchState,
         detail: detailClinicalRecordModel ?? detail,
+        detailState: detailState,
         successVerify: successVerifyClinicalRecords);
   }
 }

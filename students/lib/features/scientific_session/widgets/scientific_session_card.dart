@@ -14,10 +14,12 @@ class StudentScientificSessionCard extends StatelessWidget {
     super.key,
     required this.model,
     required this.department,
+    required this.onUpdate,
   });
 
   final StudentScientificSessionModel model;
   final ActiveDepartmentModel department;
+  final Function onUpdate;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class StudentScientificSessionCard extends StatelessWidget {
           DetailScientificSessionPage(
             id: model.scientificSessionId!,
             activeDepartmentModel: department,
+            onUpdate: onUpdate,
           ),
         ),
         child: Padding(

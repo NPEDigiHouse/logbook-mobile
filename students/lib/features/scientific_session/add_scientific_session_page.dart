@@ -140,46 +140,47 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                           if (state is SupervisorFetchSuccess) {
                             supervisors.clear();
                             supervisors.addAll(state.supervisors);
-                          }
-                          return CustomDropdown<SupervisorModel>(
-                              errorNotifier: supervisorValue,
-                              onSubmit: (text, controller) {
-                                if (supervisors.indexWhere((element) =>
-                                        element.fullName?.trim() ==
-                                        text.trim()) ==
-                                    -1) {
-                                  controller.clear();
-                                  supervisorId = '';
-                                }
-                              },
-                              hint: 'Supervisor',
-                              init: widget.detail?.studentName,
-                              onCallback: (pattern) {
-                                final temp = supervisors
-                                    .where((competence) =>
-                                        (competence.fullName ?? 'unknown')
-                                            .toLowerCase()
-                                            .trim()
-                                            .contains(pattern.toLowerCase()))
-                                    .toList();
+                            return CustomDropdown<SupervisorModel>(
+                                errorNotifier: supervisorValue,
+                                onSubmit: (text, controller) {
+                                  if (supervisors.indexWhere((element) =>
+                                          element.fullName?.trim() ==
+                                          text.trim()) ==
+                                      -1) {
+                                    controller.clear();
+                                    supervisorId = '';
+                                  }
+                                },
+                                hint: 'Supervisor',
+                                init: widget.detail?.supervisorName,
+                                onCallback: (pattern) {
+                                  final temp = supervisors
+                                      .where((competence) =>
+                                          (competence.fullName ?? 'unknown')
+                                              .toLowerCase()
+                                              .trim()
+                                              .contains(pattern.toLowerCase()))
+                                      .toList();
 
-                                return pattern.isEmpty ? supervisors : temp;
-                              },
-                              child: (suggestion) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0,
-                                    vertical: 16,
-                                  ),
-                                  child: Text(suggestion?.fullName ?? ''),
-                                );
-                              },
-                              onItemSelect: (v, controller) {
-                                if (v != null) {
-                                  supervisorId = v.id!;
-                                  controller.text = v.fullName!;
-                                }
-                              });
+                                  return pattern.isEmpty ? supervisors : temp;
+                                },
+                                child: (suggestion) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12.0,
+                                      vertical: 16,
+                                    ),
+                                    child: Text(suggestion?.fullName ?? ''),
+                                  );
+                                },
+                                onItemSelect: (v, controller) {
+                                  if (v != null) {
+                                    supervisorId = v.id!;
+                                    controller.text = v.fullName!;
+                                  }
+                                });
+                          }
+                          return const CircularProgressIndicator();
                         }),
                       ],
                     ),
@@ -213,7 +214,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                           onChanged: (v) {
                             if (v != null) sesionType = v.id!;
                           },
-                          value: sesionType != -1
+                          value: sesionType != -1 && _sessionTypes.isNotEmpty
                               ? _sessionTypes.firstWhere(
                                   (element) => element.id == sesionType)
                               : null,
@@ -349,10 +350,19 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                         const SizedBox(
                           height: 20,
                         ),
-                        FilledButton(
-                          onPressed: () => onSubmit(state.attachment),
-                          child: const Text('Submit'),
-                        ).fullWidth(),
+                        BlocSelector<ScientificSessionCubit,
+                            ScientifcSessionState, bool>(
+                          selector: (state) =>
+                              state.createState == RequestState.loading,
+                          builder: (context, isLoading) {
+                            return FilledButton(
+                              onPressed: isLoading
+                                  ? null
+                                  : () => onSubmit(state.attachment),
+                              child: const Text('Submit'),
+                            ).fullWidth();
+                          },
+                        )
                       ],
                     ),
                   ],

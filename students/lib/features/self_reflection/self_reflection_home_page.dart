@@ -8,8 +8,10 @@ import 'package:data/models/user/user_credential.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/self_reflection_cubit/self_reflection_cubit.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/empty_data.dart';
@@ -50,40 +52,56 @@ class _StudentSelfReflectionHomePageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Self Reflections"),
-      ),
-      body: SafeArea(
-        child: CheckInternetOnetime(child: (context) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              await Future.wait([
-                BlocProvider.of<StudentCubit>(context)
-                    .getStudentSelfReflections(),
-              ]);
-            },
-            child: CustomScrollView(
-              slivers: [
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  sliver: SliverFillRemaining(
-                    child:
-                        BlocListener<SelfReflectionCubit, SelfReflectionState>(
-                      listener: (context, state) {
-                        if (state.isDelete) {
-                          BlocProvider.of<StudentCubit>(context)
-                              .getStudentSelfReflections();
-                        }
-                        if (state.isUpdate) {
-                          BlocProvider.of<StudentCubit>(context)
-                              .getStudentSelfReflections();
-                        }
-                      },
-                      child: BlocBuilder<StudentCubit, StudentState>(
-                        builder: (context, state) {
-                          if (state.selfReflectionResponse != null) {
-                            return SingleChildScrollView(
+    return BlocBuilder<SelfReflectionCubit, SelfReflectionState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Self Reflections"),
+          ),
+          body: SafeArea(
+            child: CheckInternetOnetime(child: (context) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await Future.wait([
+                    BlocProvider.of<StudentCubit>(context)
+                        .getStudentSelfReflections(),
+                  ]);
+                },
+                child: BlocListener<SelfReflectionCubit, SelfReflectionState>(
+                  listener: (context, state) {
+                    if (state.isDelete) {
+                      BlocProvider.of<StudentCubit>(context)
+                          .getStudentSelfReflections();
+                      CustomAlert.success(
+                          message: "Success Delete Self Reflection",
+                          context: context);
+                    }
+                    if (state.isUpdate) {
+                      BlocProvider.of<StudentCubit>(context)
+                          .getStudentSelfReflections();
+                      CustomAlert.success(
+                          message: "Success Update Self Reflection",
+                          context: context);
+                    }
+                    if (state.isSelfReflectionPostSuccess) {
+                      CustomAlert.success(
+                          message: "Success Add New Self Reflection",
+                          context: context);
+                    }
+                  },
+                  child: BlocBuilder<StudentCubit, StudentState>(
+                    builder: (context, state) {
+                      return CustomScrollView(
+                        slivers: [
+                          const SliverToBoxAdapter(
+                            child: SizedBox(height: 20),
+                          ),
+                          if (state.fetchSR == RequestState.loading)
+                            const SliverFillRemaining(
+                              child: CustomLoading(),
+                            )
+                          else if (state.selfReflectionResponse != null)
+                            SliverToBoxAdapter(
                               child: SpacingColumn(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 onlyPading: true,
@@ -147,6 +165,7 @@ class _StudentSelfReflectionHomePageState
                                                         .selfReflectionResponse!
                                                         .listSelfReflections![
                                                     index],
+                                                onUpdate: () {},
                                               ),
                                               separatorBuilder:
                                                   (context, index) =>
@@ -167,19 +186,21 @@ class _StudentSelfReflectionHomePageState
                                   )
                                 ],
                               ),
-                            );
-                          }
-                          return const CustomLoading();
-                        },
-                      ),
-                    ),
+                            )
+                          else
+                            const SliverFillRemaining(
+                              child: CustomLoading(),
+                            )
+                        ],
+                      );
+                    },
                   ),
                 ),
-              ],
-            ),
-          );
-        }),
-      ),
+              );
+            }),
+          ),
+        );
+      },
     );
   }
 }

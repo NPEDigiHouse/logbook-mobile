@@ -24,7 +24,7 @@ class StudentSelfReflectionModel {
 @JsonSerializable()
 class SelfReflectionData {
   final String? content;
-  final int? updatedAt;
+  final DateTime? updatedAt;
   final String? selfReflectionId;
   final String? verificationStatus;
 

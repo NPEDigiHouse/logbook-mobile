@@ -8,6 +8,7 @@ class ScientifcSessionState {
   final bool postSuccess;
   final bool downloadAttachmentSuccess;
   final bool isDeleteScientificSession;
+  final RequestState createState;
   final String? attachment;
 
   ScientifcSessionState({
@@ -19,6 +20,7 @@ class ScientifcSessionState {
     this.isDeleteScientificSession = false,
     this.requestState = RequestState.init,
     this.attachState = RequestState.init,
+    this.createState = RequestState.init,
   });
 
   ScientifcSessionState copyWith({
@@ -26,19 +28,22 @@ class ScientifcSessionState {
     final List<ScientificRoles>? scientificRoles,
     RequestState? requestState,
     RequestState? attachState,
+    RequestState? createState,
     bool postSuccess = false,
     bool downloadAttachmentSuccess = false,
     bool isDeleteScientificSession = false,
     String? attachment,
   }) {
     return ScientifcSessionState(
-        listSessionTypes: listSessionTypes ?? this.listSessionTypes,
-        scientificRoles: scientificRoles ?? this.scientificRoles,
-        downloadAttachmentSuccess: downloadAttachmentSuccess,
-        postSuccess: postSuccess,
-        isDeleteScientificSession: isDeleteScientificSession,
-        requestState: requestState ?? RequestState.init,
-        attachState: attachState ?? RequestState.init,
-        attachment: attachment);
+      listSessionTypes: listSessionTypes ?? this.listSessionTypes,
+      scientificRoles: scientificRoles ?? this.scientificRoles,
+      downloadAttachmentSuccess: downloadAttachmentSuccess,
+      postSuccess: postSuccess,
+      isDeleteScientificSession: isDeleteScientificSession,
+      requestState: requestState ?? RequestState.init,
+      attachState: attachState ?? RequestState.init,
+      attachment: attachment,
+      createState: createState ?? this.createState,
+    );
   }
 }

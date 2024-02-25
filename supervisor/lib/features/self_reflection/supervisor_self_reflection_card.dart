@@ -53,9 +53,7 @@ class SupervisorSelfReflectionCard extends StatelessWidget {
                   ),
                   Text(
                     Utils.datetimeToString(
-                      DateTime.fromMillisecondsSinceEpoch(
-                        data.updatedAt ?? 0,
-                      ),
+                      data.updatedAt ?? DateTime.now(),
                     ),
                     style: textTheme.bodyMedium?.copyWith(
                       color: primaryColor,

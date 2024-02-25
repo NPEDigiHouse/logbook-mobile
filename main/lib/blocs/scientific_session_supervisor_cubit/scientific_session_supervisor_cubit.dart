@@ -51,27 +51,22 @@ class ScientificSessionSupervisorCubit
   Future<void> getScientificSessionDetail({required String id}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        detailState: RequestState.loading,
       ));
 
       final result =
           await datasource.getScientificSessionDetail(scientificSessionId: id);
-      try {
-        result.fold(
-            (l) => emit(
-                  state.copyWith(requestState: RequestState.error),
-                ), (r) {
-          return emit(state.copyWith(
-            detailClinicalRecordModel: r,
-          ));
-        });
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      result.fold(
+          (l) => emit(
+                state.copyWith(detailState: RequestState.error),
+              ), (r) {
+        emit(state.copyWith(
+            detailClinicalRecordModel: r, detailState: RequestState.data));
+      });
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          detailState: RequestState.error,
         ),
       );
     }

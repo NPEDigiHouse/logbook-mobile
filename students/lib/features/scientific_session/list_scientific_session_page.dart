@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/scientific_session_cubit/scientific_session_cubit.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/empty_data.dart';
@@ -56,146 +57,173 @@ class _StudentListScientificSessionPageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Scientific Session"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.navigateTo(AddScientificSessionPage(
-            activeDepartmentModel: widget.activeDepartmentModel)),
-        child: const Icon(
-          Icons.add_rounded,
+    return BlocListener<ScientificSessionCubit, ScientifcSessionState>(
+      listenWhen: (previous, current) =>
+          previous.isDeleteScientificSession !=
+              current.isDeleteScientificSession ||
+          previous.postSuccess != current.postSuccess,
+      listener: (context, state) {
+        isMounted = false;
+        if (state.postSuccess) {
+          CustomAlert.success(
+              message: 'Success Add New Scoemtofoc Session', context: context);
+        }
+        if (state.isDeleteScientificSession) {
+          CustomAlert.success(
+              message: 'Success Delete Scientific Session', context: context);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Scientific Session"),
         ),
-      ),
-      // : null,
-      body: SafeArea(
-        child: CheckInternetOnetime(child: (context) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              isMounted = false;
-              await Future.wait([
-                BlocProvider.of<StudentCubit>(context)
-                    .getStudentScientificSessionOfActiveDepartment(),
-              ]);
-            },
-            child: ValueListenableBuilder(
-                valueListenable: listData,
-                builder: (context, s, _) {
-                  return CustomScrollView(
-                    slivers: [
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        sliver: SliverFillRemaining(
-                          child: BlocListener<ScientificSessionCubit,
-                              ScientifcSessionState>(
-                            listener: (context, state) async {
-                              if (state.postSuccess) {
-                                isMounted = false;
-                                await Future.wait([
-                                  BlocProvider.of<StudentCubit>(context)
-                                      .getStudentScientificSessionOfActiveDepartment(),
-                                ]);
-                              }
-                            },
-                            child: BlocConsumer<StudentCubit, StudentState>(
-                              listener: (context, state) {
-                                if (state.scientificSessionResponse != null &&
-                                    state.ssState == RequestState.data) {
-                                  if (!isMounted) {
-                                    Future.microtask(() {
-                                      listData.value = [
-                                        ...state.scientificSessionResponse!
-                                            .listScientificSessions!
-                                      ];
-                                      isMounted = true;
-                                    });
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => context.navigateTo(AddScientificSessionPage(
+              activeDepartmentModel: widget.activeDepartmentModel)),
+          child: const Icon(
+            Icons.add_rounded,
+          ),
+        ),
+        // : null,
+        body: SafeArea(
+          child: CheckInternetOnetime(child: (context) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                isMounted = false;
+                await Future.wait([
+                  BlocProvider.of<StudentCubit>(context)
+                      .getStudentScientificSessionOfActiveDepartment(),
+                ]);
+              },
+              child: ValueListenableBuilder(
+                  valueListenable: listData,
+                  builder: (context, s, _) {
+                    return CustomScrollView(
+                      slivers: [
+                        SliverPadding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          sliver: SliverFillRemaining(
+                            child: BlocListener<ScientificSessionCubit,
+                                ScientifcSessionState>(
+                              listener: (context, state) async {
+                                if (state.postSuccess) {
+                                  isMounted = false;
+                                  await Future.wait([
+                                    BlocProvider.of<StudentCubit>(context)
+                                        .getStudentScientificSessionOfActiveDepartment(),
+                                  ]);
+                                }
+                              },
+                              child: BlocConsumer<StudentCubit, StudentState>(
+                                listener: (context, state) {
+                                  if (state.scientificSessionResponse != null &&
+                                      state.ssState == RequestState.data) {
+                                    if (!isMounted) {
+                                      Future.microtask(() {
+                                        listData.value = [
+                                          ...state.scientificSessionResponse!
+                                              .listScientificSessions!
+                                        ];
+                                        isMounted = true;
+                                      });
+                                    }
                                   }
-                                }
-                              },
-                              builder: (context, state) {
-                                if (state.scientificSessionResponse != null) {
-                                  return SingleChildScrollView(
-                                    child: SpacingColumn(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      onlyPading: true,
-                                      horizontalPadding: 16,
-                                      children: [
-                                        DepartmentHeader(
-                                            unitName: widget
-                                                .activeDepartmentModel
-                                                .unitName!),
-                                        const SizedBox(
-                                          height: 12,
-                                        ),
-                                        const ItemDivider(),
-                                        Builder(
-                                          builder: (context) {
-                                            if (state
-                                                    .scientificSessionResponse !=
-                                                null) {
-                                              return Column(
-                                                children: [
-                                                  // SizedBox(
-                                                  //   height: 16,
-                                                  // ),
-                                                  buildSearchFilterSection(
-                                                    verifiedCount: state
-                                                        .scientificSessionResponse!
-                                                        .verifiedCounts!,
-                                                    unverifiedCount: state
-                                                        .scientificSessionResponse!
-                                                        .unverifiedCounts!,
-                                                  ),
-                                                  Builder(builder: (context) {
-                                                    if (s.isEmpty) {
-                                                      return const EmptyData(
-                                                        subtitle:
-                                                            'Please upload scientific session data first!',
-                                                        title:
-                                                            'Data Still Empty',
+                                },
+                                builder: (context, state) {
+                                  if (state.ssState == RequestState.loading) {
+                                    return const CustomLoading();
+                                  } else if (state.scientificSessionResponse !=
+                                      null) {
+                                    return SingleChildScrollView(
+                                      child: SpacingColumn(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        onlyPading: true,
+                                        horizontalPadding: 16,
+                                        children: [
+                                          DepartmentHeader(
+                                              unitName: widget
+                                                  .activeDepartmentModel
+                                                  .unitName!),
+                                          const SizedBox(
+                                            height: 12,
+                                          ),
+                                          const ItemDivider(),
+                                          Builder(
+                                            builder: (context) {
+                                              if (state
+                                                      .scientificSessionResponse !=
+                                                  null) {
+                                                return Column(
+                                                  children: [
+                                                    // SizedBox(
+                                                    //   height: 16,
+                                                    // ),
+                                                    buildSearchFilterSection(
+                                                      verifiedCount: state
+                                                          .scientificSessionResponse!
+                                                          .verifiedCounts!,
+                                                      unverifiedCount: state
+                                                          .scientificSessionResponse!
+                                                          .unverifiedCounts!,
+                                                    ),
+                                                    Builder(builder: (context) {
+                                                      if (s.isEmpty) {
+                                                        return const EmptyData(
+                                                          subtitle:
+                                                              'Please upload scientific session data first!',
+                                                          title:
+                                                              'Data Still Empty',
+                                                        );
+                                                      }
+                                                      return ListView.separated(
+                                                        physics:
+                                                            const NeverScrollableScrollPhysics(),
+                                                        shrinkWrap: true,
+                                                        itemBuilder: (context,
+                                                                index) =>
+                                                            StudentScientificSessionCard(
+                                                          onUpdate: () {
+                                                            isMounted = false;
+                                                            BlocProvider.of<
+                                                                        StudentCubit>(
+                                                                    context)
+                                                                .getStudentScientificSessionOfActiveDepartment();
+                                                          },
+                                                          department: widget
+                                                              .activeDepartmentModel,
+                                                          model: s[index],
+                                                        ),
+                                                        separatorBuilder:
+                                                            (context, index) =>
+                                                                const SizedBox(
+                                                                    height: 12),
+                                                        itemCount: s.length,
                                                       );
-                                                    }
-                                                    return ListView.separated(
-                                                      physics:
-                                                          const NeverScrollableScrollPhysics(),
-                                                      shrinkWrap: true,
-                                                      itemBuilder: (context,
-                                                              index) =>
-                                                          StudentScientificSessionCard(
-                                                        department: widget
-                                                            .activeDepartmentModel,
-                                                        model: s[index],
-                                                      ),
-                                                      separatorBuilder:
-                                                          (context, index) =>
-                                                              const SizedBox(
-                                                                  height: 12),
-                                                      itemCount: s.length,
-                                                    );
-                                                  }),
-                                                ],
-                                              );
-                                            } else {
-                                              return const SizedBox.shrink();
-                                            }
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                }
-                                return const CustomLoading();
-                              },
+                                                    }),
+                                                  ],
+                                                );
+                                              } else {
+                                                return const SizedBox.shrink();
+                                              }
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                  return const CustomLoading();
+                                },
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                }),
-          );
-        }),
+                      ],
+                    );
+                  }),
+            );
+          }),
+        ),
       ),
     );
   }

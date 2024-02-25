@@ -179,7 +179,6 @@ class ClinicalRecordsDatasourceImpl implements ClinicalRecordsDatasource {
         '${ApiService.baseUrl}/clinical-records/$clinicalRecordId',
         options: await apiHeader.userOptions(),
       );
-      print(response.data);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = DetailClinicalRecordModel.fromJson(dataResponse.data);
       return result;

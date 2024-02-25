@@ -18,6 +18,7 @@ class StudentState {
   final StudentDepartmentRecap? studentDepartmentRecap;
   // NEW
   final RequestState fetchCR;
+  final RequestState fetchSR;
 
   StudentState({
     this.clinicalRecordResponse,
@@ -36,6 +37,7 @@ class StudentState {
     this.students,
     this.studentDepartmentRecap,
     this.fetchCR = RequestState.init,
+    this.fetchSR = RequestState.init,
   });
 
   StudentState copyWith({
@@ -56,6 +58,7 @@ class StudentState {
     bool successVerifyCheckOut = false,
     StudentDepartmentRecap? studentDepartmentRecap,
     RequestState fetchCR = RequestState.init,
+    RequestState fetchSR = RequestState.init,
   }) {
     return StudentState(
       studentDepartmentRecap:
@@ -77,6 +80,7 @@ class StudentState {
       successVerifyCheckOut: successVerifyCheckOut,
       students: students ?? this.students,
       fetchCR: fetchCR,
+      fetchSR: fetchSR,
       studentStatistic: studentStatistic ?? this.studentStatistic,
     );
   }

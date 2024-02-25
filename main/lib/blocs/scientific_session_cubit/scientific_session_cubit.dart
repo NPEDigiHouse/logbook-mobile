@@ -70,19 +70,10 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
 
   Future<void> deleteScientificSessionById({required String id}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
       await ds.deleteScientificSession(id);
-      emit(state.copyWith(
-          requestState: RequestState.data, isDeleteScientificSession: true));
-    } catch (e) {
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
-    }
+      emit(state.copyWith(isDeleteScientificSession: true));
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
   Future<void> downloadAttachment(
@@ -129,7 +120,7 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
       {required ScientificSessionPostModel model}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        createState: RequestState.loading,
       ));
 
       final result =
@@ -137,18 +128,19 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
 
       result.fold(
           (l) => emit(
-                state.copyWith(requestState: RequestState.error),
+                state.copyWith(createState: RequestState.error),
               ), (r) {
         return emit(
           state.copyWith(
             postSuccess: true,
+            createState: RequestState.data,
           ),
         );
       });
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          createState: RequestState.error,
         ),
       );
     }
@@ -156,30 +148,23 @@ class ScientificSessionCubit extends Cubit<ScientifcSessionState> {
 
   Future<void> updateScientificSession(
       {required ScientificSessionPostModel model}) async {
-    try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
+    emit(state.copyWith(
+      createState: RequestState.loading,
+    ));
 
-      final result =
-          await ds.updateScientificSession(scientificSessionPostModel: model);
+    final result =
+        await ds.updateScientificSession(scientificSessionPostModel: model);
 
-      result.fold(
-          (l) => emit(
-                state.copyWith(requestState: RequestState.error),
-              ), (r) {
-        return emit(
-          state.copyWith(
-            postSuccess: true,
-          ),
-        );
-      });
-    } catch (e) {
-      emit(
+    result.fold(
+        (l) => emit(
+              state.copyWith(createState: RequestState.error),
+            ), (r) {
+      return emit(
         state.copyWith(
-          requestState: RequestState.error,
+          postSuccess: true,
+          createState: RequestState.data,
         ),
       );
-    }
+    });
   }
 }

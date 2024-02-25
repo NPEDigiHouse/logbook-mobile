@@ -60,6 +60,7 @@ class ClinicalRecordCubit extends Cubit<ClinicalRecordState> {
     try {
       await clinicalRecordsDatasource.deleteClinicalRecord(id);
       emit(state.copyWith(isDeleteClinicalRecord: true));
+    // ignore: empty_catches
     } catch (e) {}
   }
 
