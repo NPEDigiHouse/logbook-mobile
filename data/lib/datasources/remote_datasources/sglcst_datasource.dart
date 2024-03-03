@@ -252,10 +252,13 @@ class SglCstDataSourceImpl implements SglCstDataSource {
   Future<Either<Failure, void>> verifySglByCeu(
       {required String id, required bool status}) async {
     try {
+      print(id);
+      print(status);
       await dio.put('${ApiService.baseUrl}/sgls/$id',
           options: await apiHeader.userOptions(), data: {'verified': true});
       return const Right(true);
     } catch (e) {
+      print(e.toString());
       return Left(failure(e));
     }
   }

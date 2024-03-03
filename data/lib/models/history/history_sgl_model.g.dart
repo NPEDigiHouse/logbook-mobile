@@ -22,6 +22,7 @@ HistorySglModel _$HistorySglModelFromJson(Map<String, dynamic> json) =>
       topic: (json['topic'] as List<dynamic>?)
           ?.map((e) => Topic.fromJson(e as Map<String, dynamic>))
           .toList(),
+      verificationStatus: json['verificationStatus'] as String?,
     );
 
 Map<String, dynamic> _$HistorySglModelToJson(HistorySglModel instance) =>
@@ -35,5 +36,6 @@ Map<String, dynamic> _$HistorySglModelToJson(HistorySglModel instance) =>
       'createdAt': instance.createdAt?.toIso8601String(),
       'startTime': instance.startTime,
       'endTime': instance.endTime,
+      'verificationStatus': instance.verificationStatus,
       'topic': instance.topic,
     };

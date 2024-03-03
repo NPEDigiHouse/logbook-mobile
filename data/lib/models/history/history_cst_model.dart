@@ -25,6 +25,7 @@ class HistoryCstModel {
   final int? endTime;
   @JsonKey(name: "topic")
   final List<Topic>? topic;
+  final String? verificationStatus;
 
   HistoryCstModel({
     this.cstId,
@@ -37,6 +38,7 @@ class HistoryCstModel {
     this.startTime,
     this.endTime,
     this.topic,
+    this.verificationStatus,
   });
 
   factory HistoryCstModel.fromJson(Map<String, dynamic> json) =>

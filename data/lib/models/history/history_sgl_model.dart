@@ -23,6 +23,8 @@ class HistorySglModel {
   final int? startTime;
   @JsonKey(name: "endTime")
   final int? endTime;
+  @JsonKey(name: "verificationStatus")
+  final String? verificationStatus;
   @JsonKey(name: "topic")
   final List<Topic>? topic;
 
@@ -37,6 +39,7 @@ class HistorySglModel {
     this.startTime,
     this.endTime,
     this.topic,
+    this.verificationStatus,
   });
 
   factory HistorySglModel.fromJson(Map<String, dynamic> json) =>

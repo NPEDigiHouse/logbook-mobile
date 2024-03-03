@@ -4,6 +4,7 @@ import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/sglcst/sgl_cst_on_list_model.dart';
+import 'package:supervisor/features/sgl_cst/sgl_single_page.dart';
 
 import '../supervisor_sgl_detail_page.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +27,20 @@ class SglOnListCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          context.navigateTo(SupervisorSglDetailPage(
-            studentId: sglCst.studentId!,
-            userId: userId,
-            isCeu: isCeu,
-            unitName: sglCst.activeDepartmentName,
-            studentName: sglCst.studentName ?? '...',
-          ));
+          context.navigateTo(
+            SglSinglePage(
+              id: sglCst.id ?? "",
+              isCeu: isCeu,
+              userId: userId,
+            ),
+          );
+          // context.navigateTo(SupervisorSglDetailPage(
+          //   studentId: sglCst.studentId!,
+          //   userId: userId,
+          //   isCeu: isCeu,
+          //   unitName: sglCst.activeDepartmentName,
+          //   studentName: sglCst.studentName ?? '...',
+          // ));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(

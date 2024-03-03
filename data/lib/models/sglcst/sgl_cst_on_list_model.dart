@@ -13,6 +13,7 @@ class SglCstOnList {
   String? activeDepartmentName;
   @JsonKey(name: "verificationStatus")
   String? verificationStatus;
+  String? id;
 
   SglCstOnList({
     this.latest,
@@ -20,6 +21,7 @@ class SglCstOnList {
     this.studentName,
     this.activeDepartmentName,
     this.verificationStatus,
+    this.id,
   });
 
   factory SglCstOnList.fromJson(Map<String, dynamic> json) =>

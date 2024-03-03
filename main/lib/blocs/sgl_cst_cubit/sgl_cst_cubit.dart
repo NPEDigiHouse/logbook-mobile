@@ -101,18 +101,18 @@ class SglCstCubit extends Cubit<SglCstState> {
 
   Future<void> getSgl({required String id}) async {
     emit(state.copyWith(
-      requestState: RequestState.loading,
+      fetchState: RequestState.loading,
     ));
     final result = await dataSource.getSgl(
       id: id,
     );
     result.fold(
       (l) => emit(state.copyWith(
-        requestState: RequestState.error,
+        fetchState: RequestState.error,
         errorMessage: l.message,
       )),
       (r) => emit(
-          state.copyWith(historySglData: r, requestState: RequestState.data)),
+          state.copyWith(historySglData: r, fetchState: RequestState.data)),
     );
   }
 
@@ -173,13 +173,12 @@ class SglCstCubit extends Cubit<SglCstState> {
     bool onScroll = false,
     FilterType? type,
   }) async {
+    if (!onScroll) emit(state.copyWith(sglState: RequestState.loading));
     final result = await dataSource.getSglBySupervisor(
         unitId: unitId,
         query: query,
         page: page,
         filterType: type ?? FilterType.unverified);
-
-    if (!onScroll) emit(state.copyWith(sglState: RequestState.loading));
     result.fold(
       (l) => emit(state.copyWith(
         sglState: RequestState.error,
@@ -285,18 +284,18 @@ class SglCstCubit extends Cubit<SglCstState> {
 
   Future<void> getCst({required String id}) async {
     emit(state.copyWith(
-      requestState: RequestState.loading,
+      fetchState: RequestState.loading,
     ));
     final result = await dataSource.getCst(
       id: id,
     );
     result.fold(
       (l) => emit(state.copyWith(
-        requestState: RequestState.error,
+        fetchState: RequestState.error,
         errorMessage: l.message,
       )),
       (r) => emit(
-          state.copyWith(historyCstData: r, requestState: RequestState.data)),
+          state.copyWith(historyCstData: r, fetchState: RequestState.data)),
     );
   }
 

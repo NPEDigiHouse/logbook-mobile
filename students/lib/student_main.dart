@@ -62,6 +62,7 @@ class _StudentMainMenuState extends State<StudentMainMenu> {
       return BlocConsumer<LogoutCubit, LogoutState>(
         listener: (context, logoutState) {
           if (logoutState is LogoutSuccess) {
+            CustomAlert.success(message: "Logout Success", context: context);
             context.replace(const LoginPage());
           }
         },

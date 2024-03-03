@@ -14,6 +14,7 @@ SglCstOnList _$SglCstOnListFromJson(Map<String, dynamic> json) => SglCstOnList(
       studentName: json['studentName'] as String?,
       activeDepartmentName: json['unitName'] as String?,
       verificationStatus: json['verificationStatus'] as String?,
+      id: json['id'] as String?,
     );
 
 Map<String, dynamic> _$SglCstOnListToJson(SglCstOnList instance) =>
@@ -23,4 +24,5 @@ Map<String, dynamic> _$SglCstOnListToJson(SglCstOnList instance) =>
       'studentName': instance.studentName,
       'unitName': instance.activeDepartmentName,
       'verificationStatus': instance.verificationStatus,
+      'id': instance.id,
     };

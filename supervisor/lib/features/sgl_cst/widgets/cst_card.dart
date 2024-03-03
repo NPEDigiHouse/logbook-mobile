@@ -4,8 +4,8 @@ import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/sglcst/sgl_cst_on_list_model.dart';
+import 'package:supervisor/features/sgl_cst/cst_single_page.dart';
 
-import '../supervisor_cst_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -25,12 +25,10 @@ class CstOnListCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          context.navigateTo(SupervisorCstDetailPage(
-            studentId: sglCst.studentId!,
+          context.navigateTo(CstSinglePage(
             isCeu: isCeu,
             userId: userId,
-            unitName: sglCst.activeDepartmentName,
-            studentName: sglCst.studentName ?? '...',
+            id: sglCst.id ?? '',
           ));
         },
         child: Padding(

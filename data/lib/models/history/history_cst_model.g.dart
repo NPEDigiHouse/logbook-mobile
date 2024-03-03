@@ -22,6 +22,7 @@ HistoryCstModel _$HistoryCstModelFromJson(Map<String, dynamic> json) =>
       topic: (json['topic'] as List<dynamic>?)
           ?.map((e) => Topic.fromJson(e as Map<String, dynamic>))
           .toList(),
+      verificationStatus: json['verificationStatus'] as String?,
     );
 
 Map<String, dynamic> _$HistoryCstModelToJson(HistoryCstModel instance) =>
@@ -36,4 +37,5 @@ Map<String, dynamic> _$HistoryCstModelToJson(HistoryCstModel instance) =>
       'startTime': instance.startTime,
       'endTime': instance.endTime,
       'topic': instance.topic,
+      'verificationStatus': instance.verificationStatus,
     };

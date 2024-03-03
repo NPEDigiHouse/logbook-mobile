@@ -67,6 +67,8 @@ class _MainMenuSupervisorState extends State<MainMenuSupervisor> {
     return BlocConsumer<LogoutCubit, LogoutState>(
       listener: (context, state) {
         if (state is LogoutSuccess) {
+          CustomAlert.success(message: "Logout Success", context: context);
+
           context.replace(const LoginPage());
         }
       },
