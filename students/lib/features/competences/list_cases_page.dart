@@ -6,10 +6,12 @@ import 'package:core/styles/text_style.dart';
 import 'package:data/models/competences/list_cases_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/competence_cubit/competence_cubit.dart';
 import 'package:main/widgets/chip_verified.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/headers/unit_header.dart';
@@ -36,17 +38,17 @@ class _ListCasesPageState extends State<ListCasesPage> {
   ValueNotifier<List<CaseModel>> listData = ValueNotifier([]);
   bool isMounted = false;
   late final ValueNotifier<String> _query, _selectedMenu;
+  int menuIndex = 0;
   late final ValueNotifier<Map<String, String>?> _dataFilters;
 
   @override
   void initState() {
-    Future.microtask(() {
-      BlocProvider.of<CompetenceCubit>(context).getListCases();
-    });
-
     _query = ValueNotifier('');
     _selectedMenu = ValueNotifier('All');
     _dataFilters = ValueNotifier(null);
+    Future.microtask(() {
+      BlocProvider.of<CompetenceCubit>(context).getListCases();
+    });
 
     super.initState();
   }
@@ -63,7 +65,8 @@ class _ListCasesPageState extends State<ListCasesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("List Cases"),
+        backgroundColor: scaffoldBackgroundColor,
+        title: const Text('List Cases'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showDialog(
@@ -73,6 +76,11 @@ class _ListCasesPageState extends State<ListCasesPage> {
             builder: (_) => AddCompetenceDialog(
                   type: CompetenceType.caseType,
                   unitId: widget.unitId,
+                  onAddUpdate: () {
+                    isMounted = false;
+                    BlocProvider.of<CompetenceCubit>(context).getListCases();
+                    Navigator.pop(context);
+                  },
                 )).then((value) {}),
         child: const Icon(
           Icons.add_rounded,
@@ -89,48 +97,84 @@ class _ListCasesPageState extends State<ListCasesPage> {
             },
             child: ValueListenableBuilder(
                 valueListenable: listData,
-                builder: (context, s, _) {
-                  return CustomScrollView(
-                    slivers: [
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        sliver: SliverFillRemaining(
-                          child: BlocConsumer<CompetenceCubit, CompetenceState>(
-                            listener: (context, state) async {
-                              if (state.isCaseSuccessAdded) {
-                                isMounted = false;
-                              }
-                              if (state.isDeleteCaseSuccess) {
-                                isMounted = false;
-                              }
-                              if (state.listCasesModel != null &&
-                                  state.caseState == RequestState.data) {
-                                if (!isMounted) {
-                                  Future.microtask(() {
-                                    listData.value = [
-                                      ...state.listCasesModel!.listCases!
-                                    ];
-                                    listData.notifyListeners();
-                                    isMounted = true;
-                                  });
-                                }
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state.listCasesModel != null) {
-                                return SingleChildScrollView(
-                                  child: SpacingColumn(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    onlyPading: true,
-                                    horizontalPadding: 16,
-                                    children: [
-                                      DepartmentHeader(
-                                          unitName: widget.unitName),
-                                      const SizedBox(
-                                        height: 12,
-                                      ),
+                builder: (context, sData, _) {
+                  return BlocConsumer<CompetenceCubit, CompetenceState>(
+                    listenWhen: (previous, current) =>
+                        previous.fetchState != current.fetchState,
+                    listener: (context, state) async {
+                      if (state.isCaseSuccessAdded) {
+                        isMounted = false;
+                      }
+                      if (state.isDeleteCaseSuccess) {
+                        isMounted = false;
+                        CustomAlert.success(
+                            message: "Success Delete Case", context: context);
+                      }
+                      if (state.listCasesModel != null &&
+                          state.fetchState == RequestState.data) {
+                        if (!isMounted) {
+                          Future.microtask(() {
+                            switch (menuIndex) {
+                              case 0:
+                                listData.value = [
+                                  ...state.listCasesModel!.listCases!
+                                ];
+                                break;
+                              case 1:
+                                listData.value = [
+                                  ...state.listCasesModel!.listCases!
+                                      .where((element) =>
+                                          element.verificationStatus ==
+                                          'VERIFIED')
+                                      .toList()
+                                ];
+                                break;
+                              case 2:
+                                listData.value = [
+                                  ...state.listCasesModel!.listCases!
+                                      .where((element) =>
+                                          element.verificationStatus !=
+                                          'VERIFIED')
+                                      .toList()
+                                ];
+                                break;
+                              default:
+                            }
+                            listData.notifyListeners();
+                            isMounted = true;
+                          });
+                        }
+                      }
+                    },
+                    builder: (context, state) {
+                      return CustomScrollView(
+                        slivers: [
+                          SliverAppBar(
+                            floating: true,
+                            snap: true,
+                            automaticallyImplyLeading: false,
+                            collapsedHeight: kToolbarHeight + 120,
+                            backgroundColor: scaffoldBackgroundColor,
+                            surfaceTintColor: Colors.transparent,
+                            systemOverlayStyle: const SystemUiOverlayStyle(
+                              statusBarIconBrightness: Brightness.dark,
+                            ),
+                            flexibleSpace: Column(
+                              children: [
+                                SpacingColumn(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  onlyPading: true,
+                                  horizontalPadding: 16,
+                                  children: <Widget>[
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    DepartmentHeader(unitName: widget.unitName),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    if (state.listCasesModel != null)
                                       buildSearchFilterSection(
                                         verifiedCount: state
                                             .listCasesModel!.listCases!
@@ -144,68 +188,158 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                                 element.verificationStatus !=
                                                 'VERIFIED')
                                             .length,
-                                      ),
-                                      const SizedBox(
-                                        height: 16,
-                                      ),
-                                      Builder(builder: (context) {
-                                        if (s.isEmpty) {
-                                          return const EmptyData(
-                                            subtitle:
-                                                'Please add case data first!',
-                                            title: 'Data Still Empty',
-                                          );
-                                        }
-                                        return ListView.separated(
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemBuilder: (context, index) =>
-                                              TestGradeScoreCard(
-                                            id: s[index].caseId!,
-                                            skillId: s[index].caseTypeId ?? -1,
-                                            unitId: widget.unitId,
-                                            onDelete: () {
-                                              isMounted = false;
-                                              BlocProvider.of<CompetenceCubit>(
-                                                      context)
-                                                  .deleteCaseById(
-                                                      id: s[index].caseId!);
-                                              BlocProvider.of<CompetenceCubit>(
-                                                      context)
-                                                  .getListCases();
-                                              Navigator.pop(context);
-                                            },
-                                            createdAt: DateTime
-                                                .fromMillisecondsSinceEpoch(
-                                                    (s[index].createdAt ?? 0)),
-                                            caseName: s[index].caseName!,
-                                            caseType: s[index].caseType!,
-                                            supervisorName:
-                                                s[index].supervisorName ?? '',
-                                            isVerified:
-                                                s[index].verificationStatus ==
-                                                    'VERIFIED',
-                                          ),
-                                          separatorBuilder: (context, index) =>
-                                              const SizedBox(height: 12),
-                                          itemCount: s.length,
-                                        );
-                                      }),
-                                      const SizedBox(
-                                        height: 12,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return const CustomLoading();
-                              }
-                            },
+                                      )
+                                    else
+                                      SizedBox(
+                                        width: AppSize.getAppWidth(context),
+                                      )
+
+                                    // buildTitleSection(),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            bottom: const PreferredSize(
+                              preferredSize: Size.fromHeight(6),
+                              child: Divider(
+                                height: 6,
+                                thickness: 6,
+                                color: onDisableColor,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+                          // SliverPadding(
+                          //   padding: const EdgeInsets.symmetric(vertical: 16),
+                          //   sliver: SliverFillRemaining(
+                          //     child: Builder(
+                          //       builder: (context) {
+                          //         if (state.listCasesModel != null) {
+                          //           return SingleChildScrollView(
+                          //             child: SpacingColumn(
+                          //               mainAxisAlignment:
+                          //                   MainAxisAlignment.center,
+                          //               crossAxisAlignment:
+                          //                   CrossAxisAlignment.start,
+                          //               onlyPading: true,
+                          //               horizontalPadding: 16,
+                          //               children: [
+                          //                 Builder(builder: (context) {
+                          //                   if (s.isEmpty) {
+                          //                     return const EmptyData(
+                          //                       subtitle:
+                          //                           'Please add case data first!',
+                          //                       title: 'Data Still Empty',
+                          //                     );
+                          //                   }
+                          //                   return ListView.separated(
+                          //                     physics:
+                          //                         const NeverScrollableScrollPhysics(),
+                          //                     shrinkWrap: true,
+                          //                     itemBuilder: (context, index) =>
+                          //                         TestGradeScoreCard(
+                          //                       id: s[index].caseId!,
+                          //                       skillId:
+                          //                           s[index].caseTypeId ?? -1,
+                          //                       unitId: widget.unitId,
+                          //                       onDelete: () {
+                          //                         isMounted = false;
+                          //                         BlocProvider.of<
+                          //                                     CompetenceCubit>(
+                          //                                 context)
+                          //                             .deleteCaseById(
+                          //                                 id: s[index].caseId!);
+                          //                         BlocProvider.of<
+                          //                                     CompetenceCubit>(
+                          //                                 context)
+                          //                             .getListCases();
+                          //                         Navigator.pop(context);
+                          //                       },
+                          //                       createdAt: DateTime
+                          //                           .fromMillisecondsSinceEpoch(
+                          //                               (s[index].createdAt ??
+                          //                                   0)),
+                          //                       caseName: s[index].caseName!,
+                          //                       caseType: s[index].caseType!,
+                          //                       supervisorName:
+                          //                           s[index].supervisorName ??
+                          //                               '',
+                          //                       isVerified: s[index]
+                          //                               .verificationStatus ==
+                          //                           'VERIFIED',
+                          //                     ),
+                          //                     separatorBuilder: (context,
+                          //                             index) =>
+                          //                         const SizedBox(height: 12),
+                          //                     itemCount: s.length,
+                          //                   );
+                          //                 }),
+                          //                 const SizedBox(
+                          //                   height: 12,
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           );
+                          //         } else {
+                          //           return const CustomLoading();
+                          //         }
+                          //       },
+                          //     ),
+                          //   ),
+                          // ),
+                          if (state.fetchState == RequestState.loading)
+                            const SliverFillRemaining(
+                              child: Center(child: CustomLoading()),
+                            ),
+                          if (sData.isEmpty)
+                            const SliverToBoxAdapter(
+                                child: EmptyData(
+                              subtitle:
+                                  'Please upload scientific session data first!',
+                              title: 'Data Still Empty',
+                            ))
+                          else if (state.listCasesModel != null)
+                            SliverPadding(
+                              padding: const EdgeInsets.all(16),
+                              sliver: Builder(builder: (context) {
+                                return SliverList.separated(
+                                  itemBuilder: (context, index) {
+                                    return TestGradeScoreCard(
+                                      id: sData[index].caseId!,
+                                      skillId: sData[index].caseTypeId ?? -1,
+                                      unitId: widget.unitId,
+                                     
+                                      onAddUpdate: () {
+                                        isMounted = false;
+                                        BlocProvider.of<CompetenceCubit>(
+                                                context)
+                                            .getListCases();
+                                        Navigator.pop(context);
+                                      },
+                                      createdAt:
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              (sData[index].createdAt ?? 0)),
+                                      caseName: sData[index].caseName!,
+                                      caseType: sData[index].caseType!,
+                                      supervisorName:
+                                          sData[index].supervisorName ?? '',
+                                      isVerified:
+                                          sData[index].verificationStatus ==
+                                              'VERIFIED',
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(height: 12),
+                                  itemCount: sData.length,
+                                );
+                              }),
+                            )
+                          else
+                            const SliverFillRemaining(
+                              child: Center(child: CustomLoading()),
+                            ),
+                        ],
+                      );
+                    },
                   );
                 }),
           );
@@ -231,6 +365,10 @@ class _ListCasesPageState extends State<ListCasesPage> {
                 SearchField(
                   text: '',
                   hint: 'Search Cases',
+                  onClear: () {
+                    listData.value.clear();
+                    listData.value = [...state.listCasesModel!.listCases!];
+                  },
                   onChanged: (value) {
                     final data = state.listCasesModel!.listCases!
                         .where((element) => element.caseName!
@@ -277,6 +415,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
                             selected: selected,
                             onSelected: (_) {
                               _selectedMenu.value = menuList[index];
+                              menuIndex = index;
                               switch (index) {
                                 case 0:
                                   listData.value = [
@@ -284,13 +423,18 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                   ];
                                   break;
                                 case 1:
-                                  listData.value = [
-                                    ...state.listCasesModel!.listCases!
-                                        .where((element) =>
-                                            element.verificationStatus ==
-                                            'VERIFIED')
-                                        .toList()
-                                  ];
+                                  final n = state.listCasesModel!.listCases!
+                                      .where((element) =>
+                                          element.verificationStatus ==
+                                          'VERIFIED')
+                                      .toList();
+                                  if (n.isEmpty) {
+                                    listData.value = [];
+                                    listData.value.clear();
+                                  } else {
+                                    listData.value = [...n];
+                                  }
+
                                   break;
                                 case 2:
                                   listData.value = [
@@ -300,6 +444,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                             'VERIFIED')
                                         .toList()
                                   ];
+
                                   break;
                                 default:
                               }
@@ -328,7 +473,8 @@ class TestGradeScoreCard extends StatelessWidget {
     required this.isVerified,
     required this.createdAt,
     required this.supervisorName,
-    required this.onDelete,
+   
+    required this.onAddUpdate,
     required this.id,
     required this.skillId,
     required this.unitId,
@@ -339,7 +485,8 @@ class TestGradeScoreCard extends StatelessWidget {
   final DateTime createdAt;
   final String supervisorName;
   final bool isVerified;
-  final VoidCallback onDelete;
+  
+  final VoidCallback onAddUpdate;
   final String id;
   final int skillId;
   final String unitId;
@@ -456,6 +603,7 @@ class TestGradeScoreCard extends StatelessWidget {
                           caseName: caseName,
                           id: id,
                           caseType: caseType,
+                          onAddUpdate: onAddUpdate,
                           supervisorName: supervisorName,
                         ),
                       ).then((value) {});
@@ -466,7 +614,11 @@ class TestGradeScoreCard extends StatelessWidget {
                         barrierLabel: '',
                         barrierDismissible: false,
                         builder: (_) => VerifyDialog(
-                          onTap: onDelete,
+                          onTap: () {
+                            BlocProvider.of<CompetenceCubit>(context)
+                                .deleteCaseById(id: id);
+                            Navigator.pop(context);
+                          },
                         ),
                       );
                     }

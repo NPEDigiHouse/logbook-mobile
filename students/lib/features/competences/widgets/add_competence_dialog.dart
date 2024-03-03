@@ -10,8 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/competence_cubit/competence_cubit.dart';
 import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/inputs/custom_dropdown.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'package:main/widgets/verify_dialog.dart';
@@ -24,8 +26,13 @@ enum CompetenceType {
 class AddCompetenceDialog extends StatefulWidget {
   final CompetenceType type;
   final String unitId;
+  final VoidCallback onAddUpdate;
+
   const AddCompetenceDialog(
-      {super.key, required this.type, required this.unitId});
+      {super.key,
+      required this.type,
+      required this.unitId,
+      required this.onAddUpdate});
 
   @override
   State<AddCompetenceDialog> createState() => _AddTopicDialogState();
@@ -63,13 +70,14 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
     return BlocListener<CompetenceCubit, CompetenceState>(
       listener: (context, state) {
         if (state.isCaseSuccessAdded) {
-          BlocProvider.of<CompetenceCubit>(context).getListCases();
-          Navigator.pop(context);
+          CustomAlert.success(
+              message: "Success create new case", context: context);
+          widget.onAddUpdate.call();
         }
         if (state.isSkillSuccessAdded) {
-          BlocProvider.of<CompetenceCubit>(context).getListSkills();
-
-          Navigator.pop(context);
+          CustomAlert.success(
+              message: "Success create new skills", context: context);
+          widget.onAddUpdate.call();
         }
       },
       child: Dialog(
@@ -317,10 +325,17 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: FilledButton(
-                    onPressed: onSubmit,
-                    child: const Text('Submit'),
-                  ).fullWidth(),
+                  child: BlocSelector<CompetenceCubit, CompetenceState, bool>(
+                    selector: (state) =>
+                        state.caseState == RequestState.loading ||
+                        state.skillState == RequestState.loading,
+                    builder: (context, isLoading) {
+                      return FilledButton(
+                        onPressed: isLoading ? null : onSubmit,
+                        child: const Text('Submit'),
+                      ).fullWidth();
+                    },
+                  ),
                 ),
                 const SizedBox(
                   height: 16,

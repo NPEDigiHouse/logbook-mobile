@@ -6,10 +6,12 @@ import 'package:core/styles/text_style.dart';
 import 'package:data/models/competences/list_skills_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/competence_cubit/competence_cubit.dart';
 import 'package:main/widgets/chip_verified.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/headers/unit_header.dart';
@@ -39,6 +41,8 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
   ValueNotifier<List<SkillModel>> listData = ValueNotifier([]);
   bool isMounted = false;
   late final ValueNotifier<String> _query, _selectedMenu;
+  int menuIndex = 0;
+
   late final ValueNotifier<Map<String, String>?> _dataFilters;
 
   @override
@@ -74,6 +78,11 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
             builder: (_) => AddCompetenceDialog(
                   type: CompetenceType.skillType,
                   unitId: widget.unitId,
+                  onAddUpdate: () {
+                    isMounted = false;
+                    BlocProvider.of<CompetenceCubit>(context).getListSkills();
+                    Navigator.pop(context);
+                  },
                 )).then((value) {}),
         child: const Icon(
           Icons.add_rounded,
@@ -91,46 +100,85 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
             child: ValueListenableBuilder(
                 valueListenable: listData,
                 builder: (context, s, _) {
-                  return CustomScrollView(
-                    slivers: [
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        sliver: SliverFillRemaining(
-                          child: BlocConsumer<CompetenceCubit, CompetenceState>(
-                            listener: (context, state) {
-                              if (state.isSkillSuccessAdded) {
-                                isMounted = false;
-                              }
-                              if (state.isDeleteSkillSuccess) {
-                                isMounted = false;
-                              }
-                              if (state.listSkillsModel != null &&
-                                  state.skillState == RequestState.data) {
-                                if (!isMounted) {
-                                  Future.microtask(() {
-                                    listData.value = [
-                                      ...state.listSkillsModel!.listSkills!
-                                    ];
-                                    isMounted = true;
-                                    listData.notifyListeners();
-                                  });
-                                }
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state.listSkillsModel != null) {
-                                return SingleChildScrollView(
-                                  child: SpacingColumn(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    onlyPading: true,
-                                    horizontalPadding: 16,
-                                    children: [
-                                      DepartmentHeader(
-                                          unitName: widget.unitName),
-                                      const SizedBox(
-                                        height: 12,
-                                      ),
+                  return BlocConsumer<CompetenceCubit, CompetenceState>(
+                    listener: (context, state) {
+                      if (state.fetchState == RequestState.data) {
+                        isMounted = false;
+                      }
+                      if (state.isSkillSuccessAdded) {
+                        isMounted = false;
+                      }
+                      if (state.isDeleteSkillSuccess) {
+                        isMounted = false;
+                        CustomAlert.success(
+                            message: "Success Delete Skill", context: context);
+                      }
+                      if (state.listSkillsModel != null &&
+                          state.fetchState == RequestState.data) {
+                        if (!isMounted) {
+                          Future.microtask(() {
+                            switch (menuIndex) {
+                              case 0:
+                                listData.value = [
+                                  ...state.listSkillsModel!.listSkills!
+                                ];
+                                break;
+                              case 1:
+                                listData.value = [
+                                  ...state.listSkillsModel!.listSkills!
+                                      .where((element) =>
+                                          element.verificationStatus ==
+                                          'VERIFIED')
+                                      .toList()
+                                ];
+                                break;
+                              case 2:
+                                listData.value = [
+                                  ...state.listSkillsModel!.listSkills!
+                                      .where((element) =>
+                                          element.verificationStatus !=
+                                          'VERIFIED')
+                                      .toList()
+                                ];
+                                break;
+                              default:
+                            }
+
+                            listData.notifyListeners();
+                            isMounted = true;
+                          });
+                        }
+                      }
+                    },
+                    builder: (context, state) {
+                      return CustomScrollView(
+                        slivers: [
+                          SliverAppBar(
+                            floating: true,
+                            snap: true,
+                            automaticallyImplyLeading: false,
+                            collapsedHeight: kToolbarHeight + 120,
+                            backgroundColor: scaffoldBackgroundColor,
+                            surfaceTintColor: Colors.transparent,
+                            systemOverlayStyle: const SystemUiOverlayStyle(
+                              statusBarIconBrightness: Brightness.dark,
+                            ),
+                            flexibleSpace: Column(
+                              children: [
+                                SpacingColumn(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  onlyPading: true,
+                                  horizontalPadding: 16,
+                                  children: <Widget>[
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    DepartmentHeader(unitName: widget.unitName),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    if (state.listSkillsModel != null)
                                       buildSearchFilterSection(
                                         verifiedCount: state
                                             .listSkillsModel!.listSkills!
@@ -144,69 +192,76 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                                                 element.verificationStatus !=
                                                 'VERIFIED')
                                             .length,
+                                      )
+                                    else
+                                      SizedBox(
+                                        width: AppSize.getAppWidth(context),
                                       ),
-                                      const SizedBox(
-                                        height: 16,
-                                      ),
-                                      Builder(builder: (context) {
-                                        if (s.isEmpty) {
-                                          return const EmptyData(
-                                            subtitle:
-                                                'Please add skill data first!',
-                                            title: 'Data Still Empty',
-                                          );
-                                        }
-                                        return ListView.separated(
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemBuilder: (context, index) =>
-                                              TestGradeScoreCard(
-                                            skillId: s[index].skillTypeId ?? -1,
-                                            unitId: widget.unitId,
-                                            onDelete: () {
-                                              isMounted = false;
-                                              BlocProvider.of<CompetenceCubit>(
-                                                      context)
-                                                  .deleteSkillById(
-                                                      id: s[index].skillId!);
-                                              BlocProvider.of<CompetenceCubit>(
-                                                      context)
-                                                  .getListSkills();
 
-                                              Navigator.pop(context);
-                                            },
-                                            id: s[index].skillId ?? '',
-                                            createdAt: DateTime
-                                                .fromMillisecondsSinceEpoch(
-                                                    s[index].createdAt ?? 0),
-                                            caseName: s[index].skillName!,
-                                            caseType: s[index].skillType!,
-                                            isVerified:
-                                                s[index].verificationStatus ==
-                                                    'VERIFIED',
-                                            supervisorName:
-                                                s[index].supervisorName ?? '',
-                                          ),
-                                          separatorBuilder: (context, index) =>
-                                              const SizedBox(height: 12),
-                                          itemCount: s.length,
-                                        );
-                                      }),
-                                      const SizedBox(
-                                        height: 16,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return const CustomLoading();
-                              }
-                            },
+                                    // buildTitleSection(),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            bottom: const PreferredSize(
+                              preferredSize: Size.fromHeight(6),
+                              child: Divider(
+                                height: 6,
+                                thickness: 6,
+                                color: onDisableColor,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+                          if (state.fetchState == RequestState.loading)
+                            const SliverFillRemaining(
+                              child: Center(child: CustomLoading()),
+                            ),
+                          if (s.isEmpty)
+                            const SliverToBoxAdapter(
+                                child: EmptyData(
+                              subtitle:
+                                  'Please upload scientific session data first!',
+                              title: 'Data Still Empty',
+                            ))
+                          else if (state.listSkillsModel != null)
+                            SliverPadding(
+                              padding: const EdgeInsets.all(16),
+                              sliver: SliverList.separated(
+                                itemCount: s.length,
+                                itemBuilder: (context, index) {
+                                  return TestGradeScoreCard(
+                                    skillId: s[index].skillTypeId ?? -1,
+                                    unitId: widget.unitId,
+                                    onAddUpdate: () {
+                                      isMounted = false;
+                                      BlocProvider.of<CompetenceCubit>(context)
+                                          .getListSkills();
+                                      Navigator.pop(context);
+                                    },
+                                    id: s[index].skillId ?? '',
+                                    createdAt:
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            s[index].createdAt ?? 0),
+                                    caseName: s[index].skillName!,
+                                    caseType: s[index].skillType!,
+                                    isVerified: s[index].verificationStatus ==
+                                        'VERIFIED',
+                                    supervisorName:
+                                        s[index].supervisorName ?? '',
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return const SizedBox(height: 12);
+                                },
+                              ),
+                            )
+                          else
+                            const SliverFillRemaining(
+                              child: Center(child: CustomLoading()),
+                            ),
+                        ],
+                      );
+                    },
                   );
                 }),
           );
@@ -245,6 +300,10 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                       listData.value = [...data];
                     }
                   },
+                  onClear: () {
+                    listData.value.clear();
+                    listData.value = [...state.listSkillsModel!.listSkills!];
+                  },
                 ),
                 SizedBox(
                   height: 64,
@@ -278,6 +337,7 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                             selected: selected,
                             onSelected: (_) {
                               _selectedMenu.value = menuList[index];
+                              menuIndex = index;
                               switch (index) {
                                 case 0:
                                   listData.value = [
@@ -329,7 +389,7 @@ class TestGradeScoreCard extends StatelessWidget {
     required this.isVerified,
     required this.createdAt,
     required this.supervisorName,
-    required this.onDelete,
+    required this.onAddUpdate,
     required this.id,
     required this.skillId,
     required this.unitId,
@@ -340,7 +400,7 @@ class TestGradeScoreCard extends StatelessWidget {
   final DateTime createdAt;
   final String supervisorName;
   final bool isVerified;
-  final VoidCallback onDelete;
+  final VoidCallback onAddUpdate;
   final String id;
   final int skillId;
   final String unitId;
@@ -455,6 +515,7 @@ class TestGradeScoreCard extends StatelessWidget {
                           unitId: unitId,
                           caseId: skillId,
                           caseName: caseName,
+                          onAddUpdate: onAddUpdate,
                           id: id,
                           caseType: caseType,
                           supervisorName: supervisorName,
@@ -467,7 +528,11 @@ class TestGradeScoreCard extends StatelessWidget {
                         barrierLabel: '',
                         barrierDismissible: false,
                         builder: (_) => VerifyDialog(
-                          onTap: onDelete,
+                          onTap: () {
+                            BlocProvider.of<CompetenceCubit>(context)
+                                .deleteSkillById(id: id);
+                            Navigator.pop(context);
+                          },
                         ),
                       );
                     }

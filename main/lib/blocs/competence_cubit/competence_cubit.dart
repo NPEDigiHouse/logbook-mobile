@@ -29,19 +29,15 @@ class CompetenceCubit extends Cubit<CompetenceState> {
   Future<void> getListSkills() async {
     try {
       emit(state.copyWith(
-        addSkillState: RequestState.loading,
+        fetchState: RequestState.loading,
       ));
 
       final result = await competenceDataSource.getListSkill();
 
-      try {
-        emit(state.copyWith(
-          listSkillsModel: result,
-          addSkillState: RequestState.data,
-        ));
-      } catch (e) {
-        emit(state.copyWith(addSkillState: RequestState.error));
-      }
+      emit(state.copyWith(
+        listSkillsModel: result,
+        fetchState: RequestState.data,
+      ));
     } catch (e) {
       emit(
         state.copyWith(
@@ -54,23 +50,19 @@ class CompetenceCubit extends Cubit<CompetenceState> {
   Future<void> getListCases() async {
     try {
       emit(state.copyWith(
-        addCaseState: RequestState.loading,
+        fetchState: RequestState.loading,
       ));
 
       final result = await competenceDataSource.getListCase();
 
-      try {
-        emit(state.copyWith(
-          listCasesModel: result,
-          addCaseState: RequestState.data,
-        ));
-      } catch (e) {
-        emit(state.copyWith(addCaseState: RequestState.error));
-      }
+      emit(state.copyWith(
+        listCasesModel: result,
+        fetchState: RequestState.data,
+      ));
     } catch (e) {
       emit(
         state.copyWith(
-          addCaseState: RequestState.error,
+          fetchState: RequestState.error,
         ),
       );
     }
@@ -129,24 +121,20 @@ class CompetenceCubit extends Cubit<CompetenceState> {
   Future<void> uploadNewCase({required CasePostModel model}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        addCaseState: RequestState.loading,
       ));
 
       await competenceDataSource.addCase(
         casePostModel: model,
       );
 
-      try {
-        emit(state.copyWith(
-          isCaseSuccessAdded: true,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(
+          isCaseSuccessAdded: true, addCaseState: RequestState.data));
+      getListCases();
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          addCaseState: RequestState.error,
         ),
       );
     }
@@ -155,24 +143,20 @@ class CompetenceCubit extends Cubit<CompetenceState> {
   Future<void> uploadNewSkills({required SkillPostModel model}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        addSkillState: RequestState.loading,
       ));
-
       await competenceDataSource.addSkill(
         skillPostModel: model,
       );
-
-      try {
-        emit(state.copyWith(
-          isSkillSuccessAdded: true,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(
+        isSkillSuccessAdded: true,
+        addSkillState: RequestState.data,
+      ));
+      getListSkills();
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          addSkillState: RequestState.error,
         ),
       );
     }
@@ -182,22 +166,19 @@ class CompetenceCubit extends Cubit<CompetenceState> {
       {required SkillPostModel model, required String id}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        addSkillState: RequestState.loading,
       ));
 
       await competenceDataSource.updateSkill(skillPostModel: model, id: id);
 
-      try {
-        emit(state.copyWith(
-          isSkillSuccessAdded: true,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(
+        isSkillSuccessAdded: true,
+        addSkillState: RequestState.data,
+      ));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          addSkillState: RequestState.error,
         ),
       );
     }
@@ -207,22 +188,19 @@ class CompetenceCubit extends Cubit<CompetenceState> {
       {required CasePostModel model, required String id}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        addCaseState: RequestState.loading,
       ));
 
       await competenceDataSource.updateCase(casePostModel: model, id: id);
 
-      try {
-        emit(state.copyWith(
-          isCaseSuccessAdded: true,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(
+        isCaseSuccessAdded: true,
+        addCaseState: RequestState.data,
+      ));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          addCaseState: RequestState.error,
         ),
       );
     }
@@ -321,46 +299,23 @@ class CompetenceCubit extends Cubit<CompetenceState> {
 
   Future<void> deleteSkillById({required String id}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
       await competenceDataSource.deleteSkill(id);
-      try {
-        emit(state.copyWith(
-          isDeleteSkillSuccess: true,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
-    } catch (e) {
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
-    }
+      emit(state.copyWith(
+        isDeleteSkillSuccess: true,
+      ));
+      getListSkills();
+    } catch (e) {}
   }
 
   Future<void> deleteCaseById({required String id}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
       await competenceDataSource.deleteCase(id);
-      try {
-        emit(state.copyWith(
-          isDeleteSkillSuccess: true,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
-    } catch (e) {
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
-    }
+
+      emit(state.copyWith(
+        isDeleteCaseSuccess: true,
+      ));
+      getListCases();
+    } catch (e) {}
   }
 
   Future<void> getSkillsByStudentId({required String studentId}) async {
