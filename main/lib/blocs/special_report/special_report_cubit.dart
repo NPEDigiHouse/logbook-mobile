@@ -40,19 +40,16 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
   Future<void> getStudentSpecialReport() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        fetchState: RequestState.loading,
       ));
 
       final result = await studentDataSource.getStudentSpecialReports();
-      try {
-        emit(state.copyWith(specialReport: result));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(
+          state.copyWith(specialReport: result, fetchState: RequestState.data));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          fetchState: RequestState.error,
         ),
       );
     }
@@ -61,19 +58,16 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
   Future<void> postSpecialReport({required String content}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        createState: RequestState.loading,
       ));
 
       await specialReportDataSource.postSpecialReport(content: content);
-      try {
-        emit(state.copyWith(isSuccessPostSpecialReport: true));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(
+          isSuccessPostSpecialReport: true, createState: RequestState.data));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          createState: RequestState.error,
         ),
       );
     }
@@ -106,20 +100,17 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
       {required String content, required String id}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        createState: RequestState.loading,
       ));
 
       await specialReportDataSource.updateSpecialReport(
           id: id, content: content);
-      try {
-        emit(state.copyWith(isUpdateSpecialReport: true));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(
+          isUpdateSpecialReport: true, createState: RequestState.data));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          createState: RequestState.error,
         ),
       );
     }
@@ -127,23 +118,10 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
 
   Future<void> deleteSpecialReport({required String id}) async {
     try {
-      emit(state.copyWith(
-        requestState: RequestState.loading,
-      ));
-
       await specialReportDataSource.deleteSpecialReport(id: id);
-      try {
-        emit(state.copyWith(isDeleteSpecialReport: true));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
-    } catch (e) {
-      emit(
-        state.copyWith(
-          requestState: RequestState.error,
-        ),
-      );
-    }
+      emit(state.copyWith(isDeleteSpecialReport: true));
+      getStudentSpecialReport();
+    } catch (e) {}
   }
 
   Future<void> getSpecialReportStudents() async {

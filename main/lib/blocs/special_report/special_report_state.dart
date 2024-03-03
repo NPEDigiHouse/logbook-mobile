@@ -9,6 +9,8 @@ class SpecialReportState {
   final bool isSuccessPostSpecialReport;
   final bool isDeleteSpecialReport;
   final bool isUpdateSpecialReport;
+  final RequestState fetchState;
+  final RequestState createState;
 
   SpecialReportState({
     this.specialReport,
@@ -19,6 +21,8 @@ class SpecialReportState {
     this.isSuccessPostSpecialReport = false,
     this.isDeleteSpecialReport = false,
     this.isUpdateSpecialReport = false,
+    this.createState = RequestState.init,
+    this.fetchState = RequestState.init,
   });
 
   SpecialReportState copyWith({
@@ -31,6 +35,8 @@ class SpecialReportState {
     bool isSuccessPostSpecialReport = false,
     bool isUpdateSpecialReport = false,
     bool isDeleteSpecialReport = false,
+    RequestState createState = RequestState.init,
+    RequestState fetchState = RequestState.init,
   }) {
     return SpecialReportState(
       specialReport: specialReport ?? this.specialReport,
@@ -43,6 +49,8 @@ class SpecialReportState {
           specialReportStudents ?? this.specialReportStudents,
       specialReportStudentsVerified:
           specialReportStudentsVerified ?? this.specialReportStudentsVerified,
+      fetchState: fetchState,
+      createState: createState,
     );
   }
 }

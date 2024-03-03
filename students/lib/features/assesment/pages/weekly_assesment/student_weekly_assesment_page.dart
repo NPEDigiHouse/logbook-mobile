@@ -187,7 +187,6 @@ class TopStatCard extends StatelessWidget {
                   height: 12,
                 ),
                 Builder(builder: (context) {
-                  print(totalGrade!.value);
                   return SemicircularIndicator(
                     contain: true,
                     radius: 100,

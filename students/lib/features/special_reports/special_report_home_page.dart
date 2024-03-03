@@ -5,7 +5,9 @@ import 'package:data/models/units/active_unit_model.dart';
 import 'package:data/models/user/user_credential.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/special_report/special_report_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/headers/unit_header.dart';
@@ -58,10 +60,19 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                   sliver: SliverToBoxAdapter(
                     child: BlocListener<SpecialReportCubit, SpecialReportState>(
                       listener: (context, state) {
-                        if (state.isDeleteSpecialReport ||
-                            state.isUpdateSpecialReport) {
+                        if (state.isDeleteSpecialReport) {
                           BlocProvider.of<SpecialReportCubit>(context)
                               .getStudentSpecialReport();
+                          CustomAlert.success(
+                              message: "Success Delete Problem Consultation",
+                              context: context);
+                        }
+                        if (state.isUpdateSpecialReport) {
+                          BlocProvider.of<SpecialReportCubit>(context)
+                              .getStudentSpecialReport();
+                          CustomAlert.success(
+                              message: "Success Update Problem Consultation",
+                              context: context);
                         }
                       },
                       child: SpacingColumn(
@@ -93,7 +104,10 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                             const AddNewConsultationCard(),
                           BlocBuilder<SpecialReportCubit, SpecialReportState>(
                             builder: (context, state) {
-                              if (state.specialReport != null) {
+                              if (state.fetchState == RequestState.loading) {
+                                const SizedBox(
+                                    height: 300, child: CustomLoading());
+                              } else if (state.specialReport != null) {
                                 if (state.specialReport!
                                     .listProblemConsultations!.isEmpty) {
                                   return const EmptyData(

@@ -165,7 +165,32 @@ class WeeklyGradeCard extends StatelessWidget {
             ),
             if (!(isPassed ?? true))
               const SizedBox.shrink()
-            else if (score != 0)
+            else if (score == 0 && !isStudent)
+              GestureDetector(
+                onTap: onTap,
+                child: CircleAvatar(
+                  radius: 38,
+                  backgroundColor: const Color(0xFF848FA9),
+                  child: CircleAvatar(
+                    radius: 33,
+                    backgroundColor: scaffoldBackgroundColor,
+                    child: DottedBorder(
+                      dashPattern: const [3, 2],
+                      borderType: BorderType.Circle,
+                      borderPadding: const EdgeInsets.all(2),
+                      color: const Color(0xFF848FA9),
+                      child: const Center(
+                        child: Icon(
+                          Icons.add_rounded,
+                          color: Color(0xFF848FA9),
+                          size: 28,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            else
               GestureDetector(
                 onTap: isStudent ? null : onTap,
                 child: CircularPercentIndicator(
@@ -198,31 +223,6 @@ class WeeklyGradeCard extends StatelessWidget {
                   ),
                   circularStrokeCap: CircularStrokeCap.round,
                   progressColor: totalGrade.gradientScore.color,
-                ),
-              )
-            else
-              GestureDetector(
-                onTap: onTap,
-                child: CircleAvatar(
-                  radius: 38,
-                  backgroundColor: const Color(0xFF848FA9),
-                  child: CircleAvatar(
-                    radius: 33,
-                    backgroundColor: scaffoldBackgroundColor,
-                    child: DottedBorder(
-                      dashPattern: const [3, 2],
-                      borderType: BorderType.Circle,
-                      borderPadding: const EdgeInsets.all(2),
-                      color: const Color(0xFF848FA9),
-                      child: const Center(
-                        child: Icon(
-                          Icons.add_rounded,
-                          color: Color(0xFF848FA9),
-                          size: 28,
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
               ),
           ],
