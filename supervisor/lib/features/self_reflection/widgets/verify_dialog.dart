@@ -1,4 +1,3 @@
-
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/self_reflection/verify_self_reflection_model.dart';
@@ -35,7 +34,9 @@ class _AddTopicDialogState extends State<VerifySelfReflectionDialog> {
       listener: (context, state) {
         if (state.isVerify) {
           BlocProvider.of<SelfReflectionSupervisorCubit>(context)
-            .getDetailSelfReflections(id: widget.id);
+              .getDetailSelfReflections(id: widget.id);
+          BlocProvider.of<SelfReflectionSupervisorCubit>(context)
+              .getSelfReflections();
           Navigator.pop(context);
         }
       },
@@ -98,11 +99,11 @@ class _AddTopicDialogState extends State<VerifySelfReflectionDialog> {
                 child: FilledButton.icon(
                   onPressed: () {
                     BlocProvider.of<SelfReflectionSupervisorCubit>(context)
-                      .verifySelfReflection(
-                        id: widget.id,
-                        model: VerifySelfReflectionModel(
-                            verified: true, rating: 4),
-                      );
+                        .verifySelfReflection(
+                      id: widget.id,
+                      model:
+                          VerifySelfReflectionModel(verified: true, rating: 4),
+                    );
                   },
                   icon: const Icon(Icons.verified),
                   label: const Text('Submit'),

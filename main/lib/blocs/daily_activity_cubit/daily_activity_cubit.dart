@@ -359,13 +359,12 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
     FilterType? type,
   }) async {
     try {
+      if (!onScroll) emit(state.copyWith(fetchState: RequestState.loading));
       final result = await dataSource.getDailyActivitiesBySupervisor(
           unitId: unitId,
           query: query,
           page: page,
           filterType: type ?? FilterType.unverified);
-
-      if (!onScroll) emit(state.copyWith(fetchState: RequestState.loading));
 
       if (page == 1 && !onScroll) {
         emit(state.copyWith(

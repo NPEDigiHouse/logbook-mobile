@@ -161,10 +161,10 @@ class HistoryHelper {
             onTap: () => context.navigateTo(
                   DetailScientificSessionPage(
                     id: element.attachment ?? '',
-                    activeDepartmentModel: isStudent ? ActiveDepartmentModel(
-                      unitId: element.unitId,
-                      unitName: element.unitName
-                    ) : null,
+                    activeDepartmentModel: isStudent
+                        ? ActiveDepartmentModel(
+                            unitId: element.unitId, unitName: element.unitName)
+                        : null,
                   ),
                 ),
             pathIcon: 'biotech_rounded.svg'),
@@ -173,7 +173,7 @@ class HistoryHelper {
             onTap: isStudent
                 ? () {}
                 : () => context.navigateTo(SupervisorSelfReflectionStudentPage(
-                      studentId: element.studentId ?? '',
+                      id: element.studentId ?? '',
                     )),
             pathIcon: 'emoji_objects_rounded.svg'),
         'CASE': HistoryData(

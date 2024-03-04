@@ -1,4 +1,5 @@
 import 'package:core/context/navigation_extension.dart';
+import 'package:core/helpers/app_size.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/sglcst/sgl_cst_on_list_model.dart';
@@ -183,22 +184,31 @@ class __SupervisorListSglViewState extends State<_SupervisorListSglView> {
                   (List<SglCstOnList>?, RequestState)>(
                 selector: (state) => (state.sglStudents, state.sglState),
                 builder: (context, state) {
-                  if (state.$2 == RequestState.loading) {
-                    return const CustomLoading();
-                  }
                   final data = state.$1;
-                  if (data != null) {
-                    return ValueListenableBuilder(
-                        valueListenable: isSearchExpand,
-                        builder: (context, status, _) {
-                          return Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              Positioned.fill(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Builder(builder: (context) {
+                  return ValueListenableBuilder(
+                      valueListenable: isSearchExpand,
+                      builder: (context, status, _) {
+                        return Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Positioned.fill(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Builder(builder: (context) {
+                                  if (state.$2 == RequestState.loading) {
+                                    return SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: ntf.isFilter ? 200 : 150,
+                                          ),
+                                          const Center(child: CustomLoading()),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                  if (data != null) {
                                     if (data.isEmpty) {
                                       return const EmptyData(
                                           title: 'Empty SGL',
@@ -240,182 +250,192 @@ class __SupervisorListSglViewState extends State<_SupervisorListSglView> {
                                         ),
                                       ],
                                     );
-                                  }),
-                                ),
+                                  }
+
+                                  return SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: ntf.isFilter ? 200 : 150,
+                                        ),
+                                        const Center(child: CustomLoading()),
+                                      ],
+                                    ),
+                                  );
+                                }),
                               ),
-                              if (status)
-                                Column(
-                                  children: [
-                                    Container(
-                                      decoration: const BoxDecoration(
-                                          color: scaffoldBackgroundColor,
-                                          boxShadow: [
-                                            BoxShadow(
-                                                offset: Offset(0, 2),
-                                                color: Colors.black12,
-                                                blurRadius: 12,
-                                                spreadRadius: 4)
-                                          ]),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20),
-                                            child: SearchField(
-                                              onClear: () {
-                                                query = null;
-                                                context
-                                                    .read<SglCstCubit>()
-                                                    .getListSglStudents(
+                            ),
+                            if (status)
+                              Column(
+                                children: [
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                        color: scaffoldBackgroundColor,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: Offset(0, 2),
+                                              color: Colors.black12,
+                                              blurRadius: 12,
+                                              spreadRadius: 4)
+                                        ]),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const SizedBox(
+                                          height: 16,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          child: SearchField(
+                                            onClear: () {
+                                              query = null;
+                                              context
+                                                  .read<SglCstCubit>()
+                                                  .getListSglStudents(
+                                                    unitId: ntf.unit?.id,
+                                                    page: page,
+                                                    query: query,
+                                                    type: ntf.filterType,
+                                                  );
+                                            },
+                                            onChanged: (value) {
+                                              query = value;
+                                              context
+                                                  .read<SglCstCubit>()
+                                                  .getListSglStudents(
                                                       unitId: ntf.unit?.id,
                                                       page: page,
                                                       query: query,
-                                                      type: ntf.filterType,
-                                                    );
-                                              },
-                                              onChanged: (value) {
-                                                query = value;
-                                                context
-                                                    .read<SglCstCubit>()
-                                                    .getListSglStudents(
-                                                        unitId: ntf.unit?.id,
-                                                        page: page,
-                                                        query: query,
-                                                        type: ntf.filterType);
-                                              },
-                                              text: '',
-                                              hint: 'Search for student',
-                                            ),
+                                                      type: ntf.filterType);
+                                            },
+                                            text: '',
+                                            hint: 'Search for student',
                                           ),
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-                                          SizedBox(
-                                            width: double.infinity,
-                                            child: SingleChildScrollView(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20,
-                                                  right: 20,
-                                                  bottom: 12),
-                                              scrollDirection: Axis.horizontal,
-                                              child: Row(
-                                                children: [
-                                                  if (ntf.filterType !=
-                                                      FilterType.all)
-                                                    Chip(
-                                                      backgroundColor:
-                                                          primaryColor
-                                                              .withOpacity(.1),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                        side: BorderSide.none,
-                                                      ),
-                                                      side: BorderSide(
-                                                          color: secondaryColor
-                                                              .withOpacity(.5)),
-                                                      label: Text(ntf
-                                                          .filterType.name
-                                                          .toCapitalize()),
-                                                      labelStyle: textTheme
-                                                          .bodyMedium
-                                                          ?.copyWith(
-                                                              color:
-                                                                  primaryColor),
-                                                      deleteIcon: const Icon(
-                                                        Icons.close_rounded,
-                                                        color: primaryColor,
-                                                        size: 16,
-                                                      ),
-                                                      onDeleted: () {
-                                                        context
-                                                                .read<
-                                                                    FilterNotifier>()
-                                                                .setFilterType =
-                                                            FilterType.all;
-                                                        Future.microtask(() =>
-                                                            BlocProvider.of<
-                                                                        SglCstCubit>(
-                                                                    context)
-                                                                .getListSglStudents(
-                                                              unitId:
-                                                                  ntf.unit?.id,
-                                                              page: page,
-                                                              query: query,
-                                                              type: FilterType
-                                                                  .all,
-                                                            ));
-                                                      },
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: SingleChildScrollView(
+                                            padding: const EdgeInsets.only(
+                                                left: 20,
+                                                right: 20,
+                                                bottom: 12),
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: [
+                                                if (ntf.filterType !=
+                                                    FilterType.all)
+                                                  Chip(
+                                                    backgroundColor:
+                                                        primaryColor
+                                                            .withOpacity(.1),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      side: BorderSide.none,
                                                     ),
-                                                  const SizedBox(
-                                                    width: 8,
-                                                  ),
-                                                  if (ntf.unit != null)
-                                                    Chip(
-                                                      backgroundColor:
-                                                          primaryColor
-                                                              .withOpacity(.1),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                        side: BorderSide.none,
-                                                      ),
-                                                      side: BorderSide(
-                                                          color: secondaryColor
-                                                              .withOpacity(.5)),
-                                                      label: Text(
-                                                          '${ntf.unit?.name.toCapitalize()}'),
-                                                      labelStyle: textTheme
-                                                          .bodyMedium
-                                                          ?.copyWith(
-                                                              color:
-                                                                  primaryColor),
-                                                      deleteIcon: const Icon(
-                                                        Icons.close_rounded,
-                                                        color: primaryColor,
-                                                        size: 16,
-                                                      ),
-                                                      onDeleted: () {
-                                                        context
-                                                            .read<
-                                                                FilterNotifier>()
-                                                            .setDepartmentModel = null;
-                                                        Future.microtask(
-                                                          () => BlocProvider.of<
+                                                    side: BorderSide(
+                                                        color: secondaryColor
+                                                            .withOpacity(.5)),
+                                                    label: Text(ntf
+                                                        .filterType.name
+                                                        .toCapitalize()),
+                                                    labelStyle: textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                            color:
+                                                                primaryColor),
+                                                    deleteIcon: const Icon(
+                                                      Icons.close_rounded,
+                                                      color: primaryColor,
+                                                      size: 16,
+                                                    ),
+                                                    onDeleted: () {
+                                                      context
+                                                              .read<
+                                                                  FilterNotifier>()
+                                                              .setFilterType =
+                                                          FilterType.all;
+                                                      Future.microtask(() =>
+                                                          BlocProvider.of<
                                                                       SglCstCubit>(
                                                                   context)
                                                               .getListSglStudents(
-                                                                  unitId: ntf
-                                                                      .unit?.id,
-                                                                  page: 1,
-                                                                  query: query,
-                                                                  type: ntf
-                                                                      .filterType),
-                                                        );
-                                                      },
+                                                            unitId:
+                                                                ntf.unit?.id,
+                                                            page: page,
+                                                            query: query,
+                                                            type:
+                                                                FilterType.all,
+                                                          ));
+                                                    },
+                                                  ),
+                                                const SizedBox(
+                                                  width: 8,
+                                                ),
+                                                if (ntf.unit != null)
+                                                  Chip(
+                                                    backgroundColor:
+                                                        primaryColor
+                                                            .withOpacity(.1),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      side: BorderSide.none,
                                                     ),
-                                                ],
-                                              ),
+                                                    side: BorderSide(
+                                                        color: secondaryColor
+                                                            .withOpacity(.5)),
+                                                    label: Text(
+                                                        '${ntf.unit?.name.toCapitalize()}'),
+                                                    labelStyle: textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                            color:
+                                                                primaryColor),
+                                                    deleteIcon: const Icon(
+                                                      Icons.close_rounded,
+                                                      color: primaryColor,
+                                                      size: 16,
+                                                    ),
+                                                    onDeleted: () {
+                                                      context
+                                                          .read<
+                                                              FilterNotifier>()
+                                                          .setDepartmentModel = null;
+                                                      Future.microtask(
+                                                        () => BlocProvider.of<
+                                                                    SglCstCubit>(
+                                                                context)
+                                                            .getListSglStudents(
+                                                                unitId: ntf
+                                                                    .unit?.id,
+                                                                page: 1,
+                                                                query: query,
+                                                                type: ntf
+                                                                    .filterType),
+                                                      );
+                                                    },
+                                                  ),
+                                              ],
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                            ],
-                          );
-                        });
-                  }
-                  return const CustomLoading();
+                                  ),
+                                ],
+                              ),
+                          ],
+                        );
+                      });
                 },
               ),
             ),

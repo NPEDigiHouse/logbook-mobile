@@ -3,6 +3,7 @@ import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/models/self_reflection/self_reflection_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
@@ -88,10 +89,7 @@ class _SupervisorListSelfReflectionsVerifiedPageState
                     },
                     child: Builder(
                       builder: (context) {
-                        if (state.listData2 == null) {
-                          return const CustomLoading();
-                        }
-                        if (!isMounted) {
+                        if (state.listData2 != null && !isMounted) {
                           Future.microtask(() {
                             listStudent.value = [...state.listData2!];
                           });
@@ -109,43 +107,49 @@ class _SupervisorListSelfReflectionsVerifiedPageState
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 20),
                                       child: Builder(builder: (context) {
-                                        if (s.isEmpty) {
-                                          return const EmptyData(
-                                            title:
-                                                'No Self Reflection Submitted',
-                                            subtitle:
-                                                'wait for submission from students',
-                                          );
-                                        }
-                                        return CustomScrollView(
-                                          slivers: [
-                                            if (status)
+                                        if (state.state ==
+                                            RequestState.loading) {
+                                          return const CustomLoading();
+                                        } else if (state.listData2 != null) {
+                                          if (s.isEmpty) {
+                                            return const EmptyData(
+                                              title:
+                                                  'No Self Reflection Submitted',
+                                              subtitle:
+                                                  'wait for submission from students',
+                                            );
+                                          }
+                                          return CustomScrollView(
+                                            slivers: [
+                                              if (status)
+                                                const SliverToBoxAdapter(
+                                                  child: SizedBox(
+                                                    height: 68,
+                                                  ),
+                                                ),
                                               const SliverToBoxAdapter(
                                                 child: SizedBox(
-                                                  height: 68,
+                                                  height: 16,
                                                 ),
                                               ),
-                                            const SliverToBoxAdapter(
-                                              child: SizedBox(
-                                                height: 16,
-                                              ),
-                                            ),
-                                            SliverList.separated(
-                                              itemCount: s.length,
-                                              itemBuilder: (context, index) {
-                                                return SelfReflectionCard(
-                                                  selfReflection: s[index],
-                                                );
-                                              },
-                                              separatorBuilder:
-                                                  (context, index) {
-                                                return const SizedBox(
-                                                  height: 12,
-                                                );
-                                              },
-                                            )
-                                          ],
-                                        );
+                                              SliverList.separated(
+                                                itemCount: s.length,
+                                                itemBuilder: (context, index) {
+                                                  return SelfReflectionCard(
+                                                    selfReflection: s[index],
+                                                  );
+                                                },
+                                                separatorBuilder:
+                                                    (context, index) {
+                                                  return const SizedBox(
+                                                    height: 12,
+                                                  );
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        }
+                                        return const CustomLoading();
                                       }),
                                     ),
                                   ),
@@ -211,7 +215,6 @@ class _SupervisorListSelfReflectionsVerifiedPageState
                                         ),
                                       ],
                                     ),
-                                
                                 ],
                               );
                             });

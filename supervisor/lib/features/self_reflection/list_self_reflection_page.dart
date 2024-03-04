@@ -97,11 +97,7 @@ class _SupervisorListSelfReflectionsPageState
                     },
                     child: Builder(
                       builder: (context) {
-                        if (state.listData == null ||
-                            state.state == RequestState.loading) {
-                          return const CustomLoading();
-                        }
-                        if (!isMounted) {
+                        if (state.listData != null && !isMounted) {
                           Future.microtask(() {
                             listStudent.value = [...state.listData!];
                           });
@@ -119,43 +115,49 @@ class _SupervisorListSelfReflectionsPageState
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 20),
                                       child: Builder(builder: (context) {
-                                        if (s.isEmpty) {
-                                          return const EmptyData(
-                                            title:
-                                                'No Self Reflection Submitted',
-                                            subtitle:
-                                                'wait for submission from students',
-                                          );
-                                        }
-                                        return CustomScrollView(
-                                          slivers: [
-                                            if (status)
+                                        if (state.fetchState ==
+                                            RequestState.loading) {
+                                          return const CustomLoading();
+                                        } else if (state.listData != null) {
+                                          if (s.isEmpty) {
+                                            return const EmptyData(
+                                              title:
+                                                  'No Self Reflection Submitted',
+                                              subtitle:
+                                                  'wait for submission from students',
+                                            );
+                                          }
+                                          return CustomScrollView(
+                                            slivers: [
+                                              if (status)
+                                                const SliverToBoxAdapter(
+                                                  child: SizedBox(
+                                                    height: 68,
+                                                  ),
+                                                ),
                                               const SliverToBoxAdapter(
                                                 child: SizedBox(
-                                                  height: 68,
+                                                  height: 16,
                                                 ),
                                               ),
-                                            const SliverToBoxAdapter(
-                                              child: SizedBox(
-                                                height: 16,
-                                              ),
-                                            ),
-                                            SliverList.separated(
-                                              itemCount: s.length,
-                                              itemBuilder: (context, index) {
-                                                return SelfReflectionCard(
-                                                  selfReflection: s[index],
-                                                );
-                                              },
-                                              separatorBuilder:
-                                                  (context, index) {
-                                                return const SizedBox(
-                                                  height: 12,
-                                                );
-                                              },
-                                            )
-                                          ],
-                                        );
+                                              SliverList.separated(
+                                                itemCount: s.length,
+                                                itemBuilder: (context, index) {
+                                                  return SelfReflectionCard(
+                                                    selfReflection: s[index],
+                                                  );
+                                                },
+                                                separatorBuilder:
+                                                    (context, index) {
+                                                  return const SizedBox(
+                                                    height: 12,
+                                                  );
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        }
+                                        return const CustomLoading();
                                       }),
                                     ),
                                   ),

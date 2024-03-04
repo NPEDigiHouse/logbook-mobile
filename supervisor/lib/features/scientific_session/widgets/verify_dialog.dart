@@ -1,4 +1,3 @@
-
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/scientific_session/verify_scientific_session_model.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:main/blocs/scientific_session_supervisor_cubit/scientific_session_supervisor_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/spacing_column.dart';
 
 class VerifyScientificSessionDialog extends StatefulWidget {
@@ -36,10 +36,12 @@ class _AddTopicDialogState extends State<VerifyScientificSessionDialog> {
         ScientificSessionSupervisorState>(
       listener: (context, state) {
         if (state.successVerify) {
+          CustomAlert.success(
+              message: "Success Verify Scientific Session", context: context);
           BlocProvider.of<ScientificSessionSupervisorCubit>(context)
-            .getScientificSessionDetail(id: widget.id);
+              .getScientificSessionDetail(id: widget.id);
           BlocProvider.of<ScientificSessionSupervisorCubit>(context)
-            .getScientificSessionList();
+              .getScientificSessionList();
           Navigator.pop(context);
         }
       },
@@ -133,14 +135,14 @@ class _AddTopicDialogState extends State<VerifyScientificSessionDialog> {
                 child: FilledButton.icon(
                   onPressed: () {
                     BlocProvider.of<ScientificSessionSupervisorCubit>(context)
-                      .verifyClinicalRecord(
-                        id: widget.id,
-                        model: VerifyScientificSessionModel(
-                          verified: true,
-                          rating: rating,
-                        ),
-                      );
-                                    },
+                        .verifyClinicalRecord(
+                      id: widget.id,
+                      model: VerifyScientificSessionModel(
+                        verified: true,
+                        rating: rating,
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.verified),
                   label: const Text('Submit'),
                 ),

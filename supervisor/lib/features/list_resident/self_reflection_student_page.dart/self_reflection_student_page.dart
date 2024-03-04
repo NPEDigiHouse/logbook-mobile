@@ -27,7 +27,7 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
     super.initState();
     Future.microtask(() {
       BlocProvider.of<SelfReflectionSupervisorCubit>(context, listen: false)
-        .getDetailSelfReflections(id: widget.student.studentId!);
+          .getDetailSelfReflections(id: widget.student.studentId!);
     });
     _scrollController = ScrollController();
     _scrollController.addListener(() {
@@ -62,14 +62,13 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
               BlocBuilder<SelfReflectionSupervisorCubit,
                   SelfReflectionSupervisorState>(
                 builder: (context, state) {
-                  if (state.data != null) {
-                    if (state.data!.listSelfReflections!.isNotEmpty) {
+                  if (state.data2 != null) {
+                    if (state.data2!.listSelfReflections!.isNotEmpty) {
                       return SliverList.separated(
-                        itemCount: state.data!.listSelfReflections?.length,
+                        itemCount: state.data2!.listSelfReflections?.length,
                         itemBuilder: (context, index) {
                           return SupervisorSelfReflectionCard(
-                            data: state.data!.listSelfReflections![index],
-                            index: index,
+                            data: state.data2!.listSelfReflections![index],
                           );
                         },
                         separatorBuilder: (context, index) {

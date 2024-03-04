@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/headers/unit_student_header.dart';
@@ -50,6 +51,9 @@ class _SupervisorDailyActivityDetailPageState
           if (state.stateVerifyDailyActivity == RequestState.data) {
             BlocProvider.of<DailyActivityCubit>(context)
                 .getActivityDetailBySupervisor(id: widget.id);
+            CustomAlert.success(
+                message: "Change Verification Status Daily Activity",
+                context: context);
           }
         },
         child: BlocBuilder<DailyActivityCubit, DailyActivityState>(

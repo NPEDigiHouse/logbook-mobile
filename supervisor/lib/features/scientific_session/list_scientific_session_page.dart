@@ -174,9 +174,6 @@ class _SupervisorListScientificSessionViewState
                 builder: (context, state) {
                   final data = state.$1;
 
-                  if (data == null || state.$2 == RequestState.loading) {
-                    return const CustomLoading();
-                  }
                   return ValueListenableBuilder(
                       valueListenable: isSearchExpand,
                       builder: (context, status, _) {
@@ -188,40 +185,64 @@ class _SupervisorListScientificSessionViewState
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 child: Builder(builder: (context) {
-                                  if (data.isEmpty) {
-                                    return const EmptyData(
-                                        title: 'Empty Data',
-                                        subtitle:
-                                            'No scientific session found');
-                                  }
-                                  return CustomScrollView(
-                                    controller: _scrollController,
-                                    slivers: [
-                                      if (status)
-                                        SliverToBoxAdapter(
+                                  if (state.$2 == RequestState.loading) {
+                                    return SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: ntf.isFilter ? 200 : 150,
+                                          ),
+                                          const Center(child: CustomLoading()),
+                                        ],
+                                      ),
+                                    );
+                                  } else if (data != null) {
+                                    if (data.isEmpty) {
+                                      return const EmptyData(
+                                          title: 'Empty Data',
+                                          subtitle:
+                                              'No scientific session found');
+                                    }
+
+                                    return CustomScrollView(
+                                      controller: _scrollController,
+                                      slivers: [
+                                        if (status)
+                                          SliverToBoxAdapter(
+                                            child: SizedBox(
+                                              height: ntf.isFilter ? 128 : 84,
+                                            ),
+                                          ),
+                                        const SliverToBoxAdapter(
                                           child: SizedBox(
-                                            height: ntf.isFilter ? 128 : 84,
+                                            height: 12,
                                           ),
                                         ),
-                                      const SliverToBoxAdapter(
-                                        child: SizedBox(
-                                          height: 12,
+                                        SliverList.separated(
+                                          itemCount: data.length,
+                                          itemBuilder: (context, index) {
+                                            return ScientificSessionCard(
+                                              scientificSession: data[index],
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) {
+                                            return const SizedBox(
+                                              height: 12,
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  }
+                                  return SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: ntf.isFilter ? 200 : 150,
                                         ),
-                                      ),
-                                      SliverList.separated(
-                                        itemCount: data.length,
-                                        itemBuilder: (context, index) {
-                                          return ScientificSessionCard(
-                                            scientificSession: data[index],
-                                          );
-                                        },
-                                        separatorBuilder: (context, index) {
-                                          return const SizedBox(
-                                            height: 12,
-                                          );
-                                        },
-                                      )
-                                    ],
+                                        const Center(child: CustomLoading()),
+                                      ],
+                                    ),
                                   );
                                 }),
                               ),

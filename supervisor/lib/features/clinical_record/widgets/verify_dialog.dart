@@ -1,4 +1,3 @@
-
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/clinical_records/verify_clinical_record_model.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:main/blocs/clinical_record_supervisor_cubit/clinical_record_supervisor_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/spacing_column.dart';
 
 class VerifyClinicalRecordDialog extends StatefulWidget {
@@ -36,10 +36,12 @@ class _AddTopicDialogState extends State<VerifyClinicalRecordDialog> {
         ClinicalRecordSupervisorState>(
       listener: (context, state) {
         if (state.successVerifyClinicalRecords) {
+          CustomAlert.success(
+              message: "Success Verify Clinical Record", context: context);
           BlocProvider.of<ClinicalRecordSupervisorCubit>(context)
-            .getDetailClinicalRecord(id: widget.id);
+              .getDetailClinicalRecord(id: widget.id);
           BlocProvider.of<ClinicalRecordSupervisorCubit>(context)
-            .getClinicalRecords();
+              .getClinicalRecords();
           Navigator.pop(context);
         }
       },
@@ -158,14 +160,14 @@ class _AddTopicDialogState extends State<VerifyClinicalRecordDialog> {
                 child: FilledButton.icon(
                   onPressed: () {
                     BlocProvider.of<ClinicalRecordSupervisorCubit>(context)
-                      .verifyClinicalRecord(
-                        id: widget.id,
-                        model: VerifyClinicalRecordModel(
-                            verified: true,
-                            rating: rating,
-                            supervisorFeedback: feedbackController.text),
-                      );
-                                    },
+                        .verifyClinicalRecord(
+                      id: widget.id,
+                      model: VerifyClinicalRecordModel(
+                          verified: true,
+                          rating: rating,
+                          supervisorFeedback: feedbackController.text),
+                    );
+                  },
                   icon: const Icon(Icons.verified),
                   label: const Text('Submit'),
                 ),

@@ -1,6 +1,6 @@
 import 'package:data/datasources/remote_datasources/self_reflection_datasource.dart';
 import 'package:data/models/self_reflection/self_reflection_model.dart';
-import 'package:data/models/self_reflection/student_self_reflection_model.dart';
+import 'package:data/models/self_reflection/student_self_reflection2_model.dart';
 import 'package:data/models/self_reflection/verify_self_reflection_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
@@ -16,19 +16,15 @@ class SelfReflectionSupervisorCubit
   Future<void> getSelfReflections() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        fetchState: RequestState.loading,
       ));
 
       final result = await dataSource.getSelfReflections(verified: false);
-      try {
-        emit(state.copyWith(listData: result, requestState: RequestState.data));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(listData: result, fetchState: RequestState.data));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          fetchState: RequestState.error,
         ),
       );
     }
@@ -41,13 +37,7 @@ class SelfReflectionSupervisorCubit
       ));
 
       final result = await dataSource.getSelfReflections(verified: true);
-      try {
-        emit(state.copyWith(
-          listData2: result,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(listData2: result, requestState: RequestState.data));
     } catch (e) {
       emit(
         state.copyWith(
@@ -60,13 +50,30 @@ class SelfReflectionSupervisorCubit
   Future<void> getDetailSelfReflections({required String id}) async {
     try {
       emit(state.copyWith(
+        detailState: RequestState.loading,
+      ));
+
+      final result = await dataSource.getDetail(id: id);
+      emit(state.copyWith(data: result, detailState: RequestState.data));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          detailState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> getDetailSelfReflections2({required String id}) async {
+    try {
+      emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
       final result = await dataSource.getStudentSelfReflection(studentId: id);
       try {
         emit(state.copyWith(
-          data: result,
+          data2: result,
         ));
       } catch (e) {
         emit(state.copyWith(requestState: RequestState.error));

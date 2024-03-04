@@ -5,6 +5,7 @@ part 'self_reflection_model.g.dart';
 @JsonSerializable()
 class SelfReflectionModel {
   final String? studentId;
+  final String? selfReflectionId;
   final String? studentName;
   final String? verificationStatus;
   final DateTime? latest;
@@ -13,6 +14,7 @@ class SelfReflectionModel {
   SelfReflectionModel(
       {this.latest,
       this.studentId,
+      this.selfReflectionId,
       this.studentName,
       this.unitName,
       this.verificationStatus});

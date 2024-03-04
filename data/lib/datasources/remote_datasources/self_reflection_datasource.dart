@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:data/models/self_reflection/self_reflection_model.dart';
 import 'package:data/models/self_reflection/self_reflection_post_model.dart';
-import 'package:data/models/self_reflection/student_self_reflection_model.dart';
+import 'package:data/models/self_reflection/student_self_reflection2_model.dart';
 import 'package:data/models/self_reflection/verify_self_reflection_model.dart';
 import 'package:data/services/api_service.dart';
 import 'package:data/services/token_manager.dart';
@@ -19,8 +19,8 @@ abstract class SelfReflectionDataSource {
       {required bool verified});
   Future<void> verify(
       {required String id, required VerifySelfReflectionModel model});
-  Future<String> getDetail({required String id});
-  Future<StudentSelfReflectionModel> getStudentSelfReflection(
+  Future<SelfReflectionData2> getDetail({required String id});
+  Future<StudentSelfReflection2Model> getStudentSelfReflection(
       {required String studentId});
   Future<bool> deleteSelfReflection({required String id});
   Future<bool> updateSelfReflection({required String id, required String data});
@@ -52,16 +52,18 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
   }
 
   @override
-  Future<String> getDetail({required String id}) async {
+  Future<SelfReflectionData2> getDetail({required String id}) async {
     try {
       final response = await dio.get(
         '${ApiService.baseUrl}/self-reflections/$id',
         options: await apiHeader.userOptions(),
       );
+      print(response.data);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
-      final result = dataResponse.data;
+      final result = SelfReflectionData2.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print((e as DioException).message.toString());
       throw failure(e);
     }
   }
@@ -75,6 +77,7 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
           data: {
             "verified": verified,
           });
+      print(response.data);
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<SelfReflectionModel> listData = dataResponse.data
           .map((e) => SelfReflectionModel.fromJson(e))
@@ -101,7 +104,7 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
   }
 
   @override
-  Future<StudentSelfReflectionModel> getStudentSelfReflection(
+  Future<StudentSelfReflection2Model> getStudentSelfReflection(
       {required String studentId}) async {
     try {
       final response = await dio.get(
@@ -109,9 +112,11 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
         options: await apiHeader.userOptions(),
       );
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
-      final result = StudentSelfReflectionModel.fromJson(dataResponse.data);
+      print(dataResponse);
+      final result = StudentSelfReflection2Model.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }

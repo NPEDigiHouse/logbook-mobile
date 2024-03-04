@@ -1,17 +1,18 @@
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
-import 'package:data/models/self_reflection/student_self_reflection_model.dart';
+import 'package:data/models/self_reflection/student_self_reflection2_model.dart';
 import 'package:expandable_text/expandable_text.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
+import 'package:main/blocs/self_reflection_supervisor_cubit/self_reflection_supervisor_cubit.dart';
 
 import 'widgets/verify_dialog.dart';
 import 'package:flutter/material.dart';
 
 class SupervisorSelfReflectionCard extends StatelessWidget {
-  final SelfReflectionData data;
-  final int index;
-  const SupervisorSelfReflectionCard(
-      {super.key, required this.data, required this.index});
+  final SelfReflectionData2 data;
+  const SupervisorSelfReflectionCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +53,8 @@ class SupervisorSelfReflectionCard extends StatelessWidget {
                     style: textTheme.titleSmall?.copyWith(),
                   ),
                   Text(
-                    Utils.datetimeToString(
-                      data.updatedAt ?? DateTime.now(),
+                    Utils.epochToStringDate(
+                      startTime: (data.updatedAt ?? 0) ~/ 1000,
                     ),
                     style: textTheme.bodyMedium?.copyWith(
                       color: primaryColor,
@@ -135,15 +136,23 @@ class SupervisorSelfReflectionCard extends StatelessWidget {
           if (data.verificationStatus != 'VERIFIED')
             Align(
               alignment: Alignment.centerRight,
-              child: FilledButton(
-                onPressed: () => showDialog(
-                    context: context,
-                    barrierLabel: '',
-                    barrierDismissible: false,
-                    builder: (_) => VerifySelfReflectionDialog(
-                          id: data.selfReflectionId!,
-                        )).then((value) {}),
-                child: const Text('Verify'),
+              child: BlocSelector<SelfReflectionSupervisorCubit,
+                  SelfReflectionSupervisorState, bool>(
+                selector: (state) => state.detailState == RequestState.loading,
+                builder: (context, isLoading) {
+                  return FilledButton(
+                    onPressed: isLoading
+                        ? null
+                        : () => showDialog(
+                            context: context,
+                            barrierLabel: '',
+                            barrierDismissible: false,
+                            builder: (_) => VerifySelfReflectionDialog(
+                                  id: data.selfReflectionId!,
+                                )).then((value) {}),
+                    child: const Text('Verify'),
+                  );
+                },
               ),
             ),
         ],

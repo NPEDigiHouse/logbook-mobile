@@ -418,22 +418,26 @@ class SglCstCubit extends Cubit<SglCstState> {
       String? query,
       bool onScroll = false,
       FilterType? type}) async {
+    if (!onScroll) emit(state.copyWith(cstState: RequestState.loading));
+
     final result = await dataSource.getCstBySupervisor(
         unitId: unitId,
         query: query,
         page: page,
         filterType: type ?? FilterType.unverified);
-    if (!onScroll) emit(state.copyWith(cstState: RequestState.loading));
     result.fold(
       (l) => emit(state.copyWith(
-        requestState: RequestState.error,
+        cstState: RequestState.error,
         errorMessage: l.message,
       )),
       (r) {
         if (page == 1 && !onScroll) {
           emit(state.copyWith(cstStudents: r, cstState: RequestState.data));
         } else {
-          emit(state.copyWith(cstStudents: state.cstStudents! + r));
+          emit(state.copyWith(
+            cstStudents: state.cstStudents! + r,
+            cstState: RequestState.error,
+          ));
         }
       },
     );

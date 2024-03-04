@@ -226,7 +226,7 @@ class NotifiItemHelper {
               //supervisor
               if (role == UserRole.supervisor) {
                 context.navigateTo(SupervisorSelfReflectionStudentPage(
-                  studentId: notification.senderActorId ?? '',
+                  id: notification.senderActorId ?? '',
                 ));
               }
               //student

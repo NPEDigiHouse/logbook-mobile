@@ -38,10 +38,10 @@ class _SupervisorStudentsDailyActivityPageState
 class _SupervisorListDailyActivityView extends StatefulWidget {
   @override
   State<_SupervisorListDailyActivityView> createState() =>
-      __SupervisorListDailyActivityViewState();
+      _SupervisorListDailyActivityViewState();
 }
 
-class __SupervisorListDailyActivityViewState
+class _SupervisorListDailyActivityViewState
     extends State<_SupervisorListDailyActivityView> {
   late int page;
   String? query;
@@ -193,9 +193,6 @@ class __SupervisorListDailyActivityViewState
               builder: (context, state) {
                 final data = state.dailyActivityStudents;
 
-                if (data == null || state.fetchState == RequestState.loading) {
-                  return const CustomLoading();
-                }
                 return ValueListenableBuilder(
                     valueListenable: isSearchExpand,
                     builder: (context, status, _) {
@@ -206,43 +203,70 @@ class __SupervisorListDailyActivityViewState
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
-                              child: Builder(builder: (context) {
-                                if (data.isEmpty) {
-                                  return const EmptyData(
-                                      title: 'Empty Daily Activity',
-                                      subtitle:
-                                          'there is no daily activity yet');
-                                }
-                                return CustomScrollView(
-                                  controller: _scrollController,
-                                  slivers: [
-                                    if (status)
-                                      SliverToBoxAdapter(
-                                        child: SizedBox(
-                                          height: ntf.isFilter ? 128 : 84,
+                              child: Builder(
+                                builder: (context) {
+                                  if (state.fetchState ==
+                                      RequestState.loading) {
+                                    return SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: ntf.isFilter ? 200 : 150,
+                                          ),
+                                          const Center(child: CustomLoading()),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                  if (data != null) {
+                                    if (data.isEmpty) {
+                                      return const EmptyData(
+                                          title: 'Empty Daily Activity',
+                                          subtitle:
+                                              'there is no daily activity yet');
+                                    }
+                                    return CustomScrollView(
+                                      controller: _scrollController,
+                                      slivers: [
+                                        if (status)
+                                          SliverToBoxAdapter(
+                                            child: SizedBox(
+                                              height: ntf.isFilter ? 128 : 84,
+                                            ),
+                                          ),
+                                        const SliverToBoxAdapter(
+                                          child: SizedBox(
+                                            height: 8,
+                                          ),
                                         ),
-                                      ),
-                                    const SliverToBoxAdapter(
-                                      child: SizedBox(
-                                        height: 8,
-                                      ),
+                                        SliverList.separated(
+                                          itemCount: data.length,
+                                          itemBuilder: (context, index) {
+                                            return DailyActivityCard(
+                                              dailyActivityStudent: data[index],
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) {
+                                            return const SizedBox(
+                                              height: 12,
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  }
+                                  return SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: ntf.isFilter ? 200 : 150,
+                                        ),
+                                        const Center(child: CustomLoading()),
+                                      ],
                                     ),
-                                    SliverList.separated(
-                                      itemCount: data.length,
-                                      itemBuilder: (context, index) {
-                                        return DailyActivityCard(
-                                          dailyActivityStudent: data[index],
-                                        );
-                                      },
-                                      separatorBuilder: (context, index) {
-                                        return const SizedBox(
-                                          height: 12,
-                                        );
-                                      },
-                                    )
-                                  ],
-                                );
-                              }),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                           if (status)

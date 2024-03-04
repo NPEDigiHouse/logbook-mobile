@@ -20,7 +20,7 @@ class SelfReflectionCard extends StatelessWidget {
       child: InkWell(
         onTap: () => context.navigateTo(
           SupervisorSelfReflectionStudentPage(
-            studentId: selfReflection.studentId!,
+            id: selfReflection.selfReflectionId!,
           ),
         ),
         child: Padding(
