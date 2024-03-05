@@ -8,6 +8,7 @@ class StudentCompetenceModel {
   DateTime? latest;
   @JsonKey(name: "studentId")
   String? studentId;
+  String? id;
   @JsonKey(name: "studentName")
   String? studentName;
   @JsonKey(name: "unitName")
@@ -18,6 +19,7 @@ class StudentCompetenceModel {
   StudentCompetenceModel({
     this.latest,
     this.studentId,
+    this.id,
     this.studentName,
     this.activeDepartmentName,
     this.verificationStatus,

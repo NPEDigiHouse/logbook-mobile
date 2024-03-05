@@ -186,7 +186,9 @@ class HistoryHelper {
                 : context.navigateTo(SupervisorListCasesPage(
                     studentName: element.studentName ?? '',
                     unitName: element.unitName ?? '',
-                    studentId: element.studentId ?? '')),
+                    studentId: element.studentId ?? '',
+                    id: element.attachment ?? '',
+                  )),
             pathIcon: 'case_icon.svg'),
         'SKILL': HistoryData(
             name: 'SKILL',
@@ -198,7 +200,9 @@ class HistoryHelper {
                 : context.navigateTo(SupervisorListSkillsPage(
                     studentName: element.studentName ?? '',
                     unitName: element.unitName ?? '',
-                    studentId: element.studentId ?? '')),
+                    studentId: element.studentId ?? '',
+                    id: element.attachment ?? '',
+                  )),
             pathIcon: 'skill_icon.svg'),
         'MINI_CEX': HistoryData(
             name: 'Mini Cex',

@@ -257,6 +257,7 @@ class NotifiItemHelper {
                     studentId: notification.senderActorId ?? '',
                     studentName: notification.senderName ?? '',
                     unitName: notification.unitName ?? '',
+                    id: notification.id ?? '',
                   ),
                 );
               }
@@ -286,6 +287,7 @@ class NotifiItemHelper {
                     studentId: notification.senderActorId ?? '',
                     studentName: notification.senderName ?? '',
                     unitName: notification.unitName ?? '',
+                    id: notification.id ?? '',
                   ),
                 );
               }

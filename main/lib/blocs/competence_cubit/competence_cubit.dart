@@ -6,6 +6,7 @@ import 'package:data/models/competences/list_student_cases_model.dart';
 import 'package:data/models/competences/list_student_skills_model.dart';
 import 'package:data/models/competences/skill_post_model.dart';
 import 'package:data/models/competences/student_competence_model.dart';
+import 'package:data/models/students/student_statistic.dart';
 import 'package:data/utils/filter_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
@@ -270,24 +271,18 @@ class CompetenceCubit extends Cubit<CompetenceState> {
     }
   }
 
-  Future<void> getCasesByStudentId({required String studentId}) async {
+  Future<void> getCaseById({required String id}) async {
     try {
-      emit(state.copyWith(listCasesModel: null));
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result =
-          await competenceDataSource.getListCaseOfStudent(studentId: studentId);
+      final result = await competenceDataSource.getCase(id);
 
-      try {
-        emit(state.copyWith(
-          listCasesModel: result,
-          requestState: RequestState.data,
-        ));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(
+        caseDetailModel: result,
+        requestState: RequestState.data,
+      ));
     } catch (e) {
       emit(
         state.copyWith(
@@ -318,21 +313,16 @@ class CompetenceCubit extends Cubit<CompetenceState> {
     } catch (e) {}
   }
 
-  Future<void> getSkillsByStudentId({required String studentId}) async {
+  Future<void> getSkillsById({required String id}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
-      final result = await competenceDataSource.getListSkillOfStudent(
-          studentId: studentId);
+      final result = await competenceDataSource.getSkill(id);
 
-      try {
-        emit(state.copyWith(
-            listSkillsModel: result, requestState: RequestState.data));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(
+          skillDetailModel: result, requestState: RequestState.data));
     } catch (e) {
       emit(
         state.copyWith(

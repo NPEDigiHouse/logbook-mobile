@@ -1,4 +1,3 @@
-
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
@@ -41,7 +40,7 @@ class _SupervisorCompetenceHomePageState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
-                    height: 32,
+                    height: 16,
                   ),
                   Row(
                     children: [
@@ -151,12 +150,14 @@ class CompetenceCard extends StatelessWidget {
                                   offset: const Offset(0, 0),
                                   spreadRadius: 0,
                                   blurRadius: 6,
-                                  color: const Color(0xFFD4D4D4).withOpacity(.25)),
+                                  color:
+                                      const Color(0xFFD4D4D4).withOpacity(.25)),
                               BoxShadow(
                                   offset: const Offset(0, 4),
                                   spreadRadius: 0,
                                   blurRadius: 24,
-                                  color: const Color(0xFFD4D4D4).withOpacity(.25)),
+                                  color:
+                                      const Color(0xFFD4D4D4).withOpacity(.25)),
                             ]),
                         child: Icon(
                           iconData,

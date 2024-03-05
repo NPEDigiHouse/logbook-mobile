@@ -12,10 +12,11 @@ import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/inputs/search_field.dart';
 import 'package:provider/provider.dart';
+import 'package:supervisor/features/competence/pages/detail_case_page.dart';
+import 'package:supervisor/features/competence/pages/detail_skill_page.dart';
 import 'package:supervisor/features/sgl_cst/widgets/select_department_sheet.dart';
 import 'package:supervisor/helpers/notifier/filter_notifier.dart';
 
-import 'list_skills_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -388,7 +389,6 @@ class _ListStudentTasksViewState extends State<_ListStudentTasksView> {
                                 ),
                               ],
                             ),
-                        
                         ],
                       );
                     });
@@ -405,11 +405,11 @@ class _ListStudentTasksViewState extends State<_ListStudentTasksView> {
     return InkWellContainer(
       color: Colors.white,
       onTap: () => context.navigateTo(
-        SupervisorListSkillsPage(
-          unitName: student.activeDepartmentName ?? '',
-          studentId: student.studentId!,
-          studentName: student.studentName ?? '...',
-        ),
+        DetailSkillPage(
+            unitName: student.activeDepartmentName ?? '',
+            studentId: student.studentId!,
+            studentName: student.studentName ?? '...',
+            id: student.id!),
       ),
       child: Row(
         children: [

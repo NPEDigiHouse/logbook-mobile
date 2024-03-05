@@ -42,6 +42,8 @@ abstract class CompetenceDataSource {
   Future<ListSkillsModel> getListSkill();
   Future<bool> deleteCase(String id);
   Future<bool> deleteSkill(String id);
+  Future<CaseDetailModel> getCase(String id);
+  Future<SkillDetailModel> getSkill(String id);
 }
 
 class CompetenceDataSourceImpl implements CompetenceDataSource {
@@ -351,6 +353,39 @@ class CompetenceDataSourceImpl implements CompetenceDataSource {
       );
     } catch (e) {
       print((e as DioException).response);
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<CaseDetailModel> getCase(String id) async {
+    try {
+      final response = await dio.get(
+        '${ApiService.baseUrl}/competencies/cases/$id',
+        options: await apiHeader.userOptions(),
+      );
+      print(response.data);
+      final dataResponse = DataResponse<dynamic>.fromJson(response.data);
+      final result = CaseDetailModel.fromJson(dataResponse.data);
+      return result;
+    } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<SkillDetailModel> getSkill(String id) async {
+    try {
+      final response = await dio.get(
+        '${ApiService.baseUrl}/competencies/skills/$id',
+        options: await apiHeader.userOptions(),
+      );
+      print("INIMI ${response.data}");
+      final dataResponse = DataResponse<dynamic>.fromJson(response.data);
+      final result = SkillDetailModel.fromJson(dataResponse.data);
+      return result;
+    } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }

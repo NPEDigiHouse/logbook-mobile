@@ -8,9 +8,8 @@ import 'package:main/widgets/spacing_column.dart';
 
 class VerifyCaseDialog extends StatefulWidget {
   final String id;
-  final String studentId;
   const VerifyCaseDialog(
-      {super.key, required this.id, required this.studentId});
+      {super.key, required this.id});
 
   @override
   State<VerifyCaseDialog> createState() => _AddTopicDialogState();
@@ -34,10 +33,9 @@ class _AddTopicDialogState extends State<VerifyCaseDialog> {
     return BlocListener<CompetenceCubit, CompetenceState>(
       listener: (context, state) {
         if (state.isCaseSuccessVerify) {
-          BlocProvider.of<CompetenceCubit>(context)
-            .getCasesByStudentId(
-              studentId: widget.studentId,
-            );
+          BlocProvider.of<CompetenceCubit>(context).getCaseById(
+            id: widget.id,
+          );
           Navigator.pop(context);
         }
       },
@@ -133,10 +131,10 @@ class _AddTopicDialogState extends State<VerifyCaseDialog> {
                     child: FilledButton.icon(
                       onPressed: () {
                         BlocProvider.of<CompetenceCubit>(context)
-                          .verifyCaseById(
-                            id: widget.id,
-                            rating: rating,
-                          );
+                            .verifyCaseById(
+                          id: widget.id,
+                          rating: rating,
+                        );
                       },
                       icon: const Icon(Icons.verified),
                       label: const Text('Submit'),

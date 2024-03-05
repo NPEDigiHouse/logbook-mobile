@@ -12,6 +12,7 @@ import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/inputs/search_field.dart';
 import 'package:provider/provider.dart';
+import 'package:supervisor/features/competence/pages/detail_case_page.dart';
 import 'package:supervisor/features/sgl_cst/widgets/select_department_sheet.dart';
 import 'package:supervisor/helpers/notifier/filter_notifier.dart';
 
@@ -135,7 +136,6 @@ class _ListStudentCasesPageView extends State<_ListStudentCasesView> {
                         initUnit: ntf.unit,
                         filterType: ntf.filterType,
                         onTap: (f, u) {
-                          // filterUnitId = f;
                           context.read<FilterNotifier>().setFilterType = f;
                           context.read<FilterNotifier>().setDepartmentModel = u;
                           page = 1;
@@ -406,10 +406,11 @@ class _ListStudentCasesPageView extends State<_ListStudentCasesView> {
     return InkWellContainer(
       color: Colors.white,
       onTap: () => context.navigateTo(
-        SupervisorListCasesPage(
+        DetailCasePage(
           unitName: student.activeDepartmentName ?? '',
           studentId: student.studentId!,
           studentName: student.studentName ?? '...',
+          id: student.id ?? '',
         ),
       ),
       child: Row(

@@ -42,3 +42,30 @@ class CaseModel {
   factory CaseModel.fromJson(Map<String, dynamic> json) =>
       _$CaseModelFromJson(json);
 }
+
+@JsonSerializable()
+class CaseDetailModel {
+  final String? studentId;
+  final String? studentName;
+  final String? supervisorName;
+  final String? caseId;
+  final String? caseName;
+  final String? caseType;
+  final int? caseTypeId;
+  final int? createdAt;
+  final String? verificationStatus;
+
+  CaseDetailModel(
+      {this.studentId,
+      this.studentName,
+      this.supervisorName,
+      this.caseId,
+      this.caseName,
+      this.caseTypeId,
+      this.caseType,
+      this.verificationStatus,
+      this.createdAt});
+
+  factory CaseDetailModel.fromJson(Map<String, dynamic> json) =>
+      _$CaseDetailModelFromJson(json);
+}

@@ -5,13 +5,13 @@ import 'package:data/models/competences/list_cases_model.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/competence_cubit/competence_cubit.dart';
 import 'package:main/widgets/chip_verified.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/headers/unit_student_header.dart';
 import 'package:main/widgets/inputs/search_field.dart';
 import 'package:main/widgets/spacing_column.dart';
-import 'package:main/widgets/verify_dialog.dart';
 
 import 'widgets/verify_case_dialog.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +21,13 @@ class SupervisorListCasesPage extends StatefulWidget {
   final String studentId;
   final String studentName;
   final String unitName;
+  final String id;
   const SupervisorListCasesPage({
     super.key,
     required this.studentName,
     required this.unitName,
     required this.studentId,
+    required this.id,
   });
 
   @override
@@ -42,9 +44,10 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
   @override
   void initState() {
     Future.microtask(() {
-      BlocProvider.of<CompetenceCubit>(context).getCasesByStudentId(
-        studentId: widget.studentId,
+      BlocProvider.of<CompetenceCubit>(context).getCaseById(
+        id: widget.id,
       );
+
     });
 
     _query = ValueNotifier('');
@@ -67,8 +70,10 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
     return BlocConsumer<CompetenceCubit, CompetenceState>(
       listener: (context, state) {
         if (state.isCaseSuccessVerify || state.isAllCasesSuccessVerify) {
-          BlocProvider.of<CompetenceCubit>(context).getCasesByStudentId(
-            studentId: widget.studentId,
+          CustomAlert.success(message: "Success Verify Case", context: context);
+          
+          BlocProvider.of<CompetenceCubit>(context).getCaseById(
+            id: widget.id,
           );
           isMounted = false;
         }
@@ -83,38 +88,13 @@ class _SupervisorListCasesPageState extends State<SupervisorListCasesPage> {
           appBar: AppBar(
             title: const Text("List Cases"),
           ),
-          // floatingActionButton: SizedBox(
-          //   width: AppSize.getAppWidth(context) - 32,
-          //   child: state.listCasesModel != null &&
-          //           state.listCasesModel!.listCases!.indexWhere((element) =>
-          //                   element.verificationStatus == 'INPROCESS') !=
-          //               -1
-          //       ? FilledButton(
-          //           onPressed: () {
-          //             showDialog(
-          //                 context: context,
-          //                 barrierLabel: '',
-          //                 barrierDismissible: false,
-          //                 builder: (_) => VerifyDialog(
-          //                       onTap: () {
-          //                         BlocProvider.of<CompetenceCubit>(context)
-          //                             .verifyAllCaseOfStudent(
-          //                                 studentId: widget.studentId);
-          //                         Navigator.pop(context);
-          //                       },
-          //                     ));
-          //           },
-          //           child: const Text('Verify All Cases'),
-          //         )
-          //       : null,
-          // ),
           body: SafeArea(
             child: RefreshIndicator(
               onRefresh: () async {
                 isMounted = false;
                 await Future.wait([
-                  BlocProvider.of<CompetenceCubit>(context).getCasesByStudentId(
-                    studentId: widget.studentId,
+                  BlocProvider.of<CompetenceCubit>(context).getCaseById(
+                    id: widget.id,
                   ),
                 ]);
               },
@@ -410,7 +390,6 @@ class TestGradeScoreCard extends StatelessWidget {
                               barrierDismissible: false,
                               builder: (_) => VerifyCaseDialog(
                                     id: id,
-                                    studentId: studentId,
                                   )).then((value) {}),
                           child: const Text('Verify Case'),
                         ),

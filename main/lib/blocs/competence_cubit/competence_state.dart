@@ -13,13 +13,14 @@ class CompetenceState {
   final List<StudentCompetenceModel>? skillListStudent;
   final ListCasesModel? listCasesModel;
   final ListSkillsModel? listSkillsModel;
+  final CaseDetailModel? caseDetailModel;
+  final SkillDetailModel? skillDetailModel;
   final bool isSkillSuccessVerify;
   final bool isCaseSuccessVerify;
   final bool isAllCasesSuccessVerify;
   final bool isAllSkillsSuccessVerify;
   final bool isDeleteCaseSuccess;
   final bool isDeleteSkillSuccess;
-  
 
   CompetenceState({
     this.isSkillSuccessAdded = false,
@@ -40,6 +41,8 @@ class CompetenceState {
     this.isCaseSuccessVerify = false,
     this.isAllCasesSuccessVerify = false,
     this.isAllSkillsSuccessVerify = false,
+    this.caseDetailModel,
+    this.skillDetailModel,
   });
 
   CompetenceState copyWith({
@@ -61,6 +64,8 @@ class CompetenceState {
     bool isAllSkillsSuccessVerify = false,
     bool isDeleteCaseSuccess = false,
     bool isDeleteSkillSuccess = false,
+    CaseDetailModel? caseDetailModel,
+    SkillDetailModel? skillDetailModel,
   }) {
     return CompetenceState(
       isSkillSuccessAdded: isSkillSuccessAdded,
@@ -81,6 +86,8 @@ class CompetenceState {
       skillState: addSkillState,
       isDeleteCaseSuccess: isDeleteCaseSuccess,
       isDeleteSkillSuccess: isDeleteSkillSuccess,
+      caseDetailModel: caseDetailModel,
+      skillDetailModel: skillDetailModel,
     );
   }
 }

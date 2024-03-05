@@ -1,4 +1,3 @@
-
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +8,8 @@ import 'package:main/widgets/spacing_column.dart';
 
 class VerifySkillDialog extends StatefulWidget {
   final String id;
-  final String studentId;
   const VerifySkillDialog(
-      {super.key, required this.id, required this.studentId});
+      {super.key, required this.id});
 
   @override
   State<VerifySkillDialog> createState() => _AddTopicDialogState();
@@ -35,10 +33,9 @@ class _AddTopicDialogState extends State<VerifySkillDialog> {
     return BlocListener<CompetenceCubit, CompetenceState>(
       listener: (context, state) {
         if (state.isSkillSuccessVerify) {
-          BlocProvider.of<CompetenceCubit>(context)
-            .getSkillsByStudentId(
-              studentId: widget.studentId,
-            );
+          BlocProvider.of<CompetenceCubit>(context).getSkillsById(
+            id: widget.id,
+          );
           Navigator.pop(context);
         }
       },
@@ -134,10 +131,10 @@ class _AddTopicDialogState extends State<VerifySkillDialog> {
                     child: FilledButton.icon(
                       onPressed: () {
                         BlocProvider.of<CompetenceCubit>(context)
-                          .verifySkillById(
-                            id: widget.id,
-                            rating: rating,
-                          );
+                            .verifySkillById(
+                          id: widget.id,
+                          rating: rating,
+                        );
                       },
                       icon: const Icon(Icons.verified),
                       label: const Text('Submit'),

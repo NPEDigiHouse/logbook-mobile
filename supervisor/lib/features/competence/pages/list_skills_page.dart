@@ -11,7 +11,6 @@ import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/headers/unit_student_header.dart';
 import 'package:main/widgets/inputs/search_field.dart';
 import 'package:main/widgets/spacing_column.dart';
-import 'package:main/widgets/verify_dialog.dart';
 
 import 'widgets/verify_skill_dialog.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +20,10 @@ class SupervisorListSkillsPage extends StatefulWidget {
   final String studentId;
   final String unitName;
   final String studentName;
-
+  final String id;
   const SupervisorListSkillsPage(
       {super.key,
+      required this.id,
       required this.studentName,
       required this.unitName,
       required this.studentId});
@@ -43,8 +43,8 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
   @override
   void initState() {
     Future.microtask(() {
-      BlocProvider.of<CompetenceCubit>(context).getSkillsByStudentId(
-        studentId: widget.studentId,
+      BlocProvider.of<CompetenceCubit>(context).getSkillsById(
+        id: widget.id,
       );
     });
 
@@ -69,8 +69,8 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
       listener: (context, state) {
         if (state.isSkillSuccessVerify || state.isAllSkillsSuccessVerify) {
           BlocProvider.of<CompetenceCubit>(context)
-            ..getSkillsByStudentId(
-              studentId: widget.studentId,
+            ..getSkillsById(
+              id: widget.id,
             )
             ..reset();
           isMounted = false;
@@ -115,8 +115,8 @@ class _SupervisorListSkillsPageState extends State<SupervisorListSkillsPage> {
             onRefresh: () async {
               isMounted = false;
               await Future.wait([
-                BlocProvider.of<CompetenceCubit>(context).getSkillsByStudentId(
-                  studentId: widget.studentId,
+                BlocProvider.of<CompetenceCubit>(context).getSkillsById(
+                  id: widget.id,
                 ),
               ]);
             },
@@ -417,7 +417,6 @@ class TestGradeScoreCard extends StatelessWidget {
                               barrierDismissible: false,
                               builder: (_) => VerifySkillDialog(
                                     id: id,
-                                    studentId: studentId,
                                   )).then((value) {}),
                           child: const Text('Verify Skill'),
                         ),
