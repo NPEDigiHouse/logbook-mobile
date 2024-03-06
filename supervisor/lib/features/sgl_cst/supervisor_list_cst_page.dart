@@ -258,7 +258,7 @@ class __SupervisorListCstViewState extends State<_SupervisorListCstView> {
                               }),
                             ),
                           ),
-                          if (status)
+                          if (status && data != null)
                             Column(
                               children: [
                                 Container(

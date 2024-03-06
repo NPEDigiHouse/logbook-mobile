@@ -28,6 +28,7 @@ import 'package:supervisor/features/competence/pages/list_skills_page.dart';
 import 'package:supervisor/features/daily_activity/supervisor_daily_activity_detail_page.dart';
 import 'package:supervisor/features/final_score/supervisor_final_grade_page.dart';
 import 'package:supervisor/features/self_reflection/self_reflection_student_page.dart';
+import 'package:supervisor/features/special_report/special_report_detail_page.dart';
 import 'package:supervisor/features/special_report/special_report_home_page.dart';
 
 class Activity {
@@ -238,8 +239,8 @@ class HistoryHelper {
             name: 'Problem Consultation',
             onTap: isStudent
                 ? () {}
-                : () => context.navigateTo(SpecialReportDetailPage(
-                      studentId: element.studentId ?? '',
+                : () => context.navigateTo(SpecialReportDetailPage2(
+                      id: element.attachment ?? '',
                     )),
             pathIcon: 'consultation_icon.svg'),
         'Check-in': HistoryData(

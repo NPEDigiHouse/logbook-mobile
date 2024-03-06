@@ -26,6 +26,7 @@ import 'package:supervisor/features/scientific_session/detail_scientific_session
 import 'package:supervisor/features/self_reflection/self_reflection_student_page.dart';
 import 'package:supervisor/features/sgl_cst/supervisor_cst_detail_page.dart';
 import 'package:supervisor/features/sgl_cst/supervisor_sgl_detail_page.dart';
+import 'package:supervisor/features/special_report/special_report_detail_page.dart';
 import 'package:supervisor/features/special_report/special_report_home_page.dart';
 
 class NotifData {
@@ -379,8 +380,8 @@ class NotifiItemHelper {
               });
               //supervisor
               if (role == UserRole.supervisor) {
-                context.navigateTo(SpecialReportDetailPage(
-                  studentId: notification.senderActorId ?? '',
+                context.navigateTo(SpecialReportDetailPage2(
+                  id: notification.submissionId ?? '',
                 ));
               }
               //student

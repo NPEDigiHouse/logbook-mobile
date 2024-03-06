@@ -1,17 +1,17 @@
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
-import 'package:data/models/special_reports/special_report_response.dart';
+import 'package:data/models/special_reports/special_report_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/special_report/special_report_cubit.dart';
 import 'package:main/widgets/spacing_column.dart';
 
 class VerifySpecialReportPage extends StatefulWidget {
-  final String studentId;
-  final ListProblemConsultation problemConsultation;
+  final String id;
+  final SpecialReportDetail problemConsultation;
   const VerifySpecialReportPage(
-      {super.key, required this.problemConsultation, required this.studentId});
+      {super.key, required this.problemConsultation, required this.id});
 
   @override
   State<VerifySpecialReportPage> createState() =>
@@ -27,7 +27,7 @@ class _VerifySpecialReportPageState extends State<VerifySpecialReportPage> {
       listener: (context, state) {
         if (state.isVerifySpecialReportSuccess) {
           BlocProvider.of<SpecialReportCubit>(context)
-            .getSpecialReportByStudentId(studentId: widget.studentId);
+              .getSpecialReportDetail(id: widget.id);
           Navigator.pop(context);
         }
       },
@@ -113,11 +113,10 @@ class _VerifySpecialReportPageState extends State<VerifySpecialReportPage> {
                     onPressed: () {
                       if (fieldController.text.isNotEmpty) {
                         BlocProvider.of<SpecialReportCubit>(context)
-                          .verifySpecialReport(
-                            solution: fieldController.text,
-                            id: widget
-                                .problemConsultation.problemConsultationId!,
-                          );
+                            .verifySpecialReport(
+                          solution: fieldController.text,
+                          id: widget.problemConsultation.problemConsultationId!,
+                        );
                       }
                     },
                     child: const Text('Submit'),

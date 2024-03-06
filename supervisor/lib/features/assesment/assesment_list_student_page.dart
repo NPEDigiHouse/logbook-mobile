@@ -7,6 +7,7 @@ import 'package:data/models/user/user_credential.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
 import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
@@ -36,7 +37,7 @@ class _SupervisorAssesmentStudentPageState
   void initState() {
     super.initState();
     Future.microtask(
-        () => BlocProvider.of<StudentCubit>(context)..getAllStudents());
+        () => BlocProvider.of<StudentCubit>(context).getAllStudents());
   }
 
   @override
@@ -98,9 +99,6 @@ class _SupervisorAssesmentStudentPageState
                   ]);
                 }, child: Builder(
                   builder: (context) {
-                    if (state.students == null) {
-                      return const CustomLoading();
-                    }
                     return ValueListenableBuilder(
                         valueListenable: isSearchExpand,
                         builder: (context, status, _) {
@@ -112,43 +110,49 @@ class _SupervisorAssesmentStudentPageState
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20),
                                   child: Builder(builder: (context) {
-                                    if (s.isEmpty) {
-                                      return const EmptyData(
-                                          title: 'No Assessment Submitted',
-                                          subtitle:
-                                              'wait for submission from students');
-                                    }
-                                    return CustomScrollView(
-                                      slivers: [
-                                        if (status)
+                                    if (state.fetchState ==
+                                        RequestState.loading) {
+                                      return const CustomLoading();
+                                    } else if (state.students != null) {
+                                      if (s.isEmpty) {
+                                        return const EmptyData(
+                                            title: 'No Assessment Submitted',
+                                            subtitle:
+                                                'wait for submission from students');
+                                      }
+                                      return CustomScrollView(
+                                        slivers: [
+                                          if (status)
+                                            const SliverToBoxAdapter(
+                                              child: SizedBox(
+                                                height: 82,
+                                              ),
+                                            ),
                                           const SliverToBoxAdapter(
                                             child: SizedBox(
-                                              height: 82,
+                                              height: 16,
                                             ),
                                           ),
-                                        const SliverToBoxAdapter(
-                                          child: SizedBox(
-                                            height: 16,
-                                          ),
-                                        ),
-                                        SliverList.separated(
-                                          itemCount: s.length,
-                                          itemBuilder: (context, index) {
-                                            return _buildStudentCard(
-                                                context, s[index]);
-                                          },
-                                          separatorBuilder: (context, index) {
-                                            return const SizedBox(
-                                              height: 12,
-                                            );
-                                          },
-                                        )
-                                      ],
-                                    );
+                                          SliverList.separated(
+                                            itemCount: s.length,
+                                            itemBuilder: (context, index) {
+                                              return _buildStudentCard(
+                                                  context, s[index]);
+                                            },
+                                            separatorBuilder: (context, index) {
+                                              return const SizedBox(
+                                                height: 12,
+                                              );
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    }
+                                    return const CustomLoading();
                                   }),
                                 ),
                               ),
-                              if (status)
+                              if (status && state.students != null)
                                 Column(
                                   children: [
                                     Container(

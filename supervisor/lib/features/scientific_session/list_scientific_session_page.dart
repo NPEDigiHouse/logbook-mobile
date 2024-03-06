@@ -247,7 +247,7 @@ class _SupervisorListScientificSessionViewState
                                 }),
                               ),
                             ),
-                            if (status)
+                            if (status && data != null)
                               Column(
                                 children: [
                                   Container(

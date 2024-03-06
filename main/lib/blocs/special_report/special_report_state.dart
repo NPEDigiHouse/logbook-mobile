@@ -11,6 +11,7 @@ class SpecialReportState {
   final bool isUpdateSpecialReport;
   final RequestState fetchState;
   final RequestState createState;
+  final RequestState detailState;
 
   SpecialReportState({
     this.specialReport,
@@ -23,6 +24,7 @@ class SpecialReportState {
     this.isUpdateSpecialReport = false,
     this.createState = RequestState.init,
     this.fetchState = RequestState.init,
+    this.detailState = RequestState.init,
   });
 
   SpecialReportState copyWith({
@@ -37,6 +39,7 @@ class SpecialReportState {
     bool isDeleteSpecialReport = false,
     RequestState createState = RequestState.init,
     RequestState fetchState = RequestState.init,
+    RequestState detailState = RequestState.init,
   }) {
     return SpecialReportState(
       specialReport: specialReport ?? this.specialReport,
@@ -51,6 +54,7 @@ class SpecialReportState {
           specialReportStudentsVerified ?? this.specialReportStudentsVerified,
       fetchState: fetchState,
       createState: createState,
+      detailState: detailState,
     );
   }
 }

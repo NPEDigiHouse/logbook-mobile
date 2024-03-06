@@ -15,7 +15,7 @@ class SupervisorCubit2 extends Cubit<SupervisorState2> {
     bool onScroll = false,
   }) async {
     try {
-      if (!onScroll && query == null) {
+      if (!onScroll) {
         emit(state.copyWith(requestState: RequestState.loading));
       }
       final result = await dataSource.getAllStudentsByCeu(

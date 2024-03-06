@@ -265,7 +265,7 @@ class __SupervisorListSglViewState extends State<_SupervisorListSglView> {
                                 }),
                               ),
                             ),
-                            if (status)
+                            if (status && data != null)
                               Column(
                                 children: [
                                   Container(

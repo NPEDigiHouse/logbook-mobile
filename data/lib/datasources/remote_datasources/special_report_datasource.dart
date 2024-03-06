@@ -73,6 +73,7 @@ class SpecialReportDataSourceImpl implements SpecialReportDataSource {
           '${ApiService.baseUrl}/problem-consultations/',
           options: await apiHeader.userOptions(),
           data: {"verified": verified});
+      print(response.data);
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<SpecialReportOnList> listData = dataResponse.data
           .map((e) => SpecialReportOnList.fromJson(e))
@@ -80,6 +81,7 @@ class SpecialReportDataSourceImpl implements SpecialReportDataSource {
 
       return listData;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }

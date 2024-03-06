@@ -20,4 +20,15 @@ class HistoryCubit extends Cubit<HistoryState> {
       emit(state.copyWith(requestState: RequestState.error));
     }
   }
+
+  Future<void> getInOutHistories() async {
+    try {
+      emit(state.copyWith(requestStateIo: RequestState.loading));
+
+      final data = await dataSource.getInOutHistory();
+      emit(state.copyWith(historiesIo: data, requestStateIo: RequestState.data));
+    } catch (e) {
+      emit(state.copyWith(requestStateIo: RequestState.error));
+    }
+  }
 }

@@ -254,7 +254,7 @@ class __SupervisorListClinicalRecordViewState
                               }),
                             ),
                           ),
-                          if (status)
+                          if (status && data != null)
                             Column(
                               children: [
                                 Container(

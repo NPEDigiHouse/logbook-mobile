@@ -84,7 +84,7 @@ class _SupervisorListStudentDepartmentPageState
                   IconButton(
                     onPressed: () {
                       isSearchExpand.value = !value;
-                     
+
                       if (query != null && query!.isNotEmpty) {
                         query = null;
                         context
@@ -117,9 +117,6 @@ class _SupervisorListStudentDepartmentPageState
             builder: (context, state) {
               final data = state.$1;
 
-              if (data == null || state.$2 == RequestState.loading) {
-                return const CustomLoading();
-              }
               return ValueListenableBuilder(
                   valueListenable: isSearchExpand,
                   builder: (context, status, _) {
@@ -130,44 +127,49 @@ class _SupervisorListStudentDepartmentPageState
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Builder(builder: (context) {
-                              if (data.isEmpty) {
-                                return const EmptyData(
-                                    title: 'No Students',
-                                    subtitle: 'student not found');
-                              }
-                              return CustomScrollView(
-                                controller: _scrollController,
-                                slivers: [
-                                  if (status)
+                              if (state.$2 == RequestState.loading) {
+                                return const CustomLoading();
+                              } else if (data != null) {
+                                if (data.isEmpty) {
+                                  return const EmptyData(
+                                      title: 'No Students',
+                                      subtitle: 'student not found');
+                                }
+                                return CustomScrollView(
+                                  controller: _scrollController,
+                                  slivers: [
+                                    if (status)
+                                      const SliverToBoxAdapter(
+                                        child: SizedBox(
+                                          height: 64,
+                                        ),
+                                      ),
                                     const SliverToBoxAdapter(
                                       child: SizedBox(
-                                        height: 64,
+                                        height: 20,
                                       ),
                                     ),
-                                  const SliverToBoxAdapter(
-                                    child: SizedBox(
-                                      height: 20,
-                                    ),
-                                  ),
-                                  SliverList.separated(
-                                    itemCount: data.length,
-                                    itemBuilder: (context, index) {
-                                      return StudentDepartmentCard(
-                                        data: data[index],
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return const SizedBox(
-                                        height: 12,
-                                      );
-                                    },
-                                  )
-                                ],
-                              );
+                                    SliverList.separated(
+                                      itemCount: data.length,
+                                      itemBuilder: (context, index) {
+                                        return StudentDepartmentCard(
+                                          data: data[index],
+                                        );
+                                      },
+                                      separatorBuilder: (context, index) {
+                                        return const SizedBox(
+                                          height: 12,
+                                        );
+                                      },
+                                    )
+                                  ],
+                                );
+                              }
+                              return const CustomLoading();
                             }),
                           ),
                         ),
-                        if (status)
+                        if (status && data != null)
                           Column(
                             children: [
                               Container(

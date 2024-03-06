@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 
 abstract class HistoryDataSource {
   Future<List<HistoryModel>> getHistory();
+  Future<List<HistoryModel>> getInOutHistory();
 }
 
 class HistoryDataSourceImpl extends HistoryDataSource {
@@ -29,6 +30,25 @@ class HistoryDataSourceImpl extends HistoryDataSource {
         '${ApiService.baseUrl}/history/',
         options: await apiHeader.userOptions(),
       );
+      print(response.data);
+      final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
+      List<HistoryModel> listData =
+          dataResponse.data.map((e) => HistoryModel.fromJson(e)).toList();
+      return listData;
+    } catch (e) {
+      print(e.toString());
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<List<HistoryModel>> getInOutHistory() async {
+    try {
+      final response = await dio.get(
+        '${ApiService.baseUrl}/history/inout',
+        options: await apiHeader.userOptions(),
+      );
+      print(response.data);
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<HistoryModel> listData =
           dataResponse.data.map((e) => HistoryModel.fromJson(e)).toList();

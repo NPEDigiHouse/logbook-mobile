@@ -16,6 +16,7 @@ class SpecialReportDetail {
   String? verificationStatus;
   @JsonKey(name: "solution")
   dynamic solution;
+  String? departmentName;
 
   SpecialReportDetail({
     this.content,
@@ -24,6 +25,7 @@ class SpecialReportDetail {
     this.studentName,
     this.verificationStatus,
     this.solution,
+    this.departmentName,
   });
 
   factory SpecialReportDetail.fromJson(Map<String, dynamic> json) =>

@@ -32,7 +32,7 @@ class _SupervisorSelfReflectionStudentPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List Self Reflecton'),
+        title: const Text('Submitted Self Reflecton'),
       ).variant(),
       body: SafeArea(
         child: RefreshIndicator(
@@ -50,8 +50,7 @@ class _SupervisorSelfReflectionStudentPageState
                     message: 'Success Verify Self Reflection',
                     context: context);
                 BlocProvider.of<SelfReflectionSupervisorCubit>(context)
-                  ..getDetailSelfReflections(id: widget.id)
-                  ..reset();
+                    .getDetailSelfReflections(id: widget.id);
               }
             },
             builder: (context, state) {
@@ -70,7 +69,7 @@ class _SupervisorSelfReflectionStudentPageState
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: StudentDepartmentHeader(
                           unitName: state.data?.activeDepartmentName,
-                          studentId: widget.id,
+                          studentId: state.data?.studentId?? '...',
                           studentName: state.data?.studentName ?? '...',
                         ),
                       ),

@@ -18,7 +18,7 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
   Future<void> getSpecialReportDetail({required String id}) async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        detailState: RequestState.loading,
       ));
 
       final result =
@@ -26,12 +26,12 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
       try {
         emit(state.copyWith(specialReportDetail: result));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(detailState: RequestState.error));
       }
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          detailState: RequestState.error,
         ),
       );
     }
@@ -127,7 +127,7 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
   Future<void> getSpecialReportStudents() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        fetchState: RequestState.loading,
       ));
 
       final data = await specialReportDataSource.getSpecialReportBySupervisor(
@@ -135,12 +135,12 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
       try {
         emit(state.copyWith(specialReportStudents: data));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(fetchState: RequestState.error));
       }
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          fetchState: RequestState.error,
         ),
       );
     }
@@ -149,7 +149,7 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
   Future<void> getSpecialReportStudentsVerified() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        fetchState: RequestState.loading,
       ));
 
       final data = await specialReportDataSource.getSpecialReportBySupervisor(
@@ -157,12 +157,12 @@ class SpecialReportCubit extends Cubit<SpecialReportState> {
       try {
         emit(state.copyWith(specialReportStudentsVerified: data));
       } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
+        emit(state.copyWith(fetchState: RequestState.error));
       }
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          fetchState: RequestState.error,
         ),
       );
     }

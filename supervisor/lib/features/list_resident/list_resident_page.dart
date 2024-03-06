@@ -4,6 +4,7 @@ import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/supervisors/supervisor_student_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
 import 'package:main/blocs/supervisor_cubit/supervisors_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
@@ -61,52 +62,55 @@ class _ListResidentPageState extends State<ListResidentPage> {
                     }
                   },
                   builder: (context, state) {
-                    if (state.students != null) {
-                      return CustomScrollView(
-                        slivers: [
-                          MainTitleAppBar(
-                            title: 'Students',
-                            widget: [
-                              ValueListenableBuilder(
-                                valueListenable: isSearchExpand,
-                                builder: (context, value, child) {
-                                  return Stack(
-                                    children: [
-                                      if (value)
-                                        Positioned(
-                                            right: 10,
-                                            top: 10,
-                                            child: Container(
-                                              width: 8,
-                                              height: 8,
-                                              decoration: const BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.red),
-                                            )),
-                                      IconButton(
-                                        onPressed: () {
-                                          isSearchExpand.value = !value;
-                                        },
-                                        icon: const Icon(CupertinoIcons.search),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          SliverFillRemaining(
-                            child: ValueListenableBuilder(
-                                valueListenable: isSearchExpand,
-                                builder: (context, status, _) {
-                                  return Stack(
-                                    fit: StackFit.expand,
-                                    children: [
-                                      Positioned.fill(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20),
-                                          child: Builder(builder: (context) {
+                    return CustomScrollView(
+                      slivers: [
+                        MainTitleAppBar(
+                          title: 'Students',
+                          widget: [
+                            ValueListenableBuilder(
+                              valueListenable: isSearchExpand,
+                              builder: (context, value, child) {
+                                return Stack(
+                                  children: [
+                                    if (value)
+                                      Positioned(
+                                          right: 10,
+                                          top: 10,
+                                          child: Container(
+                                            width: 8,
+                                            height: 8,
+                                            decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.red),
+                                          )),
+                                    IconButton(
+                                      onPressed: () {
+                                        isSearchExpand.value = !value;
+                                      },
+                                      icon: const Icon(CupertinoIcons.search),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        SliverFillRemaining(
+                          child: ValueListenableBuilder(
+                              valueListenable: isSearchExpand,
+                              builder: (context, status, _) {
+                                return Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Positioned.fill(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Builder(builder: (context) {
+                                          if (state.fetchState ==
+                                              RequestState.loading) {
+                                            return const CustomLoading();
+                                          } else if (state.students != null) {
                                             if (s.isEmpty) {
                                               return const EmptyData(
                                                   title: 'No Students',
@@ -142,82 +146,80 @@ class _ListResidentPageState extends State<ListResidentPage> {
                                                 )
                                               ],
                                             );
-                                          }),
-                                        ),
+                                          }
+                                          return const CustomLoading();
+                                        }),
                                       ),
-                                      if (status)
-                                        Column(
-                                          children: [
-                                            Container(
-                                              decoration: const BoxDecoration(
-                                                  color:
-                                                      scaffoldBackgroundColor,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        offset: Offset(0, 2),
-                                                        color: Colors.black12,
-                                                        blurRadius: 12,
-                                                        spreadRadius: 4)
-                                                  ]),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  const SizedBox(
-                                                    height: 16,
-                                                  ),
-                                                  Container(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 20),
-                                                    child: SearchField(
-                                                      onChanged: (value) {
-                                                        final data = state
-                                                            .students!
-                                                            .where((element) => element
-                                                                .studentName!
-                                                                .toLowerCase()
-                                                                .contains(value
-                                                                    .toLowerCase()))
-                                                            .toList();
-                                                        if (value.isEmpty) {
-                                                          listStudent.value
-                                                              .clear();
-                                                          listStudent.value = [
-                                                            ...state.students!
-                                                          ];
-                                                        } else {
-                                                          listStudent.value = [
-                                                            ...data
-                                                          ];
-                                                        }
-                                                      },
-                                                      onClear: () {
+                                    ),
+                                    if (status && state.students != null)
+                                      Column(
+                                        children: [
+                                          Container(
+                                            decoration: const BoxDecoration(
+                                                color: scaffoldBackgroundColor,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      offset: Offset(0, 2),
+                                                      color: Colors.black12,
+                                                      blurRadius: 12,
+                                                      spreadRadius: 4)
+                                                ]),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const SizedBox(
+                                                  height: 16,
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 20),
+                                                  child: SearchField(
+                                                    onChanged: (value) {
+                                                      final data = state
+                                                          .students!
+                                                          .where((element) => element
+                                                              .studentName!
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase()))
+                                                          .toList();
+                                                      if (value.isEmpty) {
                                                         listStudent.value
                                                             .clear();
                                                         listStudent.value = [
                                                           ...state.students!
                                                         ];
-                                                      },
-                                                      text: '',
-                                                      hint: 'Search student',
-                                                    ),
+                                                      } else {
+                                                        listStudent.value = [
+                                                          ...data
+                                                        ];
+                                                      }
+                                                    },
+                                                    onClear: () {
+                                                      listStudent.value.clear();
+                                                      listStudent.value = [
+                                                        ...state.students!
+                                                      ];
+                                                    },
+                                                    text: '',
+                                                    hint: 'Search student',
                                                   ),
-                                                  const SizedBox(
-                                                    height: 16,
-                                                  ),
-                                                ],
-                                              ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 16,
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                    ],
-                                  );
-                                }),
-                          ),
-                        ],
-                      );
-                    }
-                    return const CustomLoading();
+                                          ),
+                                        ],
+                                      ),
+                                  ],
+                                );
+                              }),
+                        ),
+                      ],
+                    );
                   },
                 );
               }),

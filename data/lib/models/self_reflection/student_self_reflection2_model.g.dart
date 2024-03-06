@@ -33,6 +33,7 @@ SelfReflectionData2 _$SelfReflectionData2FromJson(Map<String, dynamic> json) =>
       selfReflectionId: json['selfReflectionId'] as String?,
       activeDepartmentName: json['activeDepartmentName'] as String?,
       studentName: json['studentName'] as String?,
+      studentId: json['studentId'] as String?,
       updatedAt: json['updatedAt'] as int?,
     );
 
@@ -45,4 +46,5 @@ Map<String, dynamic> _$SelfReflectionData2ToJson(
       'verificationStatus': instance.verificationStatus,
       'activeDepartmentName': instance.activeDepartmentName,
       'studentName': instance.studentName,
+      'studentId': instance.studentId,
     };

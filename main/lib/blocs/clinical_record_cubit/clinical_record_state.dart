@@ -17,6 +17,7 @@ class ClinicalRecordState {
   final bool isDeleteClinicalRecord;
   // NEW
   final RequestState createState;
+  final RequestState fetchState;
 
   ClinicalRecordState({
     this.affectedParts,
@@ -32,6 +33,7 @@ class ClinicalRecordState {
     this.clinicalRecordPostSuccess = false,
     this.requestState = RequestState.init,
     this.createState = RequestState.init,
+    this.fetchState = RequestState.init,
   });
 
   ClinicalRecordState copyWith({
@@ -43,6 +45,7 @@ class ClinicalRecordState {
     RequestState? requestState,
     RequestState? attachState,
     RequestState createState = RequestState.init,
+    RequestState fetchState = RequestState.init,
     bool isDeleteClinicalRecord = false,
     String? crDownloadPath,
     bool isPostFeedbackSuccess = false,
@@ -57,6 +60,7 @@ class ClinicalRecordState {
         managementTypes: managementTypes ?? this.managementTypes,
         requestState: requestState ?? RequestState.init,
         attachState: attachState ?? RequestState.init,
+        fetchState: fetchState,
         createState: createState,
         isPostFeedbackSuccess: isPostFeedbackSuccess,
         isDeleteClinicalRecord: isDeleteClinicalRecord,

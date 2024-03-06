@@ -173,10 +173,6 @@ class _ListStudentCasesPageView extends State<_ListStudentCasesView> {
               builder: (context, state) {
                 final data = state.$1;
 
-                if (data == null || state.$2 == RequestState.loading) {
-                  return const CustomLoading();
-                }
-
                 return ValueListenableBuilder(
                     valueListenable: isSearchExpand,
                     builder: (context, status, _) {
@@ -188,42 +184,48 @@ class _ListStudentCasesPageView extends State<_ListStudentCasesView> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
                               child: Builder(builder: (context) {
-                                if (data.isEmpty) {
-                                  return const EmptyData(
-                                      title: 'No Cases',
-                                      subtitle: 'data not found');
+                                if (state.$2 == RequestState.loading) {
+                                  return const CustomLoading();
                                 }
-                                return CustomScrollView(
-                                  slivers: [
-                                    if (status)
-                                      SliverToBoxAdapter(
+                                if (data != null) {
+                                  if (data.isEmpty) {
+                                    return const EmptyData(
+                                        title: 'No Cases',
+                                        subtitle: 'data not found');
+                                  }
+                                  return CustomScrollView(
+                                    slivers: [
+                                      if (status)
+                                        SliverToBoxAdapter(
+                                          child: SizedBox(
+                                            height: ntf.isFilter ? 128 : 84,
+                                          ),
+                                        ),
+                                      const SliverToBoxAdapter(
                                         child: SizedBox(
-                                          height: ntf.isFilter ? 128 : 84,
+                                          height: 20,
                                         ),
                                       ),
-                                    const SliverToBoxAdapter(
-                                      child: SizedBox(
-                                        height: 20,
-                                      ),
-                                    ),
-                                    SliverList.separated(
-                                      itemCount: data.length,
-                                      itemBuilder: (context, index) {
-                                        return _buildStudentCard(
-                                            context, data[index]);
-                                      },
-                                      separatorBuilder: (context, index) {
-                                        return const SizedBox(
-                                          height: 12,
-                                        );
-                                      },
-                                    )
-                                  ],
-                                );
+                                      SliverList.separated(
+                                        itemCount: data.length,
+                                        itemBuilder: (context, index) {
+                                          return _buildStudentCard(
+                                              context, data[index]);
+                                        },
+                                        separatorBuilder: (context, index) {
+                                          return const SizedBox(
+                                            height: 12,
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  );
+                                }
+                                return const CustomLoading();
                               }),
                             ),
                           ),
-                          if (status)
+                          if (status && data != null)
                             Column(
                               children: [
                                 Container(

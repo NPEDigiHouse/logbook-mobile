@@ -14,6 +14,7 @@ SpecialReportDetail _$SpecialReportDetailFromJson(Map<String, dynamic> json) =>
       studentName: json['studentName'] as String?,
       verificationStatus: json['verificationStatus'] as String?,
       solution: json['solution'],
+      departmentName: json['departmentName'] as String?,
     );
 
 Map<String, dynamic> _$SpecialReportDetailToJson(
@@ -25,4 +26,5 @@ Map<String, dynamic> _$SpecialReportDetailToJson(
       'studentName': instance.studentName,
       'verificationStatus': instance.verificationStatus,
       'solution': instance.solution,
+      'departmentName': instance.departmentName,
     };

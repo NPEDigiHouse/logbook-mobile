@@ -4,8 +4,8 @@ import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/special_reports/special_report_on_list.dart';
+import 'package:supervisor/features/special_report/special_report_detail_page.dart';
 
-import '../special_report_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -22,8 +22,8 @@ class SpecialReportStudentCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          context.navigateTo(SpecialReportDetailPage(
-            studentId: sr.studentId!,
+          context.navigateTo(SpecialReportDetailPage2(
+            id: sr.id??'',
           ));
         },
         child: Padding(

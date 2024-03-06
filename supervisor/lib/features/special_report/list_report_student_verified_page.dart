@@ -2,6 +2,7 @@ import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:data/models/special_reports/special_report_on_list.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/special_report/special_report_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
@@ -94,9 +95,6 @@ class _SupervisorListSpecialReportVerifiedPageState
                   ]);
                 }, child: Builder(
                   builder: (context) {
-                    if (state.specialReportStudentsVerified == null) {
-                      return const CustomLoading();
-                    }
                     return ValueListenableBuilder(
                       valueListenable: isSearchExpand,
                       builder: (context, status, _) {
@@ -108,45 +106,54 @@ class _SupervisorListSpecialReportVerifiedPageState
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 child: Builder(builder: (context) {
-                                  if (s.isEmpty) {
-                                    return const EmptyData(
-                                        title:
-                                            'No Problem Consultations Submitted',
-                                        subtitle:
-                                            'wait for submission from students');
-                                  }
-                                  return CustomScrollView(
-                                    slivers: [
-                                      if (status)
+                                  if (state.fetchState ==
+                                      RequestState.loading) {
+                                    return const CustomLoading();
+                                  } else if (state
+                                          .specialReportStudentsVerified !=
+                                      null) {
+                                    if (s.isEmpty) {
+                                      return const EmptyData(
+                                          title:
+                                              'No Problem Consultations Submitted',
+                                          subtitle:
+                                              'wait for submission from students');
+                                    }
+                                    return CustomScrollView(
+                                      slivers: [
+                                        if (status)
+                                          const SliverToBoxAdapter(
+                                            child: SizedBox(
+                                              height: 68,
+                                            ),
+                                          ),
                                         const SliverToBoxAdapter(
                                           child: SizedBox(
-                                            height: 68,
+                                            height: 16,
                                           ),
                                         ),
-                                      const SliverToBoxAdapter(
-                                        child: SizedBox(
-                                          height: 16,
-                                        ),
-                                      ),
-                                      SliverList.separated(
-                                        itemCount: s.length,
-                                        itemBuilder: (context, index) {
-                                          return SpecialReportStudentCard(
-                                            sr: s[index],
-                                          );
-                                        },
-                                        separatorBuilder: (context, index) {
-                                          return const SizedBox(
-                                            height: 12,
-                                          );
-                                        },
-                                      )
-                                    ],
-                                  );
+                                        SliverList.separated(
+                                          itemCount: s.length,
+                                          itemBuilder: (context, index) {
+                                            return SpecialReportStudentCard(
+                                              sr: s[index],
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) {
+                                            return const SizedBox(
+                                              height: 12,
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  }
+                                  return const CustomLoading();
                                 }),
                               ),
                             ),
-                            if (status)
+                            if (status &&
+                                state.specialReportStudentsVerified != null)
                               Column(
                                 children: [
                                   Container(

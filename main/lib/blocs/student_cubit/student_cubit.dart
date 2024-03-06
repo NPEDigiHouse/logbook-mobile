@@ -249,16 +249,16 @@ class StudentCubit extends Cubit<StudentState> {
   Future<void> getAllStudents() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        fetchState: RequestState.loading,
       ));
 
       final result = await dataSourceSp.getAllStudents();
 
-      emit(state.copyWith(students: result));
+      emit(state.copyWith(students: result, fetchState: RequestState.data));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          fetchState: RequestState.error,
         ),
       );
     }

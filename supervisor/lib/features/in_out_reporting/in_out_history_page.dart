@@ -1,5 +1,4 @@
 import 'package:common/features/history/history_data.dart';
-import 'package:core/context/navigation_extension.dart';
 import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
@@ -41,7 +40,7 @@ class _InOutHistoryPageState extends State<InOutHistoryPage> {
     ];
 
     Future.microtask(() {
-      BlocProvider.of<HistoryCubit>(context).getHistories();
+      BlocProvider.of<HistoryCubit>(context).getInOutHistories();
     });
     _query = ValueNotifier('');
     _selectedMenu = ValueNotifier(_menuList[0]);
@@ -95,20 +94,20 @@ class _InOutHistoryPageState extends State<InOutHistoryPage> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => Future.wait([
-            BlocProvider.of<HistoryCubit>(context).getHistories(),
+            BlocProvider.of<HistoryCubit>(context).getInOutHistories(),
           ]),
           child: ValueListenableBuilder(
               valueListenable: listData,
               builder: (context, s, _) {
                 return BlocConsumer<HistoryCubit, HistoryState>(
                   listener: (context, state) {
-                    if (state.histories != null &&
+                    if (state.historiesIo != null &&
                         state.requestState == RequestState.data) {
                       if (!isMounted) {
                         Future.microtask(() {
                           listData.value = [
                             ...HistoryHelper.convertHistoryToActivity(
-                              history: state.histories!,
+                              history: state.historiesIo!,
                               onlyInOut: true,
                               roleHistory: RoleHistory.supervisor,
                               context: context,
@@ -120,16 +119,18 @@ class _InOutHistoryPageState extends State<InOutHistoryPage> {
                     }
                   },
                   builder: (context, state) {
-                    if (state.histories != null &&
-                        state.requestState == RequestState.data) {
-                      return ValueListenableBuilder(
-                          valueListenable: isSearchExpand,
-                          builder: (context, status, child) {
-                            return Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                Positioned.fill(
-                                  child: Builder(builder: (context) {
+                    return ValueListenableBuilder(
+                        valueListenable: isSearchExpand,
+                        builder: (context, status, child) {
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Positioned.fill(
+                                child: Builder(builder: (context) {
+                                  if (state.requestStateIo ==
+                                      RequestState.loading) {
+                                    return const CustomLoading();
+                                  } else if (state.historiesIo != null) {
                                     if (s.isEmpty) {
                                       return const EmptyData(
                                           title: 'No Activity Yet',
@@ -284,233 +285,229 @@ class _InOutHistoryPageState extends State<InOutHistoryPage> {
                                         )
                                       ],
                                     );
-                                  }),
-                                ),
-                                if (status)
-                                  Column(
-                                    children: [
-                                      Container(
-                                        decoration: const BoxDecoration(
-                                            color: scaffoldBackgroundColor,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  offset: Offset(0, 2),
-                                                  color: Colors.black12,
-                                                  blurRadius: 12,
-                                                  spreadRadius: 4)
-                                            ]),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const SizedBox(
-                                              height: 16,
-                                            ),
-                                            Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 20),
-                                                child: SearchField(
-                                                    text: '',
-                                                    hint: 'Search Student',
-                                                    onClear: () {
+                                  }
+                                  return const CustomLoading();
+                                }),
+                              ),
+                              if (status && state.historiesIo!=null)
+                                Column(
+                                  children: [
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                          color: scaffoldBackgroundColor,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                offset: Offset(0, 2),
+                                                color: Colors.black12,
+                                                blurRadius: 12,
+                                                spreadRadius: 4)
+                                          ]),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                              child: SearchField(
+                                                  text: '',
+                                                  hint: 'Search Student',
+                                                  onClear: () {
+                                                    listData.value.clear();
+                                                    listData.value = [
+                                                      ...HistoryHelper
+                                                          .convertHistoryToActivity(
+                                                              history: state
+                                                                  .historiesIo!,
+                                                              roleHistory:
+                                                                  RoleHistory
+                                                                      .supervisor,
+                                                              context: context,
+                                                              isCeu: false,
+                                                              isHeadDiv: true)
+                                                    ];
+                                                  },
+                                                  onChanged: (value) {
+                                                    final data = state
+                                                        .historiesIo!
+                                                        .where((element) =>
+                                                            (element.studentName ??
+                                                                    '')
+                                                                .toLowerCase()
+                                                                .contains(value
+                                                                    .toLowerCase()))
+                                                        .toList();
+                                                    if (value.isEmpty) {
                                                       listData.value.clear();
                                                       listData.value = [
                                                         ...HistoryHelper
                                                             .convertHistoryToActivity(
-                                                                history: state
-                                                                    .histories!,
-                                                                roleHistory:
-                                                                    RoleHistory
-                                                                        .supervisor,
-                                                                context:
-                                                                    context,
-                                                                isCeu: false,
-                                                                isHeadDiv: true)
+                                                          history:
+                                                              state.historiesIo!,
+                                                          roleHistory:
+                                                              RoleHistory
+                                                                  .supervisor,
+                                                          context: context,
+                                                          isCeu: false,
+                                                          isHeadDiv: true,
+                                                        )
                                                       ];
-                                                    },
-                                                    onChanged: (value) {
-                                                      final data = state
-                                                          .histories!
-                                                          .where((element) =>
-                                                              (element.studentName ??
-                                                                      '')
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase()))
-                                                          .toList();
-                                                      if (value.isEmpty) {
-                                                        listData.value.clear();
-                                                        listData.value = [
-                                                          ...HistoryHelper
-                                                              .convertHistoryToActivity(
-                                                            history: state
-                                                                .histories!,
-                                                            roleHistory:
-                                                                RoleHistory
-                                                                    .supervisor,
-                                                            context: context,
-                                                            isCeu: false,
-                                                            isHeadDiv: true,
-                                                          )
-                                                        ];
-                                                      } else {
-                                                        listData.value = [
-                                                          ...HistoryHelper
-                                                              .convertHistoryToActivity(
-                                                            history: data,
-                                                            roleHistory:
-                                                                RoleHistory
-                                                                    .supervisor,
-                                                            context: context,
-                                                            isCeu: false,
-                                                            isHeadDiv: true,
-                                                          )
-                                                        ];
-                                                      }
-                                                    })),
-                                            SizedBox(
-                                              height: 64,
-                                              child: ListView.separated(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 20),
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemCount: _menuList.length,
-                                                itemBuilder: (context, index) {
-                                                  return ValueListenableBuilder(
-                                                    valueListenable:
-                                                        _selectedMenu,
-                                                    builder: (context, value,
-                                                        child) {
-                                                      final selected = value ==
-                                                          _menuList[index];
+                                                    } else {
+                                                      listData.value = [
+                                                        ...HistoryHelper
+                                                            .convertHistoryToActivity(
+                                                          history: data,
+                                                          roleHistory:
+                                                              RoleHistory
+                                                                  .supervisor,
+                                                          context: context,
+                                                          isCeu: false,
+                                                          isHeadDiv: true,
+                                                        )
+                                                      ];
+                                                    }
+                                                  })),
+                                          SizedBox(
+                                            height: 64,
+                                            child: ListView.separated(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: _menuList.length,
+                                              itemBuilder: (context, index) {
+                                                return ValueListenableBuilder(
+                                                  valueListenable:
+                                                      _selectedMenu,
+                                                  builder:
+                                                      (context, value, child) {
+                                                    final selected = value ==
+                                                        _menuList[index];
 
-                                                      return RawChip(
-                                                        pressElevation: 0,
-                                                        clipBehavior:
-                                                            Clip.antiAlias,
-                                                        label: Text(
-                                                            _menuList[index]),
-                                                        labelPadding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 6,
-                                                        ),
-                                                        labelStyle: textTheme
-                                                            .bodyMedium
-                                                            ?.copyWith(
-                                                          color: selected
-                                                              ? primaryColor
-                                                              : primaryTextColor,
-                                                        ),
-                                                        side: BorderSide(
-                                                          color: selected
-                                                              ? Colors
-                                                                  .transparent
-                                                              : borderColor,
-                                                        ),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        checkmarkColor:
-                                                            primaryColor,
-                                                        selectedColor:
-                                                            primaryColor
-                                                                .withOpacity(
-                                                                    .2),
-                                                        selected: selected,
-                                                        onSelected: (_) {
-                                                          _selectedMenu.value =
-                                                              _menuList[index];
-                                                          switch (index) {
-                                                            case 1:
-                                                              final data = state
-                                                                  .histories!
-                                                                  .where((element) =>
-                                                                      element
-                                                                          .type!
-                                                                          .toUpperCase() ==
-                                                                      'Check-in'
-                                                                          .toUpperCase())
-                                                                  .toList();
-                                                              listData.value = [
-                                                                ...HistoryHelper.convertHistoryToActivity(
-                                                                    history:
-                                                                        data,
-                                                                    onlyInOut:
-                                                                        true,
-                                                                    roleHistory:
-                                                                        RoleHistory
-                                                                            .supervisor,
-                                                                    context:
-                                                                        context),
-                                                              ];
-                                                              break;
-                                                            case 2:
-                                                              final data = state
-                                                                  .histories!
-                                                                  .where((element) =>
-                                                                      element
-                                                                          .type!
-                                                                          .toUpperCase() ==
-                                                                      'Check-out'
-                                                                          .toUpperCase())
-                                                                  .toList();
-                                                              listData.value = [
-                                                                ...HistoryHelper.convertHistoryToActivity(
-                                                                    history:
-                                                                        data,
-                                                                    onlyInOut:
-                                                                        true,
-                                                                    roleHistory:
-                                                                        RoleHistory
-                                                                            .supervisor,
-                                                                    context:
-                                                                        context),
-                                                              ];
-                                                              break;
-                                                            case 0:
-                                                              listData.value
-                                                                  .clear();
-                                                              listData.value = [
-                                                                ...HistoryHelper.convertHistoryToActivity(
-                                                                    history: state
-                                                                        .histories!,
-                                                                    onlyInOut:
-                                                                        true,
-                                                                    roleHistory:
-                                                                        RoleHistory
-                                                                            .supervisor,
-                                                                    context:
-                                                                        context),
-                                                              ];
-                                                            default:
-                                                          }
-                                                        },
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                                separatorBuilder: (_, __) =>
-                                                    const SizedBox(width: 8),
-                                              ),
+                                                    return RawChip(
+                                                      pressElevation: 0,
+                                                      clipBehavior:
+                                                          Clip.antiAlias,
+                                                      label: Text(
+                                                          _menuList[index]),
+                                                      labelPadding:
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                        horizontal: 6,
+                                                      ),
+                                                      labelStyle: textTheme
+                                                          .bodyMedium
+                                                          ?.copyWith(
+                                                        color: selected
+                                                            ? primaryColor
+                                                            : primaryTextColor,
+                                                      ),
+                                                      side: BorderSide(
+                                                        color: selected
+                                                            ? Colors.transparent
+                                                            : borderColor,
+                                                      ),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      checkmarkColor:
+                                                          primaryColor,
+                                                      selectedColor:
+                                                          primaryColor
+                                                              .withOpacity(.2),
+                                                      selected: selected,
+                                                      onSelected: (_) {
+                                                        _selectedMenu.value =
+                                                            _menuList[index];
+                                                        switch (index) {
+                                                          case 1:
+                                                            final data = state
+                                                                .historiesIo!
+                                                                .where((element) =>
+                                                                    element
+                                                                        .type!
+                                                                        .toUpperCase() ==
+                                                                    'Check-in'
+                                                                        .toUpperCase())
+                                                                .toList();
+                                                            listData.value = [
+                                                              ...HistoryHelper.convertHistoryToActivity(
+                                                                  history: data,
+                                                                  onlyInOut:
+                                                                      true,
+                                                                  roleHistory:
+                                                                      RoleHistory
+                                                                          .supervisor,
+                                                                  context:
+                                                                      context),
+                                                            ];
+                                                            break;
+                                                          case 2:
+                                                            final data = state
+                                                                .historiesIo!
+                                                                .where((element) =>
+                                                                    element
+                                                                        .type!
+                                                                        .toUpperCase() ==
+                                                                    'Check-out'
+                                                                        .toUpperCase())
+                                                                .toList();
+                                                            listData.value = [
+                                                              ...HistoryHelper.convertHistoryToActivity(
+                                                                  history: data,
+                                                                  onlyInOut:
+                                                                      true,
+                                                                  roleHistory:
+                                                                      RoleHistory
+                                                                          .supervisor,
+                                                                  context:
+                                                                      context),
+                                                            ];
+                                                            break;
+                                                          case 0:
+                                                            listData.value
+                                                                .clear();
+                                                            listData.value = [
+                                                              ...HistoryHelper.convertHistoryToActivity(
+                                                                  history: state
+                                                                      .historiesIo!,
+                                                                  onlyInOut:
+                                                                      true,
+                                                                  roleHistory:
+                                                                      RoleHistory
+                                                                          .supervisor,
+                                                                  context:
+                                                                      context),
+                                                            ];
+                                                          default:
+                                                        }
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              separatorBuilder: (_, __) =>
+                                                  const SizedBox(width: 8),
                                             ),
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                              ],
-                            );
-                          });
-                    }
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          );
+                        });
+
                     return const CustomLoading();
                   },
                 );

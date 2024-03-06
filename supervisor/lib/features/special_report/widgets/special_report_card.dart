@@ -1,21 +1,17 @@
 import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
-import 'package:data/models/special_reports/special_report_response.dart';
+import 'package:data/models/special_reports/special_report_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import '../verify_special_report_page.dart';
 
 class SupervisorSpecialReportCard extends StatelessWidget {
-  final String studentId;
-  final int index;
-  final ListProblemConsultation data;
+  final String id;
+  final SpecialReportDetail data;
   const SupervisorSpecialReportCard(
-      {super.key,
-      required this.index,
-      required this.data,
-      required this.studentId});
+      {super.key, required this.data, required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +21,7 @@ class SupervisorSpecialReportCard extends StatelessWidget {
       onTap: () {
         context.navigateTo(VerifySpecialReportPage(
           problemConsultation: data,
-          studentId: studentId,
+          id: id,
         ));
       },
       color: Colors.white,
@@ -47,7 +43,7 @@ class SupervisorSpecialReportCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Problem Consultation #$index',
+                'Problem Consultation',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: textTheme.bodyMedium?.copyWith(

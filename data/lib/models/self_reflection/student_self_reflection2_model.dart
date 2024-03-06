@@ -28,7 +28,8 @@ class SelfReflectionData2 {
   final String? selfReflectionId;
   final String? verificationStatus;
   final String? activeDepartmentName;
-    final String? studentName;
+  final String? studentName;
+  final String? studentId;
 
   SelfReflectionData2(
       {this.content,
@@ -36,6 +37,7 @@ class SelfReflectionData2 {
       this.selfReflectionId,
       this.activeDepartmentName,
       this.studentName,
+      this.studentId,
       this.updatedAt});
 
   factory SelfReflectionData2.fromJson(json) =>

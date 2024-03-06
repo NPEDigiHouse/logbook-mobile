@@ -29,7 +29,7 @@ class _SpecialReportStudentPageState extends State<SpecialReportStudentPage> {
     super.initState();
     Future.microtask(() {
       BlocProvider.of<SpecialReportCubit>(context)
-        .getSpecialReportByStudentId(studentId: widget.student.studentId!);
+          .getSpecialReportByStudentId(studentId: widget.student.studentId!);
     });
     _scrollController = ScrollController();
     _scrollController.addListener(() {
@@ -71,26 +71,26 @@ class _SpecialReportStudentPageState extends State<SpecialReportStudentPage> {
                           const SizedBox(
                             height: 12,
                           ),
-                          ListView.separated(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            itemBuilder: (context, index) {
-                              return SupervisorSpecialReportCard(
-                                data: state.specialReport!
-                                    .listProblemConsultations![index],
-                                studentId: widget.student.studentId!,
-                                index: index + 1,
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return const SizedBox(
-                                height: 12,
-                              );
-                            },
-                            itemCount: state.specialReport!
-                                .listProblemConsultations!.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                          ),
+                          // ListView.separated(
+                          //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                          //   itemBuilder: (context, index) {
+                          //     return SupervisorSpecialReportCard(
+                          //       data: state.specialReport!
+                          //           .listProblemConsultations![index],
+                          //       id: widget.student.studentId!,
+                          //       index: index + 1,
+                          //     );
+                          //   },
+                          //   separatorBuilder: (context, index) {
+                          //     return const SizedBox(
+                          //       height: 12,
+                          //     );
+                          //   },
+                          //   itemCount: state.specialReport!
+                          //       .listProblemConsultations!.length,
+                          //   shrinkWrap: true,
+                          //   physics: const NeverScrollableScrollPhysics(),
+                          // ),
                         ],
                       );
                     } else {
