@@ -44,7 +44,7 @@ Map<String, dynamic> _$MiniCexStudentDetailModelToJson(
 
 Score _$ScoreFromJson(Map<String, dynamic> json) => Score(
       name: json['name'] as String?,
-      score: json['score'] as int?,
+      score: (json['score'] as num?)?.toDouble(),
       id: json['id'] as int?,
     );
 

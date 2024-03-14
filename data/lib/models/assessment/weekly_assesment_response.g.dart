@@ -25,7 +25,7 @@ Map<String, dynamic> _$WeeklyAssesmentResponseToJson(
     };
 
 Assesment _$AssesmentFromJson(Map<String, dynamic> json) => Assesment(
-      score: json['score'] as int?,
+      score: (json['score'] as num?)?.toDouble(),
       verificationStatus: json['verificationStatus'] as String?,
       weekNum: json['weekNum'] as int?,
       id: json['id'] as String?,

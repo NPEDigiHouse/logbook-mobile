@@ -44,7 +44,7 @@ Map<String, dynamic> _$ListScientificAssignmentToJson(
 
 Score _$ScoreFromJson(Map<String, dynamic> json) => Score(
       name: json['name'] as String?,
-      score: json['score'] as int?,
+      score: (json['score'] as num?)?.toDouble(),
       id: json['id'] as int?,
       type:
           $enumDecodeNullable(_$ScientificAssignmentTypeEnumMap, json['type']),

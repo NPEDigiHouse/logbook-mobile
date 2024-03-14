@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
@@ -31,6 +32,10 @@ class _CheckInReportPageState extends State<CheckInReportPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<StudentCubit, StudentState>(
       builder: (context, state) {
+        if(state.fetchI==RequestState.loading){
+        return const CustomLoading();
+
+        }
         if (state.studentsCheckIn != null) {
           if (state.studentsCheckIn!.isEmpty) {
             return const EmptyData(

@@ -20,6 +20,8 @@ class StudentState {
   final RequestState fetchCR;
   final RequestState fetchSR;
   final RequestState fetchState;
+  final RequestState fetchI;
+  final RequestState fetchO;
 
   StudentState({
     this.clinicalRecordResponse,
@@ -40,6 +42,8 @@ class StudentState {
     this.fetchCR = RequestState.init,
     this.fetchSR = RequestState.init,
     this.fetchState = RequestState.init,
+    this.fetchI = RequestState.init,
+    this.fetchO = RequestState.init,
   });
 
   StudentState copyWith({
@@ -62,6 +66,8 @@ class StudentState {
     RequestState fetchCR = RequestState.init,
     RequestState fetchSR = RequestState.init,
     RequestState fetchState = RequestState.init,
+    RequestState fetchI = RequestState.init,
+    RequestState fetchO = RequestState.init,
   }) {
     return StudentState(
       studentDepartmentRecap:
@@ -85,6 +91,8 @@ class StudentState {
       fetchCR: fetchCR,
       fetchSR: fetchSR,
       fetchState: fetchState,
+      fetchI: fetchI,
+      fetchO: fetchO,
       studentStatistic: studentStatistic ?? this.studentStatistic,
     );
   }

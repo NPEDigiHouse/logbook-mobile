@@ -631,7 +631,7 @@ class PdfHelper {
               ),
             ),
             Text(
-              ' ${(data.weeklyAssesment?.assesments?.fold(0, (previousValue, element) => previousValue + (element.score ?? 0)) ?? 0) / (data.weeklyAssesment?.assesments?.length ?? 1)}',
+              '${(data.weeklyAssesment?.assesments?.isEmpty ?? true ? 0 : data.weeklyAssesment!.assesments!.map((e) => e.score ?? 0).reduce((a, b) => a + b) / data.weeklyAssesment!.assesments!.length)}',
               style: TextStyle(
                 fontSize: 14,
                 color: PdfColors.black,

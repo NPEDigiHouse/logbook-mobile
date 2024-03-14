@@ -53,7 +53,7 @@ class Score {
   @JsonKey(name: "name")
   String? name;
   @JsonKey(name: "score")
-  int? score;
+  double? score;
   @JsonKey(name: "id")
   int? id;
 

@@ -5,6 +5,7 @@ import 'package:core/styles/text_style.dart';
 import 'package:data/models/students/student_check_out_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
@@ -38,6 +39,9 @@ class _CheckOutReportPageState extends State<CheckOutReportPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<StudentCubit, StudentState>(
       builder: (context, state) {
+        if (state.fetchO == RequestState.loading) {
+          return const CustomLoading();
+        }
         if (state.studentsCheckOut != null) {
           if (state.studentsCheckOut!.isEmpty) {
             return const EmptyData(
@@ -159,7 +163,6 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
                 ],
               ),
               const SizedBox(height: 16),
-
               const ItemDivider(),
               const SizedBox(height: 16),
               Text(
@@ -212,8 +215,6 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
                 ],
               ),
               const SizedBox(height: 16),
-
-           
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,

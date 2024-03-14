@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class ItemRatingSA {
   final String indicator;
-  int score;
+  double score;
   final TextEditingController scoreController;
   final int id;
 
@@ -135,17 +135,17 @@ class ScientificAssignmentProvider extends ChangeNotifier {
     switch (type) {
       case ScientificType.discussion:
         discussionList[discussionList.indexWhere((element) => element.id == id)]
-            .score = grade.toInt();
+            .score = grade;
         break;
       case ScientificType.presentation:
         presentationList[
                 presentationList.indexWhere((element) => element.id == id)]
-            .score = grade.toInt();
+            .score = grade;
         break;
       case ScientificType.presentation_style:
         presentationStyleList[
                 presentationStyleList.indexWhere((element) => element.id == id)]
-            .score = grade.toInt();
+            .score = grade;
         break;
       default:
     }

@@ -139,14 +139,10 @@ class AssesmentCubit extends Cubit<AssesmentState> {
       ));
 
       final data = await dataSource.getMiniCexDetail(id: id);
-      try {
-        emit(
+     emit(
           state.copyWith(
               miniCexStudentDetail: data, requestState: RequestState.data),
         );
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
     } catch (e) {
       emit(
         state.copyWith(

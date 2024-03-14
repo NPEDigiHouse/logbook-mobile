@@ -250,7 +250,7 @@ class TestGradeScoreCard extends StatelessWidget {
   });
 
   final String caseName;
-  final int score;
+  final double score;
 
   @override
   Widget build(BuildContext context) {

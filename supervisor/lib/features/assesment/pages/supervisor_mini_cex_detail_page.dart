@@ -3,6 +3,8 @@ import 'package:core/helpers/app_size.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/assessment/mini_cex_detail_model.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:main/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:main/helpers/helper.dart';
 import 'package:main/widgets/clip_donut_painter.dart';
@@ -33,8 +35,12 @@ class SupervisorMiniCexDetailPage extends StatefulWidget {
 
 class _SupervisorMiniCexDetailPageState
     extends State<SupervisorMiniCexDetailPage> {
+  late GlobalKey<FormBuilderState> _formKey;
+
   @override
   void initState() {
+    _formKey = GlobalKey<FormBuilderState>();
+
     Future.microtask(
       () {
         BlocProvider.of<AssesmentCubit>(context).getMiniCexStudentDetail(
@@ -49,77 +55,82 @@ class _SupervisorMiniCexDetailPageState
   @override
   Widget build(BuildContext context) {
     final itemRating = context.read<MiniCexProvider>();
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mini Cex"),
-      ).variant(),
-      floatingActionButton: BlocBuilder<AssesmentCubit, AssesmentState>(
-        builder: (context, state) {
-          if (state.miniCexStudentDetail != null &&
-              state.miniCexStudentDetail!.examinerDPKId ==
-                  widget.supervisorId) {
-            return SizedBox(
-              width: AppSize.getAppWidth(context) - 32,
-              child: FilledButton.icon(
-                onPressed: () {
-                  itemRating.getMiniCexData();
-                  BlocProvider.of<AssesmentCubit>(context).assesmentMiniCex(
-                    id: widget.id,
-                    miniCex: {
-                      'scores': itemRating.getMiniCexData(),
-                    },
-                  );
-                },
-                icon: const Icon(Icons.check_circle),
-                label: const Text('Update Changed'),
-              ),
-            );
-          } else {
-            return const SizedBox.shrink();
-          }
-        },
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Future.wait([
-            BlocProvider.of<AssesmentCubit>(context).getMiniCexStudentDetail(
-              id: widget.id,
-            ),
-          ]);
-        },
-        child: SingleChildScrollView(
-          child: SpacingColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              horizontalPadding: 16,
-              spacing: 12,
-              children: [
-                const SizedBox(
-                  height: 16,
-                ),
-                // DepartmentHeader(unitName: widget.unitName),
-                BlocConsumer<AssesmentCubit, AssesmentState>(
-                  listener: (context, state) {
-                    if (state.isAssesmentMiniCexSuccess) {
-                      BlocProvider.of<AssesmentCubit>(context)
-                          .getMiniCexStudentDetail(
+    return FormBuilder(
+      key: _formKey,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Mini Cex"),
+        ).variant(),
+        floatingActionButton: BlocBuilder<AssesmentCubit, AssesmentState>(
+          builder: (context, state) {
+            if (state.miniCexStudentDetail != null &&
+                state.miniCexStudentDetail!.examinerDPKId ==
+                    widget.supervisorId) {
+              return SizedBox(
+                width: AppSize.getAppWidth(context) - 32,
+                child: FilledButton.icon(
+                  onPressed: () {
+                    if (_formKey.currentState!.saveAndValidate()) {
+                      itemRating.getMiniCexData();
+                      BlocProvider.of<AssesmentCubit>(context).assesmentMiniCex(
                         id: widget.id,
+                        miniCex: {
+                          'scores': itemRating.getMiniCexData(),
+                        },
                       );
-                      context.read<MiniCexProvider>().reset();
                     }
                   },
-                  builder: (context, state) {
-                    if (state.miniCexStudentDetail != null) {
-                      final miniCex = state.miniCexStudentDetail!;
-                      return BuildScoreSection(
-                        miniCex: miniCex,
-                        supervisorId: widget.supervisorId,
-                      );
-                    } else {
-                      return const CustomLoading();
-                    }
-                  },
+                  icon: const Icon(Icons.check_circle),
+                  label: const Text('Update Changed'),
                 ),
-              ]),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<AssesmentCubit>(context).getMiniCexStudentDetail(
+                id: widget.id,
+              ),
+            ]);
+          },
+          child: SingleChildScrollView(
+            child: SpacingColumn(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                horizontalPadding: 16,
+                spacing: 12,
+                children: [
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  // DepartmentHeader(unitName: widget.unitName),
+                  BlocConsumer<AssesmentCubit, AssesmentState>(
+                    listener: (context, state) {
+                      if (state.isAssesmentMiniCexSuccess) {
+                        BlocProvider.of<AssesmentCubit>(context)
+                            .getMiniCexStudentDetail(
+                          id: widget.id,
+                        );
+                        context.read<MiniCexProvider>().reset();
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state.miniCexStudentDetail != null) {
+                        final miniCex = state.miniCexStudentDetail!;
+                        return BuildScoreSection(
+                          miniCex: miniCex,
+                          supervisorId: widget.supervisorId,
+                        );
+                      } else {
+                        return const CustomLoading();
+                      }
+                    },
+                  ),
+                ]),
+          ),
         ),
       ),
     );
@@ -271,6 +282,10 @@ class _BuildScoreSectionState extends State<BuildScoreSection> {
                                   label: 'Score',
                                   controller:
                                       itemRating.items[index].scoreController,
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.max(100),
+                                    FormBuilderValidators.min(0),
+                                  ]),
                                   onChanged: (v) {
                                     itemRating.updateScore(
                                         v.isNotEmpty ? double.parse(v) : 0.0,
@@ -307,7 +322,7 @@ class _BuildScoreSectionState extends State<BuildScoreSection> {
                         const SizedBox(
                           height: 8,
                         ),
-                        TextField(
+                        TextFormField(
                           controller: itemRating.items[index].scoreController,
                           decoration: const InputDecoration(
                             label: Text('Score'),

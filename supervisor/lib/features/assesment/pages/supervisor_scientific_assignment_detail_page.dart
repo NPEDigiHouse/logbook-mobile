@@ -5,7 +5,9 @@ import 'package:core/styles/text_style.dart';
 import 'package:data/models/assessment/list_scientific_assignment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:main/blocs/assesment_cubit/assesment_cubit.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/widgets/clip_donut_painter.dart';
@@ -34,8 +36,11 @@ class SupervisorScientificAssignmentDetailPage extends StatefulWidget {
 
 class _SupervisorScientificAssignmentDetailPageState
     extends State<SupervisorScientificAssignmentDetailPage> {
+  late GlobalKey<FormBuilderState> _formKey;
+
   @override
   void initState() {
+    _formKey = GlobalKey<FormBuilderState>();
     Future.microtask(
       () {
         BlocProvider.of<AssesmentCubit>(context)
@@ -53,151 +58,161 @@ class _SupervisorScientificAssignmentDetailPageState
   @override
   Widget build(BuildContext context) {
     final provider = context.read<ScientificAssignmentProvider>();
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Scientific Assignment"),
-      ).variant(),
-      floatingActionButton: BlocBuilder<AssesmentCubit, AssesmentState>(
-        builder: (context, state) {
-          if (state.scientificAssignmentDetail != null &&
-              state.scientificAssignmentDetail!.supervisingDPKId ==
-                  widget.supervisorId) {
-            return SizedBox(
-              width: AppSize.getAppWidth(context) - 32,
-              child: FilledButton.icon(
-                onPressed: () {
-                  BlocProvider.of<AssesmentCubit>(context)
-                      .assesmentScientificAssignment(
-                    id: widget.id,
-                    sa: {
-                      'scores': provider.getScientificAssignmentData(),
-                    },
-                  );
-                },
-                icon: const Icon(Icons.check_circle),
-                label: const Text('Update Changed'),
-              ),
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Future.wait([
-            BlocProvider.of<AssesmentCubit>(context)
-                .getScientiicAssignmentDetail(
-              id: widget.id,
-            ),
-          ]);
-        },
-        child: SingleChildScrollView(
-          child: SpacingColumn(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              horizontalPadding: 16,
-              spacing: 12,
-              children: [
-                const SizedBox(
-                  height: 16,
-                ),
-                // DepartmentHeader(unitName: widget.unitName),
-                BlocConsumer<AssesmentCubit, AssesmentState>(
-                  listener: (context, state) {
-                    if (state.isAssementScientificAssignmentSuccess) {
-                      provider.reset();
+    return FormBuilder(
+      key: _formKey,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Scientific Assignment"),
+        ).variant(),
+        floatingActionButton: BlocBuilder<AssesmentCubit, AssesmentState>(
+          builder: (context, state) {
+            if (state.scientificAssignmentDetail != null &&
+                state.scientificAssignmentDetail!.supervisingDPKId ==
+                    widget.supervisorId) {
+              return SizedBox(
+                width: AppSize.getAppWidth(context) - 32,
+                child: FilledButton.icon(
+                  onPressed: () {
+                    if (_formKey.currentState!.saveAndValidate()) {
                       BlocProvider.of<AssesmentCubit>(context)
-                          .getScientiicAssignmentDetail(
+                          .assesmentScientificAssignment(
                         id: widget.id,
+                        sa: {
+                          'scores': provider.getScientificAssignmentData(),
+                        },
                       );
-                      setState(() {});
                     }
-                    if (state.scientificAssignmentDetail != null &&
-                        state.stateSa == RequestState.data &&
-                        state.scientificGradeItems != null) {
-                      if (!provider.isAlreadyInit) {
-                        if (state
-                            .scientificAssignmentDetail!.scores!.isNotEmpty) {
-                          provider
-                              .init(state.scientificAssignmentDetail!.scores!);
-                        } else {
-                          provider.firstInit(state.scientificGradeItems!);
+                  },
+                  icon: const Icon(Icons.check_circle),
+                  label: const Text('Update Changed'),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              BlocProvider.of<AssesmentCubit>(context)
+                  .getScientiicAssignmentDetail(
+                id: widget.id,
+              ),
+            ]);
+          },
+          child: SingleChildScrollView(
+            child: SpacingColumn(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                horizontalPadding: 16,
+                spacing: 12,
+                children: [
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  // DepartmentHeader(unitName: widget.unitName),
+                  BlocConsumer<AssesmentCubit, AssesmentState>(
+                    listener: (context, state) {
+                      if (state.isAssementScientificAssignmentSuccess) {
+                        provider.reset();
+                        BlocProvider.of<AssesmentCubit>(context)
+                            .getScientiicAssignmentDetail(
+                          id: widget.id,
+                        );
+                        setState(() {});
+                      }
+                      if (state.scientificAssignmentDetail != null &&
+                          state.stateSa == RequestState.data &&
+                          state.scientificGradeItems != null) {
+                        if (!provider.isAlreadyInit) {
+                          if (state
+                              .scientificAssignmentDetail!.scores!.isNotEmpty) {
+                            provider.init(
+                                state.scientificAssignmentDetail!.scores!);
+                          } else {
+                            provider.firstInit(state.scientificGradeItems!);
+                          }
                         }
                       }
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state.scientificAssignmentDetail != null &&
-                        provider.isAlreadyInit) {
-                      return Builder(builder: (context) {
-                        if (state.scientificGradeItems != null) {
-                          if (state.scientificGradeItems!.isNotEmpty) {
-                            return SpacingColumn(
-                              spacing: 12,
-                              children: [
-                                StudentDepartmentHeader(
-                                  unitName: state.scientificAssignmentDetail!
-                                          .unitName ??
-                                      '',
-                                  studentId: state
-                                      .scientificAssignmentDetail!.studentId,
-                                  studentName: state.scientificAssignmentDetail!
-                                          .studentName ??
-                                      '',
-                                ),
-                                ScientificAssignmentHeadCard(
-                                    scientificAssignment:
-                                        state.scientificAssignmentDetail!),
-                                TopStatCard(
-                                    totalGrade: provider.getTotalGrades(),
-                                    title: 'Total Grades'),
-                                ScientificGradeCard(
-                                  title: 'Presentation',
-                                  iconPath:
-                                      'assets/icons/presentation_icon.svg',
-                                  saScores: provider.presentationList,
-                                  type: ScientificType.presentation,
-                                  canAccess: state.scientificAssignmentDetail!
-                                          .supervisingDPKId ==
-                                      widget.supervisorId,
-                                ),
-                                ScientificGradeCard(
-                                  title: 'Presentation Style',
-                                  iconPath:
-                                      'assets/icons/presentation_style_icon.svg',
-                                  saScores: provider.presentationStyleList,
-                                  type: ScientificType.presentation_style,
-                                  canAccess: state.scientificAssignmentDetail!
-                                          .supervisingDPKId ==
-                                      widget.supervisorId,
-                                ),
-                                ScientificGradeCard(
-                                  title: 'Discussion',
-                                  iconPath: 'assets/icons/discussion_icon.svg',
-                                  saScores: provider.discussionList,
-                                  type: ScientificType.discussion,
-                                  canAccess: state.scientificAssignmentDetail!
-                                          .supervisingDPKId ==
-                                      widget.supervisorId,
-                                ),
-                                const SizedBox(
-                                  height: 60,
-                                ),
-                              ],
+                    },
+                    builder: (context, state) {
+                      if (state.scientificAssignmentDetail != null &&
+                          provider.isAlreadyInit) {
+                        return Builder(builder: (context) {
+                          if (state.scientificGradeItems != null) {
+                            if (state.scientificGradeItems!.isNotEmpty) {
+                              return SpacingColumn(
+                                spacing: 12,
+                                children: [
+                                  StudentDepartmentHeader(
+                                    unitName: state.scientificAssignmentDetail!
+                                            .unitName ??
+                                        '',
+                                    studentId: state
+                                        .scientificAssignmentDetail!.studentId,
+                                    studentName: state
+                                            .scientificAssignmentDetail!
+                                            .studentName ??
+                                        '',
+                                  ),
+                                  ScientificAssignmentHeadCard(
+                                      scientificAssignment:
+                                          state.scientificAssignmentDetail!),
+                                  TopStatCard(
+                                      totalGrade: provider.getTotalGrades(),
+                                      title: 'Total Grades'),
+                                  ScientificGradeCard(
+                                    formKey: _formKey,
+                                    title: 'Presentation',
+                                    iconPath:
+                                        'assets/icons/presentation_icon.svg',
+                                    saScores: provider.presentationList,
+                                    type: ScientificType.presentation,
+                                    canAccess: state.scientificAssignmentDetail!
+                                            .supervisingDPKId ==
+                                        widget.supervisorId,
+                                  ),
+                                  ScientificGradeCard(
+                                    formKey: _formKey,
+                                    title: 'Presentation Style',
+                                    iconPath:
+                                        'assets/icons/presentation_style_icon.svg',
+                                    saScores: provider.presentationStyleList,
+                                    type: ScientificType.presentation_style,
+                                    canAccess: state.scientificAssignmentDetail!
+                                            .supervisingDPKId ==
+                                        widget.supervisorId,
+                                  ),
+                                  ScientificGradeCard(
+                                    formKey: _formKey,
+                                    title: 'Discussion',
+                                    iconPath:
+                                        'assets/icons/discussion_icon.svg',
+                                    saScores: provider.discussionList,
+                                    type: ScientificType.discussion,
+                                    canAccess: state.scientificAssignmentDetail!
+                                            .supervisingDPKId ==
+                                        widget.supervisorId,
+                                  ),
+                                  const SizedBox(
+                                    height: 60,
+                                  ),
+                                ],
+                              );
+                            }
+                            return const EmptyData(
+                              title: 'No Assesment Items',
+                              subtitle: 'No Assesment Items',
                             );
                           }
-                          return const EmptyData(
-                            title: 'No Assesment Items',
-                            subtitle: 'No Assesment Items',
-                          );
-                        }
+                          return const CustomLoading();
+                        });
+                      } else {
                         return const CustomLoading();
-                      });
-                    } else {
-                      return const CustomLoading();
-                    }
-                  },
-                ),
-              ]),
+                      }
+                    },
+                  ),
+                ]),
+          ),
         ),
       ),
     );
@@ -212,6 +227,7 @@ class ScientificGradeCard extends StatelessWidget {
     required this.saScores,
     required this.type,
     required this.canAccess,
+    required this.formKey,
   });
 
   final ScientificType type;
@@ -219,6 +235,7 @@ class ScientificGradeCard extends StatelessWidget {
   final String title;
   final String iconPath;
   final bool canAccess;
+  final GlobalKey<FormBuilderState> formKey;
 
   @override
   Widget build(BuildContext context) {
@@ -292,7 +309,11 @@ class ScientificGradeCard extends StatelessWidget {
                           Expanded(child: Text(data.indicator)),
                           SizedBox(
                             width: 50,
-                            child: TextField(
+                            child: TextFormField(
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.max(100),
+                                FormBuilderValidators.min(0),
+                              ]),
                               readOnly: !canAccess,
                               textAlign: TextAlign.center,
                               controller: data.scoreController,

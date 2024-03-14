@@ -87,6 +87,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
       final result = MiniCexStudentDetailModel.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }

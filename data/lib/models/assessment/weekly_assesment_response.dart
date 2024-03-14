@@ -26,7 +26,7 @@ class WeeklyAssesmentResponse {
 @JsonSerializable()
 class Assesment {
   @JsonKey(name: "score")
-  int? score;
+  double? score;
   @JsonKey(name: "verificationStatus")
   String? verificationStatus;
   @JsonKey(name: "weekNum")

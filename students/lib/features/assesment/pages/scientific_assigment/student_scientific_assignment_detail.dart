@@ -191,7 +191,7 @@ class _ScientificAssignmentDetailState
 
 class ItemRatingSA {
   final String indicator;
-  final int score;
+  final double score;
 
   ItemRatingSA({
     required this.indicator,

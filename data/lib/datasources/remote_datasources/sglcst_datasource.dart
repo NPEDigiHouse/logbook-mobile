@@ -122,6 +122,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
           });
       return const Right(true);
     } catch (e) {
+      print(e.toString());
       return Left(failure(e));
     }
   }

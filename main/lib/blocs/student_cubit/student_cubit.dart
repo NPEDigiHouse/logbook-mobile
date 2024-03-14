@@ -148,19 +148,15 @@ class StudentCubit extends Cubit<StudentState> {
   Future<void> getStudentCheckIn() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        fetchI: RequestState.loading,
       ));
 
       final result = await dataSource.getStudentCheckIn();
-      try {
-        emit(state.copyWith(studentsCheckIn: result));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+      emit(state.copyWith(studentsCheckIn: result, fetchI: RequestState.data));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          fetchI: RequestState.error,
         ),
       );
     }
@@ -191,19 +187,15 @@ class StudentCubit extends Cubit<StudentState> {
   Future<void> getStudentCheckOut() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        fetchO: RequestState.loading,
       ));
 
       final result = await dataSource.getStudentCheckOut();
-      try {
-        emit(state.copyWith(studentsCheckOut: result));
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
+       emit(state.copyWith(studentsCheckOut: result, fetchO: RequestState.data));
     } catch (e) {
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          fetchO: RequestState.error,
         ),
       );
     }
