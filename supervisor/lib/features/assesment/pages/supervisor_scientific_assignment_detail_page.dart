@@ -39,19 +39,23 @@ class _SupervisorScientificAssignmentDetailPageState
   late GlobalKey<FormBuilderState> _formKey;
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _formKey.currentState?.dispose();
+  }
+
+  @override
   void initState() {
     _formKey = GlobalKey<FormBuilderState>();
-    Future.microtask(
-      () {
-        BlocProvider.of<AssesmentCubit>(context)
-          ..getScientificGradeItems()
-          ..getScientiicAssignmentDetail(
-            id: widget.id,
-          );
-
-        context.read<ScientificAssignmentProvider>().reset();
-      },
-    );
+    Future.microtask(() => {
+          BlocProvider.of<AssesmentCubit>(context)
+            ..getScientiicAssignmentDetail(
+              id: widget.id,
+            )
+            ..getScientificGradeItems(),
+          context.read<ScientificAssignmentProvider>().reset()
+        });
     super.initState();
   }
 
@@ -138,7 +142,9 @@ class _SupervisorScientificAssignmentDetailPageState
                       if (state.scientificAssignmentDetail != null &&
                           provider.isAlreadyInit) {
                         return Builder(builder: (context) {
-                          if (state.scientificGradeItems != null) {
+                          if (state.stateSaItem == RequestState.loading) {
+                            return const CustomLoading();
+                          } else if (state.scientificGradeItems != null) {
                             if (state.scientificGradeItems!.isNotEmpty) {
                               return SpacingColumn(
                                 spacing: 12,

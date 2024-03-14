@@ -53,6 +53,13 @@ class _SupervisorMiniCexDetailPageState
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _formKey.currentState?.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final itemRating = context.read<MiniCexProvider>();
     return FormBuilder(

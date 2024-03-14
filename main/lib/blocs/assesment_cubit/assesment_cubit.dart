@@ -139,10 +139,10 @@ class AssesmentCubit extends Cubit<AssesmentState> {
       ));
 
       final data = await dataSource.getMiniCexDetail(id: id);
-     emit(
-          state.copyWith(
-              miniCexStudentDetail: data, requestState: RequestState.data),
-        );
+      emit(
+        state.copyWith(
+            miniCexStudentDetail: data, requestState: RequestState.data),
+      );
     } catch (e) {
       emit(
         state.copyWith(
@@ -155,24 +155,20 @@ class AssesmentCubit extends Cubit<AssesmentState> {
   Future<void> getScientificGradeItems() async {
     try {
       emit(state.copyWith(
-        requestState: RequestState.loading,
+        stateSaItem: RequestState.loading,
       ));
 
       final data = await dataSource.getListScientificGradeItems();
-      try {
-        emit(
-          state.copyWith(
-            scientificGradeItems: data,
-          ),
-        );
-      } catch (e) {
-        emit(state.copyWith(requestState: RequestState.error));
-      }
-    } catch (e) {
-      print(e.toString());
       emit(
         state.copyWith(
-          requestState: RequestState.error,
+          scientificGradeItems: data,
+          stateSaItem: RequestState.data,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          stateSaItem: RequestState.error,
         ),
       );
     }
