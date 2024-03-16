@@ -163,11 +163,13 @@ class _DailyActivityWeekStatusPageState
                       ),
                     )
                   else
-                    const ListSkeletonTemplate(
-                      listHeight: [130, 210, 210, 210],
-                      spacing: 20,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    const SliverToBoxAdapter(
+                      child: ListSkeletonTemplate(
+                        listHeight: [130, 210, 210, 210],
+                        spacing: 20,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      ),
                     )
                 ],
               ),

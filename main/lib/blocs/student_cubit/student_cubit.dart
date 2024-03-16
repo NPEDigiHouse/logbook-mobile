@@ -218,12 +218,12 @@ class StudentCubit extends Cubit<StudentState> {
     }
   }
 
-  Future<void> verifyCheckOut({required String studentId}) async {
+  Future<void> verifyCheckOut({required String studentId, bool isVerified=true}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
-      await dataSource.verifyCheckOut(studentId: studentId);
+      await dataSource.verifyCheckOut(studentId: studentId, isVerified:isVerified);
       try {
         emit(state.copyWith(successVerifyCheckOut: true));
       } catch (e) {

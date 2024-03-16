@@ -7,6 +7,7 @@ import 'package:data/models/students/student_check_in_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/student_cubit/student_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/verify_dialog.dart';
 
@@ -32,6 +33,8 @@ class _CheckReportBottomSheetState extends State<CheckReportBottomSheet> {
     return BlocListener<StudentCubit, StudentState>(
       listener: (context, state) {
         if (state.successVerifyCheckIn) {
+          CustomAlert.success(
+              message: "Success Response Check-In Request", context: context);
           BlocProvider.of<StudentCubit>(context).getStudentCheckIn();
           context.back();
         }

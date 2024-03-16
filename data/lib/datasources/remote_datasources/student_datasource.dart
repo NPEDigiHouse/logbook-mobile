@@ -41,7 +41,7 @@ abstract class StudentDataSource {
   Future<void> verifyCheckIn(
       {required String studentId, required bool isVerified});
   Future<List<StudentCheckOutModel>> getStudentCheckOut();
-  Future<void> verifyCheckOut({required String studentId});
+  Future<void> verifyCheckOut({required String studentId, required bool isVerified});
   Future<StudentById> getStudentById({required String studentId});
   Future<StudentDepartmentRecap> getStudentRecap({required String studentId});
 
@@ -321,12 +321,12 @@ class StudentDataSourceImpl implements StudentDataSource {
   }
 
   @override
-  Future<void> verifyCheckOut({required String studentId}) async {
+  Future<void> verifyCheckOut({required String studentId, required bool isVerified}) async {
     try {
       await dio.put(
         '${ApiService.baseUrl}/students/checkouts/$studentId',
         options: await apiHeader.userOptions(),
-        data: {'verified': true},
+        data: {'verified': isVerified},
       );
     } catch (e) {
       throw failure(e);

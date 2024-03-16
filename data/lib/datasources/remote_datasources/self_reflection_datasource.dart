@@ -63,6 +63,7 @@ class SelfReflectionDataSourceImpl implements SelfReflectionDataSource {
       final result = SelfReflectionData2.fromJson(dataResponse.data);
       return result;
     } catch (e) {
+      print('${ApiService.baseUrl}/self-reflections/$id');
       print((e as DioException).message.toString());
       throw failure(e);
     }

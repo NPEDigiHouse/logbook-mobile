@@ -43,7 +43,7 @@ class _InOutHistoryPageState extends State<InOutHistoryPage> {
       BlocProvider.of<HistoryCubit>(context).getInOutHistories();
     });
     _query = ValueNotifier('');
-    _selectedMenu = ValueNotifier(_menuList[0]);
+    _selectedMenu = ValueNotifier('All');
     _dataFilters = ValueNotifier(null);
 
     super.initState();
@@ -102,7 +102,7 @@ class _InOutHistoryPageState extends State<InOutHistoryPage> {
                 return BlocConsumer<HistoryCubit, HistoryState>(
                   listener: (context, state) {
                     if (state.historiesIo != null &&
-                        state.requestState == RequestState.data) {
+                        state.requestStateIo == RequestState.data) {
                       if (!isMounted) {
                         Future.microtask(() {
                           listData.value = [
@@ -289,7 +289,7 @@ class _InOutHistoryPageState extends State<InOutHistoryPage> {
                                   return const CustomLoading();
                                 }),
                               ),
-                              if (status && state.historiesIo!=null)
+                              if (status && state.historiesIo != null)
                                 Column(
                                   children: [
                                     Container(
@@ -345,8 +345,8 @@ class _InOutHistoryPageState extends State<InOutHistoryPage> {
                                                       listData.value = [
                                                         ...HistoryHelper
                                                             .convertHistoryToActivity(
-                                                          history:
-                                                              state.historiesIo!,
+                                                          history: state
+                                                              .historiesIo!,
                                                           roleHistory:
                                                               RoleHistory
                                                                   .supervisor,
@@ -507,8 +507,6 @@ class _InOutHistoryPageState extends State<InOutHistoryPage> {
                             ],
                           );
                         });
-
-                    return const CustomLoading();
                   },
                 );
               }),

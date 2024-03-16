@@ -13,6 +13,7 @@ import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/spacing_column.dart';
+import 'package:main/widgets/spacing_row.dart';
 import 'package:main/widgets/statistics/unit_statistics_card.dart';
 import 'package:main/widgets/statistics/unit_statistics_section.dart';
 
@@ -61,7 +62,8 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
     loadImageFromAssets(AssetPath.getImage('logo_umi.png'));
     BlocProvider.of<StudentCubit>(context)
       ..getStudentDetailById(studentId: widget.student.studentId!)
-      ..getStatisticByStudentId(studentId: widget.student.studentId!);
+      ..getStatisticByStudentId(studentId: widget.student.studentId!)
+      ..getStudentRecap(studentId: widget.student.studentId!);
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels < 160) {
@@ -125,6 +127,21 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                               ),
                               Text(
                                 widget.student.studentName ?? '',
+                                style: textTheme.titleMedium?.copyWith(
+                                  color: primaryTextColor,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                'Student Id',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: secondaryTextColor,
+                                ),
+                              ),
+                              Text(
+                                state.studentDetail!.studentId ?? '-',
                                 style: textTheme.titleMedium?.copyWith(
                                   color: primaryTextColor,
                                 ),
@@ -295,6 +312,455 @@ class _DetailProfileStudentPageState extends State<DetailProfileStudentPage> {
                                   ),
                                 ),
                               ],
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    SvgPicture.asset(
+                                      AssetPath.getIcon('icon_management.svg'),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        'Submissions',
+                                        style: textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (state.studentDepartmentRecap != null) ...[
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: SpacingRow(
+                                    spacing: 12,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                width: 1, color: dividerColor)),
+                                        child: SpacingColumn(
+                                          spacing: 4,
+                                          children: [
+                                            Container(
+                                              width: 40,
+                                              height: 40,
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: primaryColor,
+                                              ),
+                                              child: SvgPicture.asset(
+                                                AssetPath.getIcon(
+                                                    'diversity_3_rounded.svg'),
+                                                color: scaffoldBackgroundColor,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 8,
+                                            ),
+                                            Text(
+                                              '${state.studentDepartmentRecap!.sglSubmitCount}',
+                                              style: textTheme.titleLarge
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'Small Group Learning',
+                                              style: textTheme.bodySmall,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    color: state.studentDepartmentRecap!
+                                                                .sglVerifiedCount ==
+                                                            state
+                                                                .studentDepartmentRecap!
+                                                                .sglSubmitCount
+                                                        ? successColor
+                                                        : secondaryTextColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            80),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        state.studentDepartmentRecap!
+                                                                    .sglVerifiedCount ==
+                                                                state
+                                                                    .studentDepartmentRecap!
+                                                                    .sglSubmitCount
+                                                            ? Icons.verified
+                                                            : Icons
+                                                                .hourglass_top_rounded,
+                                                        size: 12,
+                                                        color: Colors.white,
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Text(
+                                                        state.studentDepartmentRecap!
+                                                                    .sglVerifiedCount ==
+                                                                state
+                                                                    .studentDepartmentRecap!
+                                                                    .sglSubmitCount
+                                                            ? 'Completed'
+                                                            : '${(state.studentDepartmentRecap!.sglSubmitCount ?? 0) - (state.studentDepartmentRecap!.sglVerifiedCount ?? 0)} Unverified',
+                                                        style: textTheme
+                                                            .labelSmall
+                                                            ?.copyWith(
+                                                                color: Colors
+                                                                    .white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                width: 1, color: dividerColor)),
+                                        child: SpacingColumn(
+                                          spacing: 4,
+                                          children: [
+                                            Container(
+                                              width: 40,
+                                              height: 40,
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: primaryColor,
+                                              ),
+                                              child: SvgPicture.asset(
+                                                AssetPath.getIcon(
+                                                    'medical_information_rounded.svg'),
+                                                color: scaffoldBackgroundColor,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 8,
+                                            ),
+                                            Text(
+                                              '${state.studentDepartmentRecap!.cstSubmitCount}',
+                                              style: textTheme.titleLarge
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'Clinical Skill Training',
+                                              style: textTheme.bodySmall,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    color: state.studentDepartmentRecap!
+                                                                .cstVerifiedCount ==
+                                                            state
+                                                                .studentDepartmentRecap!
+                                                                .cstSubmitCount
+                                                        ? successColor
+                                                        : secondaryTextColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            80),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        state.studentDepartmentRecap!
+                                                                    .cstVerifiedCount ==
+                                                                state
+                                                                    .studentDepartmentRecap!
+                                                                    .cstSubmitCount
+                                                            ? Icons.verified
+                                                            : Icons
+                                                                .hourglass_top_rounded,
+                                                        size: 12,
+                                                        color: Colors.white,
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Text(
+                                                        state.studentDepartmentRecap!
+                                                                    .cstVerifiedCount ==
+                                                                state
+                                                                    .studentDepartmentRecap!
+                                                                    .cstSubmitCount
+                                                            ? 'Completed'
+                                                            : '${(state.studentDepartmentRecap!.cstSubmitCount ?? 0) - (state.studentDepartmentRecap!.cstVerifiedCount ?? 0)} Unverified',
+                                                        style: textTheme
+                                                            .labelSmall
+                                                            ?.copyWith(
+                                                                color: Colors
+                                                                    .white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: SpacingRow(
+                                    spacing: 12,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                width: 1, color: dividerColor)),
+                                        child: SpacingColumn(
+                                          spacing: 4,
+                                          children: [
+                                            Container(
+                                              width: 40,
+                                              height: 40,
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: primaryColor,
+                                              ),
+                                              child: SvgPicture.asset(
+                                                AssetPath.getIcon(
+                                                    'clinical_notes_rounded.svg'),
+                                                color: scaffoldBackgroundColor,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 8,
+                                            ),
+                                            Text(
+                                              '${state.studentDepartmentRecap!.clinicalRecordSubmitCount}',
+                                              style: textTheme.titleLarge
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'Clinical Record',
+                                              style: textTheme.bodySmall,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    color: state.studentDepartmentRecap!
+                                                                .clinicalRecordVerifiedCount ==
+                                                            state
+                                                                .studentDepartmentRecap!
+                                                                .clinicalRecordSubmitCount
+                                                        ? successColor
+                                                        : secondaryTextColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            80),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        state.studentDepartmentRecap!
+                                                                    .clinicalRecordVerifiedCount ==
+                                                                state
+                                                                    .studentDepartmentRecap!
+                                                                    .clinicalRecordSubmitCount
+                                                            ? Icons.verified
+                                                            : Icons
+                                                                .hourglass_top_rounded,
+                                                        size: 12,
+                                                        color: Colors.white,
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Text(
+                                                        state.studentDepartmentRecap!
+                                                                    .clinicalRecordVerifiedCount ==
+                                                                state
+                                                                    .studentDepartmentRecap!
+                                                                    .clinicalRecordSubmitCount
+                                                            ? 'Completed'
+                                                            : '${(state.studentDepartmentRecap!.clinicalRecordSubmitCount ?? 0) - (state.studentDepartmentRecap!.clinicalRecordVerifiedCount ?? 0)} Unverified',
+                                                        style: textTheme
+                                                            .labelSmall
+                                                            ?.copyWith(
+                                                                color: Colors
+                                                                    .white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                      Expanded(
+                                          child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                width: 1, color: dividerColor)),
+                                        child: SpacingColumn(
+                                          spacing: 4,
+                                          children: [
+                                            Container(
+                                              width: 40,
+                                              height: 40,
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: primaryColor,
+                                              ),
+                                              child: SvgPicture.asset(
+                                                AssetPath.getIcon(
+                                                    'biotech_rounded.svg'),
+                                                color: scaffoldBackgroundColor,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 8,
+                                            ),
+                                            Text(
+                                              '${state.studentDepartmentRecap!.scientificSessionSubmitCount}',
+                                              style: textTheme.titleLarge
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'Scientific Session',
+                                              style: textTheme.bodySmall,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    color: state.studentDepartmentRecap!
+                                                                .scientificSessionVerifiedCount ==
+                                                            state
+                                                                .studentDepartmentRecap!
+                                                                .scientificSessionSubmitCount
+                                                        ? successColor
+                                                        : secondaryTextColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            80),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        state.studentDepartmentRecap!
+                                                                    .scientificSessionVerifiedCount ==
+                                                                state
+                                                                    .studentDepartmentRecap!
+                                                                    .scientificSessionSubmitCount
+                                                            ? Icons.verified
+                                                            : Icons
+                                                                .hourglass_top_rounded,
+                                                        size: 12,
+                                                        color: Colors.white,
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Text(
+                                                        state.studentDepartmentRecap!
+                                                                    .scientificSessionVerifiedCount ==
+                                                                state
+                                                                    .studentDepartmentRecap!
+                                                                    .scientificSessionSubmitCount
+                                                            ? 'Completed'
+                                                            : '${(state.studentDepartmentRecap!.scientificSessionSubmitCount ?? 0) - (state.studentDepartmentRecap!.scientificSessionVerifiedCount ?? 0)} Unverified',
+                                                        style: textTheme
+                                                            .labelSmall
+                                                            ?.copyWith(
+                                                                color: Colors
+                                                                    .white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                              ],
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                child: Divider(
+                                  height: 6,
+                                  thickness: 6,
+                                  color: onDisableColor,
+                                ),
+                              ),
                               DepartmentStatisticsSection(
                                 repaintKey: keySkill,
                                 titleText: 'Diagnosis Skills',

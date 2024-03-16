@@ -7,7 +7,6 @@ import 'package:data/utils/data_response.dart';
 import 'package:data/utils/exception_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:data/utils/failure.dart';
-import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 
 abstract class NotificationDataSource {
   Future<Either<Failure, List<NotificationModel>>> getNotifications({

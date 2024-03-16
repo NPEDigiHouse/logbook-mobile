@@ -27,7 +27,7 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
     super.initState();
     Future.microtask(() {
       BlocProvider.of<SelfReflectionSupervisorCubit>(context, listen: false)
-          .getDetailSelfReflections(id: widget.student.studentId!);
+          .getDetailSelfReflections2(id: widget.student.studentId!);
     });
     _scrollController = ScrollController();
     _scrollController.addListener(() {
@@ -49,7 +49,7 @@ class _SelfReflectionStudentPageState extends State<SelfReflectionStudentPage> {
             await Future.wait([
               BlocProvider.of<SelfReflectionSupervisorCubit>(context,
                       listen: false)
-                  .getDetailSelfReflections(id: widget.student.studentId!)
+                  .getDetailSelfReflections2(id: widget.student.studentId!)
             ]);
           },
           child: CustomScrollView(
