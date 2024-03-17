@@ -43,7 +43,8 @@ abstract class AssesmentDataSource {
       required String type,
       required String unitId,
       required double score});
-  Future<void> scoreWeeklyAssesment({required String id, required int score});
+  Future<void> scoreWeeklyAssesment(
+      {required String id, required double score});
   Future<void> submitFinalScore(
       {required String studentId,
       required String unitId,
@@ -288,7 +289,7 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
 
   @override
   Future<void> scoreWeeklyAssesment(
-      {required String id, required int score}) async {
+      {required String id, required double score}) async {
     try {
       await dio.put(
         '${ApiService.baseUrl}/weekly-assesments/$id',

@@ -1,3 +1,4 @@
+import 'package:coordinator/features/daily_activity/add_week_dialog.dart';
 import 'package:coordinator/features/daily_activity/daily_activity_detail_page.dart';
 import 'package:coordinator/features/daily_activity/update_status_all.dart';
 import 'package:core/context/navigation_extension.dart';
@@ -68,6 +69,7 @@ class _DailyActivityStudentPageState extends State<DailyActivityStudentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => Future.wait([

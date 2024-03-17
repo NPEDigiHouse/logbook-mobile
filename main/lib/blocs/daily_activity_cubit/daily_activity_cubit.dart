@@ -129,14 +129,14 @@ class DailyActivityCubit extends Cubit<DailyActivityState> {
   }
 
   Future<void> addWeekByStudent(
-      {int? startDate, int? endDate, int? weekNum}) async {
+      {int? startDate, int? endDate, int? weekNum, required String studentId}) async {
     try {
       emit(state.copyWith(
         requestState: RequestState.loading,
       ));
 
       await dataSource.createWeek(
-          startDate: startDate, endDate: endDate, weekNum: weekNum);
+          startDate: startDate, endDate: endDate, weekNum: weekNum, studentId: studentId);
       try {
         emit(state.copyWith(isAddWeekSuccess: true));
       } catch (e) {

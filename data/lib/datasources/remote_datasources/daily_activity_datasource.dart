@@ -47,7 +47,7 @@ abstract class DailyActivityDataSource {
       {required PostWeek postWeek, required String id});
   Future<Either<Failure, bool>> deleteWeek({required String id});
   Future<Either<Failure, bool>> createWeek(
-      {int? startDate, int? endDate, int? weekNum});
+      {int? startDate, int? endDate, int? weekNum, required String studentId});
   Future<Either<Failure, bool>> syncDailyActivity(String studentId);
   Future<Either<Failure, bool>> updateDailyActivityStatus(
       {required bool status, required String id});
@@ -345,10 +345,13 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
 
   @override
   Future<Either<Failure, bool>> createWeek(
-      {int? startDate, int? endDate, int? weekNum}) async {
+      {int? startDate,
+      int? endDate,
+      int? weekNum,
+      required String studentId}) async {
     try {
       await dio.post(
-        '${ApiService.baseUrl}/students/daily-activities/weeks/v2',
+        '${ApiService.baseUrl}/daily-activities/students/$studentId/weeks/v2',
         options: await apiHeader.userOptions(),
         data: {
           if (weekNum != null) 'weekNum': weekNum,
@@ -358,6 +361,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
       );
       return const Right(true);
     } catch (e) {
+      print(e.toString());
       return Left(failure(e));
     }
   }

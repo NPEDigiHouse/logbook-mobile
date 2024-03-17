@@ -491,15 +491,12 @@ class AssesmentCubit extends Cubit<AssesmentState> {
 
       final data = await dataSource.getWeeklyAssesment(
           unitId: unitId, studentId: studentId);
-      try {
-        emit(
-          state.copyWith(
-            weeklyAssesment: data,
-          ),
-        );
-      } catch (e) {
-        emit(state.copyWith(stateSa: RequestState.error));
-      }
+      emit(
+        state.copyWith(
+          weeklyAssesment: data,
+          stateSa: RequestState.data,
+        ),
+      );
     } catch (e) {
       emit(
         state.copyWith(
@@ -510,7 +507,7 @@ class AssesmentCubit extends Cubit<AssesmentState> {
   }
 
   Future<void> addScoreWeeklyAssesment(
-      {required String id, required int score}) async {
+      {required String id, required double score}) async {
     try {
       emit(state.copyWith(
         stateSa: RequestState.loading,

@@ -13,6 +13,7 @@ import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'package:main/widgets/headers/unit_header.dart';
 import 'package:main/widgets/spacing_column.dart';
+import 'package:students/features/daily_activity/widgets/add_week_dialog.dart';
 
 class DailyActivityTempModel {
   final String day;
@@ -54,7 +55,42 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
           CustomAlert.error(message: state.errorMessage!, context: context);
         },
         builder: (context, state) {
+          // final bool isNotCheckOut =
+          //     widget.activeDepartmentModel.checkOutTime != null;
+          // final bool init = state.studentDailyActivity != null &&
+          //     state.studentDailyActivity?.dailyActivities != null &&
+          //     state.studentDailyActivity!.dailyActivities!.isNotEmpty;
+          // final DateTime endDate = init
+          //     ? DateTime.fromMillisecondsSinceEpoch(
+          //         state.studentDailyActivity?.dailyActivities?.last.endDate ??
+          //             0)
+          //     : DateTime.now();
+          // final bool isLastDateBiggerThenNow = DateTime.now().isAfter(endDate);
+
           return Scaffold(
+            // floatingActionButton: (isNotCheckOut && isLastDateBiggerThenNow)
+            //     ? FloatingActionButton(
+            //         onPressed: () {
+            //           showDialog(
+            //             context: context,
+            //             barrierLabel: '',
+            //             barrierDismissible: false,
+            //             builder: (_) => AddWeekDialog(
+            //               endDate: endDate,
+            //               departmentId:
+            //                   widget.activeDepartmentModel.unitId ?? '',
+            //               weekNum: init
+            //                   ? (state.studentDailyActivity!.dailyActivities!
+            //                               .last.weekName ??
+            //                           0) +
+            //                       1
+            //                   : 1,
+            //             ),
+            //           );
+            //         },
+            //         child: const Icon(Icons.add_rounded),
+            //       )
+            //     : null,
             appBar: AppBar(
               title: const Text('Daily Activity'),
             ),

@@ -20,6 +20,7 @@ dependencies:
   grouped_list: ^5.1.2
   top_snackbar_flutter: ^3.1.0
   flutter_form_builder: ^9.1.0
+  form_builder_validators: ^9.0.0
 
   # Modul
   data:

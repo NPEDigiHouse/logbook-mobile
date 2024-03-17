@@ -213,7 +213,7 @@ class WeeklyGradeCard extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        score!.toStringAsFixed(0),
+                        score!.toStringAsFixed(1),
                         style: textTheme.titleLarge?.copyWith(
                           color: scaffoldBackgroundColor,
                           fontWeight: FontWeight.bold,

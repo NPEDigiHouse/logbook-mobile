@@ -2,6 +2,7 @@ import 'package:core/helpers/app_size.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/supervisors/student_unit_model.dart';
 import 'package:main/blocs/assesment_cubit/assesment_cubit.dart';
+import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/helpers/helper.dart';
 import 'package:main/widgets/cards/weekly_grade_card.dart';
 import 'package:main/widgets/custom_loading.dart';
@@ -57,6 +58,9 @@ class _WeeklyGradeDetailPageState extends State<WeeklyGradeDetailPage> {
               SliverToBoxAdapter(
                 child: BlocBuilder<AssesmentCubit, AssesmentState>(
                   builder: (context, state) {
+                    if (state.stateSa == RequestState.loading) {
+                      return const CustomLoading();
+                    }
                     if (state.weeklyAssesment != null) {
                       if (state.weeklyAssesment!.assesments!.isNotEmpty) {
                         return SingleChildScrollView(
