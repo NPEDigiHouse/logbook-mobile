@@ -153,7 +153,7 @@ class _CreateClinicalRecordFirstPageState
                       BuildTextField(
                         onChanged: (v) {},
                         controller: recordIdController,
-                        label: 'Record Id (No.RM)',
+                        label: 'Record Id/No.RM (required)',
                         validator: FormBuilderValidators.required(
                           errorText: 'This field is required',
                         ),
@@ -175,7 +175,7 @@ class _CreateClinicalRecordFirstPageState
                     children: [
                       BuildTextField(
                         onChanged: (v) {},
-                        label: 'Patient Name',
+                        label: 'Patient Name (Required)',
                         controller: patientNameController,
                         validator: FormBuilderValidators.required(
                           errorText: 'This field is required',
@@ -185,6 +185,9 @@ class _CreateClinicalRecordFirstPageState
                         List<String> genderType = ['MALE', 'FEMALE'];
                         return DropdownButtonFormField(
                           isExpanded: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Gender (Required)',
+                          ),
                           validator: FormBuilderValidators.required(
                             errorText: 'This field is required',
                           ),
@@ -205,7 +208,7 @@ class _CreateClinicalRecordFirstPageState
                       }),
                       BuildTextField(
                         onChanged: (v) {},
-                        label: 'Patient Age (Year)',
+                        label: 'Patient Age (required)',
                         controller: patientAgeController,
                         isOnlyNumber: true,
                         isOnlyDigit: true,

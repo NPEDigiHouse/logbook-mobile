@@ -213,7 +213,7 @@ class DailyActivityDataSourceImpl implements DailyActivityDataSource {
         '${ApiService.baseUrl}/students/daily-activities/weeks/$weekId/v2',
         options: await apiHeader.userOptions(),
       );
-
+      print(response.data);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = StudentDailyActivityPerDays.fromJson(dataResponse.data);
       return result;

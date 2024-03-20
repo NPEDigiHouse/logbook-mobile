@@ -301,6 +301,8 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                           validator: FormBuilderValidators.required(
                             errorText: 'This field is required',
                           ),
+                          decoration:
+                              const InputDecoration(label: Text('Type (Required)')),
                           items: desc
                               .map(
                                 (e) => DropdownMenuItem(

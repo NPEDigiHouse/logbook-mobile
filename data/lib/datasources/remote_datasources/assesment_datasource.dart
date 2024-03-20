@@ -50,6 +50,11 @@ abstract class AssesmentDataSource {
       required String unitId,
       required bool status});
   Future<List<ScientificGradeItem>> getListScientificGradeItems();
+  Future<void> editScientificAssignment(
+      {required MiniCexPostModel model, required String id});
+
+  Future<void> updateMiniCex(
+      {required MiniCexPostModel model, required String id});
 }
 
 class AssesmentDataSourceImpl implements AssesmentDataSource {
@@ -333,6 +338,34 @@ class AssesmentDataSourceImpl implements AssesmentDataSource {
           .map((e) => ScientificGradeItem.fromJson(e))
           .toList();
       return listData;
+    } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<void> editScientificAssignment(
+      {required MiniCexPostModel model, required String id}) async {
+    try {
+      await dio.put(
+        '${ApiService.baseUrl}/assesments/scientific-assesments/$id',
+        options: await apiHeader.userOptions(),
+        data: model.toJson(),
+      );
+    } catch (e) {
+      throw failure(e);
+    }
+  }
+
+  @override
+  Future<void> updateMiniCex(
+      {required MiniCexPostModel model, required String id}) async {
+    try {
+      await dio.put(
+        '${ApiService.baseUrl}/assesments/mini-cexs/v2/$id',
+        options: await apiHeader.userOptions(),
+        data: model.toJson(),
+      );
     } catch (e) {
       throw failure(e);
     }

@@ -78,7 +78,8 @@ class _CreateSglPageState extends State<CreateSglPage> {
                   children: [
                     TextField(
                       controller: dateController,
-                      decoration: const InputDecoration(enabled: false),
+                      decoration: const InputDecoration(
+                          enabled: false, labelText: 'Date Created'),
                     ),
                     BlocBuilder<SupervisorsCubit, SupervisorsState>(
                         builder: (context, state) {
@@ -105,6 +106,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                                           .toLowerCase()
                                           .trim()
                                           .contains(pattern.toLowerCase()))
+    
                                   .toList();
 
                               return pattern.isEmpty ? supervisors : temp;
@@ -259,6 +261,7 @@ class _CreateSglPageState extends State<CreateSglPage> {
                     TextFormField(
                       maxLines: 4,
                       minLines: 4,
+                      maxLength: 500,
                       controller: noteController,
                       decoration: const InputDecoration(
                         label: Text(

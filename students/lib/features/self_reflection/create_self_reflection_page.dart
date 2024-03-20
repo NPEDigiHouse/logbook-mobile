@@ -69,7 +69,8 @@ class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
                     const SizedBox(
                       height: 16,
                     ),
-                    if (widget.credential?.student?.supervisingDPKId == null && !widget.isFromNotif)
+                    if (widget.credential?.student?.supervisingDPKId == null &&
+                        !widget.isFromNotif)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -79,9 +80,10 @@ class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
                           ),
                         ),
                       ),
-                    if (widget.credential?.student?.supervisingDPKId !=
-                        null || widget.isFromNotif) ...[
+                    if (widget.credential?.student?.supervisingDPKId != null ||
+                        widget.isFromNotif) ...[
                       TextFormField(
+                        maxLength: 500,
                         minLines: 7,
                         maxLines: 7,
                         validator: FormBuilderValidators.required(
@@ -89,7 +91,7 @@ class _CreateSelfReflectionPageState extends State<CreateSelfReflectionPage> {
                         ),
                         controller: fieldController,
                         decoration: const InputDecoration(
-                          label: Text('Self-reflection Content'),
+                          label: Text('Self-reflection Content (Required)'),
                         ),
                       ),
                       const Spacer(),

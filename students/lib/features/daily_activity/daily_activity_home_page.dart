@@ -13,7 +13,6 @@ import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'package:main/widgets/headers/unit_header.dart';
 import 'package:main/widgets/spacing_column.dart';
-import 'package:students/features/daily_activity/widgets/add_week_dialog.dart';
 
 class DailyActivityTempModel {
   final String day;
@@ -269,6 +268,12 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                                     : DateTime.now();
                                 return DailyActivityHomeCard(
                                   isSupervisor: false,
+                                  alreadyCheckout: widget.activeDepartmentModel
+                                              .checkOutTime !=
+                                          null &&
+                                      widget.activeDepartmentModel
+                                              .checkOutTime !=
+                                          0,
                                   startDate: state
                                               .studentDailyActivity!
                                               .dailyActivities![index]

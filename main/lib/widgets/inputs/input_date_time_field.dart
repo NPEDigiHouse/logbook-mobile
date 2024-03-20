@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class InputDateTimeField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
+  final bool isRequired;
   final DateTime initialDate;
   final String? Function(String? data)? validator;
   final FutureOr<void> Function(DateTime date)? action;
@@ -14,6 +15,7 @@ class InputDateTimeField extends StatefulWidget {
       required this.action,
       this.validator,
       required this.controller,
+      this.isRequired = true,
       required this.hintText,
       required this.initialDate});
 
@@ -59,6 +61,8 @@ class _InputDateTimeFieldState extends State<InputDateTimeField> {
         errorMaxLines: 2,
         hintText: widget.hintText,
         filled: true,
+        labelText:
+            '${widget.hintText} ${widget.isRequired ? "(Required)" : ""}',
         fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),

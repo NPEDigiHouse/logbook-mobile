@@ -73,6 +73,9 @@ class _ManagementAdaptiveFormState extends State<ManagementAdaptiveForm> {
                         Builder(builder: (context) {
                           return DropdownButtonFormField(
                             isExpanded: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Management Types',
+                            ),
                             hint: const Text('Management Types'),
                             items: widget.managementTypes!
                                 .map(
@@ -105,6 +108,9 @@ class _ManagementAdaptiveFormState extends State<ManagementAdaptiveForm> {
                         Builder(builder: (context) {
                           return DropdownButtonFormField(
                             isExpanded: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Management Roles',
+                            ),
                             hint: const Text('Management Roles'),
                             items: widget.managementRole!
                                 .map(

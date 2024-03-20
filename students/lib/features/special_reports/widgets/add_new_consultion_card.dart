@@ -4,17 +4,27 @@ import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:students/features/special_reports/create_special_report_page.dart';
 
 class AddNewConsultationCard extends StatelessWidget {
-  const AddNewConsultationCard({super.key});
+  final bool isAlreadyCheckout;
+  const AddNewConsultationCard({super.key, this.isAlreadyCheckout = false});
 
   @override
   Widget build(BuildContext context) {
     return InkWellContainer(
       radius: 12,
-      onTap: () => context.navigateTo(const CreateSpecialReportPage()),
+      onTap: () {
+        if (isAlreadyCheckout) {
+          CustomAlert.error(
+              message: "already checkout for this department",
+              context: context);
+          return;
+        }
+        context.navigateTo(const CreateSpecialReportPage());
+      },
       color: primaryColor,
       boxShadow: [
         BoxShadow(

@@ -81,7 +81,8 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                         horizontalPadding: 16,
                         children: [
                           DepartmentHeader(
-                            unitName: widget.activeDepartmentModel.unitName!,
+                            unitName:
+                                widget.activeDepartmentModel.unitName ?? '',
                           ),
                           const SizedBox(
                             height: 12,
@@ -101,7 +102,13 @@ class _SpecialReportHomePageState extends State<SpecialReportHomePage> {
                           if (widget.credential?.student?.supervisingDPKId !=
                                   null ||
                               widget.isFromNotif)
-                            const AddNewConsultationCard(),
+                            AddNewConsultationCard(
+                              isAlreadyCheckout: widget
+                                          .activeDepartmentModel.checkOutTime !=
+                                      null &&
+                                  widget.activeDepartmentModel.checkOutTime !=
+                                      0,
+                            ),
                           BlocBuilder<SpecialReportCubit, SpecialReportState>(
                             builder: (context, state) {
                               if (state.fetchState == RequestState.loading) {

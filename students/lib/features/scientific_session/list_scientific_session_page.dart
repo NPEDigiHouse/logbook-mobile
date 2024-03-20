@@ -78,8 +78,16 @@ class _StudentListScientificSessionPageState
           title: const Text("Scientific Session"),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => context.navigateTo(AddScientificSessionPage(
-              activeDepartmentModel: widget.activeDepartmentModel)),
+          onPressed: () {
+            if (widget.activeDepartmentModel.checkOutTime != null && widget.activeDepartmentModel.checkOutTime != 0) {
+              CustomAlert.error(
+                  message: "already checkout for this department",
+                  context: context);
+              return;
+            }
+            context.navigateTo(AddScientificSessionPage(
+                activeDepartmentModel: widget.activeDepartmentModel));
+          },
           child: const Icon(
             Icons.add_rounded,
           ),

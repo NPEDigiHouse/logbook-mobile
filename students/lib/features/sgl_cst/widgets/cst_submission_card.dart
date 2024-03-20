@@ -4,9 +4,11 @@ import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/sglcst/cst_model.dart';
 import 'package:data/models/sglcst/topic_on_sglcst.dart';
+import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/verify_dialog.dart';
 import 'package:students/features/sgl_cst/widgets/add_topic_dialog.dart';
@@ -18,9 +20,11 @@ class CstSubmissionCard extends StatelessWidget {
     super.key,
     required this.data,
     required this.unitId,
+    required this.activeDepartmentModel,
   });
 
   final Cst data;
+  final ActiveDepartmentModel activeDepartmentModel;
   final String unitId;
 
   @override
@@ -81,7 +85,9 @@ class CstSubmissionCard extends StatelessWidget {
                 )
               ],
               const Spacer(),
-              if (data.verificationStatus != 'VERIFIED')
+              if (data.verificationStatus != 'VERIFIED' &&
+                  (activeDepartmentModel.checkOutTime == null ||
+                      activeDepartmentModel.checkOutTime == 0))
                 PopupMenuButton<String>(
                   icon: const Icon(
                     Icons.more_vert_rounded,
@@ -130,7 +136,6 @@ class CstSubmissionCard extends StatelessWidget {
                     ];
                   },
                 ),
-           
             ],
           ),
           const SizedBox(
@@ -219,6 +224,13 @@ class CstSubmissionCard extends StatelessWidget {
             ),
             TextButton.icon(
               onPressed: () {
+                if (activeDepartmentModel.checkOutTime != null &&
+                    activeDepartmentModel.checkOutTime != 0) {
+                  CustomAlert.error(
+                      message: "already checkout for this department",
+                      context: context);
+                  return;
+                }
                 showDialog(
                   context: context,
                   barrierLabel: '',
@@ -227,7 +239,7 @@ class CstSubmissionCard extends StatelessWidget {
                     type: TopicDialogType.cst,
                     date: data.createdAt!,
                     id: data.cstId!,
-                    departmentId: unitId ?? '',
+                    departmentId: unitId,
                     supervisorId: '',
                   ),
                 );

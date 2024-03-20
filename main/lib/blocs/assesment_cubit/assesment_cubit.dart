@@ -570,4 +570,50 @@ class AssesmentCubit extends Cubit<AssesmentState> {
       ),
     );
   }
+
+  Future<void> editScientificAssignment(
+      {required MiniCexPostModel model, required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.editScientificAssignment(model: model, id: id);
+      try {
+        emit(state.copyWith(isUpdate: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
+
+
+  Future<void> updateMiniCex({required MiniCexPostModel model, required String id}) async {
+    try {
+      emit(state.copyWith(
+        requestState: RequestState.loading,
+      ));
+
+      await dataSource.updateMiniCex(model: model, id: id);
+      try {
+        emit(state.copyWith(isUpdate: true));
+      } catch (e) {
+        emit(state.copyWith(requestState: RequestState.error));
+      }
+    } catch (e) {
+      print(e.toString());
+      emit(
+        state.copyWith(
+          requestState: RequestState.error,
+        ),
+      );
+    }
+  }
 }

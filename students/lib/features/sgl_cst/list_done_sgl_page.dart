@@ -66,6 +66,7 @@ class _ListDoneSglPageState extends State<ListDoneSglPage> {
                                 final data =
                                     (state.sglDoneDetail?.sgls ?? [])[index];
                                 return SglSubmissionCard(
+                                  activeDepartmentModel: widget.activeDepartmentModel,
                                     data: data,
                                     unitId:
                                         widget.activeDepartmentModel.unitId ??

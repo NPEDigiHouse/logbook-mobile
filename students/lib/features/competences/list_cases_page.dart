@@ -24,10 +24,12 @@ import 'widgets/add_competence_dialog.dart';
 class ListCasesPage extends StatefulWidget {
   final String unitName;
   final String unitId;
+  final bool isAlreadyCheckout;
   const ListCasesPage({
     super.key,
     required this.unitName,
     required this.unitId,
+    this.isAlreadyCheckout = false,
   });
 
   @override
@@ -69,7 +71,14 @@ class _ListCasesPageState extends State<ListCasesPage> {
         title: const Text('List Cases'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog(
+        onPressed: () {
+          if (widget.isAlreadyCheckout) {
+            CustomAlert.error(
+                message: "already checkout for this department",
+                context: context);
+            return;
+          }
+          showDialog(
             context: context,
             barrierLabel: '',
             barrierDismissible: false,
@@ -81,7 +90,8 @@ class _ListCasesPageState extends State<ListCasesPage> {
                     BlocProvider.of<CompetenceCubit>(context).getListCases();
                     Navigator.pop(context);
                   },
-                )).then((value) {}),
+                )).then((value) {});
+        },
         child: const Icon(
           Icons.add_rounded,
         ),
@@ -304,6 +314,7 @@ class _ListCasesPageState extends State<ListCasesPage> {
                                 return SliverList.separated(
                                   itemBuilder: (context, index) {
                                     return TestGradeScoreCard(
+                                      isAlreadyCheckout: widget.isAlreadyCheckout,
                                       id: sData[index].caseId!,
                                       skillId: sData[index].caseTypeId ?? -1,
                                       unitId: widget.unitId,
@@ -473,7 +484,7 @@ class TestGradeScoreCard extends StatelessWidget {
     required this.isVerified,
     required this.createdAt,
     required this.supervisorName,
-   
+    required this.isAlreadyCheckout,
     required this.onAddUpdate,
     required this.id,
     required this.skillId,
@@ -485,6 +496,7 @@ class TestGradeScoreCard extends StatelessWidget {
   final DateTime createdAt;
   final String supervisorName;
   final bool isVerified;
+  final bool isAlreadyCheckout;
   
   final VoidCallback onAddUpdate;
   final String id;
@@ -585,7 +597,7 @@ class TestGradeScoreCard extends StatelessWidget {
                   ],
                 ),
               ),
-              if (!isVerified)
+              if (!isVerified && !isAlreadyCheckout)
                 PopupMenuButton<String>(
                   icon: const Icon(
                     Icons.more_vert_rounded,

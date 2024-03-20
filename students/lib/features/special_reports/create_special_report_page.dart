@@ -76,6 +76,7 @@ class _CreateSpecialReportPageState extends State<CreateSpecialReportPage> {
                       validator: FormBuilderValidators.required(
                         errorText: 'This field is required',
                       ),
+                      maxLength: 500,
                       controller: fieldController,
                       textAlignVertical: TextAlignVertical.top,
                       decoration: const InputDecoration(

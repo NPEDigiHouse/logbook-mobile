@@ -220,6 +220,8 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                         validator: FormBuilderValidators.required(
                           errorText: 'This field is required',
                         ),
+                        decoration:
+                            InputDecoration(labelText: 'Status (Required)'),
                         isExpanded: true,
                         hint: const Text('Status'),
                         value: status != null
@@ -373,6 +375,8 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                             activityNameId = al.id;
                           }
                           return DropdownButtonFormField(
+                            decoration: InputDecoration(
+                                labelText: 'Activity (Required)'),
                             validator: FormBuilderValidators.required(
                               errorText: 'This field is required',
                             ),
@@ -400,6 +404,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                       ],
                       TextFormField(
                         maxLines: 5,
+                        maxLength: 500,
                         controller: detailController,
                         minLines: 5,
                         decoration: InputDecoration(

@@ -14,8 +14,12 @@ import 'student_scientific_assignment_detail.dart';
 class StudentScientificAssignmentPage extends StatefulWidget {
   final String unitName;
   final bool isSupervisingDPKExist;
+  final bool isAlreadyCheckOut;
   const StudentScientificAssignmentPage(
-      {super.key, required this.unitName, required this.isSupervisingDPKExist});
+      {super.key,
+      required this.unitName,
+      required this.isSupervisingDPKExist,
+      this.isAlreadyCheckOut = false});
 
   @override
   State<StudentScientificAssignmentPage> createState() =>
@@ -93,7 +97,7 @@ class _StudentScientificAssignmentPageState
                         );
                       }
                       final sa = state.scientificAssignmentStudents!.first;
-                      return WrapperScientificAssignment(id: sa.id!);
+                      return WrapperScientificAssignment(id: sa.id!, isAlreadyCheckout: widget.isAlreadyCheckOut);
                     } else {
                       return const CustomLoading();
                     }
@@ -110,7 +114,9 @@ class _StudentScientificAssignmentPageState
 
 class WrapperScientificAssignment extends StatefulWidget {
   final String id;
-  const WrapperScientificAssignment({super.key, required this.id});
+  final bool isAlreadyCheckout;
+  const WrapperScientificAssignment(
+      {super.key, required this.id, required this.isAlreadyCheckout});
 
   @override
   State<WrapperScientificAssignment> createState() =>
@@ -132,7 +138,8 @@ class _WrapperScientificAssignmentState
       listener: (context, state) {
         if (state.scientificAssignmentDetail != null) {
           context.replace(
-            ScientificAssignmentDetail(id: widget.id),
+            ScientificAssignmentDetail(
+                id: widget.id, isAlreadyCheckOut: widget.isAlreadyCheckout),
           );
         }
       },

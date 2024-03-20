@@ -25,10 +25,13 @@ import 'widgets/add_competence_dialog.dart';
 class ListSkillsPage extends StatefulWidget {
   final String unitName;
   final String unitId;
+  final bool isAlreadyCheckout;
+
   // final int countCheckIn;
   const ListSkillsPage({
     super.key,
     required this.unitName,
+    this.isAlreadyCheckout = false,
     required this.unitId,
     // required this.countCheckIn,
   });
@@ -71,19 +74,27 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
         title: const Text("List Skills"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog(
-            context: context,
-            barrierLabel: '',
-            barrierDismissible: false,
-            builder: (_) => AddCompetenceDialog(
-                  type: CompetenceType.skillType,
-                  unitId: widget.unitId,
-                  onAddUpdate: () {
-                    isMounted = false;
-                    BlocProvider.of<CompetenceCubit>(context).getListSkills();
-                    Navigator.pop(context);
-                  },
-                )).then((value) {}),
+        onPressed: () {
+          if (widget.isAlreadyCheckout) {
+            CustomAlert.error(
+                message: "already checkout for this department",
+                context: context);
+            return;
+          }
+          showDialog(
+              context: context,
+              barrierLabel: '',
+              barrierDismissible: false,
+              builder: (_) => AddCompetenceDialog(
+                    type: CompetenceType.skillType,
+                    unitId: widget.unitId,
+                    onAddUpdate: () {
+                      isMounted = false;
+                      BlocProvider.of<CompetenceCubit>(context).getListSkills();
+                      Navigator.pop(context);
+                    },
+                  )).then((value) {});
+        },
         child: const Icon(
           Icons.add_rounded,
         ),
@@ -230,6 +241,7 @@ class _ListSkillsPageState extends State<ListSkillsPage> {
                                 itemCount: s.length,
                                 itemBuilder: (context, index) {
                                   return TestGradeScoreCard(
+                                    isAlreadyCheckout: widget.isAlreadyCheckout,
                                     skillId: s[index].skillTypeId ?? -1,
                                     unitId: widget.unitId,
                                     onAddUpdate: () {
@@ -391,6 +403,7 @@ class TestGradeScoreCard extends StatelessWidget {
     required this.supervisorName,
     required this.onAddUpdate,
     required this.id,
+    required this.isAlreadyCheckout,
     required this.skillId,
     required this.unitId,
   });
@@ -400,6 +413,7 @@ class TestGradeScoreCard extends StatelessWidget {
   final DateTime createdAt;
   final String supervisorName;
   final bool isVerified;
+  final bool isAlreadyCheckout;
   final VoidCallback onAddUpdate;
   final String id;
   final int skillId;
@@ -499,7 +513,7 @@ class TestGradeScoreCard extends StatelessWidget {
                   ],
                 ),
               ),
-              if (!isVerified)
+              if (!isVerified && !isAlreadyCheckout)
                 PopupMenuButton<String>(
                   icon: const Icon(
                     Icons.more_vert_rounded,

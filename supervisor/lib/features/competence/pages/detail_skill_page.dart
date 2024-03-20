@@ -19,9 +19,11 @@ class DetailSkillPage extends StatefulWidget {
   final String unitName;
   final String studentName;
   final String id;
+  final bool isStudent;
   const DetailSkillPage(
       {super.key,
       required this.id,
+      this.isStudent = false,
       required this.studentName,
       required this.unitName,
       required this.studentId});
@@ -102,6 +104,7 @@ class _DetailSkillPageState extends State<DetailSkillPage> {
                                   isVerified:
                                       data.verificationStatus == 'VERIFIED',
                                   createdAt: data.createdAt ?? 0,
+                                  isStudent: widget.isStudent,
                                 ),
                                 const SizedBox(
                                   height: 48,
@@ -135,6 +138,7 @@ class TestGradeScoreCard extends StatelessWidget {
     required this.id,
     required this.studentId,
     required this.createdAt,
+    required this.isStudent,
   });
 
   final String skillName;
@@ -143,6 +147,7 @@ class TestGradeScoreCard extends StatelessWidget {
   final String skillType;
   final int createdAt;
   final bool isVerified;
+  final bool isStudent;
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +216,7 @@ class TestGradeScoreCard extends StatelessWidget {
                       ),
                       const ChipVerified(),
                     ],
-                    if (!isVerified) ...[
+                    if (!isVerified && !isStudent) ...[
                       const SizedBox(
                         height: 4,
                       ),

@@ -16,7 +16,8 @@ import 'package:semicircle_indicator/semicircle_indicator.dart';
 import 'package:main/widgets/clip_donut_painter.dart';
 
 class StudentWeeklyAssementPage extends StatefulWidget {
-  const StudentWeeklyAssementPage({super.key});
+  final bool isAlreadyCheckOut;
+  const StudentWeeklyAssementPage({super.key, this.isAlreadyCheckOut = false});
 
   @override
   State<StudentWeeklyAssementPage> createState() =>
@@ -89,6 +90,7 @@ class _StudentWeeklyAssementPageState extends State<StudentWeeklyAssementPage> {
                                     DateTime.fromMillisecondsSinceEpoch(
                                         (element.startDate ?? 0))));
                                 return WeeklyGradeCard(
+                                  isAlreadyCheckout: widget.isAlreadyCheckOut,
                                   startTime: element.startDate,
                                   endTime: element.endDate,
                                   isPassed: isPassed,

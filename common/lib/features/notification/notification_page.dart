@@ -177,11 +177,39 @@ class _BuildNotificationPageState extends State<_BuildNotificationPage> {
                                               ),
                                               SliverGroupedListView<
                                                   NotificationModel, DateTime>(
-                                                groupBy: (element) => DateTime(
-                                                  element.createdAt!.year,
-                                                  element.createdAt!.month,
-                                                  element.createdAt!.day,
-                                                ),
+                                                groupBy: (activity) {
+                                                  final now = DateTime.now();
+                                                  final now2 = DateTime(
+                                                      now.year,
+                                                      now.month,
+                                                      now.day);
+                                                  var difference =
+                                                      now2.difference(
+                                                          activity.createdAt!);
+                                                  if (difference.inDays == 0) {
+                                                    return now2;
+                                                  } else if (difference
+                                                          .inDays <=
+                                                      1) {
+                                                    return now2.subtract(
+                                                        const Duration(
+                                                            days: 1));
+                                                  } else if (difference
+                                                          .inDays <=
+                                                      7) {
+                                                    return now2.subtract(
+                                                        const Duration(
+                                                            days: 6));
+                                                  } else if (difference
+                                                          .inDays <=
+                                                      30) {
+                                                    return now2.subtract(
+                                                        const Duration(
+                                                            days: 30));
+                                                  } else {
+                                                    return DateTime(2020);
+                                                  }
+                                                },
                                                 groupComparator:
                                                     (date1, date2) =>
                                                         date2.compareTo(date1),

@@ -27,6 +27,7 @@ class DailyActivityHomeCard extends StatelessWidget {
   final bool isCoordinator;
   final String? studentId;
   final bool activeStatus;
+  final bool alreadyCheckout;
   const DailyActivityHomeCard(
       {super.key,
       this.studentId,
@@ -35,47 +36,56 @@ class DailyActivityHomeCard extends StatelessWidget {
       this.activeStatus = false,
       required this.isSupervisor,
       required this.endDate,
+      this.alreadyCheckout = false,
       required this.startDate,
       required this.da,
       this.dailyActivity});
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
     return Stack(
       children: [
-        InkWellContainer(
-          padding: const EdgeInsets.all(16),
-          radius: 12,
-          onTap: isCoordinator ? null : () => onWeekTab(context),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                offset: const Offset(0, 0),
+        if (DateTime(now.year, now.month, now.day).isBefore(
+                DateTime(startDate.year, startDate.month, startDate.day)) &&
+            alreadyCheckout)
+          ...[]
+        else ...[
+          InkWellContainer(
+            padding: const EdgeInsets.all(16),
+            radius: 12,
+            onTap: isCoordinator ? null : () => onWeekTab(context),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  offset: const Offset(0, 0),
+                  spreadRadius: 0,
+                  blurRadius: 6,
+                  color: const Color(0xFFD4D4D4).withOpacity(.25)),
+              BoxShadow(
+                offset: const Offset(0, 4),
                 spreadRadius: 0,
-                blurRadius: 6,
-                color: const Color(0xFFD4D4D4).withOpacity(.25)),
-            BoxShadow(
-              offset: const Offset(0, 4),
-              spreadRadius: 0,
-              blurRadius: 24,
-              color: const Color(0xFFD4D4D4).withOpacity(.25),
-            ),
-          ],
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              isCoordinator ? _dailyActivityStatus() : _verifiedWeekStatus(),
-              ..._header(),
-              _listDailyAttendance(),
+                blurRadius: 24,
+                color: const Color(0xFFD4D4D4).withOpacity(.25),
+              ),
             ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                isCoordinator ? _dailyActivityStatus() : _verifiedWeekStatus(),
+                ..._header(),
+                _listDailyAttendance(),
+              ],
+            ),
           ),
-        ),
-        if (DateTime.now().isBefore(startDate) &&
-            !isSupervisor &&
-            !isCoordinator)
-          Positioned.fill(
-            child: _lockedWeekLayer(),
-          ),
+          if (DateTime(now.year, now.month, now.day).isBefore(
+                  DateTime(startDate.year, startDate.month, startDate.day)) &&
+              !isSupervisor &&
+              !isCoordinator)
+            Positioned.fill(
+              child: _lockedWeekLayer(),
+            ),
+        ],
       ],
     );
   }
@@ -385,6 +395,7 @@ class DailyActivityHomeCard extends StatelessWidget {
     bool status = activeStatus || active;
     context.navigateTo(
       DailyActivityWeekStatusPage(
+        alreadyCheckout: alreadyCheckout,
         daId: da.dailyActivityId ?? '',
         isSupervisor: isSupervisor,
         weekName: da.weekName!,

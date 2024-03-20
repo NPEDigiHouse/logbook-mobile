@@ -65,6 +65,9 @@ class _ExaminationAdaptiveFormState extends State<ExaminationAdaptiveForm> {
                     Expanded(
                       child: Builder(builder: (context) {
                         return DropdownButtonFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Examination Types',
+                          ),
                           isExpanded: true,
                           hint: const Text('Examination Types'),
                           items: widget.examTypes!

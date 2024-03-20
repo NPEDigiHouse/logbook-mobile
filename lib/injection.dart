@@ -1,7 +1,6 @@
 import 'package:data/datasources/remote_datasources/notification_datasource.dart';
 import 'package:data/services/token_manager.dart';
 import 'package:data/utils/api_header.dart';
-import 'package:data/utils/notification_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:main/blocs/notification_cubit/notification_cubit.dart';
 import 'package:main/main.exports.dart';

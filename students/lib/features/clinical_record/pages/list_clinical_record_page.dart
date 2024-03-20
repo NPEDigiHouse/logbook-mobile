@@ -59,6 +59,13 @@ class _ListClinicalRecordPageState extends State<ListClinicalRecordPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          if (widget.activeDepartmentModel.checkOutTime != null &&
+              widget.activeDepartmentModel.checkOutTime != 0) {
+            CustomAlert.error(
+                message: "already checkout for this department",
+                context: context);
+            return;
+          }
           context.navigateTo(CreateClinicalRecordFirstPage(
               activeDepartmentModel: widget.activeDepartmentModel));
           isMounted = false;

@@ -16,14 +16,17 @@ import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/spacing_column.dart';
 import 'package:semicircle_indicator/semicircle_indicator.dart';
 import 'package:main/widgets/clip_donut_painter.dart';
+import 'package:students/features/assesment/pages/scientific_assigment/add_scientific_assignment_page.dart';
 import '../widgets/title_assesment_card.dart';
 
 class ScientificAssignmentDetail extends StatefulWidget {
   const ScientificAssignmentDetail({
     super.key,
     required this.id,
+    this.isAlreadyCheckOut = false,
   });
   final String id;
+  final bool isAlreadyCheckOut;
   @override
   State<ScientificAssignmentDetail> createState() =>
       _ScientificAssignmentDetailState();
@@ -41,6 +44,38 @@ class _ScientificAssignmentDetailState
     return Scaffold(
       appBar: AppBar(
         title: const Text("Scientific Assignment"),
+        actions: [
+          (widget.isAlreadyCheckOut)
+              ? const SizedBox.shrink()
+              : BlocSelector<AssesmentCubit, AssesmentState,
+                  ListScientificAssignment?>(
+                  selector: (state) => state.scientificAssignmentDetail,
+                  builder: (context, data) {
+                    if (data == null) return const SizedBox.shrink();
+                    return PopupMenuButton<String>(
+                      icon: const Icon(
+                        Icons.more_vert_rounded,
+                      ),
+                      onSelected: (value) {
+                        if (value == 'Edit') {
+                          context.navigateTo(AddScientificAssignmentPage(
+                            unitName: data.unitName ?? '',
+                            oldData: data,
+                          ));
+                        }
+                      },
+                      itemBuilder: (BuildContext context) {
+                        return <PopupMenuEntry<String>>[
+                          const PopupMenuItem<String>(
+                            value: 'Edit',
+                            child: Text('Edit'),
+                          ),
+                        ];
+                      },
+                    );
+                  },
+                ),
+        ],
       ).variant(),
       body: SafeArea(
         child: RefreshIndicator(
@@ -53,7 +88,13 @@ class _ScientificAssignmentDetailState
           child: CustomScrollView(
             slivers: [
               SliverFillRemaining(
-                child: BlocBuilder<AssesmentCubit, AssesmentState>(
+                child: BlocConsumer<AssesmentCubit, AssesmentState>(
+                  listener: (context, state) {
+                    if (state.isUpdate) {
+                      BlocProvider.of<AssesmentCubit>(context)
+                          .getScientiicAssignmentDetail(id: widget.id);
+                    }
+                  },
                   builder: (context, state) {
                     if (state.requestState == RequestState.loading) {
                       return const CustomLoading();

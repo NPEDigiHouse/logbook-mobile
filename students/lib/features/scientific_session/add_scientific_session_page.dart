@@ -202,7 +202,10 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                             errorText: 'This field is required',
                           ),
                           isExpanded: true,
-                          hint: const Text('Session Type'),
+                          hint: const Text('Session Type (Required)'),
+                          decoration: const InputDecoration(
+                            label: Text('Session Type (Required)'),
+                          ),
                           items: _sessionTypes
                               .map(
                                 (e) => DropdownMenuItem(
@@ -221,7 +224,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                         ),
                         BuildTextField(
                           onChanged: (v) {},
-                          label: 'Title',
+                          label: 'Title (Required)',
                           controller: titleController,
                           validator: FormBuilderValidators.required(
                             errorText: 'This field is required',
@@ -229,7 +232,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                         ),
                         BuildTextField(
                           onChanged: (v) {},
-                          label: 'Topics',
+                          label: 'Topics (Required)',
                           controller: topicController,
                           validator: FormBuilderValidators.required(
                             errorText: 'This field is required',
@@ -238,11 +241,15 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                         BuildTextField(
                           onChanged: (v) {},
                           label: 'Reference',
+                          maxLength: 100,
                           controller: referenceController,
                         ),
                         DropdownButtonFormField(
                           isExpanded: true,
-                          hint: const Text('Role'),
+                          hint: const Text('Role (Required)'),
+                          decoration: const InputDecoration(
+                            label: Text('Role (Required)'),
+                          ),
                           validator: FormBuilderValidators.required(
                             errorText: 'This field is required',
                           ),
@@ -341,6 +348,7 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                         ),
                         TextFormField(
                           maxLines: 5,
+                          maxLength: 500,
                           minLines: 5,
                           controller: additionalNotesController,
                           decoration: const InputDecoration(

@@ -80,6 +80,13 @@ class _ListSglPageState extends State<ListSglPage> {
                 SglCstAppBar(
                     title: 'Small Group Learning (SGL)',
                     onBtnPressed: () {
+                      if (widget.activeDepartmentModel.checkOutTime != null &&
+                          widget.activeDepartmentModel.checkOutTime != 0) {
+                        CustomAlert.error(
+                            message: "already checkout for this department",
+                            context: context);
+                        return;
+                      }
                       context.navigateTo(
                         CreateSglPage(
                           model: widget.activeDepartmentModel,
@@ -114,6 +121,8 @@ class _ListSglPageState extends State<ListSglPage> {
                                   final data =
                                       (state.sglDetail?.sgls ?? [])[index];
                                   return SglSubmissionCard(
+                                      activeDepartmentModel:
+                                          widget.activeDepartmentModel,
                                       data: data,
                                       unitId:
                                           widget.activeDepartmentModel.unitId ??

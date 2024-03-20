@@ -17,19 +17,22 @@ import 'package:students/features/clinical_record/pages/detail_clinical_record_p
 import 'package:students/features/competences/list_cases_page.dart';
 import 'package:students/features/competences/list_skills_page.dart';
 import 'package:students/features/scientific_session/detail_scientific_session_page.dart';
+import 'package:students/features/self_reflection/self_reflection_home_page.dart';
 import 'package:students/features/sgl_cst/list_cst_page.dart';
 import 'package:students/features/sgl_cst/list_sgl_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_mini_cex_detail_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_personal_behavior_detail_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_scientific_assignment_detail_page.dart';
 import 'package:supervisor/features/clinical_record/supervisor_detail_clinical_record_page.dart';
+import 'package:supervisor/features/competence/pages/detail_case_page.dart';
+import 'package:supervisor/features/competence/pages/detail_skill_page.dart';
 import 'package:supervisor/features/competence/pages/list_cases_page.dart';
 import 'package:supervisor/features/competence/pages/list_skills_page.dart';
 import 'package:supervisor/features/daily_activity/supervisor_daily_activity_detail_page.dart';
 import 'package:supervisor/features/final_score/supervisor_final_grade_page.dart';
 import 'package:supervisor/features/self_reflection/self_reflection_student_page.dart';
+import 'package:supervisor/features/sgl_cst/supervisor_sgl_detail_page.dart';
 import 'package:supervisor/features/special_report/special_report_detail_page.dart';
-import 'package:supervisor/features/special_report/special_report_home_page.dart';
 
 class Activity {
   final String title;
@@ -100,41 +103,19 @@ class HistoryHelper {
         'SGL': HistoryData(
             name: 'SGL',
             onTap: () {
-              if (isStudent) {
-                context.navigateTo(
-                  ListSglPage(
-                    activeDepartmentModel: ActiveDepartmentModel(
-                      unitId: element.unitId,
-                      unitName: element.unitName,
-                    ),
-                  ),
-                );
-              } else {
-                context.navigateTo(
-                  HistorySglPage(
-                    id: element.attachment ?? '',
-                  ),
-                );
-              }
+              context.navigateTo(
+                HistorySglPage(
+                  id: element.attachment ?? '',
+                ),
+              );
             },
             pathIcon: 'diversity_3_rounded.svg'),
         'CST': HistoryData(
             name: 'CST',
             onTap: () {
-              if (isStudent) {
-                context.navigateTo(
-                  ListCstPage(
-                    activeDepartmentModel: ActiveDepartmentModel(
-                      unitId: element.unitId,
-                      unitName: element.unitName,
-                    ),
-                  ),
-                );
-              } else {
-                context.navigateTo(HistoryCstPage(
-                  id: element.attachment ?? '',
-                ));
-              }
+              context.navigateTo(HistoryCstPage(
+                id: element.attachment ?? '',
+              ));
             },
             pathIcon: 'medical_information_rounded.svg'),
         'Clinical Record': HistoryData(
@@ -172,38 +153,34 @@ class HistoryHelper {
         'Self-Reflection': HistoryData(
             name: 'Self Reflection',
             onTap: isStudent
-                ? () {}
+                ? () => context.navigateTo(StudentSelfReflectionHomePage(
+                      isFromNotif: true,
+                      activeDepartmentModel: ActiveDepartmentModel(
+                          unitName: element.unitName, unitId: element.unitId),
+                    ))
                 : () => context.navigateTo(SupervisorSelfReflectionStudentPage(
                       id: element.studentId ?? '',
                     )),
             pathIcon: 'emoji_objects_rounded.svg'),
         'CASE': HistoryData(
             name: 'CASE',
-            onTap: () => isStudent
-                ? context.navigateTo(ListCasesPage(
-                    unitName: element.unitName ?? '',
-                    unitId: element.unitId ?? '',
-                  ))
-                : context.navigateTo(SupervisorListCasesPage(
-                    studentName: element.studentName ?? '',
-                    unitName: element.unitName ?? '',
-                    studentId: element.studentId ?? '',
-                    id: element.attachment ?? '',
-                  )),
+            onTap: () => context.navigateTo(DetailCasePage(
+                  unitName: element.unitName ?? '',
+                  studentId: element.studentId ?? '',
+                  id: element.attachment ?? '',
+                  studentName: element.studentName ?? '',
+                  isStudent: isStudent,
+                )),
             pathIcon: 'case_icon.svg'),
         'SKILL': HistoryData(
             name: 'SKILL',
-            onTap: () => isStudent
-                ? context.navigateTo(ListSkillsPage(
-                    unitName: element.unitName ?? '',
-                    unitId: element.unitId ?? '',
-                  ))
-                : context.navigateTo(SupervisorListSkillsPage(
-                    studentName: element.studentName ?? '',
-                    unitName: element.unitName ?? '',
-                    studentId: element.studentId ?? '',
-                    id: element.attachment ?? '',
-                  )),
+            onTap: () => context.navigateTo(DetailSkillPage(
+                  unitName: element.unitName ?? '',
+                  studentId: element.studentId ?? '',
+                  id: element.attachment ?? '',
+                  studentName: element.studentName ?? '',
+                  isStudent: isStudent,
+                )),
             pathIcon: 'skill_icon.svg'),
         'MINI_CEX': HistoryData(
             name: 'Mini Cex',
@@ -237,9 +214,7 @@ class HistoryHelper {
             pathIcon: 'icon_scientific_assignment.svg'),
         'Problem Consultation': HistoryData(
             name: 'Problem Consultation',
-            onTap: isStudent
-                ? () {}
-                : () => context.navigateTo(SpecialReportDetailPage2(
+            onTap:  () => context.navigateTo(SpecialReportDetailPage2(
                       id: element.attachment ?? '',
                     )),
             pathIcon: 'consultation_icon.svg'),

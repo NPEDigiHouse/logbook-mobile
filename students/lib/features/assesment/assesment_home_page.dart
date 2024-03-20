@@ -22,6 +22,8 @@ class AssesmentHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(activeDepartmentModel.checkOutTime);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Assesment'),
@@ -47,8 +49,11 @@ class AssesmentHomePage extends StatelessWidget {
                 AssementMenuCard(
                   iconPath: 'icon_weekly.svg',
                   title: 'Weekly Grades',
-                  onTap: () =>
-                      context.navigateTo(const StudentWeeklyAssementPage()),
+                  onTap: () => context.navigateTo(StudentWeeklyAssementPage(
+                    isAlreadyCheckOut:
+                        activeDepartmentModel.checkOutTime != null &&
+                            activeDepartmentModel.checkOutTime != 0,
+                  )),
                   desc: 'Weekly assessment from kordik team',
                 ),
                 const SizedBox(
@@ -62,6 +67,9 @@ class AssesmentHomePage extends StatelessWidget {
                     unitName: activeDepartmentModel.unitName!,
                     isSupervisingDPKExist:
                         credential.student?.supervisingDPKId != null,
+                    isAlreadyCheckOut:
+                        activeDepartmentModel.checkOutTime != null &&
+                            activeDepartmentModel.checkOutTime != 0,
                   )),
                   desc: 'Scientific assessment data',
                 ),
@@ -78,6 +86,9 @@ class AssesmentHomePage extends StatelessWidget {
                       unitName: activeDepartmentModel.unitName!,
                       isExaminerDPKExist:
                           credential.student?.examinerDPKId != null,
+                      isAlreadyCheckOut:
+                          activeDepartmentModel.checkOutTime != null &&
+                              activeDepartmentModel.checkOutTime != 0,
                     )),
                     desc: 'Mini Clinical Evaluation Exercise',
                   );

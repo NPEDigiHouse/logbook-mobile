@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/activity_cubit/activity_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/custom_loading.dart';
 import 'package:main/widgets/empty_data.dart';
 import 'package:main/widgets/inkwell_container.dart';
@@ -79,6 +80,9 @@ class _SelectActivityPageState extends State<SelectActivityPage> {
                             merge[index].longitude == 0) {
                           selectedLocation.value = merge[index];
                           widget.onTap.call(merge[index]);
+                          CustomAlert.success(
+                              message: "Success Select Location",
+                              context: context);
                         } else {
                           showModalBottomSheet(
                             context: context,
@@ -87,6 +91,9 @@ class _SelectActivityPageState extends State<SelectActivityPage> {
                               onTap: (ActivityModel activity) {
                                 selectedLocation.value = activity;
                                 widget.onTap.call(activity);
+                                CustomAlert.success(
+                                    message: "Success Select Location",
+                                    context: context);
                               },
                               model: merge[index],
                               isActive: merge[index] == val,

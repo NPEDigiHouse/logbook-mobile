@@ -73,6 +73,7 @@ class _ListDoneCstPageState extends State<ListDoneCstPage> {
                                   final data =
                                       state.cstDoneDetail!.csts![index];
                                   return CstSubmissionCard(
+                                    activeDepartmentModel: widget.activeDepartmentModel,
                                       data: data,
                                       unitId:
                                           widget.activeDepartmentModel.unitId ??

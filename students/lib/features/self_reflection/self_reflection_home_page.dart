@@ -133,7 +133,15 @@ class _StudentSelfReflectionHomePageState
                                           null ||
                                       widget.isFromNotif)
                                     _AddNewSelfReflectionCard(
-                                        credential: widget.credential),
+                                      credential: widget.credential,
+                                      isAlreadyCheckout: widget
+                                                  .activeDepartmentModel
+                                                  .checkOutTime !=
+                                              null &&
+                                          widget.activeDepartmentModel
+                                                  .checkOutTime !=
+                                              0,
+                                    ),
                                   Builder(
                                     builder: (context) {
                                       if (state.selfReflectionResponse !=
@@ -159,6 +167,13 @@ class _StudentSelfReflectionHomePageState
                                               shrinkWrap: true,
                                               itemBuilder: (context, index) =>
                                                   StudentSelfReflectionCard(
+                                                isAlreadyCheckout: widget
+                                                            .activeDepartmentModel
+                                                            .checkOutTime !=
+                                                        null &&
+                                                    widget.activeDepartmentModel
+                                                            .checkOutTime !=
+                                                        0,
                                                 credential: widget.credential,
                                                 isFromNotif: widget.isFromNotif,
                                                 model: state
@@ -208,14 +223,24 @@ class _StudentSelfReflectionHomePageState
 class _AddNewSelfReflectionCard extends StatelessWidget {
   final UserCredential? credential;
   final bool? isFromNotif;
+  final bool isAlreadyCheckout;
   const _AddNewSelfReflectionCard(
-      {super.key, this.credential, this.isFromNotif});
+      {super.key,
+      this.credential,
+      this.isFromNotif,
+      this.isAlreadyCheckout = false});
 
   @override
   Widget build(BuildContext context) {
     return InkWellContainer(
       radius: 12,
       onTap: () {
+        if (isAlreadyCheckout) {
+          CustomAlert.error(
+              message: "already checkout for this department",
+              context: context);
+          return;
+        }
         context.navigateTo(CreateSelfReflectionPage(
           credential: credential,
           isFromNotif: isFromNotif ?? false,

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,6 +11,7 @@ class BuildTextField extends StatefulWidget {
   final bool isOnlyNumber;
   final bool isDisable;
   final bool isOnlyDigit;
+  final int maxLength;
   final String? Function(dynamic data)? validator;
 
   const BuildTextField(
@@ -16,6 +19,7 @@ class BuildTextField extends StatefulWidget {
       this.controller,
       this.initialValue,
       this.validator,
+      this.maxLength = 50,
       this.isDisable = false,
       this.isOnlyDigit = false,
       this.isOnlyNumber = false,
@@ -34,6 +38,7 @@ class _BuildTextFieldState extends State<BuildTextField> {
       controller: widget.controller,
       validator: widget.validator,
       onChanged: widget.onChanged,
+      maxLength: widget.maxLength,
       initialValue: widget.initialValue,
       inputFormatters: widget.isOnlyDigit
           ? <TextInputFormatter>[
@@ -44,6 +49,7 @@ class _BuildTextFieldState extends State<BuildTextField> {
           widget.isOnlyNumber ? TextInputType.number : TextInputType.text,
       decoration: InputDecoration(
         labelText: widget.label,
+        
       ),
     );
   }

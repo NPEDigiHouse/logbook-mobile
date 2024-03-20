@@ -176,6 +176,7 @@ class _AddTopicDialogState extends State<AddTopicDialog> {
                   }),
                   TextFormField(
                     maxLines: 4,
+                    maxLength: 500,
                     minLines: 4,
                     decoration: const InputDecoration(
                       label: Text(

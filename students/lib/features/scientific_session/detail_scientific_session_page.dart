@@ -69,7 +69,8 @@ class _DetailScientificSessionPageState
             if (cr.detailState == RequestState.data &&
                 cr.detail != null &&
                 cr.detail?.verificationStatus != "VERIFIED" &&
-                widget.activeDepartmentModel != null)
+                (widget.activeDepartmentModel?.checkOutTime == null ||
+                    widget.activeDepartmentModel?.checkOutTime == 0))
               PopupMenuButton<String>(
                 icon: const Icon(
                   Icons.more_vert_rounded,

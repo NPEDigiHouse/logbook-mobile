@@ -66,6 +66,9 @@ class _DiagnosticsAdaptiveFormState extends State<DiagnosticsAdaptiveForm> {
                       child: Builder(builder: (context) {
                         return DropdownButtonFormField(
                           isExpanded: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Diagnostics Types',
+                          ),
                           hint: const Text('Diagnostics Types'),
                           items: widget.diagnosisTypes!
                               .map(

@@ -15,13 +15,14 @@ class StudentSelfReflectionCard extends StatelessWidget {
   final UserCredential? credential;
   final bool isFromNotif;
   final Function? onUpdate;
-
+  final bool isAlreadyCheckout;
 
   const StudentSelfReflectionCard({
     super.key,
     this.credential,
     required this.model,
     this.onUpdate,
+    this.isAlreadyCheckout = false,
     this.isFromNotif = false,
   });
 
@@ -123,7 +124,8 @@ class StudentSelfReflectionCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (model.verificationStatus != 'VERIFIED')
+                if (model.verificationStatus != 'VERIFIED' &&
+                    !isAlreadyCheckout)
                   PopupMenuButton<String>(
                     icon: const Icon(
                       Icons.more_vert_rounded,

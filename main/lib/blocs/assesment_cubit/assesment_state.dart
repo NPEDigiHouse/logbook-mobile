@@ -21,6 +21,7 @@ class AssesmentState {
   final RequestState stateSa;
   final RequestState stateSaItem;
   final bool isSubmitFinalScoreSuccess;
+  final bool isUpdate;
   RequestState requestState;
 
   AssesmentState({
@@ -45,6 +46,7 @@ class AssesmentState {
     this.isPersonalBehaviorVerify = false,
     this.personalBehaviorDetail,
     this.personalBehaviorStudent,
+    this.isUpdate = false,
   });
 
   AssesmentState copyWith({
@@ -69,6 +71,7 @@ class AssesmentState {
     List<StudentScientificAssignment>? personalBehaviorStudent,
     PersonalBehaviorDetailModel? personalBehaviorDetail,
     bool isPersonalBehaviorVerify = false,
+    bool isUpdate = false,
   }) {
     return AssesmentState(
       isSubmitFinalScoreSuccess: isSubmitFinalScoreSuccess,
@@ -97,6 +100,7 @@ class AssesmentState {
           personalBehaviorStudent ?? this.personalBehaviorStudent,
       weeklyAssesment: weeklyAssesment ?? this.weeklyAssesment,
       isScoreWeeklyAssessment: isScoreWeeklyAssessment,
+      isUpdate: isUpdate,
     );
   }
 }

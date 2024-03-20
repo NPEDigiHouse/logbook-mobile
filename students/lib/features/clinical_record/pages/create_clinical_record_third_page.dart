@@ -185,6 +185,7 @@ class _CreateClinicalRecordThirdPageState
                       child: TextFormField(
                         maxLines: 5,
                         minLines: 5,
+                        maxLength: 500,
                         controller: notesController,
                         decoration: const InputDecoration(
                           label: Text('Additional Notes'),

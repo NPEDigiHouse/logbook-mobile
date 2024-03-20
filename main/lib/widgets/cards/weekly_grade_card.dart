@@ -15,6 +15,7 @@ class WeeklyGradeCard extends StatelessWidget {
   final String status;
   final bool? isPassed;
   final double? score;
+  final bool isAlreadyCheckout;
   final VoidCallback? onTap;
   final TotalGradeHelper totalGrade;
   final bool isStudent;
@@ -25,6 +26,7 @@ class WeeklyGradeCard extends StatelessWidget {
     this.isPassed,
     this.startTime,
     this.endTime,
+    this.isAlreadyCheckout = false,
     this.isStudent = false,
     this.notAttendNum,
     required this.totalGrade,
@@ -36,6 +38,14 @@ class WeeklyGradeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final startDate = DateTime.fromMillisecondsSinceEpoch(startTime!);
+    print(startDate.year);
+    if (DateTime(now.year, now.month, now.day).isBefore(
+            DateTime(startDate.year, startDate.month, startDate.day)) &&
+        isAlreadyCheckout) {
+      return const SizedBox.shrink();
+    }
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),

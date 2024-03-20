@@ -51,6 +51,8 @@ class _CompetenceHomePageState extends State<CompetenceHomePage> {
                         child: CompetenceCard(
                           onTap: () => context.navigateTo(ListCasesPage(
                             unitName: widget.model.unitName ?? '',
+                            isAlreadyCheckout:
+                                widget.model.checkOutTime != null && widget.model.checkOutTime != 0,
                             // countCheckIn: widget.model.countCheckIn ?? 0,
                             unitId: widget.unitId,
                           )),

@@ -21,9 +21,7 @@ ThemeData get lightTheme {
     ),
     appBarTheme: appBarTheme,
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    
     timePickerTheme: TimePickerThemeData(
-      
       hourMinuteTextStyle: TextStyle(
         fontSize: 48,
         fontWeight: FontWeight.w600,
@@ -85,7 +83,9 @@ final textButtonTheme = TextButtonThemeData(
 );
 
 final inputDecorationTheme = InputDecorationTheme(
-  floatingLabelBehavior: FloatingLabelBehavior.auto,
+  
+  floatingLabelBehavior: FloatingLabelBehavior.always,
+  
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(14),
     borderSide: const BorderSide(
@@ -100,5 +100,7 @@ final inputDecorationTheme = InputDecorationTheme(
   ),
   hintStyle: const TextStyle(
     color: onFormDisableColor,
+    
   ),
+  
 );

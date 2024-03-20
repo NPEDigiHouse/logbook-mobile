@@ -4,9 +4,11 @@ import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/sglcst/sgl_model.dart';
 import 'package:data/models/sglcst/topic_on_sglcst.dart';
+import 'package:data/models/units/active_unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/sgl_cst_cubit/sgl_cst_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/dividers/item_divider.dart';
 import 'package:main/widgets/verify_dialog.dart';
 import 'package:students/features/sgl_cst/widgets/add_topic_dialog.dart';
@@ -18,10 +20,12 @@ class SglSubmissionCard extends StatelessWidget {
     super.key,
     required this.data,
     required this.unitId,
+    required this.activeDepartmentModel,
   });
 
   final Sgl data;
   final String unitId;
+  final ActiveDepartmentModel activeDepartmentModel;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +85,9 @@ class SglSubmissionCard extends StatelessWidget {
                 )
               ],
               const Spacer(),
-              if (data.verificationStatus != 'VERIFIED')
+              if (data.verificationStatus != 'VERIFIED' &&
+                  (activeDepartmentModel.checkOutTime == null ||
+                      activeDepartmentModel.checkOutTime == 0))
                 PopupMenuButton<String>(
                   icon: const Icon(
                     Icons.more_vert_rounded,
@@ -218,6 +224,13 @@ class SglSubmissionCard extends StatelessWidget {
             ),
             TextButton.icon(
               onPressed: () {
+                if (activeDepartmentModel.checkOutTime != null &&
+                    activeDepartmentModel.checkOutTime != 0) {
+                  CustomAlert.error(
+                      message: "already checkout for this department",
+                      context: context);
+                  return;
+                }
                 showDialog(
                   context: context,
                   barrierLabel: '',
@@ -226,7 +239,7 @@ class SglSubmissionCard extends StatelessWidget {
                     type: TopicDialogType.sgl,
                     date: data.createdAt!,
                     id: data.sglId!,
-                    departmentId: unitId ?? '',
+                    departmentId: unitId,
                     supervisorId: '',
                   ),
                 );

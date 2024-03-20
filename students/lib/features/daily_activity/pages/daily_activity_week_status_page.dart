@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';
 import 'package:main/blocs/daily_activity_cubit/daily_activity_cubit.dart';
+import 'package:main/widgets/custom_alert.dart';
 import 'package:main/widgets/inkwell_container.dart';
 import 'package:main/widgets/skeleton/list_skeleton_template.dart';
 import 'package:main/widgets/spacing_column.dart';
@@ -24,6 +25,7 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
   final DateTime endDate;
   final bool isSupervisor;
   final String? studentId;
+  final bool alreadyCheckout;
   final bool status;
 
   const DailyActivityWeekStatusPage({
@@ -34,6 +36,7 @@ class DailyActivityWeekStatusPage extends StatefulWidget {
     required this.endDate,
     required this.daId,
     this.studentId,
+    this.alreadyCheckout = false,
     required this.weekName,
   });
 
@@ -139,6 +142,7 @@ class _DailyActivityWeekStatusPageState
                                 isSupervisor: widget.isSupervisor,
                                 activeStatus: widget.status,
                                 id: data[index].id!,
+                                alreadyCheckout: widget.alreadyCheckout,
                                 endDate: widget.endDate,
                                 date: DateTime.fromMillisecondsSinceEpoch(
                                     (data[index].date ?? 0) * 1000),
@@ -301,6 +305,7 @@ class DailyActivityStatusCard extends StatefulWidget {
   final DateTime? date;
   final String? dailyActivityId;
   final String id;
+  final bool alreadyCheckout;
   final String day;
   final String? activity;
   final String verificationStatus;
@@ -316,6 +321,7 @@ class DailyActivityStatusCard extends StatefulWidget {
     this.supervisorName,
     required this.endDate,
     required this.isSupervisor,
+    required this.alreadyCheckout,
     required this.date,
     required this.dailyActivityId,
     required this.id,
@@ -368,11 +374,19 @@ class _DailyActivityStatusCardState extends State<DailyActivityStatusCard> {
       onTap: widget.activeStatus &&
               widget.verificationStatus != 'VERIFIED' &&
               !widget.isSupervisor
-          ? () => context.navigateTo(CreateDailyActivityPage(
+          ? () {
+              if (widget.alreadyCheckout) {
+                CustomAlert.error(
+                    message: "already checkout for this department",
+                    context: context);
+                return;
+              }
+              context.navigateTo(CreateDailyActivityPage(
                 dayId: widget.id,
                 id: widget.dailyActivityId!,
                 activityStatus: widget.activitiesStatus,
-              ))
+              ));
+            }
           : null,
       color: Colors.white,
       boxShadow: [

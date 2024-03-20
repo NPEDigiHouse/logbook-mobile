@@ -15,9 +15,10 @@ import 'student_mini_cex_detail.dart';
 class StudentTestGrade extends StatefulWidget {
   final String unitName;
   final bool isExaminerDPKExist;
+    final bool isAlreadyCheckOut;
 
   const StudentTestGrade(
-      {super.key, required this.unitName, required this.isExaminerDPKExist});
+      {super.key, required this.unitName, required this.isExaminerDPKExist, this.isAlreadyCheckOut = false});
 
   @override
   State<StudentTestGrade> createState() => _StudentTestGradeState();
@@ -93,6 +94,7 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
                         final miniCex = state.studentMiniCexs!.first;
                         return WrapperMiniCex(
                           id: miniCex.id!,
+                          isAlreadyCheckOut: widget.isAlreadyCheckOut,
                         );
                       } else {
                         return const CustomLoading();
@@ -111,7 +113,8 @@ class _StudentTestGradeState extends State<StudentTestGrade> {
 
 class WrapperMiniCex extends StatefulWidget {
   final String id;
-  const WrapperMiniCex({super.key, required this.id});
+    final bool isAlreadyCheckOut;
+  const WrapperMiniCex({super.key, required this.id, required this.isAlreadyCheckOut});
 
   @override
   State<WrapperMiniCex> createState() => _WrapperMiniCexState();
@@ -133,6 +136,7 @@ class _WrapperMiniCexState extends State<WrapperMiniCex> {
             state.requestState == RequestState.data) {
           context.replace(StudentMiniCexDetail(
             id: widget.id,
+            isAlreadyCheckOut: widget.isAlreadyCheckOut,
           ));
         }
       },

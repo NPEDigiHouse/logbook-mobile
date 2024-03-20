@@ -64,7 +64,10 @@ class _DetailClinicalRecordPageState extends State<DetailClinicalRecordPage> {
           title: const Text("Entry Detail"),
           actions: [
             if (cr.detailClinicalRecordModel != null &&
-                cr.detailClinicalRecordModel?.verificationStatus != "VERIFIED")
+                cr.detailClinicalRecordModel?.verificationStatus !=
+                    "VERIFIED" &&
+                (widget.department.checkOutTime == null ||
+                    widget.department.checkOutTime == 0))
               PopupMenuButton<String>(
                 icon: const Icon(
                   Icons.more_vert_rounded,

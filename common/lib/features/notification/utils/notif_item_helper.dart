@@ -4,9 +4,11 @@ import 'package:data/models/notification/notification_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/notification_cubit/notification_cubit.dart';
+import 'package:students/features/assesment/pages/final_score/student_final_score_page.dart';
 import 'package:students/features/assesment/pages/mini_cex/student_test_grade_page.dart';
 import 'package:students/features/assesment/pages/personal_behavior/student_personal_behavior_page.dart';
 import 'package:students/features/assesment/pages/scientific_assigment/student_scientific_assignment_page.dart';
+import 'package:students/features/assesment/pages/weekly_assesment/student_weekly_assesment_page.dart';
 import 'package:students/features/clinical_record/pages/detail_clinical_record_page.dart';
 import 'package:students/features/competences/list_cases_page.dart';
 import 'package:students/features/competences/list_skills_page.dart';
@@ -27,7 +29,6 @@ import 'package:supervisor/features/self_reflection/self_reflection_student_page
 import 'package:supervisor/features/sgl_cst/supervisor_cst_detail_page.dart';
 import 'package:supervisor/features/sgl_cst/supervisor_sgl_detail_page.dart';
 import 'package:supervisor/features/special_report/special_report_detail_page.dart';
-import 'package:supervisor/features/special_report/special_report_home_page.dart';
 
 class NotifData {
   final String name;
@@ -109,6 +110,44 @@ class NotifiItemHelper {
   static Map<ActivityType, NotifData> getNotifData(BuildContext context,
           UserRole role, NotificationModel notification) =>
       {
+        ActivityType.finalScore: NotifData(
+            name: 'FINAL SCORE',
+            onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
+              //student
+              if (role == UserRole.student) {
+                if (notification.unit != null) {
+                  context.navigateTo(
+                    StudentFinalScorePage(
+                      departmentName: notification.unitName ?? '',
+                    ),
+                  );
+                }
+              }
+            },
+            pathIcon: 'diversity_3_rounded.svg'),
+        ActivityType.weeklyAssessment: NotifData(
+            name: 'WEEKLY ASSESSMENT',
+            onTap: () {
+              Future.microtask(() {
+                context
+                    .read<NotificationCubit>()
+                    .readNotification(id: notification.id ?? '');
+              });
+              //student
+              if (role == UserRole.student) {
+                if (notification.unit != null) {
+                  context.navigateTo(
+                    const StudentWeeklyAssementPage(),
+                  );
+                }
+              }
+            },
+            pathIcon: 'diversity_3_rounded.svg'),
         ActivityType.sgl: NotifData(
             name: 'SGL',
             onTap: () {

@@ -80,6 +80,12 @@ class _ListCstPageState extends State<ListCstPage> {
                 SglCstAppBar(
                   title: 'Clinical Skill Training (CST)',
                   onBtnPressed: () {
+                    if (widget.activeDepartmentModel.checkOutTime != null && widget.activeDepartmentModel.checkOutTime != 0) {
+                      CustomAlert.error(
+                          message: "already checkout for this department",
+                          context: context);
+                      return;
+                    }
                     context.navigateTo(CreateCstPage(
                       model: widget.activeDepartmentModel,
                       date: DateTime.now(),
@@ -118,6 +124,7 @@ class _ListCstPageState extends State<ListCstPage> {
                                   itemBuilder: (context, index) {
                                     final data = state.cstDetail!.csts![index];
                                     return CstSubmissionCard(
+                                      activeDepartmentModel: widget.activeDepartmentModel,
                                         data: data,
                                         unitId: widget
                                                 .activeDepartmentModel.unitId ??

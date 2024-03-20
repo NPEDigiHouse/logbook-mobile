@@ -9,6 +9,7 @@ class StudentDailyActivityPerDays {
   final int? alpha;
   @JsonKey(name: "attend")
   final int? attend;
+  
   final String? verificationStatus;
   final int? date;
   @JsonKey(name: "weekName")

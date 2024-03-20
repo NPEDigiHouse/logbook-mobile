@@ -79,7 +79,8 @@ class _CreateCstPageState extends State<CreateCstPage> {
                   children: [
                     TextField(
                       controller: dateController,
-                      decoration: const InputDecoration(enabled: false),
+                      decoration: const InputDecoration(
+                          enabled: false, labelText: 'Date Created'),
                     ),
                     BlocBuilder<SupervisorsCubit, SupervisorsState>(
                         builder: (context, state) {
@@ -266,6 +267,7 @@ class _CreateCstPageState extends State<CreateCstPage> {
                     TextFormField(
                       maxLines: 4,
                       minLines: 4,
+                      maxLength: 500,
                       controller: noteController,
                       decoration: const InputDecoration(
                         label: Text(
