@@ -183,7 +183,9 @@ class _LoginPageState extends State<LoginPage> {
       Future.microtask(() {
         BlocProvider.of<WrapperCubit>(context).isSignIn();
       });
-      context.replace(const Wrapper());
+      context.replace(const Wrapper(
+        isFromLogin: true,
+      ));
     }
 
     if (state is LoginFailed) {

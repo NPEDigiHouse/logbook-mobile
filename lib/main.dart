@@ -1,4 +1,3 @@
-
 import 'package:data/utils/api_header.dart';
 import 'package:data/utils/notification_utils.dart';
 import 'package:elogbook/firebase_options.dart';
@@ -15,7 +14,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await NotificationUtils.configureFirebaseMessaging();
+  NotificationUtils.init();
   CredentialSaver.instance();
   await initializeDateFormatting('en_EN', null)
       .then((_) => runApp(const App()));

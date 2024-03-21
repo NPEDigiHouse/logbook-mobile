@@ -17,9 +17,11 @@ class CstSinglePage extends StatefulWidget {
   final String id;
   final bool isCeu;
   final String userId;
+  final bool fromNotif;
   const CstSinglePage({
     super.key,
     required this.id,
+    this.fromNotif = false,
     required this.isCeu,
     required this.userId,
   });
@@ -248,8 +250,8 @@ class _CstSinglePageState extends State<CstSinglePage> {
                                           ),
                                           Builder(
                                             builder: (context) {
-                                              if (data.supervisorId ==
-                                                      widget.userId &&
+                                              if ((data.supervisorId ==
+                                                      widget.userId || widget.fromNotif) &&
                                                   data.verificationStatus !=
                                                       "VERIFIED") {
                                                 if (data.topic![i]
@@ -327,7 +329,7 @@ class _CstSinglePageState extends State<CstSinglePage> {
                                 children: [
                                   Builder(
                                     builder: (context) {
-                                      if (data.supervisorId == widget.userId &&
+                                      if ((data.supervisorId == widget.userId || widget.fromNotif) &&
                                           data.verificationStatus !=
                                               "VERIFIED") {
                                         if (data.topic?.indexWhere((element) =>

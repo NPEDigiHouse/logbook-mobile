@@ -49,6 +49,7 @@ class NotificationDataSourceImpl extends NotificationDataSource {
             if (activityType != null) "submissionType": activityType,
             if (unitId != null) "unit": unitId,
           });
+      print(response.data);
       final dataResponse = DataResponse<List<dynamic>>.fromJson(response.data);
       List<NotificationModel> listData =
           dataResponse.data.map((e) => NotificationModel.fromJson(e)).toList();

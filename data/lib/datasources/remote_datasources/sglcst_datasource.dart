@@ -151,6 +151,7 @@ class SglCstDataSourceImpl implements SglCstDataSource {
         '${ApiService.baseUrl}/csts/students/$studentId',
         options: await apiHeader.userOptions(),
       );
+      print(response.data);
       final dataResponse = DataResponse<dynamic>.fromJson(response.data);
       final result = CstResponse.fromJson(dataResponse.data);
       return Right(result);

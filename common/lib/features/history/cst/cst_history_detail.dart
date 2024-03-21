@@ -38,6 +38,9 @@ class _HistoryCstPageState extends State<HistoryCstPage> {
       body: CheckInternetOnetime(child: (context) {
         return BlocBuilder<SglCstCubit, SglCstState>(
           builder: (context, state) {
+            if (state.fetchState == RequestState.loading) {
+              return const Center(child: CustomLoading());
+            }
             if (state.historyCstData != null) {
               return CustomScrollView(
                 slivers: [
@@ -207,12 +210,8 @@ class _HistoryCstPageState extends State<HistoryCstPage> {
                   ),
                 ],
               );
-            } else if (state.requestState == RequestState.loading) {
-              return const Center(child: CustomLoading());
-            } else if (state.requestState == RequestState.error) {
-              return const Text('Error');
             }
-            return const SizedBox.shrink();
+            return const Center(child: CustomLoading());
           },
         );
       }),

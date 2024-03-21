@@ -21,6 +21,8 @@ class CstOnListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(userId);
+
     return Material(
       color: Colors.transparent,
       child: InkWell(

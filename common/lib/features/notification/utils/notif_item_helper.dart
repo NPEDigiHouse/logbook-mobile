@@ -1,3 +1,5 @@
+import 'package:common/features/history/cst/cst_history_detail.dart';
+import 'package:common/features/history/sgl/sgl_history_detail.dart';
 import 'package:common/features/notification/notification_page.dart';
 import 'package:core/context/navigation_extension.dart';
 import 'package:data/models/notification/notification_model.dart';
@@ -26,8 +28,8 @@ import 'package:supervisor/features/competence/pages/list_skills_page.dart';
 import 'package:supervisor/features/daily_activity/supervisor_daily_activity_detail_page.dart';
 import 'package:supervisor/features/scientific_session/detail_scientific_session_page.dart';
 import 'package:supervisor/features/self_reflection/self_reflection_student_page.dart';
-import 'package:supervisor/features/sgl_cst/supervisor_cst_detail_page.dart';
-import 'package:supervisor/features/sgl_cst/supervisor_sgl_detail_page.dart';
+import 'package:supervisor/features/sgl_cst/cst_single_page.dart';
+import 'package:supervisor/features/sgl_cst/sgl_single_page.dart';
 import 'package:supervisor/features/special_report/special_report_detail_page.dart';
 
 class NotifData {
@@ -129,7 +131,7 @@ class NotifiItemHelper {
                 }
               }
             },
-            pathIcon: 'diversity_3_rounded.svg'),
+            pathIcon: 'feed_rounded.svg'),
         ActivityType.weeklyAssessment: NotifData(
             name: 'WEEKLY ASSESSMENT',
             onTap: () {
@@ -147,7 +149,7 @@ class NotifiItemHelper {
                 }
               }
             },
-            pathIcon: 'diversity_3_rounded.svg'),
+            pathIcon: 'icon_weekly.svg'),
         ActivityType.sgl: NotifData(
             name: 'SGL',
             onTap: () {
@@ -158,20 +160,16 @@ class NotifiItemHelper {
               });
               //supervisor
               if (role == UserRole.supervisor) {
-                context.navigateTo(SupervisorSglDetailPage(
-                  studentId: notification.senderId ?? '',
+                context.navigateTo(SglSinglePage(
+                  id: notification.submissionId ?? '',
                   isCeu: false,
-                  studentName: notification.senderName ?? '',
-                  unitName: notification.unitName,
                   userId: notification.receiverId ?? '',
                 ));
               }
               //student
               if (role == UserRole.student) {
-                if (notification.unit != null) {
-                  context.navigateTo(
-                      ListSglPage(activeDepartmentModel: notification.unit!));
-                }
+                context.navigateTo(
+                    HistorySglPage(id: notification.submissionId ?? ''));
               }
             },
             pathIcon: 'diversity_3_rounded.svg'),
@@ -184,21 +182,19 @@ class NotifiItemHelper {
                     .readNotification(id: notification.id ?? '');
               });
               //supervisor
+              print(notification.receiverId);
               if (role == UserRole.supervisor) {
-                context.navigateTo(SupervisorCstDetailPage(
-                  studentId: notification.senderId ?? '',
+                context.navigateTo(CstSinglePage(
+                  id: notification.submissionId ?? '',
                   isCeu: false,
-                  studentName: notification.senderName ?? '',
-                  unitName: notification.unitName,
+                  fromNotif: true,
                   userId: notification.receiverId ?? '',
                 ));
               }
               //student
               if (role == UserRole.student) {
-                if (notification.unit != null) {
-                  context.navigateTo(
-                      ListCstPage(activeDepartmentModel: notification.unit!));
-                }
+                context.navigateTo(
+                    HistoryCstPage(id: notification.submissionId ?? ''));
               }
             },
             pathIcon: 'medical_information_rounded.svg'),
@@ -454,16 +450,6 @@ class NotifiItemHelper {
               });
             },
             pathIcon: 'wifi_protected_setup_rounded.svg'),
-        ActivityType.finalScore: NotifData(
-            name: 'Final Score',
-            onTap: () {
-              Future.microtask(() {
-                context
-                    .read<NotificationCubit>()
-                    .readNotification(id: notification.id ?? '');
-              });
-            },
-            pathIcon: 'feed_rounded.svg'),
         ActivityType.dailyActivity: NotifData(
             name: 'Daily Activity',
             onTap: () {
@@ -487,15 +473,5 @@ class NotifiItemHelper {
               }
             },
             pathIcon: 'summarize_rounded.svg'),
-        ActivityType.weeklyAssessment: NotifData(
-            name: 'Weekly Assesment',
-            onTap: () {
-              Future.microtask(() {
-                context
-                    .read<NotificationCubit>()
-                    .readNotification(id: notification.id ?? '');
-              });
-            },
-            pathIcon: 'icon_weekly.svg'),
       };
 }

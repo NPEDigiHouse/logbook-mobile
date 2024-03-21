@@ -480,7 +480,7 @@ class SglCstCubit extends Cubit<SglCstState> {
     emit(state.copyWith(
       requestState: RequestState.loading,
     ));
-
+    
     final result = await dataSource.getCstByStudentId(studentId: studentId);
     result.fold(
       (l) => emit(state.copyWith(

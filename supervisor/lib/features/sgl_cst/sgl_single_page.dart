@@ -17,10 +17,13 @@ class SglSinglePage extends StatefulWidget {
   final String id;
   final bool isCeu;
   final String userId;
+  final bool fromNotif;
+
   const SglSinglePage({
     super.key,
     required this.id,
     required this.isCeu,
+    this.fromNotif = false,
     required this.userId,
   });
 
@@ -248,8 +251,9 @@ class _SglSinglePageState extends State<SglSinglePage> {
                                           ),
                                           Builder(
                                             builder: (context) {
-                                              if (data.supervisorId ==
-                                                      widget.userId &&
+                                              if ((data.supervisorId ==
+                                                          widget.userId ||
+                                                      widget.fromNotif) &&
                                                   data.verificationStatus !=
                                                       "VERIFIED") {
                                                 if (data.topic![i]
@@ -327,7 +331,8 @@ class _SglSinglePageState extends State<SglSinglePage> {
                                 children: [
                                   Builder(
                                     builder: (context) {
-                                      if (data.supervisorId == widget.userId &&
+                                      if ((data.supervisorId == widget.userId ||
+                                              widget.fromNotif) &&
                                           data.verificationStatus !=
                                               "VERIFIED") {
                                         if (data.topic?.indexWhere((element) =>

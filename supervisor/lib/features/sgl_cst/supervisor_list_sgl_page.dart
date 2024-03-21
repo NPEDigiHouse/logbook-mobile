@@ -1,5 +1,4 @@
 import 'package:core/context/navigation_extension.dart';
-import 'package:core/helpers/app_size.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/sglcst/sgl_cst_on_list_model.dart';

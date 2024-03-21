@@ -14,24 +14,17 @@ import 'package:students/features/assesment/pages/personal_behavior/student_pers
 import 'package:students/features/assesment/pages/scientific_assigment/student_scientific_assignment_page.dart';
 import 'package:students/features/assesment/pages/weekly_assesment/student_weekly_assesment_page.dart';
 import 'package:students/features/clinical_record/pages/detail_clinical_record_page.dart';
-import 'package:students/features/competences/list_cases_page.dart';
-import 'package:students/features/competences/list_skills_page.dart';
 import 'package:students/features/scientific_session/detail_scientific_session_page.dart';
 import 'package:students/features/self_reflection/self_reflection_home_page.dart';
-import 'package:students/features/sgl_cst/list_cst_page.dart';
-import 'package:students/features/sgl_cst/list_sgl_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_mini_cex_detail_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_personal_behavior_detail_page.dart';
 import 'package:supervisor/features/assesment/pages/supervisor_scientific_assignment_detail_page.dart';
 import 'package:supervisor/features/clinical_record/supervisor_detail_clinical_record_page.dart';
 import 'package:supervisor/features/competence/pages/detail_case_page.dart';
 import 'package:supervisor/features/competence/pages/detail_skill_page.dart';
-import 'package:supervisor/features/competence/pages/list_cases_page.dart';
-import 'package:supervisor/features/competence/pages/list_skills_page.dart';
 import 'package:supervisor/features/daily_activity/supervisor_daily_activity_detail_page.dart';
 import 'package:supervisor/features/final_score/supervisor_final_grade_page.dart';
 import 'package:supervisor/features/self_reflection/self_reflection_student_page.dart';
-import 'package:supervisor/features/sgl_cst/supervisor_sgl_detail_page.dart';
 import 'package:supervisor/features/special_report/special_report_detail_page.dart';
 
 class Activity {

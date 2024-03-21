@@ -1,22 +1,19 @@
+// ignore_for_file: depend_on_referenced_packages
+
+import 'package:core/context/navigation_extension.dart';
+import 'package:common/features/notification/notification_page.dart';
 import 'package:data/data.exports.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 
 class NotificationUtils {
   static final FirebaseMessaging _firebaseMessaging =
       FirebaseMessaging.instance;
 
-  static Future<void> configureFirebaseMessaging() async {
-    // Set up notification handlers
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Received in the foreground: ${message.notification?.body}");
-      // Tambahkan logika atau tindakan yang sesuai saat menerima notifikasi di foreground
-    });
-
-    FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
-
-    // Get device token
+  static Future<void> init() async {
     try {
       String? token = await _firebaseMessaging.getToken();
+      print(token);
       AuthPreferenceHandler.setFCMToken(token);
       print("FCM Token: $token");
     } catch (e) {
@@ -24,18 +21,24 @@ class NotificationUtils {
     }
   }
 
+  static Future<void> configureFirebaseMessaging(
+      BuildContext context, UserRole role) async {
+    FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      _handleNotificationTap(context, message, role);
+    });
+  }
+
   static Future<void> _handleBackgroundMessage(RemoteMessage message) async {
     print("Handling a background message: ${message.notification?.body}");
     // Tambahkan logika atau tindakan yang sesuai saat aplikasi berjalan di background
   }
 
-  static Future<void> subscribeToTopic(String topic) async {
-    await _firebaseMessaging.subscribeToTopic(topic);
-    print("Subscribed to $topic");
-  }
-
-  static Future<void> unsubscribeFromTopic(String topic) async {
-    await _firebaseMessaging.unsubscribeFromTopic(topic);
-    print("Unsubscribed from $topic");
+  static void _handleNotificationTap(
+      BuildContext context, RemoteMessage message, UserRole role) {
+    context.navigateTo(NotificationPage(
+      role: role,
+    ));
   }
 }

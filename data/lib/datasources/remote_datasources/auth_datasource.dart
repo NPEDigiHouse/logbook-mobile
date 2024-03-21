@@ -120,6 +120,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
       return const Right(true);
     } catch (e) {
+      print(e.toString());
       return Left(failure(e));
     }
   }

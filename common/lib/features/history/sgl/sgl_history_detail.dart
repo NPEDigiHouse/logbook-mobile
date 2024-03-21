@@ -40,6 +40,9 @@ class _HistorySglPageState extends State<HistorySglPage> {
       body: CheckInternetOnetime(child: (context) {
         return BlocBuilder<SglCstCubit, SglCstState>(
           builder: (context, state) {
+            if (state.fetchState == RequestState.loading) {
+              return const Center(child: CustomLoading());
+            }
             if (state.historySglData != null) {
               return CustomScrollView(
                 slivers: [
@@ -209,10 +212,6 @@ class _HistorySglPageState extends State<HistorySglPage> {
                   ),
                 ],
               );
-            } else if (state.requestState == RequestState.loading) {
-              return const Center(child: CustomLoading());
-            } else if (state.requestState == RequestState.error) {
-              return const Text('Error');
             }
             return const SizedBox.shrink();
           },
