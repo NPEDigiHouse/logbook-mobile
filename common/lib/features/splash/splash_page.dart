@@ -1,13 +1,16 @@
 import 'dart:async';
 
+import 'package:common/features/auth/login_page.dart';
+import 'package:coordinator/features/menu/main_menu.dart';
 import 'package:core/app/app_settings.dart';
 import 'package:core/helpers/app_size.dart';
 import 'package:core/helpers/asset_path.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
+import 'package:data/models/user/user_credential.dart';
 import 'package:main/blocs/wrapper_cubit/wrapper_cubit.dart';
-
-import '../wrapper/wrapper.dart';
+import 'package:students/student_main.dart';
+import 'package:supervisor/features/menu/main_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -30,92 +33,107 @@ class _SplashPageState extends State<SplashPage> {
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    // Will change page after two second
-    super.didChangeDependencies();
-    Timer(const Duration(seconds: 5), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Wrapper(),
-          ),
-        );
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: scaffoldBackgroundColor,
-      body: Container(
-        color: primaryColor,
-        width: AppSize.getAppWidth(context),
-        height: AppSize.getAppHeight(context),
-        child: Stack(
-          children: [
-            Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(.1),
-                ),
-                padding: const EdgeInsets.all(20),
-                width: 240,
-                height: 240,
-              ),
+    return BlocListener<WrapperCubit, WrapperState>(
+      listener: (context, state) {
+        if (state is CredentialExist) {
+          final UserCredential credential = state.credential;
+          Widget? page;
+          switch (credential.role) {
+            case 'SUPERVISOR' || 'DPK':
+              page = const MainMenuSupervisor();
+            case 'ER':
+              page = const MainMenuCoordinator();
+            case 'STUDENT':
+              page = const StudentMainMenu();
+          }
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => page ?? const LoginPage(),
             ),
-            Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(.2),
-                ),
-                padding: const EdgeInsets.all(20),
-                width: 200,
-                height: 200,
-              ),
+          );
+        } else if (state is CredentialNotExist || state is WrapperFailed) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LoginPage(),
             ),
-            Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(.3),
-                ),
-                padding: const EdgeInsets.all(30),
-                width: 160,
-                height: 160,
-                child: SvgPicture.asset(
-                  AssetPath.getIcon('logo.svg'),
-                  width: 100,
-                  height: 100,
-                  color: scaffoldBackgroundColor,
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 24,
-              child: SizedBox(
-                width: AppSize.getAppWidth(context),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Version ${AppSettings.appVersion} (2024)",
-                          style: textTheme.bodyMedium
-                              ?.copyWith(color: scaffoldBackgroundColor),
-                        ),
-                      ],
-                    ),
-                  ],
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: scaffoldBackgroundColor,
+        body: Container(
+          color: primaryColor,
+          width: AppSize.getAppWidth(context),
+          height: AppSize.getAppHeight(context),
+          child: Stack(
+            children: [
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(.1),
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  width: 240,
+                  height: 240,
                 ),
               ),
-            )
-          ],
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(.2),
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  width: 200,
+                  height: 200,
+                ),
+              ),
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(.3),
+                  ),
+                  padding: const EdgeInsets.all(30),
+                  width: 160,
+                  height: 160,
+                  child: SvgPicture.asset(
+                    AssetPath.getIcon('logo.svg'),
+                    width: 100,
+                    height: 100,
+                    color: scaffoldBackgroundColor,
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 24,
+                child: SizedBox(
+                  width: AppSize.getAppWidth(context),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Version ${AppSettings.appVersion} (2024)",
+                            style: textTheme.bodyMedium
+                                ?.copyWith(color: scaffoldBackgroundColor),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -2,10 +2,9 @@ import 'package:core/context/navigation_extension.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/competences/case_post_model.dart';
-import 'package:data/models/competences/list_student_cases_model.dart';
-import 'package:data/models/competences/list_student_skills_model.dart';
 import 'package:data/models/competences/skill_post_model.dart';
 import 'package:data/models/supervisors/supervisor_model.dart';
+import 'package:data/repository/repository_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -49,14 +48,20 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
   @override
   void initState() {
     if (widget.type == CompetenceType.caseType) {
-      BlocProvider.of<CompetenceCubit>(context)
-          .getStudentCases(unitId: widget.unitId);
+      if (RepositoryData.cases.isEmpty) {
+        BlocProvider.of<CompetenceCubit>(context)
+            .getStudentCases(unitId: widget.unitId);
+      }
     } else {
-      BlocProvider.of<CompetenceCubit>(context)
-          .getStudentSkills(unitId: widget.unitId);
+      if (RepositoryData.skills.isEmpty) {
+        BlocProvider.of<CompetenceCubit>(context)
+            .getStudentSkills(unitId: widget.unitId);
+      }
     }
-    BlocProvider.of<SupervisorsCubit>(context, listen: false)
-        .getAllSupervisors();
+    if (RepositoryData.supervisors.isEmpty) {
+      BlocProvider.of<SupervisorsCubit>(context, listen: false)
+          .getAllSupervisors();
+    }
     super.initState();
   }
 
@@ -141,18 +146,14 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                   horizontalPadding: 16,
                   spacing: 12,
                   children: [
-                    BlocBuilder<SupervisorsCubit, SupervisorsState>(
-                        builder: (context, state) {
-                      List<SupervisorModel> supervisors = [];
-                      if (state is SupervisorFetchSuccess) {
-                        supervisors.clear();
-                        supervisors.addAll(state.supervisors);
-                      }
-                      return CustomDropdown<SupervisorModel>(
+                    if (RepositoryData.supervisors.isNotEmpty)
+                      CustomDropdown<SupervisorModel>(
                           errorNotifier: supervisorVal,
                           onSubmit: (text, controller) {
-                            if (supervisors.indexWhere((element) =>
-                                    element.fullName?.trim() == text.trim()) ==
+                            if (RepositoryData.supervisors.indexWhere(
+                                    (element) =>
+                                        element.fullName?.trim() ==
+                                        text.trim()) ==
                                 -1) {
                               controller.clear();
                               supervisorId = '';
@@ -160,7 +161,7 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                           },
                           hint: 'Supervisor',
                           onCallback: (pattern) {
-                            final temp = supervisors
+                            final temp = RepositoryData.supervisors
                                 .where((competence) =>
                                     (competence.fullName ?? 'unknown')
                                         .toLowerCase()
@@ -168,7 +169,9 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                                         .contains(pattern.toLowerCase()))
                                 .toList();
 
-                            return pattern.isEmpty ? supervisors : temp;
+                            return pattern.isEmpty
+                                ? RepositoryData.supervisors
+                                : temp;
                           },
                           child: (suggestion) {
                             return Padding(
@@ -184,70 +187,203 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                               supervisorId = v.id!;
                               controller.text = v.fullName!;
                             }
-                          });
-                    }),
-                    if (widget.type == CompetenceType.skillType)
-                      BlocBuilder<CompetenceCubit, CompetenceState>(
-                        builder: (context, state) {
-                          List<StudentSkillModel> competences = [];
-                          if (state.studentSkillsModel != null) {
-                            competences.clear();
-                            competences.addAll(state.studentSkillsModel!);
-                            return CustomDropdown<dynamic>(
-                                errorNotifier: competenceVal,
-                                onSubmit: (text, controller) {
-                                  if (competences.indexWhere((element) =>
-                                          element.name?.trim() ==
-                                          text.trim()) ==
-                                      -1) {
-                                    controller.clear();
-                                    caseId = null;
-                                  }
-                                },
-                                hint: 'Skills',
-                                onCallback: (pattern) {
-                                  final temp = competences
-                                      .where((competence) =>
-                                          (competence.name ?? '')
-                                              .toLowerCase()
-                                              .trim()
-                                              .contains(pattern.toLowerCase()))
-                                      .toList();
+                          })
+                    else
+                      BlocBuilder<SupervisorsCubit, SupervisorsState>(
+                          builder: (context, state) {
+                        if (state is SupervisorFetchSuccess) {
+                          RepositoryData.supervisors.clear();
+                          RepositoryData.supervisors.addAll(state.supervisors);
+                          return CustomDropdown<SupervisorModel>(
+                              errorNotifier: supervisorVal,
+                              onSubmit: (text, controller) {
+                                if (RepositoryData.supervisors.indexWhere(
+                                        (element) =>
+                                            element.fullName?.trim() ==
+                                            text.trim()) ==
+                                    -1) {
+                                  controller.clear();
+                                  supervisorId = '';
+                                }
+                              },
+                              hint: 'Supervisor',
+                              onCallback: (pattern) {
+                                final temp = RepositoryData.supervisors
+                                    .where((competence) =>
+                                        (competence.fullName ?? 'unknown')
+                                            .toLowerCase()
+                                            .trim()
+                                            .contains(pattern.toLowerCase()))
+                                    .toList();
 
-                                  return pattern.isEmpty ? competences : temp;
-                                },
-                                child: (suggestion) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0,
-                                      vertical: 16,
-                                    ),
-                                    child: Text(suggestion.name),
-                                  );
-                                },
-                                onItemSelect: (v, controller) {
-                                  if (v != null) {
-                                    caseId = v.id;
-                                    controller.text = v.name!;
-                                  }
-                                });
-                          }
-                          return const CircularProgressIndicator();
-                        },
-                      )
+                                return pattern.isEmpty
+                                    ? RepositoryData.supervisors
+                                    : temp;
+                              },
+                              child: (suggestion) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 16,
+                                  ),
+                                  child: Text(suggestion?.fullName ?? ''),
+                                );
+                              },
+                              onItemSelect: (v, controller) {
+                                if (v != null) {
+                                  supervisorId = v.id!;
+                                  controller.text = v.fullName!;
+                                }
+                              });
+                        }
+                        return const CircularProgressIndicator();
+                      }),
+                    if (widget.type == CompetenceType.skillType)
+                      if (RepositoryData.skills.isNotEmpty)
+                        CustomDropdown<dynamic>(
+                            errorNotifier: competenceVal,
+                            onSubmit: (text, controller) {
+                              if (RepositoryData.skills.indexWhere((element) =>
+                                      element.name?.trim() == text.trim()) ==
+                                  -1) {
+                                controller.clear();
+                                caseId = null;
+                              }
+                            },
+                            hint: 'Skills',
+                            onCallback: (pattern) {
+                              final temp = RepositoryData.skills
+                                  .where((competence) => (competence.name ?? '')
+                                      .toLowerCase()
+                                      .trim()
+                                      .contains(pattern.toLowerCase()))
+                                  .toList();
+
+                              return pattern.isEmpty
+                                  ? RepositoryData.skills
+                                  : temp;
+                            },
+                            child: (suggestion) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 16,
+                                ),
+                                child: Text(suggestion.name),
+                              );
+                            },
+                            onItemSelect: (v, controller) {
+                              if (v != null) {
+                                caseId = v.id;
+                                controller.text = v.name!;
+                              }
+                            })
+                      else
+                        BlocBuilder<CompetenceCubit, CompetenceState>(
+                          builder: (context, state) {
+                            if (state.studentSkillsModel != null) {
+                              RepositoryData.skills.clear();
+                              RepositoryData.skills
+                                  .addAll(state.studentSkillsModel!);
+                              return CustomDropdown<dynamic>(
+                                  errorNotifier: competenceVal,
+                                  onSubmit: (text, controller) {
+                                    if (RepositoryData.skills.indexWhere(
+                                            (element) =>
+                                                element.name?.trim() ==
+                                                text.trim()) ==
+                                        -1) {
+                                      controller.clear();
+                                      caseId = null;
+                                    }
+                                  },
+                                  hint: 'Skills',
+                                  onCallback: (pattern) {
+                                    final temp = RepositoryData.skills
+                                        .where((competence) => (competence
+                                                    .name ??
+                                                '')
+                                            .toLowerCase()
+                                            .trim()
+                                            .contains(pattern.toLowerCase()))
+                                        .toList();
+
+                                    return pattern.isEmpty
+                                        ? RepositoryData.skills
+                                        : temp;
+                                  },
+                                  child: (suggestion) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0,
+                                        vertical: 16,
+                                      ),
+                                      child: Text(suggestion.name),
+                                    );
+                                  },
+                                  onItemSelect: (v, controller) {
+                                    if (v != null) {
+                                      caseId = v.id;
+                                      controller.text = v.name!;
+                                    }
+                                  });
+                            }
+                            return const CircularProgressIndicator();
+                          },
+                        )
+                    else if (RepositoryData.cases.isNotEmpty)
+                      CustomDropdown<dynamic>(
+                          errorNotifier: competenceVal,
+                          onSubmit: (text, controller) {
+                            if (RepositoryData.cases.indexWhere((element) =>
+                                    element.name?.trim() == text.trim()) ==
+                                -1) {
+                              controller.clear();
+                              caseId = null;
+                            }
+                          },
+                          hint: 'Cases',
+                          onCallback: (pattern) {
+                            final temp = RepositoryData.cases
+                                .where((competence) => (competence.name ?? '')
+                                    .toLowerCase()
+                                    .trim()
+                                    .contains(pattern.toLowerCase()))
+                                .toList();
+
+                            return pattern.isEmpty
+                                ? RepositoryData.cases
+                                : temp;
+                          },
+                          child: (suggestion) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16,
+                              ),
+                              child: Text(suggestion.name),
+                            );
+                          },
+                          onItemSelect: (v, controller) {
+                            if (v != null) {
+                              caseId = v.id;
+                              controller.text = v.name!;
+                            }
+                          })
                     else
                       BlocBuilder<CompetenceCubit, CompetenceState>(
                         builder: (context, state) {
-                          List<StudentCaseModel> competences = [];
                           if (state.studentCasesModel != null) {
-                            competences.clear();
-                            competences.addAll(state.studentCasesModel!);
+                            RepositoryData.cases.clear();
+                            RepositoryData.cases
+                                .addAll(state.studentCasesModel!);
                             return CustomDropdown<dynamic>(
                                 errorNotifier: competenceVal,
                                 onSubmit: (text, controller) {
-                                  if (competences.indexWhere((element) =>
-                                          element.name?.trim() ==
-                                          text.trim()) ==
+                                  if (RepositoryData.cases.indexWhere(
+                                          (element) =>
+                                              element.name?.trim() ==
+                                              text.trim()) ==
                                       -1) {
                                     controller.clear();
                                     caseId = null;
@@ -255,7 +391,7 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                                 },
                                 hint: 'Cases',
                                 onCallback: (pattern) {
-                                  final temp = competences
+                                  final temp = RepositoryData.cases
                                       .where((competence) =>
                                           (competence.name ?? '')
                                               .toLowerCase()
@@ -263,7 +399,9 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                                               .contains(pattern.toLowerCase()))
                                       .toList();
 
-                                  return pattern.isEmpty ? competences : temp;
+                                  return pattern.isEmpty
+                                      ? RepositoryData.cases
+                                      : temp;
                                 },
                                 child: (suggestion) {
                                   return Padding(
@@ -301,8 +439,8 @@ class _AddTopicDialogState extends State<AddCompetenceDialog> {
                           validator: FormBuilderValidators.required(
                             errorText: 'This field is required',
                           ),
-                          decoration:
-                              const InputDecoration(label: Text('Type (Required)')),
+                          decoration: const InputDecoration(
+                              label: Text('Type (Required)')),
                           items: desc
                               .map(
                                 (e) => DropdownMenuItem(

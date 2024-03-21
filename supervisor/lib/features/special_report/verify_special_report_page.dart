@@ -4,6 +4,8 @@ import 'package:core/styles/text_style.dart';
 import 'package:data/models/special_reports/special_report_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:main/blocs/special_report/special_report_cubit.dart';
 import 'package:main/widgets/spacing_column.dart';
 
@@ -21,6 +23,8 @@ class VerifySpecialReportPage extends StatefulWidget {
 class _VerifySpecialReportPageState extends State<VerifySpecialReportPage> {
   final TextEditingController fieldController = TextEditingController();
   final ValueNotifier<bool> isSaveAsDraft = ValueNotifier(false);
+  final _formKey = GlobalKey<FormBuilderState>();
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<SpecialReportCubit, SpecialReportState>(
@@ -39,92 +43,102 @@ class _VerifySpecialReportPageState extends State<VerifySpecialReportPage> {
           child: CustomScrollView(slivers: [
             SliverFillRemaining(
               hasScrollBody: false,
-              child: SpacingColumn(
-                onlyPading: true,
-                horizontalPadding: 16,
-                children: [
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          offset: const Offset(0, 1),
-                          color: Colors.black.withOpacity(.06),
-                          blurRadius: 8,
-                        )
-                      ],
+              child: FormBuilder(
+                key: _formKey,
+                child: SpacingColumn(
+                  onlyPading: true,
+                  horizontalPadding: 16,
+                  children: [
+                    const SizedBox(
+                      height: 16,
                     ),
-                    child: Theme(
-                      data: Theme.of(context).copyWith(
-                        dividerColor: Colors.transparent,
-                      ),
-                      child: ExpansionTile(
-                        iconColor: primaryTextColor,
-                        collapsedIconColor: primaryTextColor,
-                        tilePadding: const EdgeInsets.only(
-                          left: 6,
-                          right: 10,
-                        ),
-                        childrenPadding: const EdgeInsets.fromLTRB(6, 8, 6, 16),
-                        title: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              'Problem',
-                              style: textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                          ],
-                        ),
-                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.problemConsultation.content ?? '',
-                              style: textTheme.bodyMedium,
-                            ),
-                          ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        color: scaffoldBackgroundColor,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            offset: const Offset(0, 1),
+                            color: Colors.black.withOpacity(.06),
+                            blurRadius: 8,
+                          )
                         ],
                       ),
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          dividerColor: Colors.transparent,
+                        ),
+                        child: ExpansionTile(
+                          iconColor: primaryTextColor,
+                          collapsedIconColor: primaryTextColor,
+                          tilePadding: const EdgeInsets.only(
+                            left: 6,
+                            right: 10,
+                          ),
+                          childrenPadding:
+                              const EdgeInsets.fromLTRB(6, 8, 6, 16),
+                          title: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                'Problem',
+                                style: textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                            ],
+                          ),
+                          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                widget.problemConsultation.content ?? '',
+                                style: textTheme.bodyMedium,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  TextFormField(
-                    minLines: 7,
-                    maxLines: 7,
-                    controller: fieldController,
-                    textAlignVertical: TextAlignVertical.top,
-                    decoration: const InputDecoration(
-                      label: Text('Given solution'),
+                    const SizedBox(
+                      height: 12,
                     ),
-                  ),
-                  const Spacer(),
-                  FilledButton(
-                    onPressed: () {
-                      if (fieldController.text.isNotEmpty) {
-                        BlocProvider.of<SpecialReportCubit>(context)
-                            .verifySpecialReport(
-                          solution: fieldController.text,
-                          id: widget.problemConsultation.problemConsultationId!,
-                        );
-                      }
-                    },
-                    child: const Text('Submit'),
-                  ).fullWidth(),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                ],
+                    TextFormField(
+                      minLines: 7,
+                      maxLines: 7,
+                      maxLength: 500,
+                      controller: fieldController,
+                      textAlignVertical: TextAlignVertical.top,
+                      decoration: const InputDecoration(
+                        label: Text('Given solution'),
+                      ),
+                      validator: FormBuilderValidators.required(
+                        errorText: 'This field is required',
+                      ),
+                    ),
+                    const Spacer(),
+                    FilledButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.saveAndValidate() &&
+                            fieldController.text.isNotEmpty) {
+                          BlocProvider.of<SpecialReportCubit>(context)
+                              .verifySpecialReport(
+                            solution: fieldController.text,
+                            id: widget
+                                .problemConsultation.problemConsultationId!,
+                          );
+                        }
+                      },
+                      child: const Text('Submit'),
+                    ).fullWidth(),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                  ],
+                ),
               ),
             ),
           ]),

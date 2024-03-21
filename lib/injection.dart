@@ -175,12 +175,18 @@ void _injectStateManagement() {
     () => WrapperCubit(
       authDataSource: locator(),
       userDataSource: locator(),
+      competenceDataSource: locator(),
+      departmentDatasource: locator(),
+      supervisorsDataSource: locator(),
+      sglCstdataSource: locator(),
     ),
   );
 
   locator.registerFactory(
     () => DepartmentCubit(
       datasource: locator(),
+      competenceDataSource: locator(),
+      sglCstdataSource: locator(),
     ),
   );
   locator.registerFactory(

@@ -9,6 +9,7 @@ import 'package:data/models/scientific_session/scientific_session_post_model.dar
 import 'package:data/models/scientific_session/session_types_model.dart';
 import 'package:data/models/supervisors/supervisor_model.dart';
 import 'package:data/models/units/active_unit_model.dart';
+import 'package:data/repository/repository_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -59,8 +60,10 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      BlocProvider.of<SupervisorsCubit>(context, listen: false)
-          .getAllSupervisors();
+      if (RepositoryData.supervisors.isEmpty) {
+        BlocProvider.of<SupervisorsCubit>(context, listen: false)
+            .getAllSupervisors();
+      }
       BlocProvider.of<ScientificSessionCubit>(context)
         ..getListSessionTypes()
         ..getScientificSessionRoles();
@@ -134,54 +137,100 @@ class _AddScientificSessionPageState extends State<AddScientificSessionPage> {
                           ),
                           initialValue: widget.activeDepartmentModel.unitName,
                         ),
-                        BlocBuilder<SupervisorsCubit, SupervisorsState>(
-                            builder: (context, state) {
-                          List<SupervisorModel> supervisors = [];
-                          if (state is SupervisorFetchSuccess) {
-                            supervisors.clear();
-                            supervisors.addAll(state.supervisors);
-                            return CustomDropdown<SupervisorModel>(
-                                errorNotifier: supervisorValue,
-                                onSubmit: (text, controller) {
-                                  if (supervisors.indexWhere((element) =>
-                                          element.fullName?.trim() ==
-                                          text.trim()) ==
-                                      -1) {
-                                    controller.clear();
-                                    supervisorId = '';
-                                  }
-                                },
-                                hint: 'Supervisor',
-                                init: widget.detail?.supervisorName,
-                                onCallback: (pattern) {
-                                  final temp = supervisors
-                                      .where((competence) =>
-                                          (competence.fullName ?? 'unknown')
-                                              .toLowerCase()
-                                              .trim()
-                                              .contains(pattern.toLowerCase()))
-                                      .toList();
+                        if (RepositoryData.supervisors.isNotEmpty)
+                          CustomDropdown<SupervisorModel>(
+                              errorNotifier: supervisorValue,
+                              onSubmit: (text, controller) {
+                                if (RepositoryData.supervisors.indexWhere(
+                                        (element) =>
+                                            element.fullName?.trim() ==
+                                            text.trim()) ==
+                                    -1) {
+                                  controller.clear();
+                                  supervisorId = '';
+                                }
+                              },
+                              hint: 'Supervisor',
+                              onCallback: (pattern) {
+                                final temp = RepositoryData.supervisors
+                                    .where((competence) =>
+                                        (competence.fullName ?? 'unknown')
+                                            .toLowerCase()
+                                            .trim()
+                                            .contains(pattern.toLowerCase()))
+                                    .toList();
 
-                                  return pattern.isEmpty ? supervisors : temp;
-                                },
-                                child: (suggestion) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0,
-                                      vertical: 16,
-                                    ),
-                                    child: Text(suggestion?.fullName ?? ''),
-                                  );
-                                },
-                                onItemSelect: (v, controller) {
-                                  if (v != null) {
-                                    supervisorId = v.id!;
-                                    controller.text = v.fullName!;
-                                  }
-                                });
-                          }
-                          return const CircularProgressIndicator();
-                        }),
+                                return pattern.isEmpty
+                                    ? RepositoryData.supervisors
+                                    : temp;
+                              },
+                              child: (suggestion) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 16,
+                                  ),
+                                  child: Text(suggestion?.fullName ?? ''),
+                                );
+                              },
+                              onItemSelect: (v, controller) {
+                                if (v != null) {
+                                  supervisorId = v.id!;
+                                  controller.text = v.fullName!;
+                                }
+                              })
+                        else
+                          BlocBuilder<SupervisorsCubit, SupervisorsState>(
+                              builder: (context, state) {
+                            if (state is SupervisorFetchSuccess) {
+                              RepositoryData.supervisors.clear();
+                              RepositoryData.supervisors
+                                  .addAll(state.supervisors);
+                              return CustomDropdown<SupervisorModel>(
+                                  errorNotifier: supervisorValue,
+                                  onSubmit: (text, controller) {
+                                    if (RepositoryData.supervisors.indexWhere(
+                                            (element) =>
+                                                element.fullName?.trim() ==
+                                                text.trim()) ==
+                                        -1) {
+                                      controller.clear();
+                                      supervisorId = '';
+                                    }
+                                  },
+                                  hint: 'Supervisor',
+                                  onCallback: (pattern) {
+                                    final temp = RepositoryData.supervisors
+                                        .where((competence) => (competence
+                                                    .fullName ??
+                                                'unknown')
+                                            .toLowerCase()
+                                            .trim()
+                                            .contains(pattern.toLowerCase()))
+                                        .toList();
+
+                                    return pattern.isEmpty
+                                        ? RepositoryData.supervisors
+                                        : temp;
+                                  },
+                                  child: (suggestion) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0,
+                                        vertical: 16,
+                                      ),
+                                      child: Text(suggestion?.fullName ?? ''),
+                                    );
+                                  },
+                                  onItemSelect: (v, controller) {
+                                    if (v != null) {
+                                      supervisorId = v.id!;
+                                      controller.text = v.fullName!;
+                                    }
+                                  });
+                            }
+                            return const CircularProgressIndicator();
+                          }),
                       ],
                     ),
                     const SizedBox(

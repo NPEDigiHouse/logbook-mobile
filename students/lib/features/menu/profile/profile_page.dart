@@ -14,6 +14,7 @@ import 'package:core/helpers/utils.dart';
 import 'package:core/styles/color_palette.dart';
 import 'package:core/styles/text_style.dart';
 import 'package:data/models/user/user_credential.dart';
+import 'package:data/repository/repository_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -399,6 +400,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         onConfirmBtnTap: () async {
                           await BlocProvider.of<UserCubit>(context).reset();
                           await BlocProvider.of<LogoutCubit>(context).logout();
+                          //
+                          RepositoryData.allClear();
                         },
                         confirmBtnColor: primaryColor,
                       );

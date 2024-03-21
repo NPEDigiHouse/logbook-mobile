@@ -4,6 +4,7 @@ import 'package:data/models/sglcst/sglcst_post_model.dart';
 import 'package:data/models/sglcst/topic_model.dart';
 import 'package:data/models/supervisors/supervisor_model.dart';
 import 'package:data/models/units/active_unit_model.dart';
+import 'package:data/repository/repository_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -43,10 +44,15 @@ class _CreateCstPageState extends State<CreateCstPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<SupervisorsCubit>(context, listen: false)
-        .getAllSupervisors();
-    BlocProvider.of<SglCstCubit>(context, listen: false)
-        .getTopicsByDepartmentId(unitId: widget.model.unitId!);
+    if (RepositoryData.supervisors.isEmpty) {
+      BlocProvider.of<SupervisorsCubit>(context, listen: false)
+          .getAllSupervisors();
+    }
+    if (RepositoryData.cstTopics.isEmpty) {
+      BlocProvider.of<SglCstCubit>(context, listen: false)
+          .getTopicsByDepartmentId(unitId: widget.model.unitId!);
+    }
+
     dateController.text = Utils.datetimeToString(DateTime.now());
   }
 
@@ -82,53 +88,99 @@ class _CreateCstPageState extends State<CreateCstPage> {
                       decoration: const InputDecoration(
                           enabled: false, labelText: 'Date Created'),
                     ),
-                    BlocBuilder<SupervisorsCubit, SupervisorsState>(
-                        builder: (context, state) {
-                      List<SupervisorModel> supervisors = [];
-                      if (state is SupervisorFetchSuccess) {
-                        supervisors.clear();
-                        supervisors.addAll(state.supervisors);
-                        return CustomDropdown<SupervisorModel>(
-                            errorNotifier: supervisorVal,
-                            onSubmit: (text, controller) {
-                              if (supervisors.indexWhere((element) =>
-                                      element.fullName?.trim() ==
-                                      text.trim()) ==
-                                  -1) {
-                                controller.clear();
-                                supervisorId = '';
-                              }
-                            },
-                            hint: 'Supervisor',
-                            onCallback: (pattern) {
-                              final temp = supervisors
-                                  .where((competence) =>
-                                      (competence.fullName ?? 'unknown')
-                                          .toLowerCase()
-                                          .trim()
-                                          .contains(pattern.toLowerCase()))
-                                  .toList();
+                    if (RepositoryData.supervisors.isNotEmpty)
+                      CustomDropdown<SupervisorModel>(
+                          errorNotifier: supervisorVal,
+                          onSubmit: (text, controller) {
+                            if (RepositoryData.supervisors.indexWhere(
+                                    (element) =>
+                                        element.fullName?.trim() ==
+                                        text.trim()) ==
+                                -1) {
+                              controller.clear();
+                              supervisorId = '';
+                            }
+                          },
+                          hint: 'Supervisor',
+                          onCallback: (pattern) {
+                            final temp = RepositoryData.supervisors
+                                .where((competence) =>
+                                    (competence.fullName ?? 'unknown')
+                                        .toLowerCase()
+                                        .trim()
+                                        .contains(pattern.toLowerCase()))
+                                .toList();
 
-                              return pattern.isEmpty ? supervisors : temp;
-                            },
-                            child: (suggestion) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0,
-                                  vertical: 16,
-                                ),
-                                child: Text(suggestion?.fullName ?? ''),
-                              );
-                            },
-                            onItemSelect: (v, controller) {
-                              if (v != null) {
-                                supervisorId = v.id!;
-                                controller.text = v.fullName!;
-                              }
-                            });
-                      }
-                      return const CircularProgressIndicator();
-                    }),
+                            return pattern.isEmpty
+                                ? RepositoryData.supervisors
+                                : temp;
+                          },
+                          child: (suggestion) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16,
+                              ),
+                              child: Text(suggestion?.fullName ?? ''),
+                            );
+                          },
+                          onItemSelect: (v, controller) {
+                            if (v != null) {
+                              supervisorId = v.id!;
+                              controller.text = v.fullName!;
+                            }
+                          })
+                    else
+                      BlocBuilder<SupervisorsCubit, SupervisorsState>(
+                          builder: (context, state) {
+                        if (state is SupervisorFetchSuccess) {
+                          RepositoryData.supervisors.clear();
+                          RepositoryData.supervisors.addAll(state.supervisors);
+                          return CustomDropdown<SupervisorModel>(
+                              errorNotifier: supervisorVal,
+                              onSubmit: (text, controller) {
+                                if (RepositoryData.supervisors.indexWhere(
+                                        (element) =>
+                                            element.fullName?.trim() ==
+                                            text.trim()) ==
+                                    -1) {
+                                  controller.clear();
+                                  supervisorId = '';
+                                }
+                              },
+                              hint: 'Supervisor',
+                              onCallback: (pattern) {
+                                final temp = RepositoryData.supervisors
+                                    .where((competence) =>
+                                        (competence.fullName ?? 'unknown')
+                                            .toLowerCase()
+                                            .trim()
+                                            .contains(pattern.toLowerCase()))
+                                    .toList();
+
+                                return pattern.isEmpty
+                                    ? RepositoryData.supervisors
+                                    : temp;
+                              },
+                              child: (suggestion) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 16,
+                                  ),
+                                  child: Text(suggestion?.fullName ?? ''),
+                                );
+                              },
+                              onItemSelect: (v, controller) {
+                                if (v != null) {
+                                  supervisorId = v.id!;
+                                  controller.text = v.fullName!;
+                                }
+                              });
+                        }
+                        return const CircularProgressIndicator();
+                      }),
+                  
                   ],
                 ),
                 const SizedBox(
@@ -184,86 +236,128 @@ class _CreateCstPageState extends State<CreateCstPage> {
                         ),
                       ],
                     ),
-                    BlocBuilder<SglCstCubit, SglCstState>(
-                        builder: (context, state) {
-                      List<TopicModel> topicModels = [];
-                      if (state.topics != null) {
-                        topicModels.clear();
-                        topicModels.addAll(ParseHelper.filterTopic(
-                            listData: state.topics!, isSGL: false));
-                        if (topicModels.isNotEmpty) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ValueListenableBuilder(
-                                valueListenable: topics,
-                                builder: (context, value, child) {
-                                  return Column(
-                                    children: [
-                                      for (int i = 0;
-                                          i < value.length;
-                                          i++) ...[
-                                        CustomDropdown<TopicModel>(
-                                            errorNotifier: topicVal,
-                                            onSubmit: (text, controller) {
-                                              if (topicModels.indexWhere(
-                                                      (element) =>
-                                                          element.name
-                                                              ?.trim() ==
-                                                          text.trim()) ==
-                                                  -1) {
-                                                controller.clear();
-                                                topics.value[i] = -1;
-                                              }
-                                            },
-                                            hint: 'Topics',
-                                            onCallback: (pattern) {
-                                              final temp = topicModels
-                                                  .where((competence) =>
-                                                      (competence.name ??
-                                                              'unknown')
-                                                          .toLowerCase()
-                                                          .trim()
-                                                          .contains(pattern
-                                                              .toLowerCase()))
-                                                  .toList();
+                    if (RepositoryData.cstTopics.isNotEmpty)
+                      CustomDropdown<TopicModel>(
+                          errorNotifier: topicVal,
+                          onSubmit: (text, controller) {
+                            if (RepositoryData.cstTopics.indexWhere((element) =>
+                                    element.name?.trim() == text.trim()) ==
+                                -1) {
+                              controller.clear();
+                              topics.value[0] = -1;
+                            }
+                          },
+                          hint: 'Topics',
+                          onCallback: (pattern) {
+                            final temp = RepositoryData.cstTopics
+                                .where((competence) =>
+                                    (competence.name ?? 'unknown')
+                                        .toLowerCase()
+                                        .trim()
+                                        .contains(pattern.toLowerCase()))
+                                .toList();
 
-                                              return pattern.isEmpty
-                                                  ? topicModels
-                                                  : temp;
-                                            },
-                                            child: (suggestion) {
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 12.0,
-                                                  vertical: 16,
-                                                ),
-                                                child: Text(
-                                                    suggestion?.name ?? ''),
-                                              );
-                                            },
-                                            onItemSelect: (v, controller) {
-                                              if (v != null) {
-                                                topics.value[i] = v.id!;
-                                                controller.text = v.name!;
-                                              }
-                                            }),
-                                        // SizedBox(
-                                        //   height: 12,
-                                        // )
-                                      ],
-                                    ],
-                                  );
-                                },
+                            return pattern.isEmpty
+                                ? RepositoryData.cstTopics
+                                : temp;
+                          },
+                          child: (suggestion) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16,
                               ),
-                            ],
-                          );
+                              child: Text(suggestion?.name ?? ''),
+                            );
+                          },
+                          onItemSelect: (v, controller) {
+                            if (v != null) {
+                              topics.value[0] = v.id!;
+                              controller.text = v.name!;
+                            }
+                          })
+                    else
+                      BlocBuilder<SglCstCubit, SglCstState>(
+                          builder: (context, state) {
+                        if (state.topics != null) {
+                          RepositoryData.cstTopics.clear();
+                          RepositoryData.cstTopics.addAll(
+                              ParseHelper.filterTopic(
+                                  listData: state.topics!, isSGL: false));
+                          if (RepositoryData.cstTopics.isNotEmpty) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ValueListenableBuilder(
+                                  valueListenable: topics,
+                                  builder: (context, value, child) {
+                                    return Column(
+                                      children: [
+                                        for (int i = 0;
+                                            i < value.length;
+                                            i++) ...[
+                                          CustomDropdown<TopicModel>(
+                                              errorNotifier: topicVal,
+                                              onSubmit: (text, controller) {
+                                                if (RepositoryData.cstTopics
+                                                        .indexWhere((element) =>
+                                                            element.name
+                                                                ?.trim() ==
+                                                            text.trim()) ==
+                                                    -1) {
+                                                  controller.clear();
+                                                  topics.value[i] = -1;
+                                                }
+                                              },
+                                              hint: 'Topics',
+                                              onCallback: (pattern) {
+                                                final temp = RepositoryData
+                                                    .cstTopics
+                                                    .where((competence) =>
+                                                        (competence.name ??
+                                                                'unknown')
+                                                            .toLowerCase()
+                                                            .trim()
+                                                            .contains(pattern
+                                                                .toLowerCase()))
+                                                    .toList();
+
+                                                return pattern.isEmpty
+                                                    ? RepositoryData.cstTopics
+                                                    : temp;
+                                              },
+                                              child: (suggestion) {
+                                                return Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 12.0,
+                                                    vertical: 16,
+                                                  ),
+                                                  child: Text(
+                                                      suggestion?.name ?? ''),
+                                                );
+                                              },
+                                              onItemSelect: (v, controller) {
+                                                if (v != null) {
+                                                  topics.value[i] = v.id!;
+                                                  controller.text = v.name!;
+                                                }
+                                              }),
+                                          // SizedBox(
+                                          //   height: 12,
+                                          // )
+                                        ],
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
+                            );
+                          }
+                          return const SizedBox.shrink();
                         }
-                        return const SizedBox.shrink();
-                      }
-                      return const CircularProgressIndicator();
-                    }),
+                        return const CircularProgressIndicator();
+                      }),
                     TextFormField(
                       maxLines: 4,
                       minLines: 4,

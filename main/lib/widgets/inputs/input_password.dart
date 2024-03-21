@@ -39,7 +39,8 @@ class _InputPasswordState extends State<InputPassword> {
           onChanged: widget.onChange,
           keyboardType: TextInputType.visiblePassword,
           decoration: InputDecoration(
-            label: Text(widget.label),
+            hintText: widget.label,
+            labelText: widget.label,
             suffixIcon: IconButton(
               icon: Icon(
                 value

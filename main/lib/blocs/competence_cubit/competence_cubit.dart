@@ -6,7 +6,6 @@ import 'package:data/models/competences/list_student_cases_model.dart';
 import 'package:data/models/competences/list_student_skills_model.dart';
 import 'package:data/models/competences/skill_post_model.dart';
 import 'package:data/models/competences/student_competence_model.dart';
-import 'package:data/models/students/student_statistic.dart';
 import 'package:data/utils/filter_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/blocs/clinical_record_cubit/clinical_record_cubit.dart';

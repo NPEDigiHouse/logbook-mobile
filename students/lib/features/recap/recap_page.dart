@@ -807,7 +807,7 @@ class ExpanseCustom extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        color: scaffoldBackgroundColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: <BoxShadow>[
           BoxShadow(

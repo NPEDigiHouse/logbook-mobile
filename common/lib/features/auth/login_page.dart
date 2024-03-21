@@ -144,8 +144,7 @@ class _LoginPageState extends State<LoginPage> {
       key: const Key('username_field'),
       name: 'username',
       decoration: const InputDecoration(
-        label: Text('Username or ID'),
-      ),
+          hintText: 'Username or ID', labelText: 'Username or ID'),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(
           errorText: 'This field is required',

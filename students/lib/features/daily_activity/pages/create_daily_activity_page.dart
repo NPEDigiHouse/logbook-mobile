@@ -6,6 +6,7 @@ import 'package:data/models/activity/activity_model.dart';
 import 'package:data/models/daily_activity/daily_activity_post_model.dart';
 import 'package:data/models/daily_activity/student_daily_activity_model.dart';
 import 'package:data/models/supervisors/supervisor_model.dart';
+import 'package:data/repository/repository_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +59,10 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      BlocProvider.of<SupervisorsCubit>(context).getAllSupervisors();
+      if (RepositoryData.supervisors.isEmpty) {
+        BlocProvider.of<SupervisorsCubit>(context, listen: false)
+            .getAllSupervisors();
+      }
       BlocProvider.of<ActivityCubit>(context)
         ..getActivityNames()
         ..getActivityLocations();
@@ -144,61 +148,99 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                               value: val,
                             );
                           }),
-                    BlocBuilder<SupervisorsCubit, SupervisorsState>(
-                        builder: (context, state) {
-                      List<SupervisorModel> supervisors = [];
-                      if (state is SupervisorFetchSuccess) {
-                        supervisors.clear();
-                        supervisors.addAll(state.supervisors);
-                        if (supervisors.indexWhere((element) =>
-                                element.fullName == supervisorName) !=
-                            -1) {
-                          final al = supervisors.firstWhere(
-                              (element) => element.fullName == supervisorName);
-                          supervisorId = al.id;
-                        }
-                        return CustomDropdown<SupervisorModel>(
-                            errorNotifier: supervisorVal,
-                            onSubmit: (text, controller) {
-                              if (supervisors.indexWhere((element) =>
-                                      element.fullName?.trim() ==
-                                      text.trim()) ==
-                                  -1) {
-                                controller.clear();
-                                supervisorId = '';
-                              }
-                            },
-                            hint: 'Supervisor',
-                            init: supervisorName,
-                            onCallback: (pattern) {
-                              final temp = supervisors
-                                  .where((competence) =>
-                                      (competence.fullName ?? 'unknown')
-                                          .toLowerCase()
-                                          .trim()
-                                          .contains(pattern.toLowerCase()))
-                                  .toList();
+                    if (RepositoryData.supervisors.isNotEmpty)
+                      CustomDropdown<SupervisorModel>(
+                          errorNotifier: supervisorVal,
+                          onSubmit: (text, controller) {
+                            if (RepositoryData.supervisors.indexWhere(
+                                    (element) =>
+                                        element.fullName?.trim() ==
+                                        text.trim()) ==
+                                -1) {
+                              controller.clear();
+                              supervisorId = '';
+                            }
+                          },
+                          hint: 'Supervisor',
+                          onCallback: (pattern) {
+                            final temp = RepositoryData.supervisors
+                                .where((competence) =>
+                                    (competence.fullName ?? 'unknown')
+                                        .toLowerCase()
+                                        .trim()
+                                        .contains(pattern.toLowerCase()))
+                                .toList();
 
-                              return pattern.isEmpty ? supervisors : temp;
-                            },
-                            child: (suggestion) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0,
-                                  vertical: 16,
-                                ),
-                                child: Text(suggestion?.fullName ?? ''),
-                              );
-                            },
-                            onItemSelect: (v, controller) {
-                              if (v != null) {
-                                supervisorId = v.id!;
-                                controller.text = v.fullName!;
-                              }
-                            });
-                      }
-                      return const CircularProgressIndicator();
-                    }),
+                            return pattern.isEmpty
+                                ? RepositoryData.supervisors
+                                : temp;
+                          },
+                          child: (suggestion) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16,
+                              ),
+                              child: Text(suggestion?.fullName ?? ''),
+                            );
+                          },
+                          onItemSelect: (v, controller) {
+                            if (v != null) {
+                              supervisorId = v.id!;
+                              controller.text = v.fullName!;
+                            }
+                          })
+                    else
+                      BlocBuilder<SupervisorsCubit, SupervisorsState>(
+                          builder: (context, state) {
+                        if (state is SupervisorFetchSuccess) {
+                          RepositoryData.supervisors.clear();
+                          RepositoryData.supervisors.addAll(state.supervisors);
+                          return CustomDropdown<SupervisorModel>(
+                              errorNotifier: supervisorVal,
+                              onSubmit: (text, controller) {
+                                if (RepositoryData.supervisors.indexWhere(
+                                        (element) =>
+                                            element.fullName?.trim() ==
+                                            text.trim()) ==
+                                    -1) {
+                                  controller.clear();
+                                  supervisorId = '';
+                                }
+                              },
+                              hint: 'Supervisor',
+                              onCallback: (pattern) {
+                                final temp = RepositoryData.supervisors
+                                    .where((competence) =>
+                                        (competence.fullName ?? 'unknown')
+                                            .toLowerCase()
+                                            .trim()
+                                            .contains(pattern.toLowerCase()))
+                                    .toList();
+
+                                return pattern.isEmpty
+                                    ? RepositoryData.supervisors
+                                    : temp;
+                              },
+                              child: (suggestion) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 16,
+                                  ),
+                                  child: Text(suggestion?.fullName ?? ''),
+                                );
+                              },
+                              onItemSelect: (v, controller) {
+                                if (v != null) {
+                                  supervisorId = v.id!;
+                                  controller.text = v.fullName!;
+                                }
+                              });
+                        }
+                        return const CircularProgressIndicator();
+                      }),
+                    
                     const SizedBox(
                       height: 12,
                     ),
@@ -221,7 +263,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                           errorText: 'This field is required',
                         ),
                         decoration:
-                            InputDecoration(labelText: 'Status (Required)'),
+                            const InputDecoration(labelText: 'Status (Required)'),
                         isExpanded: true,
                         hint: const Text('Status'),
                         value: status != null
@@ -375,7 +417,7 @@ class _CreateDailyActivityPageState extends State<CreateDailyActivityPage> {
                             activityNameId = al.id;
                           }
                           return DropdownButtonFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 labelText: 'Activity (Required)'),
                             validator: FormBuilderValidators.required(
                               errorText: 'This field is required',

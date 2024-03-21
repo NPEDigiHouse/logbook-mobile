@@ -83,9 +83,7 @@ final textButtonTheme = TextButtonThemeData(
 );
 
 final inputDecorationTheme = InputDecorationTheme(
-  
-  floatingLabelBehavior: FloatingLabelBehavior.always,
-  
+  floatingLabelBehavior: FloatingLabelBehavior.auto,
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(14),
     borderSide: const BorderSide(
@@ -100,7 +98,5 @@ final inputDecorationTheme = InputDecorationTheme(
   ),
   hintStyle: const TextStyle(
     color: onFormDisableColor,
-    
   ),
-  
 );
