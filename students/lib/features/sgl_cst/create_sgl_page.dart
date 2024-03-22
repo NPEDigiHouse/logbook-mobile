@@ -189,86 +189,91 @@ class _CreateSglPageState extends State<CreateSglPage> {
                   pathPrefix: 'icon_activity.svg',
                   padding: 16,
                 ),
-                if (RepositoryData.sglTopics.isNotEmpty)
-                  CustomDropdown<TopicModel>(
-                    errorNotifier: topicVal,
-                    onSubmit: (text, controller) {
-                      if (RepositoryData.sglTopics.indexWhere((element) =>
-                              element.name?.trim() == text.trim()) ==
-                          -1) {
-                        controller.clear();
-                        topics.value[0] = -1;
-                      }
-                    },
-                    hint: 'Topics',
-                    onCallback: (pattern) {
-                      final temp = RepositoryData.sglTopics
-                          .where((competence) => (competence.name ?? 'unknown')
-                              .toLowerCase()
-                              .trim()
-                              .contains(pattern.toLowerCase()))
-                          .toList();
-
-                      return pattern.isEmpty ? RepositoryData.sglTopics : temp;
-                    },
-                    child: (suggestion) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0,
-                          vertical: 16,
+                           SpacingColumn(
+                  horizontalPadding: 16,
+                  spacing: 12,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InputDateTimeField(
+                              action: (d) {},
+                              validator: FormBuilderValidators.required(
+                                errorText: 'This field is required',
+                              ),
+                              initialDate: dateController.text.isEmpty
+                                  ? DateTime.now()
+                                  : Utils.stringToDateTime(dateController.text),
+                              controller: startTimeController,
+                              hintText: 'Start Time'),
                         ),
-                        child: Text(suggestion?.name ?? ''),
-                      );
-                    },
-                    onItemSelect: (v, controller) {
-                      if (v != null) {
-                        topics.value[0] = v.id!;
-                        controller.text = v.name!;
-                      }
-                    },
-                  )
-                else
-                  SpacingColumn(
-                    horizontalPadding: 16,
-                    spacing: 12,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: InputDateTimeField(
-                                action: (d) {},
-                                validator: FormBuilderValidators.required(
-                                  errorText: 'This field is required',
-                                ),
-                                initialDate: DateTime.now(),
-                                controller: startTimeController,
-                                hintText: 'Start Time'),
-                          ),
-                          const SizedBox(
-                            width: 12,
-                          ),
-                          Expanded(
-                            child: InputDateTimeField(
-                                action: (d) {},
-                                validator: (data) {
-                                  if (data == null || data.toString().isEmpty) {
-                                    return 'This field is required';
-                                  }
-                                  if (Utils.stringTimeToDateTime(
-                                    widget.date,
-                                    startTimeController.text,
-                                  ).isAfter(Utils.stringTimeToDateTime(
-                                      widget.date, data))) {
-                                    return 'end data cannot be before the start date';
-                                  }
-                                  return null;
-                                },
-                                initialDate: DateTime.now(),
-                                controller: endTimeController,
-                                hintText: 'End Time'),
-                          ),
-                        ],
-                      ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Expanded(
+                          child: InputDateTimeField(
+                              validator: (data) {
+                                if (data == null || data.toString().isEmpty) {
+                                  return 'This field is required';
+                                }
+                                if (Utils.stringTimeToDateTime(
+                                        widget.date, startTimeController.text)
+                                    .isAfter(Utils.stringTimeToDateTime(
+                                        widget.date, data))) {
+                                  return 'end data cannot be before the start date';
+                                }
+                                return null;
+                              },
+                              action: (d) {},
+                              initialDate: dateController.text.isEmpty
+                                  ? DateTime.now()
+                                  : Utils.stringToDateTime(dateController.text),
+                              controller: endTimeController,
+                              hintText: 'End Time'),
+                        ),
+                      ],
+                    ),
+                    if (RepositoryData.sglTopics.isNotEmpty)
+                      CustomDropdown<TopicModel>(
+                          errorNotifier: topicVal,
+                          onSubmit: (text, controller) {
+                            if (RepositoryData.sglTopics.indexWhere((element) =>
+                                    element.name?.trim() == text.trim()) ==
+                                -1) {
+                              controller.clear();
+                              topics.value[0] = -1;
+                            }
+                          },
+                          hint: 'Topics',
+                          onCallback: (pattern) {
+                            final temp = RepositoryData.sglTopics
+                                .where((competence) =>
+                                    (competence.name ?? 'unknown')
+                                        .toLowerCase()
+                                        .trim()
+                                        .contains(pattern.toLowerCase()))
+                                .toList();
+
+                            return pattern.isEmpty
+                                ? RepositoryData.sglTopics
+                                : temp;
+                          },
+                          child: (suggestion) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16,
+                              ),
+                              child: Text(suggestion?.name ?? ''),
+                            );
+                          },
+                          onItemSelect: (v, controller) {
+                            if (v != null) {
+                              topics.value[0] = v.id!;
+                              controller.text = v.name!;
+                            }
+                          })
+                    else
                       BlocBuilder<SglCstCubit, SglCstState>(
                           builder: (context, state) {
                         if (state.topics != null) {
@@ -289,53 +294,55 @@ class _CreateSglPageState extends State<CreateSglPage> {
                                             i < value.length;
                                             i++) ...[
                                           CustomDropdown<TopicModel>(
-                                            errorNotifier: topicVal,
-                                            onSubmit: (text, controller) {
-                                              if (RepositoryData.sglTopics
-                                                      .indexWhere((element) =>
-                                                          element.name
-                                                              ?.trim() ==
-                                                          text.trim()) ==
-                                                  -1) {
-                                                controller.clear();
-                                                topics.value[i] = -1;
-                                              }
-                                            },
-                                            hint: 'Topics',
-                                            onCallback: (pattern) {
-                                              final temp = RepositoryData
-                                                  .sglTopics
-                                                  .where((competence) =>
-                                                      (competence.name ??
-                                                              'unknown')
-                                                          .toLowerCase()
-                                                          .trim()
-                                                          .contains(pattern
-                                                              .toLowerCase()))
-                                                  .toList();
+                                              errorNotifier: topicVal,
+                                              onSubmit: (text, controller) {
+                                                if (RepositoryData.sglTopics
+                                                        .indexWhere((element) =>
+                                                            element.name
+                                                                ?.trim() ==
+                                                            text.trim()) ==
+                                                    -1) {
+                                                  controller.clear();
+                                                  topics.value[i] = -1;
+                                                }
+                                              },
+                                              hint: 'Topics',
+                                              onCallback: (pattern) {
+                                                final temp = RepositoryData
+                                                    .sglTopics
+                                                    .where((competence) =>
+                                                        (competence.name ??
+                                                                'unknown')
+                                                            .toLowerCase()
+                                                            .trim()
+                                                            .contains(pattern
+                                                                .toLowerCase()))
+                                                    .toList();
 
-                                              return pattern.isEmpty
-                                                  ? RepositoryData.sglTopics
-                                                  : temp;
-                                            },
-                                            child: (suggestion) {
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 12.0,
-                                                  vertical: 16,
-                                                ),
-                                                child: Text(
-                                                    suggestion?.name ?? ''),
-                                              );
-                                            },
-                                            onItemSelect: (v, controller) {
-                                              if (v != null) {
-                                                topics.value[i] = v.id!;
-                                                controller.text = v.name!;
-                                              }
-                                            },
-                                          ),
+                                                return pattern.isEmpty
+                                                    ? RepositoryData.sglTopics
+                                                    : temp;
+                                              },
+                                              child: (suggestion) {
+                                                return Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 12.0,
+                                                    vertical: 16,
+                                                  ),
+                                                  child: Text(
+                                                      suggestion?.name ?? ''),
+                                                );
+                                              },
+                                              onItemSelect: (v, controller) {
+                                                if (v != null) {
+                                                  topics.value[i] = v.id!;
+                                                  controller.text = v.name!;
+                                                }
+                                              }),
+                                          // SizedBox(
+                                          //   height: 12,
+                                          // )
                                         ],
                                       ],
                                     );
@@ -348,19 +355,19 @@ class _CreateSglPageState extends State<CreateSglPage> {
                         }
                         return const CircularProgressIndicator();
                       }),
-                      TextFormField(
-                        maxLines: 4,
-                        minLines: 4,
-                        maxLength: 500,
-                        controller: noteController,
-                        decoration: const InputDecoration(
-                          label: Text(
-                            'Additional notes',
-                          ),
+                    TextFormField(
+                      maxLines: 4,
+                      minLines: 4,
+                      maxLength: 500,
+                      controller: noteController,
+                      decoration: const InputDecoration(
+                        label: Text(
+                          'Additional notes',
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
                 const SizedBox(
                   height: 16,
                 ),
