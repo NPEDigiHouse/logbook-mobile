@@ -509,10 +509,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                               activeDepartmentModel.checkOutStatus == null
                                   ? BlocSelector<StudentCubit, StudentState,
                                       bool>(
-                                      selector: (state) =>
-                                          state.studentDepartmentRecap
-                                              ?.isCompleted ??
-                                          false,
+                                      selector: (state) => true,
                                       builder: (context, state) {
                                         return SizedBox(
                                           width: double.infinity,

@@ -153,7 +153,7 @@ class _StudentRecapPageState extends State<StudentRecapPage> {
                                     width: 200,
                                     child: Center(
                                       child: Text(
-                                        '${(state.dailyActivityStat ?? 0).toStringAsFixed(2)}%',
+                                        '${(state.dailyActivityStat ?? 0).toStringAsFixed(0)}%',
                                         style: textTheme.titleLarge?.copyWith(
                                           color:
                                               (state.dailyActivityStat ?? 0) >

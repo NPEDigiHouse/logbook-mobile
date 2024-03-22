@@ -105,6 +105,7 @@ class DepartmentDatasourceImpl implements DepartmentDatasource {
         options: await apiHeader.userOptions(),
       );
     } catch (e) {
+      print(e.toString());
       throw failure(e);
     }
   }
